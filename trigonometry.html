@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Trig Lab with Angle Label</title>
+    <style>
+        :root {
+            --primary: #1e90ff; --sec: #2ed573; --acc: #ff4757; --tan: #e67e22;
+        }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            margin: 0; padding: 10px; 
+            background-color: #f0f2f5; 
+            display: flex; flex-direction: column; align-items: center; 
+        }
+
+        #ui-layer {
+            background: white; padding: 20px; border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 95%; max-width: 800px;
+            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+            margin-bottom: 20px;
+        }
+        .control-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        input[type="range"] { cursor: pointer; width: 150px; }
+        button { 
+            padding: 10px 20px; border-radius: 8px; border: none; 
+            font-weight: bold; cursor: pointer; color: white; min-width: 120px;
+        }
+        .pause { background: #e74c3c; } .play { background: #27ae60; }
+
+        #stage {
+            position: relative; width: 95%; max-width: 500px; height: 300px;
+            border-bottom: 3px solid #333; border-left: 3px solid #333;
+            margin: 50px 0;
+        }
+        .side { position: absolute; transition: none; }
+        #adj { bottom: 0; left: 0; height: 5px; background: var(--acc); }
+        #opp { bottom: 0; width: 5px; background: var(--sec); }
+        #hyp { bottom: 0; left: 0; height: 5px; background: var(--primary); transform-origin: left bottom; }
+
+       
+        #inner-angle-label {
+            position: absolute; bottom: 8px; left: 45px;
+            font-weight: bold; color: #555; font-size: 14px;
+        }
+
+        .label { 
+            position: absolute; font-size: 12px; font-weight: bold; 
+            background: rgba(255,255,255,0.9); padding: 2px 6px; 
+            border-radius: 4px; white-space: nowrap; pointer-events: none;
+        }
+
+        #calc-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px; width: 95%; max-width: 900px;
+        }
+        .card { 
+            background: white; padding: 15px; border-radius: 12px; 
+            text-align: center; border-top: 6px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .math { font-family: monospace; font-size: 1.1em; display: block; margin: 5px 0; }
+        .res { font-size: 1.4em; font-weight: bold; color: #2c3e50; }
+
+        @media (max-width: 600px) {
+            #stage { height: 200px; }
+            .label { font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div class="control-group">
+            <label>Angle Selector: <b id="angle-display">30</b>°</label>
+            <input type="range" id="angleSlider" min="25" max="75" value="30">
+        </div>
+        <div class="control-group">
+            <button id="toggleBtn" class="pause">Pause</button>
+        </div>
+    </div>
+
+    <div id="stage">
+      
+        <div id="inner-angle-label">θ = 30°</div>
+
+        <div id="adj" class="side"></div>
+        <div id="opp" class="side"></div>
+        <div id="hyp" class="side"></div>
+
+        <div id="l-adj" class="label" style="color: var(--acc);">බද්ධ</div>
+        <div id="l-opp" class="label" style="color: var(--sec);">සම්මුඛ</div>
+        <div id="l-hyp" class="label" style="color: var(--primary);">කර්ණය</div>
+    </div>
+
+    <div id="calc-grid">
+        <div class="card" style="border-color: var(--sec);">
+            <h3 style="color: var(--sec);">Sin (θ)</h3>
+            <span class="math">සම්මුඛ / කර්ණය</span>
+            <span class="math" id="sin-m">...</span>
+            <span class="res" id="sin-r">0.500</span>
+        </div>
+        <div class="card" style="border-color: var(--acc);">
+            <h3 style="color: var(--acc);">Cos (θ)</h3>
+            <span class="math">බද්ධ / කර්ණය</span>
+            <span class="math" id="cos-m">...</span>
+            <span class="res" id="cos-r">0.866</span>
+        </div>
+        <div class="card" style="border-color: var(--tan);">
+            <h3 style="color: var(--tan);">Tan (θ)</h3>
+            <span class="math">සම්මුඛ / බද්ධ</span>
+            <span class="math" id="tan-m">...</span>
+            <span class="res" id="tan-r">0.577</span>
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('angleSlider');
+        const angleDisp = document.getElementById('angle-display');
+        const innerAngleLabel = document.getElementById('inner-angle-label');
+        const toggleBtn = document.getElementById('toggleBtn');
+        
+        let angleDeg = 30;
+        let time = 0;
+        let isPaused = false;
+        let frame;
+
+        slider.addEventListener('input', (e) => {
+            angleDeg = parseInt(e.target.value);
+            angleDisp.innerText = angleDeg;
+            innerAngleLabel.innerText = `θ = ${angleDeg}°`;
+            if(isPaused) update(); 
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            toggleBtn.innerText = isPaused ? "Continue" : "Pause";
+            toggleBtn.className = isPaused ? "play" : "pause";
+            if(!isPaused) update();
+        });
+
+        function update() {
+            const angleRad = angleDeg * (Math.PI / 180);
+            
+            const baseSize = window.innerWidth < 600 ? 160 : 360;
+            const amp = window.innerWidth < 600 ? 50 : 100;
+            
+            const hLen = baseSize + Math.sin(time) * amp;
+            const oLen = hLen * Math.sin(angleRad);
+            const aLen = hLen * Math.cos(angleRad);
+
+            // Update Sides
+            document.getElementById('adj').style.width = `${aLen}px`;
+            document.getElementById('opp').style.height = `${oLen}px`;
+            document.getElementById('opp').style.left = `${aLen}px`;
+            document.getElementById('hyp').style.width = `${hLen}px`;
+            document.getElementById('hyp').style.transform = `rotate(-${angleDeg}deg)`;
+
+            // Update Labels
+            setLabel('l-adj', aLen/2 - 20, -30, `බද්ධ පාදය ${aLen.toFixed(1)} cm`);
+            setLabel('l-opp', aLen + 10, oLen/2, `සම්මුක පාදය ${oLen.toFixed(1)} cm`);
+            setLabel('l-hyp', aLen/3, oLen/2 + 30, `කර්ණය ${hLen.toFixed(1)} cm`);
+
+            // Positioning inner theta label based on current scale
+            innerAngleLabel.style.left = `${Math.min(aLen * 0.2, 50)}px`;
+            innerAngleLabel.style.bottom = `${Math.min(oLen * 0.05, 15)}px`;
+
+            // Ratios
+            updateMath('sin', oLen, hLen);
+            updateMath('cos', aLen, hLen);
+            updateMath('tan', oLen, aLen);
+
+            if(!isPaused) {
+                time += 0.01;
+                frame = requestAnimationFrame(update);
+            }
+        }
+
+        function setLabel(id, left, bottom, text) {
+            const el = document.getElementById(id);
+            el.style.left = `${left}px`;
+            el.style.bottom = `${bottom}px`;
+            el.innerText = text;
+        }
+
+        function updateMath(prefix, num, den) {
+            document.getElementById(`${prefix}-m`).innerText = `= ${num.toFixed(1)} / ${den.toFixed(1)}`;
+            document.getElementById(`${prefix}-r`).innerText = (num / den).toFixed(3);
+        }
+
+        update();
+        window.addEventListener('resize', () => { if(isPaused) update(); });
+    </script>
+</body>
+</html>

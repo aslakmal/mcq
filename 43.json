@@ -1,0 +1,12 @@
+[{
+    "id": 101,
+    "question": "$345 \\times 23 = ?$",
+    "options": [
+      "7935",
+      "7885",
+      "8035",
+      "7795"
+    ],
+    "answerIndex": 0,
+    "explanation": "$345 \\times 23 = 7935$.<br><br>බහුපද ගුණ කිරීමේ (Long Multiplication) පියවර පහත දැක්වේ:<br><br><div class='multiex' style='font-family: monospace; line-height: 1.2; text-align: right; direction: ltr; padding: 5px; border: 1px solid #ccc; background-color: #f9f9f9;'><span style='display: block;'>&nbsp;345</span><span style='display: block;'>x&nbsp;23</span><span style='display: block;'>-----</span><span style='display: block;'>&nbsp;1035&nbsp;</span><span style='display: block;'>+6900</span><span style='display: block;'>-----</span><span style='display: block;'>&nbsp;7935</span></div><br><div class='explanation-steps'><p>පළමුව, **345** අංකය **3** න් ගුණ කරනවා. **345 × 3 = 1035** ලැබෙනවා.</p><p>දෙවනුව, **345** අංකය **2** න් ගුණ කරනවා. මෙම **2** දසයේ ස්ථානයේ ඇති නිසා, පිළිතුරෙහි අවසානයට බිංදුවක් (0) එකතු කරමින් **345 × 20 = 6900** ලෙස ලියනවා.</p><p>අවසානයේදී, **1035** සහ **6900** යන ගුණිතයන් දෙක එකතු කරනවා. 1035 + 6900 = **7935**.</p></div>"
+  }]
