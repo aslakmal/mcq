@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <title>📐 6 ශ්‍රේණිය ගණිතය: ජ්‍යාමිතිය (SVG සමඟින්)</title>
+    <style>
+        body {
+            font-family: 'Iskoola Pota', 'Noto Sans Sinhala', sans-serif;
+            background-color: #e6f7ff;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #007bff;
+            border-bottom: 3px dashed #007bff;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            color: #28a745;
+            margin-top: 35px;
+            border-left: 5px solid #28a745;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #fd7e14;
+            margin-top: 20px;
+        }
+        .content-box {
+            background-color: #ffffff;
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .svg-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .shape-label {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 5px;
+            color: #008080;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📐 ජ්‍යාමිතිය</h1>
+    <p class="content-box">
+        ජ්‍යාමිතිය කියන්නේ හැඩතල, ඒවායේ ප්‍රමාණයන් ගැන ඉගෙන ගන්න විද්‍යාවයි!
+    </p>
+
+    <h2>⭐ 1. තල රූප</h2>
+    <div class="content-box">
+        <p>
+            තල රූප කියන්නේ කඩදාසියක ඇඳීමට පුළුවන්, පැතලි හැඩතල වලටයි.
+            පහත දැක්වෙන්නේ සමහර තල රූපයි.
+        </p>
+
+        <div class="svg-container">
+            <div>
+                <svg width="100" height="100">
+                    <rect x="10" y="20" width="80" height="60" style="fill:#ffb3ba; stroke:#d60000; stroke-width:3;" />
+                </svg>
+                <div class="shape-label">සෘජුකෝණාස්‍රය</div>
+            </div>
+
+            <div>
+                <svg width="100" height="100">
+                    <polygon points="50,10 90,90 10,90" style="fill:#b3d4ff; stroke:#005c99; stroke-width:3;" />
+                </svg>
+                <div class="shape-label">ත්‍රිකෝණය</div>
+            </div>
+
+            <div>
+                <svg width="100" height="100">
+                    <circle cx="50" cy="50" r="40" style="fill:#a8e6cf; stroke:#3cb371; stroke-width:3;" />
+                </svg>
+                <div class="shape-label">වෘත්තය</div>
+            </div>
+        </div>
+
+        <h3>🔲 වර්ගඵලය</h3>
+        <p>
+            වර්ගඵලය කියන්නේ තල රූපයක ඇතුළත තියෙන ඉඩ ප්‍රමාණයයි.කාමරේකට ටයිල් අල්ලන්න එහෙම ඕනැ උනාම කඩෙන් ටයිල් කොච්චරක් ගන්න ඕනැද දැනගන්න කාමරේ බිම වර්ගඵලය තමයි ගනන් කරන්න ඕනැ. 
+        </p>
+        
+        <h3>🚧 පරිමිතිය</h3>
+        <p>
+            පරිමිතිය කියන්නේ තල රූපයක දාරය දිගේ ඇති මුළු දුර ප්‍රමාණයයි.වත්ත වටේට වැටක් ගහන්න ඕනැ උනාම ඒකට කොච්චර කම්බි යනවද දැනගන්න ඉඩමේ පරිමිතිය(වටේ දිග) තමයි ගනන් කරන්න ඕනැ.
+        </p>
+    </div>
+
+    <h2>📦 2. ඝන වස්තු</h2>
+    <div class="content-box">
+        <p>
+            ඝන වස්තු කියන්නේ අතින් අල්ලන්න පුළුවන්, ත්‍රිමාන (3D) හැඩතල වලටයි. 
+        </p>
+        <div class="svg-container">
+            <svg width="200" height="200" viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+
+                <!-- TOP face -->
+                <polygon 
+                  points="80,0 140,28 80,56 20,28" 
+                  fill="#9fc9ea" />
+              
+                <!-- LEFT face -->
+                <polygon 
+                  points="20,28 80,56 80,140 20,112" 
+                  fill="#7fb6e0" />
+              
+                <!-- RIGHT face -->
+                <polygon 
+                  points="140,28 80,56 80,140 140,112"
+                  fill="#5a8fcb" />
+              </svg>
+                                   
+
+  <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Radial gradient for 3D sphere effect -->
+      <radialGradient id="sphereGrad" cx="35%" cy="35%" r="65%">
+        <stop offset="0%"  stop-color="#d0ecff"/>  <!-- highlight -->
+        <stop offset="50%" stop-color="#9fc9ea"/>  <!-- light blue -->
+        <stop offset="100%" stop-color="#5a8fcb"/> <!-- darker rim -->
+      </radialGradient>
+    </defs>
+  
+    <!-- Sphere -->
+    <circle cx="100" cy="100" r="70" fill="url(#sphereGrad)"/>
+  </svg>
+  
+
+  <svg viewBox="0 0 200 260" width="200" height="260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="40" y="60" width="120" height="140" fill="#7fb6e0"/>
+  
+    <!-- TOP ellipse (rounder) -->
+    <ellipse cx="100" cy="60" rx="60" ry="30" fill="#9fc9ea"/>
+  
+    <!-- SIDE rectangle -->
+  
+    <!-- BOTTOM ellipse (exact same size as top) -->
+    <ellipse cx="100" cy="200" rx="60" ry="30" fill="#5a8fcb"/>
+  </svg>
+  
+</div>   
+
+        <h3>💧 පරිමාව</h3>
+        <p>
+            පරිමාව කියන්නේ ඝන වස්තුවක් තුළ ඇති ඉඩ ප්‍රමාණයයි.
+        </p>
+        
+        <h3>🧱 පෘෂ්ඨික වර්ගඵලය</h3>
+        <p>
+            පෘෂ්ඨික වර්ගඵලය කියන්නේ ඝන වස්තුවේ පිටත ඇති මුළු වර්ගඵලයයි.
+        </p>
+    </div>
+
+    
+
+
+</body>
+</html>
