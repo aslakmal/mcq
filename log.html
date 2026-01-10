@@ -1,262 +1,481 @@
 <!DOCTYPE html>
 <html lang="si">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ලඝු සහ ප්‍රතිලඝු ගණකය</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; line-height: 1.6; color: #333; max-width: 950px; margin: auto; }
-        .container { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .tabs { display: flex; background: #f1f1f1; border-bottom: 1px solid #ddd; }
-        .tab-btn { flex: 1; padding: 15px; border: none; cursor: pointer; font-size: 1.1em; font-weight: bold; background: #e2e2e2; }
-        .tab-btn.active { background: #007bff; color: #fff; }
-        .content { padding: 20px; display: none; }
-        .content.active { display: block; }
-        .tablediv { overflow-x: auto; margin-top: 15px; }
-        table { border-collapse: collapse; width: 100%; font-size: 0.85em; min-width: 700px; }
-        th, td { border: 1px solid #ebebeb; padding: 3px 4px; text-align: center; }
-        .row-highlight { background-color: #e7f3ff; }
-        .dark-highlight { background-color: #007bff; color: white; font-weight: bold; }
-        .thead-highlight { background-color: #0056b3; color: white; }
-        .input-group { margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 5px; }
-        .note { margin-top: 15px; background: #fff3cd; padding: 15px; border-left: 5px solid #ffc107; }
-        .calc-box { font-family: monospace; background: #eef; padding: 15px; border-radius: 5px; margin-top: 10px; }
-        input { padding: 8px; width: 150px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 8px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
-        .small { font-weight: bold; }
-    </style>
-       <script>
-        MathJax = {
-          tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            packages: { '[+]': ['ams'] }
-          },
-          options: {
-            enableMenu: false
-          },
-          chtml: {
-            mtextInheritFont: true
-          }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 950px;
+            margin: auto;
         }
-      </script>
+
+        .container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            background: #e2e2e2;
+        }
+
+        .tab-btn.active {
+            background: #007bff;
+            color: #fff;
+        }
+
+        .content {
+            padding: 20px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .tablediv {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.85em;
+            min-width: 700px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ebebeb;
+            padding: 3px 4px;
+            text-align: center;
+        }
+
+        .row-highlight {
+            background-color: #e7f3ff;
+        }
+
+        .dark-highlight {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .thead-highlight {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .note {
+            margin-top: 15px;
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .calc-box {
+            font-family: monospace;
+            background: #eef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        input {
+            padding: 8px;
+            width: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .small {
+            font-weight: bold;
+        }
+        .arrow-wrapper {
+            display: flex;gap: 5px;
+}
+@media only screen and (min-width: 800px){
+    .arrow-wrapper{display: none;}
+}
+/* arrows */
+.scroll-btn {
+  z-index: 5;
+  background: #bbbbbb;
+    color: #000000;
+  border: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.3s;
+  height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    user-select: none;       
+  -webkit-user-select: none; 
+  -ms-user-select: none;
+}
+
+.scroll-btn.left {
+  left: 0;
+}
+
+.scroll-btn.right {
+  right: 0;
+}
+
+/* faded */
+.scroll-btn.fade {
+  opacity: 0.5;
+  pointer-events: none;
+}
+    </style>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                packages: { '[+]': ['ams'] }
+            },
+            options: {
+                enableMenu: false
+            },
+            chtml: {
+                mtextInheritFont: true
+            }
+        }
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
 </head>
+
 <body>
 
-    <p>ලඝුගණක කියන්නේ ගණන් හැදීමේ ක්‍රමයක්.</p>
-    
+
     <ul>
-      <li>කැල්කියුලේටර නැති කාලේ ගණිතඥයන්ට ගණන් හදන්න ලඝුගණක ලොකු උදව්වක් වුණා.</li>
-      <li>ඔයාට $2,000,000 \times 500,000$ වගේ ලොකු සංඛ්‍යා දෙකක් ගුණ කරන්න ඕනේ කියලා හිතන්න.කැල්කියුලේටරයක් නැතිව ඒක අමාරුයි</li>
-        <li>ලඝුගණක වලින් මේ ලොකු ඉලක්කම් දෙකේ ලඝු අංකය ලඝු පොතෙන් හොයලා ඒ දෙක එකතු කරලා ලඝු පොතෙන් ඒකේ ප්‍රතිලඝු බලන්න විතරයි තියෙන්නෙ.
+        <li>ලඝුගණක පොත කියන්නෙ ලේසියෙන් ගනන් හදන්න උදව් කරන පොතක්</li>
+        <li>කැල්කියුලේටර් නැති කාලෙ ලොකු ගනන් ගුණ කරන්න බෙදන්න ඕනැ උනාම ලඝුපොත තමයි පාවිච්චි කරේ</li>
+        <li>ලොකු ඉලක්කම් දෙකක් ගුණ කරන්නනම් ඒ ඉලක්කම් දෙකට අදාල ලඝුපොතේ ඉලක්කම් දෙක හොයලා ඒ දෙක එකතු කරලා ඒ එන ඉලක්කමට
+            අදාල ප්‍රතිලඝු අංකය ලඝුපොතෙන්ම බලලා හොයාගන්න විතරයි</li>
+        <li>මෙතනදී ලොකු ගුණකිරීම එකතු කිරීමක් බවට මාරු උන නිසා වැඩේ ලේසි වෙනවා</li>
+        <li>ගුණකිරීම් විතරක් නෙමෙයි.බෙදන්න,බලය/වර්ගමූලය හොයන්නත් ලඝුගණක වලින් පුලුවන්</li>
+    </ul>
+
+    <ul>
+        <li>
+            <strong>ගුණකිරීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>එකතු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
+            <p>$$\log(m \times n) = \log(m) + \log(n)$$</p>
         </li>
-       <li>ගුණකිරීම් විතරක් නෙමෙයි.බෙදන්න,බලය/වර්ගමූලය හොයන්නත් ලඝුගණක වලින් පුලුවන්. </li>
+        <li>
+            <strong>බෙදීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>අඩු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
+            <p>$$\log\left(\frac{m}{n}\right) = \log(m) - \log(n)$$</p>
+        </li>
+        <li>
+            <strong>බලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>ගුණ</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
+            <p>$$\log(m^n) = n \times \log(m)$$</p>
+        </li>
+        <li>
+            <strong>වර්ගමූලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>බෙදලා</strong> ප්‍රතිලඝු හොයන්න ඕනැ.
+            <p>$$\log(\sqrt{m}) = \frac{1}{n} \times \log(m)$$</p>
+        </li>
     </ul>
+    <p>ලඝු අංකයක පූර්නාංශය,දශමංශය කියලා කොටස් දෙකක් තියනවා. </p>
+    <p>උදා: 2.6558</p>
+
     
-    <ul>
-      <li>
-          <strong>ගුණකිරීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>එකතු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-          <p>$$\log(m \times n) = \log(m) + \log(n)$$</p>
-      </li>
-      <li>
-          <strong>බෙදීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>අඩු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-          <p>$$\log\left(\frac{m}{n}\right) = \log(m) - \log(n)$$</p>
-      </li>
-      <li>
-          <strong>බලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>ගුණ</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-          <p>$$\log(m^n) = n \times \log(m)$$</p>
-      </li>
-      <li>
-          <strong>වර්ගමූලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>බෙදලා</strong> ප්‍රතිලඝු හොයන්න ඕනැ.
-          <p>$$\log(\sqrt{m}) = \frac{1}{n} \times \log(m)$$</p>
-      </li>
-    </ul>
-    
-<div class="container">
 
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'logSection')">ලඝුගණක (Log)</button>
-        <button class="tab-btn" onclick="openTab(event, 'antilogSection')">ප්‍රතිලඝුගණක (Antilog)</button>
-    </div>
-
-    <div id="logSection" class="content active">
-        <h2>ලඝු වගුව භාවිතා කර ලඝුගණක සෙවීම</h2>
-        <div class="input-group">
-            අංකය ඇතුළු කරන්න: <input id="logInput" type="number" step="0.001" value="452.7">
-            <button onclick="renderLog()">lg() සොයන්න</button>
+    <div style="font-family: Arial, sans-serif; padding: 20px; margin: auto; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; text-align: center; width: fit-content;">
+        <div style="font-size: 40px; font-weight: bold; margin-bottom: 20px;"> <span
+                style="color: #e74c3c; border: 2px solid #e74c3c; border-radius: 50%; padding: 5px 15px; display: inline-block;">2</span>
+            <span style="color: #333;">.</span> <span
+                style="color: #3498db; border: 2px solid #3498db; border-radius: 15px; padding: 5px 15px; display: inline-block;">6558</span>
         </div>
-        <div id="logOutput"></div>
-    </div>
 
-    <div id="antilogSection" class="content">
-        <h2>ලඝු වගුව භාවිතා කර ප්‍රතිලඝු සෙවීම</h2>
-        <div class="input-group">
-            ලඝු අගය: <input id="antiInput" type="text" value="2.6558">
-            <button onclick="renderAntilog()">ප්‍රතිලඝු සොයන්න</button>
-            <p style="font-size: 0.8em; color: #666;">* සෘණ අගයන් සඳහා -2.6558 ලෙස ඇතුළත් කළ හැක.</p>
+        <div style="display: flex; justify-content: flex-start; gap: 50px;">
+            <div style="text-align: center;">
+                <div style="font-size: 24px; color: #e74c3c;">↑</div>
+                <div style="font-weight: bold; color: #e74c3c;">පූර්ණාංශය</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 24px; color: #3498db;">↑</div>
+                <div style="font-weight: bold; color: #3498db;">දශමාංශය</div>
+            </div>
         </div>
-        <div id="antiOutput"></div>
     </div>
-</div>
+    <h3>ලඝුපොත</h3>
+    <p>පහල තියෙන්නෙ ස්මාට් ලඝුපොතක්.ඕනිම ඉලක්කමක ලඝුගණකය හොයන්නත් ඕනැම ලඝුගණකයට ප්‍රතිලඝු හොයන්නත් මේ ස්මාට් ලඝුපොතෙන් ඉක්මනින්ම පුලුවන්.</p>
+    <div class="container">
 
-<script>
-    function openTab(evt, sectionName) {
-        let content = document.getElementsByClassName("content");
-        for (let i = 0; i < content.length; i++) content[i].style.display = "none";
-        let tablinks = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
-        document.getElementById(sectionName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
 
-    function fmt4(n) { return String(n).padStart(4, '0'); }
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'logSection')">ලඝුගණක (Log)</button>
+            <button class="tab-btn" onclick="openTab(event, 'antilogSection')">ප්‍රතිලඝුගණක (Antilog)</button>
+        </div>
 
-    function mantissaInt(x) {
-        const lg = Math.log10(x);
-        const mant = lg - Math.floor(lg);
-        return Math.round(mant * 10000);
-    }
+        <div id="logSection" class="content active">
+            <h2>ලඝු වගුව භාවිතා කර ලඝුගණක සෙවීම</h2>
+            <div class="input-group">
+                අංකය ඇතුළු කරන්න: <input id="logInput" type="number" step="0.001" value="452.7">
+                <button onclick="renderLog()">lg() සොයන්න</button>
+            </div>
+            <div id="logOutput"></div>
+        </div>
 
-    // --- LOGARITHM RENDER ---
-    function renderLog() {
-    const out = document.getElementById('logOutput');
-    const v = parseFloat(document.getElementById('logInput').value);
-    if(!v || v <= 0) { alert('ධන අංකයක් ඇතුළු කරන්න'); return; }
+        <div id="antilogSection" class="content">
+            <h2>ලඝු වගුව භාවිතා කර ප්‍රතිලඝු සෙවීම</h2>
+            <div class="input-group">
+                ලඝු අගය: <input id="antiInput" type="text" value="2.6558">
+                <button onclick="renderAntilog()">ප්‍රතිලඝු සොයන්න</button>
+                <p style="font-size: 0.8em; color: #666;">* සෘණ අගයන් සඳහා -2.6558 ලෙස ඇතුළත් කළ හැක.</p>
+            </div>
+            <div id="antiOutput"></div>
+        </div>
+    </div>
 
-    const exp = Math.floor(Math.log10(v));
-    const mantNum = v / Math.pow(10, exp);
-    const digits = mantNum.toFixed(3).replace('.', '');
-    const row = parseInt(digits.substring(0,2));
-    const col = parseInt(digits[2]);
-    const diffCol = parseInt(digits[3]);
+    <script>
+        function openTab(evt, sectionName) {
+            let content = document.getElementsByClassName("content");
+            for (let i = 0; i < content.length; i++) content[i].style.display = "none";
+            let tablinks = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
+            document.getElementById(sectionName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
 
-    let mainV = mantissaInt(row/10 + col/100);
-    let diffV = (diffCol > 0) ? (mantissaInt(row/10 + col/100 + diffCol/1000) - mainV) : 0;
-    
-    let html = `<h3>පියවර</h3><p>1. විද්‍යාත්මක ආකාරය: ${v} = ${mantNum.toFixed(3)} × 10<sup>${exp}</sup></p>`;
-    html += `<p>2. ලඝු වගුවේ <b>${row}</b> පේළිය සහ <b>${col}</b> තීරුව බලන්න.</p>`;
+        function fmt4(n) { return String(n).padStart(4, '0'); }
 
-    html += buildTableHTML(row, col, diffCol, true);
+        function mantissaInt(x) {
+            const lg = Math.log10(x);
+            const mant = lg - Math.floor(lg);
+            return Math.round(mant * 10000);
+        }
 
-    html += `<div class="calc-box">
-        වගුවේ අගය (${row}, ${col}) &nbsp;: ${fmt4(mainV)}<br>
-        අන්තර මධ්‍යය (${diffCol}) &nbsp;:&nbsp; ${diffV}<br>
-        මුළු දශම අංශය &nbsp;&nbsp;&nbsp;&nbsp;:${fmt4(mainV)} + ${diffV} = <b>${fmt4(mainV + diffV)}</b>
+        // --- LOGARITHM RENDER ---
+        function renderLog() {
+            const out = document.getElementById('logOutput');
+            const v = parseFloat(document.getElementById('logInput').value);
+            if (!v || v <= 0) { alert('ධන අංකයක් ඇතුළු කරන්න'); return; }
+
+            const exp = Math.floor(Math.log10(v));
+            const mantNum = v / Math.pow(10, exp);
+            const digits = mantNum.toFixed(3).replace('.', '');
+            const row = parseInt(digits.substring(0, 2));
+            const col = parseInt(digits[2]);
+            const diffCol = parseInt(digits[3]);
+
+            let mainV = mantissaInt(row / 10 + col / 100);
+            let diffV = (diffCol > 0) ? (mantissaInt(row / 10 + col / 100 + diffCol / 1000) - mainV) : 0;
+
+            let html = `<h5>1.පූර්ණාංශය සෙවීම</h5><p>විද්‍යාත්මක ආකාරය: ${v} = ${mantNum.toFixed(3)} × 10<sup>${exp}</sup></p>`;
+            html += `<pre>මෙතන දහයේ බලය(${exp}) තමයි ලඝු අංකයේ පූර්ණාංශය.</pre>`
+            html += `<h5>2.දශමාංශය සෙවීම</h5><p>අපේ ඉලක්කම ${v} ට අනුව ලඝු වගුවේ <b>${row}</b> පේළිය සහ <b>${col}</b>`
+                if (diffCol > 0) { 
+                html += ` සහ අන්තර මධ්‍යය(අ.ම) <b>${diffCol}</b>`
+            } 
+                html += ` තීරුව බලන්න.</p>`;
+
+            html += buildTableHTML(row, col, diffCol, true);
+
+            html += `<div class="calc-box">
+        වගුවේ අගය (${row}, ${col}) &nbsp;: ${fmt4(mainV)}<br>`
+            if (diffCol > 0) {
+                html += `අන්තර මධ්‍යය (${diffCol}) &nbsp;:&nbsp; ${diffV}<br>`
+            }
+            html += `මුළු දශම අංශය &nbsp;&nbsp;&nbsp;&nbsp;:${fmt4(mainV)} + ${diffV} = <b>${fmt4(mainV + diffV)}</b>
     </div>`;
 
-    // --- ව්‍යුත්ති (Bar) ලකුණ සැකසීම ---
-    let displayAns;
-    if (exp < 0) {
-        // සෘණ නම්, සෘණ ලකුණ ඉවත් කර ඉලක්කමට උඩින් ඉරක් (Bar) එක් කරයි
-        displayAns = `<b>${Math.abs(exp)}̅.${fmt4(mainV + diffV)}</b>`;
-    } else {
-        // ධන නම් සාමාන්‍ය පරිදි පෙන්වයි
-        displayAns = `<b>${exp}.${fmt4(mainV + diffV)}</b>`;
-    }
-
-    html += `<div class="note"><b>අවසාන පිළිතුර ≈ ${displayAns}</b></div>`;
-    out.innerHTML = html;
-}
-
-    // --- ANTILOG RENDER (Reverse Search) ---
-    function renderAntilog() {
-        const out = document.getElementById('antiOutput');
-        let raw = document.getElementById('antiInput').value.trim();
-        let charac, mantissa;
-
-        // Handling Bar and Negative
-        if(raw.startsWith('-') || raw.includes('bar') || raw.includes('̅')) {
-            let clean = raw.replace('-', '').replace('bar', '').replace('̅', '');
-            let parts = clean.split('.');
-            charac = -parseInt(parts[0]);
-            mantissa = parseFloat("0." + (parts[1] || "0"));
-        } else {
-            let val = parseFloat(raw);
-            charac = Math.floor(val);
-            mantissa = val - charac;
-        }
-
-        const targetM = Math.round(mantissa * 10000);
-        let row = 10, col = 0, mainV = 0, diffCol = 0, diffV = 0;
-
-        // 1. Find the closest lower value in log table
-        let found = false;
-        for (let r = 10; r <= 99; r++) {
-            for (let c = 0; c <= 9; c++) {
-                let cur = mantissaInt(r/10 + c/100);
-                if (cur <= targetM) {
-                    row = r; col = c; mainV = cur;
-                } else { found = true; break; }
+            // --- ව්‍යුත්ති (Bar) ලකුණ සැකසීම ---
+            let displayAns;
+            if (exp < 0) {
+                // සෘණ නම්, සෘණ ලකුණ ඉවත් කර ඉලක්කමට උඩින් ඉරක් (Bar) එක් කරයි
+                displayAns = `<b>${Math.abs(exp)}̅.${fmt4(mainV + diffV)}</b>`;
+            } else {
+                // ධන නම් සාමාන්‍ය පරිදි පෙන්වයි
+                displayAns = `<b>${exp}.${fmt4(mainV + diffV)}</b>`;
             }
-            if (found) break;
+
+            html += `<div class="note"><b>අවසාන පිළිතුර ≈ ${displayAns}</b></div>`;
+            out.innerHTML = html;
+            
         }
 
-        // 2. Find Mean Difference
-        let rem = targetM - mainV;
-        if (rem > 0) {
-            let bestD = 999;
-            for (let d = 1; d <= 9; d++) {
-                let dVal = mantissaInt(row/10 + col/100 + d/1000) - mainV;
-                if (Math.abs(dVal - rem) < bestD) {
-                    bestD = Math.abs(dVal - rem);
-                    diffCol = d; diffV = dVal;
+        // --- ANTILOG RENDER (Reverse Search) ---
+        function renderAntilog() {
+            const out = document.getElementById('antiOutput');
+            let raw = document.getElementById('antiInput').value.trim();
+            let charac, mantissa;
+
+            // Handling Bar and Negative
+            if (raw.startsWith('-') || raw.includes('bar') || raw.includes('̅')) {
+                let clean = raw.replace('-', '').replace('bar', '').replace('̅', '');
+                let parts = clean.split('.');
+                charac = -parseInt(parts[0]);
+                mantissa = parseFloat("0." + (parts[1] || "0"));
+            } else {
+                let val = parseFloat(raw);
+                charac = Math.floor(val);
+                mantissa = val - charac;
+            }
+
+            const targetM = Math.round(mantissa * 10000);
+            let row = 10, col = 0, mainV = 0, diffCol = 0, diffV = 0;
+
+            // 1. Find the closest lower value in log table
+            let found = false;
+            for (let r = 10; r <= 99; r++) {
+                for (let c = 0; c <= 9; c++) {
+                    let cur = mantissaInt(r / 10 + c / 100);
+                    if (cur <= targetM) {
+                        row = r; col = c; mainV = cur;
+                    } else { found = true; break; }
+                }
+                if (found) break;
+            }
+
+            // 2. Find Mean Difference
+            let rem = targetM - mainV;
+            if (rem > 0) {
+                let bestD = 999;
+                for (let d = 1; d <= 9; d++) {
+                    let dVal = mantissaInt(row / 10 + col / 100 + d / 1000) - mainV;
+                    if (Math.abs(dVal - rem) < bestD) {
+                        bestD = Math.abs(dVal - rem);
+                        diffCol = d; diffV = dVal;
+                    }
                 }
             }
-        }
 
-        let html =`<p>පූර්ණ අංශය: <b>${charac < 0 ? Math.abs(charac)+'̅' : charac}</b>, දශම අංශය: <b>.${fmt4(targetM)}</b></p>`;
-        html += `<p>ලඝු වගුවේ අගයන් අතර <b>.${fmt4(targetM)}</b> හෝ <b>.${fmt4(targetM)}</b> ට කුඩාම ළඟම අගය සොයන්න.</p>`;
+            let html = `<p>පූර්ණ අංශය: <b>${charac < 0 ? Math.abs(charac) + '̅' : charac}</b>, දශම අංශය: <b>.${fmt4(targetM)}</b></p>`;
+            html += `<p>ලඝු වගුවේ අගයන් අතර <b>.${fmt4(targetM)}</b> හෝ <b>.${fmt4(targetM)}</b> ට කුඩාම ළඟම අගය සොයන්න.</p>`;
 
-        html += buildTableHTML(row, col, diffCol, true);
+            html += buildTableHTML(row, col, diffCol, true);
 
-        const digits = (row * 100) + (col * 10) + diffCol;
-        const ans = (digits / 1000) * Math.pow(10, charac);
+            const digits = (row * 100) + (col * 10) + diffCol;
+            const ans = (digits / 1000) * Math.pow(10, charac);
 
-        html += `<div class="calc-box">
+            html += `<div class="calc-box">
             ළඟම අගය ${fmt4(mainV)} හමුවන්නේ: <b>${row}</b> පේළිය සහ <b>${col}</b> තීරුවෙන්.<br>
             අවශ්‍ය ඉතිරිය: ${targetM} - ${mainV} = <b>${targetM - mainV}</b><br>
             එම අගයට ළඟම අන්තර මධ්‍යය: <b>${diffV}</b> (තීරුව <b>${diffCol}</b>)<br><br>
             ලැබෙන ඉලක්කම්: ${row} | ${col} | ${diffCol} &nbsp;➔ &nbsp;<b>${digits}</b>
         </div>`;
 
-        html += `<h3>දශමස්ථානය තැබීම</h3>`;
-        html += `<div class="note">විද්‍යාත්මක ආකාරය: ${digits/1000} × 10<sup>${charac}</sup><br>
+            html += `<h3>දශමස්ථානය තැබීම</h3>`;
+            html += `<div class="note">විද්‍යාත්මක ආකාරය: ${digits / 1000} × 10<sup>${charac}</sup><br>
                  <b>අවසාන පිළිතුර ≈ ${ans.toPrecision(5)}</b></div>`;
-        out.innerHTML = html;
-    }
-
-    // Common function to draw the Log Table snippet
-    function buildTableHTML(targetRow, targetCol, targetDiff, isLogTable) {
-        let html = `<div class="tablediv"><table><thead><tr><th>N</th>`;
-        for(let c=0;c<10;c++) html += `<th class="${c===targetCol?'thead-highlight':''}">${c}</th>`;
-        for(let d=1;d<=9;d++) html += `<th class="${d===targetDiff?'thead-highlight':''} small">අ.ම. ${d}</th>`;
-        html += `</tr></thead><tbody>`;
-
-        for(let r = targetRow - 2; r <= targetRow + 2; r++) {
-            if(r < 10 || r > 99) continue;
-            let isR = (r === targetRow);
-            html += `<tr class="${isR?'row-highlight':''}"><td><b>${r}</b></td>`;
-            for(let c=0;c<10;c++) {
-                let v = mantissaInt(r/10 + c/100);
-                let cls = (isR && c === targetCol) ? 'dark-highlight' : '';
-                html += `<td class="${cls}">${fmt4(v)}</td>`;
-            }
-            for(let d=1;d<=9;d++) {
-                let base = mantissaInt(r/10 + targetCol/100);
-                let dv = mantissaInt(r/10 + targetCol/100 + d/1000) - base;
-                let cls = (isR && d === targetDiff) ? 'dark-highlight' : '';
-                html += `<td class="${cls}">${dv}</td>`;
-            }
-            html += `</tr>`;
+            out.innerHTML = html;
+            
         }
-        html += `</tbody></table></div>`;
-        return html;
-    }
 
-    renderLog();
-    renderAntilog();
-</script>
+        // Common function to draw the Log Table snippet
+        function buildTableHTML(targetRow, targetCol, targetDiff, isLogTable) {
+            let html = `<div class="arrow-wrapper">
+  <button class="scroll-btn left fade">&larr;</button>  <button class="scroll-btn right">&rarr;</button></div>
+<div class="tablediv" id="tableScroll"><table><thead><tr><th>N</th>`;
+            for (let c = 0; c < 10; c++) html += `<th class="${c === targetCol ? 'thead-highlight' : ''}">${c}</th>`;
+            for (let d = 1; d <= 9; d++) html += `<th class="${d === targetDiff ? 'thead-highlight' : ''} small">අ.ම. ${d}</th>`;
+            html += `</tr></thead><tbody>`;
+
+            for (let r = targetRow - 2; r <= targetRow + 2; r++) {
+                if (r < 10 || r > 99) continue;
+                let isR = (r === targetRow);
+                html += `<tr class="${isR ? 'row-highlight' : ''}"><td><b>${r}</b></td>`;
+                for (let c = 0; c < 10; c++) {
+                    let v = mantissaInt(r / 10 + c / 100);
+                    let cls = (isR && c === targetCol) ? 'dark-highlight' : '';
+                    html += `<td class="${cls}">${fmt4(v)}</td>`;
+                }
+                for (let d = 1; d <= 9; d++) {
+                    let base = mantissaInt(r / 10 + targetCol / 100);
+                    let dv = mantissaInt(r / 10 + targetCol / 100 + d / 1000) - base;
+                    let cls = (isR && d === targetDiff) ? 'dark-highlight' : '';
+                    html += `<td class="${cls}">${dv}</td>`;
+                }
+                html += `</tr>`;
+            }
+            html += `</tbody></table></div>`;
+            return html;
+           
+        }
+
+        renderLog();
+        renderAntilog();
+
+        document.addEventListener("click", e => {
+  const btn = e.target.closest(".scroll-btn");
+  if (!btn) return;
+
+  const arrowWrapper = btn.closest(".arrow-wrapper");
+  if (!arrowWrapper) return;
+
+  // find the tablediv that belongs to THIS arrow set
+  const tableDiv = arrowWrapper.nextElementSibling;
+
+  if (!tableDiv || !tableDiv.classList.contains("tablediv")) return;
+
+  const scrollAmount = tableDiv.clientWidth * 0.8;
+  const dir = btn.classList.contains("left") ? -1 : 1;
+
+  tableDiv.scrollBy({
+    left: dir * scrollAmount,
+    behavior: "smooth"
+  });
+});
+document.addEventListener("scroll", e => {
+  const tableDiv = e.target.closest(".tablediv");
+  if (!tableDiv) return;
+
+  const arrowWrapper = tableDiv.previousElementSibling;
+  if (!arrowWrapper || !arrowWrapper.classList.contains("arrow-wrapper")) return;
+
+  const leftBtn = arrowWrapper.querySelector(".scroll-btn.left");
+  const rightBtn = arrowWrapper.querySelector(".scroll-btn.right");
+
+  const maxScroll = tableDiv.scrollWidth - tableDiv.clientWidth;
+
+  leftBtn.classList.toggle("fade", tableDiv.scrollLeft <= 0);
+  rightBtn.classList.toggle("fade", tableDiv.scrollLeft >= maxScroll - 1);
+}, true);
+
+
+    </script>
+
+
 </body>
+
 </html>
