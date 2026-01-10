@@ -218,6 +218,7 @@
   justify-content: space-between; 
   align-items: center;
   gap: 10px;
+  margin-bottom: 5px;
 }
 
 .control label {
@@ -235,6 +236,10 @@
   font-weight: bold;
   padding: 0;
   box-sizing: border-box;
+  background: #e6e6e6;
+    color: #000000;
+    border: none;
+    cursor: pointer;
 }
 
 .control input {
@@ -245,9 +250,6 @@
 }
 
 
-button:focus {
-  outline: 3px solid #4a90e2;
-}
 .input-container {
   display: flex;
   align-items: center;
@@ -302,7 +304,10 @@ button:focus {
   background: #007bff;
   color: #fff;
  }
-
+.btn-wrapper{
+    display: flex;
+    gap:2px;
+}
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen flex items-center justify-center p-4 font-sans">
@@ -326,15 +331,7 @@ button:focus {
       
       
       
-    <div class="control">
-      <span>අනුක්‍රමණය:</span>
-      <input type="number" id="coef" value="2" min="-10" max="10">
-    </div>
-    
-    <div class="control">
-      <span>අණ්තඃඛණ්ඩය:</span>
-      <input type="number" id="constant" value="1" min="-50" max="50">
-    </div>
+
     <div id="equationDisplay" class="equation-display">y = 2x² + 3</div>
 
   
@@ -443,7 +440,23 @@ button:focus {
 
             </svg>-->
         </div>
-
+        <div class="control">
+            <span>අනුක්‍රමණය:</span>
+        <div class="btn-wrapper">
+              <button class="scroll-btn left">←</button> 
+              <input type="number" id="coef" value="2" min="-10" max="10" readonly>
+              <button class="scroll-btn right">→</button>
+            </div>
+          </div>
+          
+          <div class="control">
+            <span>අණ්තඃඛණ්ඩය:</span>
+            <div class="btn-wrapper">
+            <button class="scroll-btn left">←</button> 
+            <input type="number" id="constant" value="1" min="-50" max="50" readonly>
+            <button class="scroll-btn right">→</button>
+        </div>
+          </div>
         <p id="errorMessage" class="error-message hidden">
      </p>
 
@@ -453,6 +466,39 @@ button:focus {
 
     <script src="js/graph.js"></script>
     <script>
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".scroll-btn");
+  if (!btn) return;
+
+  const wrapper = btn.closest(".btn-wrapper");
+  if (!wrapper) return;
+
+  const input = wrapper.querySelector('input[type="number"]');
+  if (!input) return;
+
+  const step = input.step ? Number(input.step) : 1;
+  const min = input.min !== "" ? Number(input.min) : -Infinity;
+  const max = input.max !== "" ? Number(input.max) : Infinity;
+
+  let value = Number(input.value) || 0;
+
+  if (btn.classList.contains("left")) {
+    value -= step;
+  } else {
+    value += step;
+  }
+
+  // clamp value
+  value = Math.max(min, Math.min(max, value));
+
+  input.value = value;
+
+  // 🔥 trigger same logic as manual typing
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+});
+
+
            createGraphSVG('.graph-container');
 
 
