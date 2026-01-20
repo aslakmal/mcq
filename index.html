@@ -6,6 +6,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#162367">
   <style>
     body {
       font-family: "Noto Sans Sinhala", sans-serif;
@@ -18,8 +20,10 @@
       background-size: cover;
       min-height: 100vh;
       font-size: 15px;
+      max-width: 800px;
+    margin: auto;
     }
-
+    a{color: #FF9800;text-decoration: none;}
     #menu-toggle {
       position: fixed;
       top: 10px;
@@ -220,7 +224,7 @@
 
     #topic-list span {
       padding: 20px;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: bold;
       color: #fff;
     }
@@ -328,6 +332,8 @@
     display: block;
 }
 .options .cc{background: red;}
+#scores-panel{    padding-top: 100px;}
+#topicChart{margin-top:0 !important}
   </style>
 
 
@@ -362,90 +368,76 @@
 
   <ul class="topic-list" id="topic-list">
 
-    <li>
+  <!--  <li>
       <div><img src="img/on_your_mark.png" alt="On Your Mark" class="menu-icon">
-        <span>On Your Mark</span>
+        <span>සිද්ධාන්ත</span>
       </div>
-      <div class="submenu">6-9 වසර</div>
-    <ul>
-        <li>සංඛ්‍යා</li>
-        <li>ජ්‍යාමිතිය</li>
-        <li>වීජ ගණිතය</li>
-        <li>මිණුම්</li>
-        <li>දත්ත නිරූපණය</li>
-    </ul>
-    <div class="submenu">10,11 වසර</div>
-    <ul>
-        <li>සම්බන්ධතා සහ ශ්‍රිත</li>
-        <li>වර්ගජ සමීකරණ සහ වීජීය ප්‍රකාශන.</li>
-        <li>දර්ශක සහ ලඝුගණක</li>
-        <li>තල ජ්‍යාමිතිය</li>
-        <li>ත්‍රිකෝණමිතිය</li>
-        <li>සංඛ්‍යාත ව්‍යාප්තිය</li>
-        <li>අනුපාත, ප්‍රතිශත, සහ වාණිජ ගණිතය</li>
-        <li>මැට්‍රික්ස්</li>
-        <li>අසමානතා, ඝන ජ්‍යාමිතිය, සහ ස්ථානීය කේන්ද්‍රය</li>
-    </ul>
+    <ul id="tute-list">
+        <li data-file="triangle.html" class="active">ත්‍රිකෝණ ප්‍රමේයයන්</li>
+        <li data-file="circle.html">වෘත්ත ප්‍රමේයයන්</li>
+        <li data-file="log.html">ලඝුගණක</li>
+        <li data-file="trigonometry.html">ලඝුගණක</li>
+        <li data-file="triangle.html">ශ්‍රිත/ප්‍රස්ථාර</li>
+     </ul>
+</li>-->
     <li>
       <div> <img src="img/get_set.png" alt="Get Set" class="menu-icon">
-        <span>Get Set</span>
+        <span>ප්‍රශ්න/පිලිතුරු</span>
       </div>
       <ul class="mcq-list" id="mcq-list">
-        <li data-file="34.json" class="active">එකතු කිරීම් සහ අඩු කිරීම්</li>
-        <li data-file="35.json">ගුණ කිරීම</li>
-        <!-- <li data-file="43.json">දීර්ඝ ගුණ කිරීම</li>-->
-        <li data-file="36.json">බෙදීම</li>
-        <!--<li data-file="40.json">දීර්ඝ බෙදීම</li>-->
-        <li data-file="41.json">ප්‍රථමක සාධක සෙවීම</li>
-        <li data-file="38.json">වර්ගමූල එකතු කිරීම හා අඩු කිරීම</li>
-        <li data-file="30.json">සමීකරණ</li>
-        <li data-file="45.json">අසමානතා 1</li>
-        <li data-file="44.json">අසමානතා 2</li>
-        <li data-file="15.json">අසමානතා 3</li>
-        <li data-file="29.json">සමගාමී සමීකරණ</li>
+        <li data-file="1.json" class="active">එකතු කිරීම් සහ අඩු කිරීම්</li>
+        <li data-file="2.json">ගුණ කිරීම</li>
+        <li data-file="3.json">බෙදීම</li>
+        <li data-file="4.json">ප්‍රථමක සාධක සෙවීම</li>
+        <li data-file="5.json">වර්ගමූල එකතු කිරීම හා අඩු කිරීම</li>
+        <li data-file="6.json">සමීකරණ</li>
+        <li data-file="7.json">අසමානතා 1</li>
+        <li data-file="8.json">අසමානතා 2</li>
+        <li data-file="9.json">අසමානතා 3</li>
+        <li data-file="10.json">සමගාමී සමීකරණ</li>
         <li data-file="11.json">බහුපද ගුණ කිරීම</li>
         <li data-file="12.json">කුඩාම පොදු ගුණාකාරය සෙවීම</li>
         <li data-file="13.json">භාග එකතු කිරීම හා අඩු කිරීම</li>
         <li data-file="14.json">භාග ගුණ කිරීම හා බෙදීම</li>
-        <li data-file="16.json">ද්වීපද ප්‍රකාශනයක සාධක සෙවීම</li>
-        <li data-file="20.json">භාග 1</li>
-        <li data-file="21.json">භාග 2</li>
-        <li data-file="31.json">ප්‍රතිශත 1 (සුලු පොලිය)</li>
-        <li data-file="1.json">ප්‍රතිශත 2 (වරිපනම් බදු)</li>
-        <li data-file="26.json">ප්‍රතිශත 3 (වැල් පොලී)</li>
-        <li data-file="32.json">ප්‍රතිශත 4 (හීන වන ශේශ ක්‍රමය)</li>
-        <li data-file="2.json">වීජීය පදවල කුඩාම පොදු ගුණාකාරය සෙවීම</li>
-        <li data-file="3.json">දර්ශක හා ලඝුගණක</li>
-        <li data-file="4.json">වීජීය සමීකරණ විසඳීම</li>
-        <li data-file="5.json">සාධකයක් සෙවීම</li>
-        <li data-file="6.json">ගුණෝන්තර ශ්‍රේඪි</li>
-        <li data-file="7.json">සම්භාවිතාව</li>
-        <li data-file="8.json">සිලින්ඩරයක පරිමාව</li>
-        <li data-file="9.json">සමීකරණ</li>
-        <li data-file="46.json">ලඝුගණක</li>
-        <li data-file="10.json">ත්‍රිපද වර්ගජ ප්‍රකාශනයක සාධක සෙවීම</li>
-        <li data-file="17.json">සමගාමී සමීකරණ විසඳීම</li>
-        <li data-file="19.json">ඛන්ඩාංක වලින් සමීකරණය සෙවීම</li>
-        <li data-file="28.json">අන්තඃඛණ්ඩය හා ඛණ්ඩාංක වලින් ප්‍රස්ථාරය සෙවීම</li>
-        <li data-file="27.json">ප්‍රස්ථාර මගින් අනුක්‍රමණය හා අන්තඃඛණ්ඩය සෙවීම</li>
-        <li data-file="18.json">ප්‍රස්ථාර මගින් සමීකරණය සෙවීම</li>
-        <li data-file="22.json">මිනිස් දින ගැටලු</li>
-        <li data-file="23.json">මධ්‍යන්‍යය(Mean)</li>
-        <li data-file="25.json">මධ්‍යස්ථය(Median)</li>
-        <li data-file="24.json">මාතය(mode)</li>
-        <li data-file="33.json">කොටස් හා ලාභාංශ</li>
+        <li data-file="15.json">ද්වීපද ප්‍රකාශනයක සාධක සෙවීම</li>
+        <li data-file="16.json">භාග 1</li>
+        <li data-file="17.json">භාග 2</li>
+        <li data-file="18.json">ප්‍රතිශත 1 (සුලු පොලිය)</li>
+        <li data-file="19.json">ප්‍රතිශත 2 (වරිපනම් බදු)</li>
+        <li data-file="20.json">ප්‍රතිශත 3 (වැල් පොලී)</li>
+        <li data-file="21.json">ප්‍රතිශත 4 (හීන වන ශේශ ක්‍රමය)</li>
+        <li data-file="22.json">වීජීය පදවල කුඩාම පොදු ගුණාකාරය සෙවීම</li>
+        <li data-file="23.json">දර්ශක හා ලඝුගණක</li>
+        <li data-file="24.json">වීජීය සමීකරණ විසඳීම</li>
+        <li data-file="25.json">සාධකයක් සෙවීම</li>
+        <li data-file="26.json">ගුණෝන්තර ශ්‍රේඪි</li>
+        <li data-file="27.json">සම්භාවිතාව</li>
+        <li data-file="28.json">සිලින්ඩරයක පරිමාව</li>
+        <li data-file="29.json">සමීකරණ</li>
+        <li data-file="30.json">ලඝුගණක</li>
+        <li data-file="31.json">ත්‍රිපද වර්ගජ ප්‍රකාශනයක සාධක සෙවීම</li>
+        <li data-file="32.json">සමගාමී සමීකරණ විසඳීම</li>
+        <li data-file="33.json">ඛන්ඩාංක වලින් සමීකරණය සෙවීම</li>
+        <li data-file="34.json">අන්තඃඛණ්ඩය හා ඛණ්ඩාංක වලින් ප්‍රස්ථාරය සෙවීම</li>
+        <li data-file="35.json">ප්‍රස්ථාර මගින් අනුක්‍රමණය හා අන්තඃඛණ්ඩය සෙවීම</li>
+        <li data-file="36.json">ප්‍රස්ථාර මගින් සමීකරණය සෙවීම</li>
+        <li data-file="37.json">මිනිස් දින ගැටලු</li>
+        <li data-file="38.json">මධ්‍යන්‍යය(Mean)</li>
+        <li data-file="39.json">මධ්‍යස්ථය(Median)</li>
+        <li data-file="40.json">මාතය(mode)</li>
+        <li data-file="41.json">කොටස් හා ලාභාංශ</li>
       </ul>
 
     </li>
-    <li id="live_test">
+    <li class="live_test">
       <div> <img src="img/go.png" alt="Go" class="menu-icon">
-        <span>Go</span>
+        <span>විභාග</span>
       </div>
     </li>
 
     <li id="scores">
       <div><img src="img/victory.png" alt="Victory" class="menu-icon">
-        <span>Victory</span>
+        <span>ප්‍රගති වාර්තාව</span>
       </div>
     </li>
 
@@ -465,7 +457,10 @@
   <button id="explain-btn">නිවැරදි පිලිතුර</button>
 </div>
 <div id="scores-panel" style="display:none;">
+  <p id="examscorehead">විභාග ලකුණු අනුව ප්‍රගතිය<br>(විභාග සඳහා <a href="#" class="live_test">මෙතනින්</a> පිවිසෙන්න)</p>
     <canvas id="examScoreChart"></canvas>
+    <br><br>
+    <div>විභාග ලකුණු අනුව එක් එක් පාඩම් වල ප්‍රගතිය. <br> දිගම තීරුව හිමි පාඩමට වැඩිම ලකුණු ලැබී ඇත</div>
     <div id="topicChartWrapper" style="height:1000px; overflow-y:auto;">
     <canvas id="topicChart" style="margin-top:40px;"></canvas>
   </div>
@@ -490,49 +485,23 @@
       '<div style="position: absolute;top: -4px;left: 116px;width: 20px;height: 20px;background: #fafafa;color: #000000;text-align: center;line-height: 14px;font-size: 12px;transform: rotate(361deg);clip-path: polygon(50% 100%, 0 0, 100% 0)">2</div>' +
       '<div style="position: absolute;top: 34px;left: 77px;width: 20px;height: 20px;background: #fafafa;color: #000000;text-align: center;line-height: 24px;font-size: 12px;transform: rotate(28deg);clip-path: polygon(50% 0%, 0 100%, 100% 100%)">3</div>' +
       '<div style="position: absolute;top: 36px;left: 109px;width: 20px;height: 20px;background: #fafafa;color: #000000;text-align: center;line-height: 24px;font-size: 12px;transform: rotate(10deg);clip-path: polygon(50% 0%, 0 100%, 100% 100%)">4</div>';
-      var topic_list = {
-  34: "එකතු කිරීම් සහ අඩු කිරීම්",
-  35: "ගුණ කිරීම",
-  36: "බෙදීම",
-  41: "ප්‍රථමක සාධක සෙවීම",
-  38: "වර්ගමූල එකතු කිරීම හා අඩු කිරීම",
-  30: "සමීකරණ",
-  45: "අසමානතා 1",
-  44: "අසමානතා 2",
-  15: "අසමානතා 3",
-  29: "සමගාමී සමීකරණ",
-  11: "බහුපද ගුණ කිරීම",
-  12: "කුඩාම පොදු ගුණාකාරය සෙවීම",
-  13: "භාග එකතු කිරීම හා අඩු කිරීම",
-  14: "භාග ගුණ කිරීම හා බෙදීම",
-  16: "ද්වීපද ප්‍රකාශනයක සාධක සෙවීම",
-  20: "භාග 1",
-  21: "භාග 2",
-  31: "ප්‍රතිශත 1 (සුලු පොලිය)",
-  1:  "ප්‍රතිශත 2 (වරිපනම් බදු)",
-  26: "ප්‍රතිශත 3 (වැල් පොලී)",
-  32: "ප්‍රතිශත 4 (හීන වන ශේශ ක්‍රමය)",
-  2:  "වීජීය පදවල කුඩාම පොදු ගුණාකාරය සෙවීම",
-  3:  "දර්ශක හා ලඝුගණක",
-  4:  "වීජීය සමීකරණ විසඳීම",
-  5:  "සාධකයක් සෙවීම",
-  6:  "ගුණෝන්තර ශ්‍රේඪි",
-  7:  "සම්භාවිතාව",
-  8:  "සිලින්ඩරයක පරිමාව",
-  9:  "සමීකරණ",
-  46: "ලඝුගණක",
-  10: "ත්‍රිපද වර්ගජ ප්‍රකාශනයක සාධක සෙවීම",
-  17: "සමගාමී සමීකරණ විසඳීම",
-  19: "ඛන්ඩාංක වලින් සමීකරණය සෙවීම",
-  28: "අන්තඃඛණ්ඩය හා ඛණ්ඩාංක වලින් ප්‍රස්ථාරය සෙවීම",
-  27: "ප්‍රස්ථාර මගින් අනුක්‍රමණය හා අන්තඃඛණ්ඩය සෙවීම",
-  18: "ප්‍රස්ථාර මගින් සමීකරණය සෙවීම",
-  22: "මිනිස් දින ගැටලු",
-  23: "මධ්‍යන්‍යය (Mean)",
-  25: "මධ්‍යස්ථය (Median)",
-  24: "මාතය (Mode)",
-  33: "කොටස් හා ලාභාංශ"
-};
+      function getTopicList() {
+    var topic_list = {};
+    var listItems = document.querySelectorAll('#mcq-list li');
+
+    listItems.forEach(function(li) {
+        // Extract the number from "1.json", "2.json", etc.
+        var fileName = li.getAttribute('data-file');
+        var fileNumber = fileName.replace('.json', '');
+        
+        // Map the number to the Sinhala text
+        topic_list[fileNumber] = li.textContent.trim();
+    });
+
+    return topic_list;
+}
+
+var topic_list = getTopicList();
 
 /* =========================
    GLOBALS
@@ -661,7 +630,7 @@ console.log(question)
   selectedAnswerIndex = null;
 
   /* graph logic preserved */
-  if (question.catID == '18' || question.catID == '27') {
+  if (question.catID == '35' || question.catID == '36') {
     const parentElement = document.querySelector('.question');
     const newContainer = document.createElement('div');
     newContainer.className = 'graph-container';
@@ -739,7 +708,7 @@ function showExplanation(explanation, quiz) {
     });
   }
 
-  if (catid == '34.json') {
+  if (catid == '1.json') {
     const parentElement = document.getElementById('explanation-text');
     const newContainer = document.createElement('div');
     newContainer.className = 'line-container';
@@ -879,10 +848,26 @@ function showFinalScorePopup() {
    LIVE EXAM CONFIRM POPUP
 ========================= */
 function showLiveExamPopup() {
-  document.getElementById('explanation-quiz').innerHTML = "📝 Live Exam";
+ // document.getElementById('explanation-quiz').innerHTML = "📝 Live Exam";
   document.getElementById('explanation-text').innerHTML = `
-    <p>Random questions • No explanations</p>
-    <button class="start-exam-btn" onclick="closePopup();loadLiveExamQuestions()">Start Exam</button>
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 2px solid #4A90E2; border-radius: 10px; padding: 20px; max-width: 400px; ">
+    <ul style="list-style-type: none; padding: 0; line-height: 1.8;">
+        <li>📝 මෙය කෙටි ප්‍රශ්න 40ක විභාගයකි</li>  
+        <li>✅ ලබා දී ඇති විකල්ප 4න් නිවැරදි පිලිතුර තෝරන්න</li>
+        <li>⏱️ කාලය කළමනාකරණය ගැන සැලකිලිමත් වන්න</li>
+        <li>🧠 ප්‍රශ්න සියල්ල හොඳින් කියවා අවබෝධ කරගන්න</li>
+    </ul>
+    <div style="margin-top: 20px; text-align: center; font-weight: bold; ">
+        සාර්ථකව විභාගයට මුහුණ දීමට සුභ පතමු!
+    </div>
+    <button class="start-exam-btn" onclick="closePopup();loadLiveExamQuestions()" 
+    style="background: linear-gradient(112deg, #009688, #009688, #43A047);
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;cursor:pointer"
+>ආරම්භ කරන්න</button>
+</div>
   `;
   popup.classList.add('show');
 }
@@ -946,7 +931,13 @@ topicList.addEventListener('click', event => {
 
   document.getElementById('next-btn').onclick = showNextQuestion;
   document.getElementById('prev-btn').onclick = showPreviousQuestion;
-  document.getElementById('live_test').onclick = showLiveExamPopup;
+  document.addEventListener('click', e => {
+  const el = e.target.closest('.live_test');
+  if (!el) return;
+  e.preventDefault();  
+  showLiveExamPopup();
+});
+
 });
 document.addEventListener("DOMContentLoaded", () => {
       const parentItems = document.querySelectorAll("#topic-list > li");
@@ -980,7 +971,8 @@ function renderScoreCharts() {
 }
 function renderExamLineChart(scores) {
   const ctx = document.getElementById("examScoreChart").getContext("2d");
-
+ // console.log(scores.length)
+//"examscorehead"
   if (examChart) examChart.destroy();
 
   examChart = new Chart(ctx, {
@@ -988,11 +980,11 @@ function renderExamLineChart(scores) {
     data: {
       labels: scores.map((_, i) => `Exam ${i + 1}`),
       datasets: [{
-        label: "Exam Score",
+       // label: "Exam Score",
         data: scores,
         borderWidth: 2,
         tension: 0.3,
-        fill: false
+      //  fill: false
       }]
     },
     options: {
@@ -1004,63 +996,92 @@ function renderExamLineChart(scores) {
           max: 42,             
     
         }
+      },plugins: {
+      legend: {
+        display: false
       }
+    }
     }
   });
 }
 function renderTopicBarChart(topics) {
-  const ctx = document.getElementById("topicChart").getContext("2d");
-console.log(topics)
+  const canvas = document.getElementById("topicChart");
+  const ctx = canvas.getContext("2d");
+  const wrapper = document.getElementById("topicChartWrapper");
+
   if (topicChart) topicChart.destroy();
 
   const labels = [];
   const values = [];
 
   Object.entries(topics).forEach(([topic, results]) => {
-    const topicName = topic_list[topic] || `Topic ${topic}`;
-labels.push(topicName);
-    values.push(results.reduce((a, b) => a + b, 0)); // count of 1s
+    if(topic_list[topic]){
+    const topicName = topic_list[topic];
+    labels.push(wrapLabel(topicName, 25));
+    values.push(results.reduce((a, b) => a + b, 0));
+    }
   });
-  const barColors = values.map(v => {
-  if (v <= 3) return '#e53935';      // weak
-  if (v <= 6) return '#fb8c00';      // medium
-  return '#43a047';                  // strong
-});
+
+  // ✅ increase vertical space
+  const minHeightPerBar = 35;
+  wrapper.style.height = `${values.length * minHeightPerBar}px`;
+
   topicChart = new Chart(ctx, {
     type: "bar",
     data: {
       labels,
       datasets: [{
-        label: "Correct Answers (last 10 exams)",
         data: values,
-        borderWidth: 1,
-        backgroundColor: barColors
+        barThickness: 30,
+        categoryPercentage: 0.5,
+        barPercentage: 0.9
       }]
     },
     options: {
-  indexAxis: 'y',
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      //type: 'linear',    
+      scales: {
+  x: {
     beginAtZero: true,
     min: 0,
-    max: 10,             
+    max: 10,          // 👈 force full range
     ticks: {
-      stepSize: 1
+      autoSkip: false // show all labels
     }
   },
-    y: {
-      ticks: {
-        autoSkip: false
-      }
-    }
+  y: {
+    ticks: { autoSkip: false }
   }
 }
-
-
+,
+      plugins: {
+        legend: { display: false }
+      }
+    }
   });
 }
+
+function wrapLabel(text, maxLength = 30) {
+  if (text.length <= maxLength) return text;
+
+  const words = text.split(" ");
+  let line1 = "";
+  let line2 = "";
+
+  for (const word of words) {
+    if ((line1 + word).length <= maxLength) {
+      line1 += (line1 ? " " : "") + word;
+    } else {
+      line2 += (line2 ? " " : "") + word;
+    }
+  }
+
+  return [line1, line2];
+}
+
+
 
   </script>
 
