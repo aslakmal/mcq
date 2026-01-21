@@ -52,14 +52,52 @@ function getCookie(name) {
 const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
 return match ? JSON.parse(decodeURIComponent(match[2])) : null;
 }
-
 /* =========================
-EXAM ANALYTICS (LAST 5)
+IndexedDB helper
 ========================= */
-let examStats = getCookie("examStats") || {
-scores: [],
-topics: {}
-};
+
+const DB_NAME = "mathsExamDB";
+const DB_VERSION = 1;
+const STORE_NAME = "examStats";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+async function getExamStats() {
+  const db = await openDB();
+  return new Promise(resolve => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const req = store.get("stats");
+
+    req.onsuccess = () => {
+      resolve(req.result || {
+        scores: [],
+        topics: {}
+      });
+    };
+  });
+}
+async function saveExamStats(stats) {
+  const db = await openDB();
+  const tx = db.transaction(STORE_NAME, "readwrite");
+  tx.objectStore(STORE_NAME).put(stats, "stats");
+}
+
+
+
 
 let currentExamTopicResults = {};
 let currentExamScore = 0;
@@ -310,36 +348,38 @@ currentExamTopicResults[question._topic] = correct ? 1 : 0;
 /* =========================
 FINISH EXAM
 ========================= */
-function finishExam() {
-let score = 0;
+async function finishExam() {
+  let score = 0;
 
-// calculate score from topic results
-Object.values(currentExamTopicResults).forEach(val => {
-if (val === 1) score++;
-});
+  Object.values(currentExamTopicResults).forEach(val => {
+    if (val === 1) score++;
+  });
 
-// save score
-examStats.scores.push(score);
-if (examStats.scores.length > 10) {
-examStats.scores.shift();
+  const examStats = await getExamStats();
+
+  // save score
+  examStats.scores.push(score);
+  if (examStats.scores.length > 10) {
+    examStats.scores.shift();
+  }
+
+  // save topic-wise results
+  Object.entries(currentExamTopicResults).forEach(([topic, val]) => {
+    if (!examStats.topics[topic]) {
+      examStats.topics[topic] = [];
+    }
+
+    examStats.topics[topic].push(val);
+
+    if (examStats.topics[topic].length > 10) {
+      examStats.topics[topic].shift();
+    }
+  });
+
+  await saveExamStats(examStats);
+  showFinalScorePopup(score);
 }
 
-// save topic-wise results
-Object.entries(currentExamTopicResults).forEach(([topic, val]) => {
-if (!examStats.topics[topic]) {
-examStats.topics[topic] = [];
-}
-
-examStats.topics[topic].push(val);
-
-if (examStats.topics[topic].length > 10) {
-examStats.topics[topic].shift();
-}
-});
-
-setCookie("examStats", examStats);
-showFinalScorePopup(score);
-}
 
 
 /* =========================
@@ -480,10 +520,10 @@ renderScoreCharts();
 let examChart = null;
 let topicChart = null;
 
-function renderScoreCharts() {
+async function renderScoreCharts() {
 document.getElementById('scores-panel').style.display = 'block';
 document.getElementById('tutes-panel').style.display = 'none';  
-const examStats = getCookie("examStats");
+const examStats = await getExamStats();
 
 if (!examStats) return;
 
@@ -515,7 +555,7 @@ emptyState.style.display = "none";
 const ctx = canvas.getContext("2d");
 
 examChart = new Chart(ctx, {
-type: "line",
+type: "bar",
 data: {
 labels: scores.map((_, i) => `Exam ${i + 1}`),
 datasets: [{
@@ -569,6 +609,18 @@ values.push(results.reduce((a, b) => a + b, 0));
 }
 });
 
+// keep original values
+const rawValues = [...values];
+
+// replace 0 with 0.2 only for display
+const displayValues = rawValues.map(v => v === 0 ? 0.1 : v);
+
+// red for zero, blue for others
+const barColors = rawValues.map(v =>
+  v === 0 ? "rgba(255, 0, 0, 0.7)" : "rgba(54, 162, 235, 0.8)"
+);
+
+
 // ✅ increase vertical space
 const minHeightPerBar = 35;
 wrapper.style.height = `${values.length * minHeightPerBar}px`;
@@ -578,7 +630,8 @@ type: "bar",
 data: {
 labels,
 datasets: [{
-  data: values,
+  data: displayValues,
+  backgroundColor: barColors,
   barThickness: 30,
   categoryPercentage: 0.5,
   barPercentage: 0.9
@@ -604,7 +657,8 @@ ticks: { autoSkip: false }
 }
 ,
 plugins: {
-  legend: { display: false }
+  legend: { display: false },
+  tooltip: { enabled: false }
 }
 }
 });
