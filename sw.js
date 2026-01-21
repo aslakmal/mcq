@@ -1,5 +1,11 @@
-const CACHE_NAME = "onepage-pwa-v3";
-const CORE_ASSETS = ["./", "./index.html"];
+const CACHE_NAME = "pwa-v3";
+const CORE_ASSETS = [
+    "./",
+    "./index.html",
+    "js/graph.js",
+    "js/line.js",
+    ...Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`)
+  ];
 
 self.addEventListener("install", e => {
   self.skipWaiting();
