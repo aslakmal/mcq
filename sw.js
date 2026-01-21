@@ -2,9 +2,12 @@ const CACHE_NAME = "pwa-v3";
 const CORE_ASSETS = [
     "./",
     "./index.html",
+    ...Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`),
     "js/graph.js",
     "js/line.js",
-    ...Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`)
+    "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js",
+    "https://cdn.jsdelivr.net/npm/chart.js",
+    "https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap"
   ];
 
 self.addEventListener("install", e => {
