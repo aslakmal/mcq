@@ -334,6 +334,15 @@
 .options .cc{background: red;}
 #scores-panel{    padding-top: 100px;}
 #topicChart{margin-top:0 !important}
+
+.chart-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
   </style>
 
 
@@ -458,12 +467,25 @@
 </div>
 <div id="scores-panel" style="display:none;">
   <p id="examscorehead">විභාග ලකුණු අනුව ප්‍රගතිය<br>(විභාග සඳහා <a href="#" class="live_test">මෙතනින්</a> පිවිසෙන්න)</p>
+  <div id="examChartWrapper">
     <canvas id="examScoreChart"></canvas>
+    <div class="chart-empty" style="display:none;">
+      <p>No data available yet</p>
+      <button class="live_test">Start an Exam</button>
+    </div>
+  </div>
+  
+
     <br><br>
-    <div>විභාග ලකුණු අනුව එක් එක් පාඩම් වල ප්‍රගතිය. <br> දිගම තීරුව හිමි පාඩමට වැඩිම ලකුණු ලැබී ඇත</div>
+    <div>විභාග ලකුණු අනුව එක් එක් පාඩම් වල ප්‍රගතිය. <br> කෙටි තීරු වලින් ඇති පාඩම් නැවත බලා හැකියාව වර්දනය කිරීමට උත්සාහ කරන්න</div>
     <div id="topicChartWrapper" style="height:1000px; overflow-y:auto;">
     <canvas id="topicChart" style="margin-top:40px;"></canvas>
+    <div class="chart-empty" style="display:none;">
+      <p>No data available yet</p>
+      <button class="live_test">Start an Exam</button>
+    </div>
   </div>
+  
   </div>
 
   <!-- Explanation popup -->
@@ -966,14 +988,32 @@ function renderScoreCharts() {
 
   if (!examStats) return;
 
-  renderExamLineChart(examStats.scores);
-  renderTopicBarChart(examStats.topics);
+  renderExamLineChart(
+  document.getElementById("examChartWrapper"),
+  examStats.scores
+);
+
+renderTopicBarChart(
+  document.getElementById("topicChartWrapper"),
+  examStats.topics
+);
+
 }
-function renderExamLineChart(scores) {
-  const ctx = document.getElementById("examScoreChart").getContext("2d");
- // console.log(scores.length)
-//"examscorehead"
-  if (examChart) examChart.destroy();
+function renderExamLineChart(wrapperEl, scores) {
+  const canvas = wrapperEl.querySelector("canvas");
+  const emptyState = wrapperEl.querySelector(".chart-empty");
+
+  if (!scores || scores.length === 0) {
+    canvas.style.display = "none";
+    emptyState.style.display = "flex";
+    if (examChart) examChart.destroy();
+    return;
+  }
+
+  canvas.style.display = "block";
+  emptyState.style.display = "none";
+
+  const ctx = canvas.getContext("2d");
 
   examChart = new Chart(ctx, {
     type: "line",
@@ -1004,10 +1044,10 @@ function renderExamLineChart(scores) {
     }
   });
 }
-function renderTopicBarChart(topics) {
+function renderTopicBarChart(wrapper,topics) {
   const canvas = document.getElementById("topicChart");
   const ctx = canvas.getContext("2d");
-  const wrapper = document.getElementById("topicChartWrapper");
+  //const wrapper = document.getElementById("topicChartWrapper");
 
   if (topicChart) topicChart.destroy();
 
