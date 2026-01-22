@@ -164,10 +164,23 @@ installBtn.addEventListener('click', async () => {
   await deferredPrompt.userChoice;
   deferredPrompt = null;
 });
+window.addEventListener('appinstalled', () => {
+  installBtn.style.display = 'none';
+  deferredPrompt = null;
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  installBtn.disabled = true;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  installBtn.disabled = false;
+});
+
 
 /* ---- Open App ---- */
 function openApp() {
-  window.location.href = "maths.html";
+  window.location.href = "/maths.html";
 }
 </script>
 
