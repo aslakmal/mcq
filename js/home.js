@@ -111,7 +111,7 @@ async function loadQuestions(jsonFilePath) {
 
 
   try {
-    const response = await fetch(jsonFilePath);
+    const response = await fetch(jsonFilePath+'.json');
 
     // Check if the network request actually succeeded
     if (!response.ok) {
