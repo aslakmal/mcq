@@ -598,53 +598,59 @@ function renderExamLineChart(wrapperEl, scores) {
   });
 }
 
+
+
 function renderTopicBarChart(wrapper, topics) {
   const canvas = document.getElementById("topicChart");
   const ctx = canvas.getContext("2d");
-  //const wrapper = document.getElementById("topicChartWrapper");
   const emptyState = wrapper.querySelector(".chart-empty");
 
   if (!topics || Object.keys(topics).length === 0) {
     emptyState.style.display = "flex";
+    canvas.style.display = "none";
+
+    if (topicChart) {
+      topicChart.destroy();
+      topicChart = null;
+    }
     return;
   }
 
-  canvas.style.display = "block";
   emptyState.style.display = "none";
-  if (topicChart) topicChart.destroy();
+  canvas.style.display = "block";
 
   const labels = [];
-  const values = [];
+  const rawValues = [];
 
   Object.entries(topics).forEach(([topic, results]) => {
     if (topic_list[topic]) {
       const topicName = topic_list[topic];
       labels.push(wrapLabel(topicName, 25));
-      values.push(results.reduce((a, b) => a + b, 0));
+      rawValues.push(results.reduce((a, b) => a + b, 0));
     }
   });
 
-  // keep original values
-  const rawValues = [...values];
-
-  // replace 0 with 0.2 only for display
+  // display values (avoid zero-height bars)
   const displayValues = rawValues.map(v => v === 0 ? 0.1 : v);
 
-  // red for zero, blue for others
   const barColors = rawValues.map(v =>
     v === 0 ? "rgba(255, 0, 0, 0.7)" : "rgba(54, 162, 235, 0.8)"
   );
 
-
-  // ✅ increase vertical space
+  // dynamic height
   const minHeightPerBar = 35;
-  wrapper.style.height = `${values.length * minHeightPerBar}px`;
+  wrapper.style.height = `${labels.length * minHeightPerBar}px`;
+
+  // 🔁 UPDATE EXISTING CHART
   if (topicChart) {
     topicChart.data.labels = labels;
-    topicChart.data.datasets[0].data = values;
+    topicChart.data.datasets[0].data = displayValues;
+    topicChart.data.datasets[0].backgroundColor = barColors;
     topicChart.update();
     return;
   }
+
+  // 🆕 CREATE ONCE
   topicChart = new Chart(ctx, {
     type: "bar",
     data: {
@@ -658,24 +664,20 @@ function renderTopicBarChart(wrapper, topics) {
       }]
     },
     options: {
-      indexAxis: 'y',
+      indexAxis: "y",
       responsive: true,
       maintainAspectRatio: false,
-      //type: 'linear',    
       scales: {
         x: {
           beginAtZero: true,
           min: 0,
-          max: 10,          // 👈 force full range
-          ticks: {
-            autoSkip: false // show all labels
-          }
+          max: 10,
+          ticks: { autoSkip: false }
         },
         y: {
           ticks: { autoSkip: false }
         }
-      }
-      ,
+      },
       plugins: {
         legend: { display: false },
         tooltip: { enabled: false }
@@ -683,6 +685,7 @@ function renderTopicBarChart(wrapper, topics) {
     }
   });
 }
+
 
 function wrapLabel(text, maxLength = 30) {
   if (text.length <= maxLength) return text;
