@@ -556,13 +556,17 @@ function renderExamLineChart(wrapperEl, scores) {
   const ctx = canvas.getContext("2d");
 
   if (examChart) {
-    examChart.data.labels = labels;
-    examChart.data.datasets[0].data = values;
+    examChart.data.labels.length = 0;
+    examChart.data.datasets[0].data.length = 0;
+
+    examChart.data.labels.push(...labels);
+    examChart.data.datasets[0].data.push(...values);
+
     examChart.update();
     return;
   }
 
-  var examChart_ = new Chart(ctx, {
+  examChart = new Chart(ctx, {
     type: "bar",
     data: {
       labels: scores.map((_, i) => `Exam ${i + 1}`),
