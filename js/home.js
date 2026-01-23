@@ -562,7 +562,7 @@ function renderExamLineChart(wrapperEl, scores) {
     return;
   }
 
-  examChart = new Chart(ctx, {
+  var examChart_ = new Chart(ctx, {
     type: "bar",
     data: {
       labels: scores.map((_, i) => `Exam ${i + 1}`),
