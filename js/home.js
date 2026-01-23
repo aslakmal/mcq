@@ -157,7 +157,7 @@ function showQuestion(question) {
   document.getElementById('scores-panel').style.display = 'none';
   document.getElementById('tutes-panel').style.display = 'block';
   const container = document.getElementById('questions-container');
-  console.log(question)
+
   let optionsHtml = '';
   let x = 0;
   question.options.forEach((option, index) => {
@@ -554,7 +554,7 @@ function renderExamLineChart(wrapperEl, scores) {
   emptyState.style.display = "none";
 
   const ctx = canvas.getContext("2d");
-
+console.log(scores.length)
   if (examChart) {
     examChart.data.labels.length = 0;
     examChart.data.datasets[0].data.length = 0;
@@ -600,7 +600,7 @@ function renderTopicBarChart(wrapper, topics) {
   const ctx = canvas.getContext("2d");
   //const wrapper = document.getElementById("topicChartWrapper");
   const emptyState = wrapper.querySelector(".chart-empty");
-  console.log(topics)
+
   if (!topics || Object.keys(topics).length === 0) {
     emptyState.style.display = "flex";
     return;
