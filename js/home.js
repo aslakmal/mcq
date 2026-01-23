@@ -540,42 +540,46 @@ async function renderScoreCharts() {
   );
 
 }
+
 function renderExamLineChart(wrapperEl, scores) {
   const canvas = wrapperEl.querySelector("canvas");
   const emptyState = wrapperEl.querySelector(".chart-empty");
- 
-  if (!scores || scores.length === 0) {
+  const ctx = canvas.getContext("2d");
+
+  if (!Array.isArray(scores) || scores.length === 0) {
     emptyState.style.display = "flex";
-    if (examChart) examChart.destroy();
+    canvas.style.display = "none";
+
+    if (examChart) {
+      examChart.destroy();
+      examChart = null;
+    }
     return;
   }
 
-  canvas.style.display = "block";
   emptyState.style.display = "none";
+  canvas.style.display = "block";
 
-  const ctx = canvas.getContext("2d");
-console.log(scores.length)
+  // ✅ DEFINE labels once
+  const labels = scores.map((_, i) => `Exam ${i + 1}`);
+
+  // 🔁 UPDATE EXISTING CHART
   if (examChart) {
-    examChart.data.labels.length = 0;
-    examChart.data.datasets[0].data.length = 0;
-
-    examChart.data.labels.push(...labels);
-    examChart.data.datasets[0].data.push(...values);
-
+    examChart.data.labels = labels;
+    examChart.data.datasets[0].data = scores;
     examChart.update();
     return;
   }
 
+  // 🆕 CREATE CHART ONCE
   examChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: scores.map((_, i) => `Exam ${i + 1}`),
+      labels,
       datasets: [{
-        // label: "Exam Score",
         data: scores,
         borderWidth: 2,
-        tension: 0.3,
-        //  fill: false
+        tension: 0.3
       }]
     },
     options: {
@@ -584,17 +588,16 @@ console.log(scores.length)
         y: {
           beginAtZero: true,
           min: 0,
-          max: 42,
-
+          max: 42
         }
-      }, plugins: {
-        legend: {
-          display: false
-        }
+      },
+      plugins: {
+        legend: { display: false }
       }
     }
   });
 }
+
 function renderTopicBarChart(wrapper, topics) {
   const canvas = document.getElementById("topicChart");
   const ctx = canvas.getContext("2d");
