@@ -541,7 +541,6 @@ async function renderScoreCharts() {
 
 }
 function renderExamLineChart(wrapperEl, scores) {
-  if (examChart) examChart.destroy();
   const canvas = wrapperEl.querySelector("canvas");
   const emptyState = wrapperEl.querySelector(".chart-empty");
  
