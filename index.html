@@ -1,188 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>O/L Maths Digitalbook</title>
+    <title>O/L Maths App</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4f46e5">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
 
-<style>
-/* -------- Reset -------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
+    <style>
+        /* -------- Reset -------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
 
-/* -------- Background -------- */
-body {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #4f46e5, #06b6d4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  overflow: hidden;
-}
+        /* -------- Background -------- */
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-/* -------- Floating math symbols -------- */
-.math-bg span {
-  position: absolute;
-  font-size: 3rem;
-  opacity: 0.1;
-  animation: float 12s linear infinite;
-}
+        /* -------- Floating math symbols -------- */
+        .math-bg span {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.1;
+            animation: float 12s linear infinite;
+        }
 
-.math-bg span:nth-child(1) { top: 10%; left: 15%; animation-duration: 10s; }
-.math-bg span:nth-child(2) { top: 70%; left: 80%; animation-duration: 14s; }
-.math-bg span:nth-child(3) { top: 40%; left: 60%; animation-duration: 12s; }
-.math-bg span:nth-child(4) { top: 80%; left: 20%; animation-duration: 16s; }
+        .math-bg span:nth-child(1) {
+            top: 10%;
+            left: 15%;
+            animation-duration: 10s;
+        }
 
-@keyframes float {
-  0% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-40px) rotate(20deg); }
-  100% { transform: translateY(0) rotate(0); }
-}
+        .math-bg span:nth-child(2) {
+            top: 70%;
+            left: 80%;
+            animation-duration: 14s;
+        }
 
-/* -------- Card -------- */
-.card {
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 90%;
-  max-width: 420px;
-  text-align: center;
-  animation: fadeIn 1.2s ease;
-}
+        .math-bg span:nth-child(3) {
+            top: 40%;
+            left: 60%;
+            animation-duration: 12s;
+        }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+        .math-bg span:nth-child(4) {
+            top: 80%;
+            left: 20%;
+            animation-duration: 16s;
+        }
 
-.logo {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-}
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0);
+            }
 
-h1 {
-  font-size: 1.9rem;
-  margin-bottom: 0.5rem;
-}
+            50% {
+                transform: translateY(-40px) rotate(20deg);
+            }
 
-p {
-  opacity: 0.9;
-  margin-bottom: 1.8rem;
-}
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+        }
 
-/* -------- Buttons -------- */
-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+        /* -------- Card -------- */
+        .card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            animation: fadeIn 1.2s ease;
+        }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-.install-btn {
-  background: #22c55e;
-  color: #022c22;
-  margin-bottom: 12px;
-  display: none;
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.open-btn {
-  background: white;
-  color: #4f46e5;
-}
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
 
-.footer {
-  margin-top: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.8;
-}
-</style>
+        h1 {
+            font-size: 1.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            opacity: 0.9;
+            margin-bottom: 1.8rem;
+        }
+
+        /* -------- Buttons -------- */
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .install-btn {
+            background: #22c55e;
+            color: #022c22;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .open-btn {
+            background: white;
+            color: #4f46e5;
+        }
+
+        .footer {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        :root {
+            --img-width: 300px;
+            --img-height: 533px; /* Standard 16:9 mobile ratio */
+            --gap: 20px;
+        }
+/* The container limits the viewable area */
+.slider-container {
+            position: relative;
+            /* width for 3 images + gaps */
+            width: calc((var(--img-width) * 3) + (var(--gap) * 2));
+        }
+
+        /* Tablet View: Limit to 2 images */
+        @media (max-width: 1050px) {
+            .slider-container {
+                width: calc((var(--img-width) * 2) + var(--gap));
+            }
+        }
+
+        /* Mobile View: Limit to 1 image */
+        @media (max-width: 700px) {
+            .slider-container {
+                width: var(--img-width);
+            }
+            .nav-btn { display: none; } /* Hide buttons on mobile touch */
+        }
+
+        .screenshot-wrapper {
+            display: flex;
+            gap: var(--gap);
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            padding: 10px 0;
+        }
+
+        .screenshot-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .screenshot-wrapper img {
+            width: var(--img-width);
+            height: 606px; /* Controls the vertical "largeness" */
+            flex-shrink: 0;
+            border-radius: 12px;
+            scroll-snap-align: start;
+            object-fit: cover; /* Prevents stretching */
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-wrapper img:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 22px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prev-btn { left: -60px; }
+        .next-btn { right: -60px; }
+        .nav-btn:active { scale: 0.95; }
+    </style>
 </head>
 
 <body>
 
-<div class="math-bg">
-  <span>∑</span>
-  <span>π</span>
-  <span>√</span>
-  <span>×</span>
-</div>
+    <div class="math-bg">
+        <span>∑</span>
+        <span>π</span>
+        <span>√</span>
+        <span>×</span>
+    </div>
 
-<div class="card">
-  <div class="logo">📘</div>
-  <h1>O/L Maths App</h1>
-  <p>
-    Practice exams • Track progress • Learn offline  
-    <br>Designed for Sri Lankan O/L students
-  </p>
+    <div class="card">
+        <div class="logo">📘</div>
+        <h1>O/L Maths Digital book</h1>
+        <p>
+            Practice exams • Track progress • Learn offline
+            <br>Designed for Sri Lankan O/L students
+        </p>
 
-  <button class="install-btn" id="installBtn">📲 Install App</button>
-  <button class="open-btn" onclick="openApp()">🚀 Open App</button>
+        <button class="install-btn" id="installBtn">📲 Install App</button>
+        <button class="open-btn" onclick="openApp()">🚀 Open App</button>
 
-  <div class="footer">
-    Free • Offline • Fast
-  </div>
-</div>
+        <div class="footer">
+            Free • Offline • Fast
+        </div>
+    </div>
+    <div class="slider-container">
+        <button class="nav-btn prev-btn" onclick="slide('left')">❮</button>
+        
+        <div class="screenshot-wrapper" id="slider">
+            <img src="img/s1.jpg" alt="1">
+            <img src="img/s2.jpg" alt="2">
+            <img src="img/s3.jpg" alt="3">
+            <img src="img/s4.jpg" alt="4">
+            <img src="img/s5.jpg" alt="5">
+            <img src="img/s6.jpg" alt="6">
+            <img src="img/s7.jpg" alt="7">
+            <img src="img/s8.jpg" alt="8">
+            <img src="img/s9.jpg" alt="9">
+        </div>
+    
+        <button class="nav-btn next-btn" onclick="slide('right')">❯</button>
+    </div>
+
+
+    <script>
+        /* ---- Service Worker ---- */
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+
+        /* ---- PWA Install ---- */
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+        });
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            installBtn.disabled = true;
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            installBtn.disabled = false;
+        });
+
+
+        /* ---- Open App ---- */
+        function openApp() {
+            window.location.href = "/maths.html";
+        }
+    </script>
+
 
 <script>
-/* ---- Service Worker ---- */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
-}
-
-/* ---- PWA Install ---- */
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'block';
-});
-
-installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-});
-window.addEventListener('appinstalled', () => {
-  installBtn.style.display = 'none';
-  deferredPrompt = null;
-});
-
-installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  installBtn.disabled = true;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  installBtn.disabled = false;
-});
-
-
-/* ---- Open App ---- */
-function openApp() {
-  window.location.href = "/maths.html";
-}
+function slide(direction) {
+        const slider = document.getElementById('slider');
+        const step = 320; // 300px width + 20px gap
+        
+        if (direction === 'left') {
+            slider.scrollBy({ left: -step, behavior: 'smooth' });
+        } else {
+            slider.scrollBy({ left: step, behavior: 'smooth' });
+        }
+    }
 </script>
+    
 
 </body>
+
 </html>
