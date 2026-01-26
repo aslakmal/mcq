@@ -8,16 +8,14 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            padding: 20px;
             line-height: 1.6;
             color: #333;
             max-width: 950px;
             margin: auto;
         }
-
+.lbody{padding: 15px;}
         .container {
             border: 1px solid #ddd;
-            border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
@@ -165,6 +163,86 @@
   opacity: 0.5;
   pointer-events: none;
 }
+h4{margin: 0;}
+
+/* Container setup */
+.ldesc {
+    display: grid;
+    /* This creates a responsive grid: boxes will be at least 300px wide */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* The Feature Card */
+.ldesc>li {
+    background: #ffffff;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Hover effect to make it feel interactive */
+.ldesc>li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: #007bff;
+}
+
+/* Heading style inside the card */
+.ldesc>li h4 {
+    margin: 0 0 12px 0;
+    color: #007bff;
+    font-size: 1.25rem;
+    padding-bottom: 8px;
+}
+
+/* Text style (Sinhala fonts usually need a bit more line-height) */
+.ldesc>li {
+    line-height: 1.8;
+    color: #333;
+    font-size: 1rem;
+}
+
+.accordion {
+  list-style: none;
+  padding: 0;
+}
+
+.accordion li {
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.accordion h4 {
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.accordion h4::after {
+  content: '+'; /* Visual indicator */
+}
+
+.accordion li.active h4::after {
+  content: '-';
+}
+
+.lcontent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; /* The sliding effect */
+  background: white;
+}
+
+
     </style>
     <script>
         MathJax = {
@@ -185,35 +263,49 @@
 </head>
 
 <body>
+<div class="lbody">
+    <h1>ලඝුගණක</h1>
+    <ul class="ldesc accordion">
+        
+        <li><h4>මොකද්ද මේ?</h4><div class="lcontent">ලඝුගණක පොත කියන්නෙ ලේසියෙන් ගනන් හදන්න උදව් කරන පොතක්</div></li>
+        
+        <li><h4>මොකටද?</h4><div class="lcontent">කැල්කියුලේටර් එහෙම නැති කාලෙ ලොකු ගනන් ගුණ කරන්න බෙදන්න ඕනැ උනාම ලඝුපොත තමයි පාවිච්චි කරේ</div></li>
+        
+        <li><h4>කොහොමද?</h4><div class="lcontent">ලොකු ඉලක්කම් දෙකක් ගුණ කරන්නනම් ඒ ඉලක්කම් දෙකට අදාල ලඝුපොතේ ඉලක්කම් දෙක හොයලා ඒ දෙක එකතු කරලා ඒ එන ඉලක්කමට
+            අදාල ප්‍රතිලඝු අංකය ලඝුපොතෙන්ම බලලා හොයාගන්න විතරයි තියෙන්නේ</div></li>
+            
+        <li><h4>වාසිය?</h4><div class="lcontent">මෙතනදී දීර්ඝ ගුණකිරීම එකතු කිරීමක් බවට මාරු උන නිසා වැඩේ ලේසි වෙනවා</div></li>
+        
+        <li><h4>ගුණකරන්න විතරද?</h4><div class="lcontent">ගුණකිරීම් විතරක් නෙමෙයි.බෙදන්න,බලය/වර්ගමූලය හොයන්නත් ලඝුගණක වලින් පුලුවන්
+            <ul style="padding: 0;">
+                <li>
+                    <strong>ගුණකිරීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>එකතු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
+                    <p>$$\log(m \times n) = \log(m) + \log(n)$$</p>
+                    <i>මෙතනදි log() යන්නෙන් සංකේතවත් වෙන්නෙ වරහන් ඇතුලේ ඇති ඉලක්කමේ 10 පාදයට ලඝුගණකය යන්නයි.
+                        මෙය කෙටියෙන් lg() ලෙසද ලිවිය හැක.</i>    
+                </li>
+                <li>
+                    <strong>බෙදීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>අඩු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
+                    <p>$$\log\left(\frac{m}{n}\right) = \log(m) - \log(n)$$</p>
+                </li>
+                <li>
+                    <strong>බලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>ගුණ</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
+                    <p>$$\log(m^n) = n \times \log(m)$$</p>
+                </li>
+                <li>
+                    <strong>වර්ගමූලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>බෙදලා</strong> ප්‍රතිලඝු හොයන්න ඕනැ.
+                    <p>$$\log(\sqrt{m}) = \frac{1}{n} \times \log(m)$$</p>
+                </li>
+            </ul>
 
-
-    <ul>
-        <li>ලඝුගණක පොත කියන්නෙ ලේසියෙන් ගනන් හදන්න උදව් කරන පොතක්</li>
-        <li>කැල්කියුලේටර් නැති කාලෙ ලොකු ගනන් ගුණ කරන්න බෙදන්න ඕනැ උනාම ලඝුපොත තමයි පාවිච්චි කරේ</li>
-        <li>ලොකු ඉලක්කම් දෙකක් ගුණ කරන්නනම් ඒ ඉලක්කම් දෙකට අදාල ලඝුපොතේ ඉලක්කම් දෙක හොයලා ඒ දෙක එකතු කරලා ඒ එන ඉලක්කමට
-            අදාල ප්‍රතිලඝු අංකය ලඝුපොතෙන්ම බලලා හොයාගන්න විතරයි</li>
-        <li>මෙතනදී ලොකු ගුණකිරීම එකතු කිරීමක් බවට මාරු උන නිසා වැඩේ ලේසි වෙනවා</li>
-        <li>ගුණකිරීම් විතරක් නෙමෙයි.බෙදන්න,බලය/වර්ගමූලය හොයන්නත් ලඝුගණක වලින් පුලුවන්</li>
+        </div></li>
     </ul>
 
-    <ul>
-        <li>
-            <strong>ගුණකිරීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>එකතු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-            <p>$$\log(m \times n) = \log(m) + \log(n)$$</p>
-        </li>
-        <li>
-            <strong>බෙදීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>අඩු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-            <p>$$\log\left(\frac{m}{n}\right) = \log(m) - \log(n)$$</p>
-        </li>
-        <li>
-            <strong>බලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>ගුණ</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-            <p>$$\log(m^n) = n \times \log(m)$$</p>
-        </li>
-        <li>
-            <strong>වර්ගමූලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>බෙදලා</strong> ප්‍රතිලඝු හොයන්න ඕනැ.
-            <p>$$\log(\sqrt{m}) = \frac{1}{n} \times \log(m)$$</p>
-        </li>
-    </ul>
+    <h3>
+   
+    </h3>
+
+   
     <p>ලඝු අංකයක පූර්නාංශය,දශමංශය කියලා කොටස් දෙකක් තියනවා. </p>
     <p>උදා: 2.6558</p>
 
@@ -238,7 +330,8 @@
         </div>
     </div>
     <h3>ලඝුපොත</h3>
-    <p>පහල තියෙන්නෙ ස්මාට් ලඝුපොතක්.ඕනිම ඉලක්කමක ලඝුගණකය හොයන්නත් ඕනැම ලඝුගණකයට ප්‍රතිලඝු හොයන්නත් මේ ස්මාට් ලඝුපොතෙන් ඉක්මනින්ම පුලුවන්.</p>
+    <p>පහල තියෙන්නෙ ඩිජිටල් ලඝුපොතක්.ඕනිම ඉලක්කමක ලඝුගණකය හොයන්නත් ඕනැම ලඝුගණකයට ප්‍රතිලඝු හොයන්නත් මේ ඩිජිටල් ලඝුපොතෙන් ඉක්මනින්ම පුලුවන්.</p>
+    </div>
     <div class="container">
 
 
@@ -250,8 +343,8 @@
         <div id="logSection" class="content active">
             <h2>ලඝු වගුව භාවිතා කර ලඝුගණක සෙවීම</h2>
             <div class="input-group">
-                අංකය ඇතුළු කරන්න: <input id="logInput" type="number" step="0.001" value="452.7">
-                <button onclick="renderLog()">lg() සොයන්න</button>
+                අංකය ඇතුළු කරන්න: <div style="display: flex;"><input id="logInput" type="number" step="0.001" value="452.7">
+                <button onclick="renderLog()">lg() සොයන්න</button></div>
             </div>
             <div id="logOutput"></div>
         </div>
@@ -259,8 +352,8 @@
         <div id="antilogSection" class="content">
             <h2>ලඝු වගුව භාවිතා කර ප්‍රතිලඝු සෙවීම</h2>
             <div class="input-group">
-                ලඝු අගය: <input id="antiInput" type="text" value="2.6558">
-                <button onclick="renderAntilog()">ප්‍රතිලඝු සොයන්න</button>
+                ලඝු අගය: <div style="display: flex;"><input id="antiInput" type="text" value="2.6558">
+                <button onclick="renderAntilog()">ප්‍රතිලඝු සොයන්න</button></div>
                 <p style="font-size: 0.8em; color: #666;">* සෘණ අගයන් සඳහා -2.6558 ලෙස ඇතුළත් කළ හැක.</p>
             </div>
             <div id="antiOutput"></div>
@@ -312,9 +405,9 @@
             html += buildTableHTML(row, col, diffCol, true);
 
             html += `<div class="calc-box">
-        වගුවේ අගය (${row}, ${col}) &nbsp;: ${fmt4(mainV)}<br>`
+        වගුවේ අගය &nbsp;: ${fmt4(mainV)}<br>`
             if (diffCol > 0) {
-                html += `අන්තර මධ්‍යය (${diffCol}) &nbsp;:&nbsp; ${diffV}<br>`
+                html += `අන්තර මධ්‍යය &nbsp;:&nbsp; ${diffV}<br>`
             }
             html += `මුළු දශම අංශය &nbsp;&nbsp;&nbsp;&nbsp;:${fmt4(mainV)} + ${diffV} = <b>${fmt4(mainV + diffV)}</b>
     </div>`;
@@ -456,7 +549,8 @@
     behavior: "smooth"
   });
 });
-document.addEventListener("scroll", e => {
+document.querySelectorAll(".tablediv").forEach(tableDiv => {
+  tableDiv.addEventListener("scroll", e => {
   const tableDiv = e.target.closest(".tablediv");
   if (!tableDiv) return;
 
@@ -472,7 +566,33 @@ document.addEventListener("scroll", e => {
   rightBtn.classList.toggle("fade", tableDiv.scrollLeft >= maxScroll - 1);
 }, true);
 
+})
 
+// Select only the top-level list items of the accordion
+document.querySelectorAll('.accordion > li').forEach(item => {
+  item.addEventListener('click', function(e) {
+    // Prevent the click from affecting parent menus if nested
+    e.stopPropagation();
+
+    const lcontent = this.querySelector(':scope > .lcontent');
+    if (!lcontent) return; // Exit if this specific LI has no content div
+
+    const isOpen = this.classList.contains('active');
+
+    // Close other top-level items
+    document.querySelectorAll('.accordion > li').forEach(el => {
+      el.classList.remove('active');
+      const childContent = el.querySelector(':scope > .lcontent');
+      if (childContent) childContent.style.maxHeight = null;
+    });
+
+    // Open this item
+    if (!isOpen) {
+      this.classList.add('active');
+      lcontent.style.maxHeight = lcontent.scrollHeight + "px";
+    }
+  });
+});
     </script>
 
 
