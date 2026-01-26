@@ -6,18 +6,8 @@
 <title>Circle Theorems</title>
 
 <style>
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    padding-top: 20px;
-}
 
+body{    font-family: Arial, sans-serif;}
 .theorem-list-container {
     width: 90%;
     max-width: 500px; 
@@ -28,7 +18,14 @@ body {
     overflow: auto;
     height: 300px; 
 }
-
+.center{    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+     padding-top: 20px;}
+.container{padding: 15px;}
 .theorem-item {
     border-bottom: 1px solid #eee; 
 }
@@ -167,8 +164,10 @@ body {
 </style>
 </head>
 <body>
-
-   
+  <div class="container">
+  <h1>වෘත්ත ප්‍රමේයයන්</h1>
+<div class="center">
+  
       <div class="diagram-container">
         <div class="circle-outline" id="circle">
           <div class="center-point"></div>
@@ -278,8 +277,9 @@ body {
             </div>
         </div>
         </div>
-
-      <script> 
+      </div>
+    </div>
+        <script> 
       var equation=document.getElementById('eq')
       // Increased array sizes to accommodate more lines/angles
       const lines = [
