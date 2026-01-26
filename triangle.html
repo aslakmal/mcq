@@ -7,24 +7,27 @@
   <title>Triangle Theorems</title>
   <style>
     body {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
       font-family: Arial, sans-serif;
-      padding-top: 20px;
+  
     }
-
+    .container {
+    padding: 15px;
+}
+    .center {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 20px;
+}
     .diagram-container {
       position: relative;
       width: 250px;
       height: 250px;
       margin: 20px 0;
       background: transparent;
-      border: 1px dashed #ccc;
     }
 
     /* Triangle lines */
@@ -145,8 +148,10 @@
     }
   </style>
 </head>
-
 <body>
+  <div class="container">
+  <h1>වෘත්ත ප්‍රමේයයන්</h1>
+<div class="center">
 
   <div class="diagram-container">
     <!-- Triangle Lines -->
@@ -228,6 +233,8 @@
       </div>
     </div>
   </div>
+</div>
+</div>
 
   <script>
     const lines = [
