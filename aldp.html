@@ -29,18 +29,23 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  window.createLicense = async () => {
-    const licenseKey = crypto.randomUUID().toUpperCase();
-
+window.createLicense = async () => {
+  const licenseKey = crypto.randomUUID().toUpperCase();
+  try {
     await setDoc(doc(db, "licenses", licenseKey), {
       active: true,
       maxDevices: 5,
+      devices: {},
       createdAt: serverTimestamp()
     });
-
+    document.getElementById("out").innerText = "License key:\n" + licenseKey;
+  } catch(err) {
     document.getElementById("out").innerText =
-      "License key:\n" + licenseKey;
-  };
+      "Error creating license:\n" + err.message;
+    console.error(err);
+  }
+};
+
 </script>
 
 </body>
