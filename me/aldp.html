@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>License Generator</title>
+</head>
+<body>
+
+<button onclick="createLicense()">Create License</button>
+<p id="out"></p>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",
+  authDomain: "stable-synapse-241016.firebaseapp.com",
+  databaseURL: "https://stable-synapse-241016-default-rtdb.firebaseio.com",
+  projectId: "stable-synapse-241016",
+  storageBucket: "stable-synapse-241016.firebasestorage.app",
+  messagingSenderId: "311188310788",
+  appId: "1:311188310788:web:888512a24236ba39c45e51",
+  measurementId: "G-SY83EZT9J1"
+};
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+window.createLicense = async () => {
+  const licenseKey = crypto.randomUUID().toUpperCase();
+  try {
+    await setDoc(doc(db, "licenses", licenseKey), {
+      active: true,
+      maxDevices: 5,
+      devices: {},
+      createdAt: serverTimestamp()
+    });
+    document.getElementById("out").innerText = "License key:\n" + licenseKey;
+  } catch(err) {
+    document.getElementById("out").innerText =
+      "Error creating license:\n" + err.message;
+    console.error(err);
+  }
+};
+
+</script>
+
+</body>
+</html>
