@@ -26,18 +26,23 @@ self.addEventListener("activate", e => {
   self.clients.claim();
 });
 
-self.addEventListener("fetch", e => {
+self.addEventListener('fetch', e => {
+  const req = e.request;
+
+  // Skip POST, PUT, DELETE, etc.
+  if (req.method !== 'GET') {
+    return; // just let network handle it
+  }
+
   e.respondWith(
     caches.open(CACHE_NAME).then(cache =>
-      cache.match(e.request).then(res => {
-        return (
-          res ||
-          fetch(e.request).then(netRes => {
-            cache.put(e.request, netRes.clone());
-            return netRes;
-          })
-        );
+      cache.match(req).then(res => {
+        return res || fetch(req).then(response => {
+          cache.put(req, response.clone());
+          return response;
+        });
       })
     )
   );
 });
+
