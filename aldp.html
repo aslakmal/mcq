@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>License Generator</title>
+</head>
+<body>
+
+<button onclick="createLicense()">Create License</button>
+<p id="out"></p>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.createLicense = async () => {
+    const licenseKey = crypto.randomUUID().toUpperCase();
+
+    await setDoc(doc(db, "licenses", licenseKey), {
+      active: true,
+      maxDevices: 5,
+      createdAt: serverTimestamp()
+    });
+
+    document.getElementById("out").innerText =
+      "License key:\n" + licenseKey;
+  };
+</script>
+
+</body>
+</html>
