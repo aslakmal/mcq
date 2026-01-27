@@ -31,6 +31,7 @@
 
 window.createLicense = async () => {
   const licenseKey = crypto.randomUUID().toUpperCase();
+  console.log(licenseKey)
   try {
     await setDoc(doc(db, "licenses", licenseKey), {
       active: true,
