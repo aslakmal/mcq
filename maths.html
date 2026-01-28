@@ -366,6 +366,96 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
   </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        databaseURL: "https://stable-synapse-241016-default-rtdb.firebaseio.com",
+        projectId: "stable-synapse-241016",
+        /* Add your other config fields here */
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    async function runGatekeeper() {
+        const msg = document.getElementById("msg");
+        
+        // 1. Check if already running as PWA
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        
+        // 2. Check LocalStorage for previous validation
+        const isVerified = localStorage.getItem("maths_verified") === "true";
+
+        if (isPWA || isVerified) {
+            showApp();
+            return;
+        }
+
+        // 3. Not a PWA + Not verified: Check URL for Key
+        const urlParams = new URLSearchParams(window.location.search);
+        const licenseKey = urlParams.get('key');
+
+        if (!licenseKey) {
+            msg.innerHTML = '<span class="error">Invalid Access. Please use your unique installation link.</span>';
+            return;
+        }
+
+        // 4. Handle Device ID
+        let deviceId = localStorage.getItem("pwa_device_id");
+        if (!deviceId) {
+            deviceId = "DEV-" + crypto.randomUUID().substring(0, 8).toUpperCase();
+            localStorage.setItem("pwa_device_id", deviceId);
+        }
+
+        try {
+            const licenseRef = ref(db, `licenses/${licenseKey}`);
+            const snapshot = await get(licenseRef);
+
+            if (!snapshot.exists()) {
+                msg.innerHTML = '<span class="error">License Key Not Found!</span>';
+                return;
+            }
+
+            const data = snapshot.val();
+            const devices = data.devices || {};
+            
+            // Check if this specific device is already in the list
+            if (devices[deviceId]) {
+                grantAccess();
+            } else if (Object.keys(devices).length < 5) {
+                // New device, but space is available
+                await set(ref(db, `licenses/${licenseKey}/devices/${deviceId}`), {
+                    added: Date.now()
+                });
+                grantAccess();
+            } else {
+                msg.innerHTML = '<span class="error">Limit Reached! This key is already used on 5 devices.</span>';
+            }
+
+        } catch (err) {
+            msg.innerText = "Connection Error: " + err.message;
+        }
+    }
+
+    function grantAccess() {
+        localStorage.setItem("maths_verified", "true");
+        showApp();
+        // Register Service Worker now so they can install
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    }
+
+    function showApp() {
+        document.getElementById("gatekeeper").style.display = "none";
+        document.getElementById("app-content").style.display = "block";
+    }
+
+    runGatekeeper();
+    </script>
+
   <script src="js/graph.js"></script>
   <script src="js/line.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -373,6 +463,10 @@
 </head>
 
 <body>
+  <div id="gatekeeper">
+    <p id="msg">Loading..</p>
+</div>
+  <div id="app-content">
   <button id="menu-toggle">
     ☰
   </button>
@@ -386,11 +480,11 @@
         <span>සිද්ධාන්ත</span>
       </div>
     <ul id="tute-list">
-        <li data-file="triangle.html" class="active"><a href="triangle.html">ත්‍රිකෝණ ප්‍රමේයයන්</a></li>
-        <li data-file="circle.html"><a href="circle.html">වෘත්ත ප්‍රමේයයන්</a></li>
-        <li data-file="log.html"><a href="log.html">ලඝුගණක</a></li>
-        <li data-file="trigonometry.html"><a href="trigonometry.html">ත්‍රිකෝණමිතිය</a></li>
-        <li data-file="triangle.html"><a href="graph.html">ශ්‍රිත/ප්‍රස්ථාර</a></li>
+      <a href="triangle.html"> <li data-file="triangle.html" class="active"> ත්‍රිකෝණ ප්‍රමේයයන්</li></a>
+      <a href="circle.html"> <li data-file="circle.html"> වෘත්ත ප්‍රමේයයන්</li></a>
+      <a href="log.html"> <li data-file="log.html"> ලඝුගණක</li></a>
+      <a href="trigonometry.html"> <li data-file="trigonometry.html"> ත්‍රිකෝණමිතිය</li></a>
+      <a href="graph.html"> <li data-file="triangle.html"> ශ්‍රිත/ප්‍රස්ථාර</li></a>
      </ul>
 </li>
     <li>
@@ -501,6 +595,8 @@
   </div>
   <div class="number-line-target">
   </div>
+
+</div>
   <script src="js/home.js"></script>
 
 
