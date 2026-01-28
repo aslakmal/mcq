@@ -10,6 +10,9 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <meta name="theme-color" content="#162367">
   <style>
+    #app-content { display: none; }
+        #gatekeeper { padding: 20px; font-family: sans-serif; text-align: center; }
+        .error { color: red; font-weight: bold; }
     body {
       font-family: "Noto Sans Sinhala", sans-serif;
       line-height: 1.6;
@@ -371,10 +374,15 @@
     import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
-        databaseURL: "https://stable-synapse-241016-default-rtdb.firebaseio.com",
-        projectId: "stable-synapse-241016",
-        /* Add your other config fields here */
-    };
+  apiKey: "AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",
+  authDomain: "stable-synapse-241016.firebaseapp.com",
+  databaseURL: "https://stable-synapse-241016-default-rtdb.firebaseio.com",
+  projectId: "stable-synapse-241016",
+  storageBucket: "stable-synapse-241016.firebasestorage.app",
+  messagingSenderId: "311188310788",
+  appId: "1:311188310788:web:888512a24236ba39c45e51",
+  measurementId: "G-SY83EZT9J1"
+};
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
