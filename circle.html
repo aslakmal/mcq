@@ -567,14 +567,14 @@ body{    font-family: Arial, sans-serif;}
     let activeLine = null;
     let startX, startY, startLeft, startTop;
     
-    // ✅ 1. ADD ROTATE HANDLE TO ALL LINES
+    //  1. ADD ROTATE HANDLE TO ALL LINES
     document.querySelectorAll('.line').forEach(line => {
       const rotateHandle = document.createElement('div');
       rotateHandle.classList.add('rotate-handle');
       line.appendChild(rotateHandle);
     });
     
-    // ✅ 2. EVENT LISTENERS
+    //  2. EVENT LISTENERS
     document.querySelectorAll('.line').forEach(line => {
       const rotateHandle = line.querySelector('.rotate-handle');
     
