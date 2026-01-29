@@ -133,10 +133,12 @@ async function loadQuestions(jsonFilePath) {
     updateStatsDisplay();
 
   } catch (error) {
-    console.error("Detailed Error:", error); // This helps you debug in the F12 console
-    document.getElementById('questions-container').innerHTML =
-      `<p style="color:red;">Error loading questions: ${error.message}</p>
- <button onclick="loadQuestions('${jsonFilePath}')">Retry</button>`;
+    console.error("Detailed Error:", error); 
+
+ setTimeout(() => {
+  loadQuestions(jsonFilePath);
+}, 500);
+
   }
 }
 
