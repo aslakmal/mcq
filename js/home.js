@@ -120,7 +120,7 @@ async function loadQuestions(jsonFilePath) {
 
     allQuestions = await response.json();
     allQuestions.forEach(item => {
-      item.catID = +jsonFilePath.split('.')[0];
+      item.catID = +jsonFilePath;
     });
     // Ensure we actually got an array back
     if (!Array.isArray(allQuestions)) {
