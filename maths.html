@@ -353,21 +353,25 @@
   </style>
 
 
-  <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        packages: { '[+]': ['ams'] }
-      },
-      options: {
-        enableMenu: false
-      },
-      chtml: {
-        mtextInheritFont: true
-      }
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      packages: { '[+]': ['ams'] }
+    },
+    options: {
+      enableMenu: false
+    },
+    chtml: {
+      mtextInheritFont: true,
+      fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2'
+    },
+    loader: {
+      load: ['[tex]/ams']
     }
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+  };
+</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" crossorigin="anonymous">
   </script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
