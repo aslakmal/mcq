@@ -1,4 +1,4 @@
-const CACHE_NAME = "v3";
+const CACHE_NAME = "vi";
 
 // 1. Pre-cache core local assets
 // Note: Only include the main CDN entry points here. 
@@ -40,30 +40,28 @@ self.addEventListener("activate", (e) => {
 
 // Fetch: Cache-First Strategy (Ideal for libraries like MathJax)
 self.addEventListener("fetch", (e) => {
-  // We only handle GET requests
-  if (e.request.method !== "GET") return;
-
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      // 1. Return from cache if found
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      // 2. Otherwise, fetch from network
-      return fetch(e.request).then((networkResponse) => {
-        // Check if we received a valid response to cache
-        // status 0 is for "opaque" CDN responses
-        if (networkResponse && (networkResponse.status === 200 || networkResponse.status === 0)) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseToCache);
-          });
+    if (e.request.method !== "GET") return;
+  
+    // FIX: Only process http and https requests
+    if (!e.request.url.startsWith('http')) return;
+  
+    e.respondWith(
+      caches.match(e.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
         }
-        return networkResponse;
-      }).catch(() => {
-        // Optional: Return a custom offline page if both fail
-      });
-    })
-  );
-});
+  
+        return fetch(e.request).then((networkResponse) => {
+          if (networkResponse && (networkResponse.status === 200 || networkResponse.status === 0)) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(e.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        }).catch(() => {
+          // Fallback logic could go here
+        });
+      })
+    );
+  });
