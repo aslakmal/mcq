@@ -217,9 +217,14 @@ function showQuestion(question) {
     showExplanation(question.explanation, question.question);
   };
 
-  if (window.MathJax) {
-    MathJax.typesetClear();
-    MathJax.typesetPromise([container]);
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    if (typeof MathJax.typesetClear === 'function') {
+      MathJax.typesetClear([container]);
+    }
+  
+    MathJax.typesetPromise([container]).catch((err) => {
+      console.warn("MathJax typeset failed:", err.message);
+    });
   }
 }
 
