@@ -1,4 +1,4 @@
-const CACHE_NAME = "pw1";
+const CACHE_NAME = "1";
 const CORE_ASSETS = [
     "./",
     "./index.html",
