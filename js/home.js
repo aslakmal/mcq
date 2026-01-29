@@ -473,7 +473,7 @@ document.getElementById('mcq-list').addEventListener('click', (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const firstTopic = document.querySelector('#mcq-list li[data-file]');
-  if (firstTopic) loadQuestions(firstTopic.dataset.file.split('.')[0]);
+  if (firstTopic) loadQuestions(Math.floor(Math.random() * 40) + 1);
 
   var topicList = document.getElementById('mcq-list');
 
