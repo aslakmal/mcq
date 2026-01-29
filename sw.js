@@ -6,6 +6,7 @@ const CACHE_NAME = "vi";
 const CORE_ASSETS = [
   "./",
   "./index.html",
+  "./maths.html",
   ...Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`),
   "js/graph.js",
   "js/line.js",
