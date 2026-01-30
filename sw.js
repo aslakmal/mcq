@@ -15,16 +15,27 @@ const CORE_ASSETS = [
   "https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap"
 ];
 
-// Install: Cache core assets immediately
 self.addEventListener("install", (e) => {
   self.skipWaiting();
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      // We use map + cache.add instead of addAll so one failed 
-      // CDN request doesn't break the whole installation.
-      return Promise.allSettled(
-        CORE_ASSETS.map((url) => cache.add(url))
+    caches.open(CACHE_NAME).then(async (cache) => {
+      console.log("Caching core assets...");
+      
+      // We still want to be resilient, but we 'await' the process
+      const results = await Promise.allSettled(
+        CORE_ASSETS.map((url) => 
+          fetch(url).then((response) => {
+            if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+            return cache.put(url, response);
+          })
+        )
       );
+
+      // Check if critical items failed (Optional)
+      const failed = results.filter(r => r.status === 'rejected');
+      if (failed.length > 0) {
+        console.warn(`${failed.length} assets failed to cache, but SW installed anyway.`);
+      }
     })
   );
 });
