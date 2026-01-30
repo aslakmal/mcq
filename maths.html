@@ -350,6 +350,17 @@
 }
 #examChartWrapper,#topicChartWrapper{position: relative;}
 #tute-list a{color:#fff}
+/* If the app is running as a standalone PWA, hide the button */
+@media (display-mode: standalone) {
+  .open-btn {
+    display: none;
+  }
+}
+.open-btn{width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 7px;
+    left: 0;}
   </style>
 
 
@@ -611,7 +622,7 @@
 </div>
   <script src="js/home.js"></script>
 
-
+  <button class="open-btn"><a href="/maths.html" target="_blank">🚀 Open App</a></button>
 </body>
 
 </html>
