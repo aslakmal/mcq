@@ -1,336 +1,629 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="icons/icon-192.png">
-    <title>Digital Book</title>
+  <title>O/L ගණිතය</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <meta name="theme-color" content="#162367">
+  <style>
+    #app-content { display: none; }
+        #gatekeeper { padding: 20px; font-family: sans-serif; text-align: center; }
+        .error { color: red; font-weight: bold; }
+    body {
+      font-family: "Noto Sans Sinhala", sans-serif;
+      line-height: 1.6;
+      margin: 5px;
+      font-weight: 100;
+      color: #ffffff;
+      background: linear-gradient(0deg, #162367, #094741);
+      background-repeat: no-repeat;
+      background-size: cover;
+      min-height: 100vh;
+      font-size: 15px;
+      max-width: 800px;
+    margin: auto;
+    }
+    a{color: #FF9800;text-decoration: none;}
+    #menu-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1001;
+      background: #004d40;
+      ;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #fff
+    }
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#4f46e5">
+    .question-container {
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
 
-    <style>
-        /* -------- Reset -------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
-        }
+    .question {
+      margin-bottom: 10px;
+    }
 
-        /* -------- Background -------- */
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .options ul {
+      list-style-type: none;
+      padding: 0;
+    }
 
-        /* -------- Floating math symbols -------- */
-        .math-bg span {
-            position: absolute;
-            font-size: 3rem;
-            opacity: 0.1;
-            animation: float 12s linear infinite;
-        }
+    .options li {
+      min-width: 100px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      padding: 6px;
+      box-shadow: 0 2px 3px #00000036;
+      background-size: 200% 200%;
+      transition: background-position 0.3s ease;
+    }
+    .options li.selected{background: #23777d !important;}
 
-        .math-bg span:nth-child(1) {
-            top: 10%;
-            left: 15%;
-            animation-duration: 10s;
-        }
+    /* .options li:hover{background-position: 200% 0;}*/
+    #explanation-popup {
+      color: #ffffff;
+      background: linear-gradient(0deg, #162367, #094741);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .5s ease;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      margin: 0;
+      padding-top: 10px;
+      height: 100vh;
+    }
 
-        .math-bg span:nth-child(2) {
-            top: 70%;
-            left: 80%;
-            animation-duration: 14s;
-        }
-
-        .math-bg span:nth-child(3) {
-            top: 40%;
-            left: 60%;
-            animation-duration: 12s;
-        }
-
-        .math-bg span:nth-child(4) {
-            top: 80%;
-            left: 20%;
-            animation-duration: 16s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0);
-            }
-
-            50% {
-                transform: translateY(-40px) rotate(20deg);
-            }
-
-            100% {
-                transform: translateY(0) rotate(0);
-            }
-        }
-
-        /* -------- Card -------- */
-        .card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            animation: fadeIn 1.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        h1 {
-            font-size: 1.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        p {
-            opacity: 0.9;
-            margin-bottom: 1.8rem;
-        }
-
-        /* -------- Buttons -------- */
-        button {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-        }
-
-        .install-btn {
-            background: #22c55e;
-            color: #022c22;
-            margin-bottom: 12px;
-            display: none;
-        }
-
-        .open-btn {
-            background: white;
-            color: #4f46e5;
-        }
-
-        .footer {
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        :root {
-            --img-width: 300px;
-            --img-height: 533px; /* Standard 16:9 mobile ratio */
-            --gap: 20px;
-        }
-        a{text-decoration:none}
-/* The container limits the viewable area */
-.slider-container {
-            position: relative;
-            /* width for 3 images + gaps */
-            width: calc((var(--img-width) * 3) + (var(--gap) * 2));
-        }
-
-        /* Tablet View: Limit to 2 images */
-        @media (max-width: 1050px) {
-            .slider-container {
-                width: calc((var(--img-width) * 2) + var(--gap));
-            }
-        }
-
-        /* Mobile View: Limit to 1 image */
-        @media (max-width: 700px) {
-            .slider-container {
-                width: var(--img-width);
-            }
-            .nav-btn { display: none; } /* Hide buttons on mobile touch */
-        }
-
-        .screenshot-wrapper {
-            display: flex;
-            gap: var(--gap);
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            padding: 10px 0;
-        }
-
-        .screenshot-wrapper::-webkit-scrollbar {
-            display: none;
-        }
-
-        .screenshot-wrapper img {
-            width: var(--img-width);
-            height: 606px; /* Controls the vertical "largeness" */
-            flex-shrink: 0;
-            border-radius: 12px;
-            scroll-snap-align: start;
-            object-fit: cover; /* Prevents stretching */
-            transition: transform 0.3s ease;
-        }
-
-        .screenshot-wrapper img:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Navigation Buttons */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-size: 22px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .prev-btn { left: 0; }
-        .next-btn { right: 0; }
-        .nav-btn:active { scale: 0.95; }
-    </style>
-</head>
-
-<body>
-
-    <div class="math-bg">
-        <span>∑</span>
-        <span>π</span>
-        <span>√</span>
-        <span>×</span>
-    </div>
-
-    <div class="card">
-        <div class="logo">📘</div>
-        <h1>O/L Maths Digital book</h1>
-        <p>
-            Practice exams • Track progress • Learn offline
-            <br>Designed for Sri Lankan O/L students
-        </p>
-
-        <button class="install-btn" id="installBtn">📲 Install App</button>
-        <button class="open-btn"><a href="/maths.html" target="_blank">🚀 Open App</a></button>
-
-        <div class="footer">
-            Free • Offline • Fast
-        </div>
-    </div>
-    <div class="slider-container">
-        <button class="nav-btn prev-btn" onclick="slide('left')">❮</button>
-        
-        <div class="screenshot-wrapper" id="slider">
-            <img src="img/s1.jpg" alt="1">
-            <img src="img/s2.jpg" alt="2">
-            <img src="img/s3.jpg" alt="3">
-            <img src="img/s4.jpg" alt="4">
-            <img src="img/s5.jpg" alt="5">
-            <img src="img/s6.jpg" alt="6">
-            <img src="img/s7.jpg" alt="7">
-            <img src="img/s8.jpg" alt="8">
-            <img src="img/s9.jpg" alt="9">
-        </div>
-    
-        <button class="nav-btn next-btn" onclick="slide('right')">❯</button>
-    </div>
+    #explanation-popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
 
-    <script>
-        /* ---- Service Worker ---- */
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
 
-        /* ---- PWA Install ---- */
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
+    #explanation-text {
+      margin: 0 10px 30px;
+      overflow-y: scroll;
+      max-height: 70vh;
+    }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
-        });
+    .divider {
+      padding: 10px;
+    }
 
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            await deferredPrompt.userChoice;
-            deferredPrompt = null;
-        });
-        window.addEventListener('appinstalled', () => {
-            installBtn.style.display = 'none';
-            deferredPrompt = null;
-        });
+    #explanation-quiz {
+      margin: 40px 10px;
+    }
 
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            installBtn.disabled = true;
-            deferredPrompt.prompt();
-            await deferredPrompt.userChoice;
-            installBtn.disabled = false;
-        });
+    .explanation h4 {
+      margin-top: 0;
+    }
+
+    #questions-container {
+      max-width: 600px;
+      margin: auto;
+      padding-top: 100px;
+    }
+
+    .closebtn {
+      position: fixed;
+      right: 20px;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 25px;
+      cursor: pointer
+    }
+
+    #prvnxt {
+      margin: 20px auto;
+      width: max-content;
+      display: flex;
+      gap: 30px;
+    }
+
+    #prev-btn,
+    #next-btn {
+      padding: 20px;
+      border: none;
+      box-shadow: 0 6px 11px #00000036;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    #prev-btn {
+      background: transparent;
+    }
+
+    #next-btn {
+      background: transparent;
+    }
+
+    mjx-container[jax="CHTML"][display="true"] {
+      display: unset !important;
+    }
+
+    mjx-container {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+    }
+
+    #topic-list {
+      opacity: 0;
+      position: fixed;
+      top: 50px;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      background: #ffffff00;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+     /* transform: translateX(-100%);*/
+      /* Hide by moving left */
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 10px;
+      pointer-events: none;
+    }
+
+    #topic-list.open {
+     /* transform: translateX(0);
+      /* Slide into view */
+      opacity: 1;
+      pointer-events:auto;
+    }
+
+    .topic-list li,
+    .mcq-list li {
+      padding: 10px 15px;
+      background:linear-gradient(112deg, #009688, #009688, #43A047);
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .topic-list li ul li {
+      background: #293c89;
+    }
+
+    .mcq-list li:hover,
+    .mcq-list li.active {
+      background: #195953;
+    }
+
+    #topic-list li>ul {
+      margin-top: 0px;
+      padding: 0;
+    }
+
+    #topic-list ul,.submenu {
+      max-height: 0;
+      overflow: scroll;
+      transition: max-height 0.6s ease;
+    }
+
+    #topic-list li.open>ul {
+      max-height: 500px;
+    }
+    #topic-list li.open .submenu{max-height: 50px;}
+    #topic-list li {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #topic-list span {
+      padding: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+    #topic-list li div{display: flex;}
+    #topic-list li div img{width: 80px;}
+
+    #topic-list > li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+#topic-list.open > li {
+  opacity: 1;
+  transform: translateY(0);
+}
+#topic-list.open > li:nth-child(1) { transition-delay: 0.05s; }
+#topic-list.open > li:nth-child(2) { transition-delay: 0.2s; }
+#topic-list.open > li:nth-child(3) { transition-delay: 0.3s; }
+#topic-list.open > li:nth-child(4) { transition-delay: 0.4s; }
+#topic-list.open > li:nth-child(5) { transition-delay: 0.5s; }
+/* Add more if needed */
+
+/* Add more if needed */
 
 
-        /* ---- Open App ---- */
-        function openApp() {
-            window.location.href = "/maths.html";
-        }
-    </script>
+
+    #explanation-text::-webkit-scrollbar {
+      width: 4px;
+    }
+
+
+
+    #explanation-text::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    .longdivex {
+      float: right;
+      width: 80%;
+      line-height: 13px;
+      font-size: 10px;
+    }
+
+    .sadk {
+      position: relative;
+      margin-top: 25px;
+      width: 140px;
+      height: 50px;
+    }
+
+    .sadk .MathJax {
+      position: absolute !important;
+      right: 0;
+      top: 15px;
+    }
+
+    .longdivex p {
+      background: #1c5e7c;
+      width: fit-content;
+      padding: 5px;
+      border-radius: 0 5px 5px;
+      margin-bottom: 2px;
+    }
+
+    .graph-container {
+      background: #fff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .prime_divide>div {
+      display: flex;
+      line-height: 26px;
+      align-items: center;
+    }
+
+    .prime_divide>div:not(:last-child)>span:nth-child(2) {
+      padding: 2px 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .prime_divide>div>span:nth-child(2) {
+      min-width: 30px;
+    }
+
+    .prime_divide>div>span:nth-child(3) {
+      font-size: 10px;
+      line-height: 13px;
+    }
+#explain-btn{
+    padding: 20px;
+    border: none;
+    box-shadow: 0 6px 11px #00000036;
+    border-radius: 14px;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(112deg, #009688, #009688, #43A047);
+    margin: auto;
+    display: block;
+}
+
+#scores-panel{    padding-top: 100px;}
+#topicChart{margin-top:0 !important}
+
+.chart-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#examChartWrapper,#topicChartWrapper{position: relative;}
+#tute-list a{color:#fff}
+/* If the app is running as a standalone PWA, hide the button */
+@media (display-mode: standalone) {
+  .open-btn {
+    display: none;
+  }
+}
+.open-btn{width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 7px;
+    left: 0;
+    z-index: 99999;}
+  </style>
 
 
 <script>
-function slide(direction) {
-        const slider = document.getElementById('slider');
-        const step = 320; // 300px width + 20px gap
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      packages: { '[+]': ['ams'] }
+    },
+    options: {
+      enableMenu: false
+    },
+    chtml: {
+      mtextInheritFont: true,
+      fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2'
+    },
+    loader: {
+      load: ['[tex]/ams']
+    }
+  };
+</script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" crossorigin="anonymous">
+  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",
+  authDomain: "stable-synapse-241016.firebaseapp.com",
+  databaseURL: "https://stable-synapse-241016-default-rtdb.firebaseio.com",
+  projectId: "stable-synapse-241016",
+  storageBucket: "stable-synapse-241016.firebasestorage.app",
+  messagingSenderId: "311188310788",
+  appId: "1:311188310788:web:888512a24236ba39c45e51",
+  measurementId: "G-SY83EZT9J1"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    async function runGatekeeper() {
+        const msg = document.getElementById("msg");
         
-        if (direction === 'left') {
-            slider.scrollBy({ left: -step, behavior: 'smooth' });
-        } else {
-            slider.scrollBy({ left: step, behavior: 'smooth' });
+        // 1. Check if already running as PWA
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        
+        // 2. Check LocalStorage for previous validation
+        const isVerified = localStorage.getItem("maths_verified") === "true";
+
+        if (isPWA || isVerified) {
+            showApp();
+            return;
+        }
+
+        // 3. Not a PWA + Not verified: Check URL for Key
+        const urlParams = new URLSearchParams(window.location.search);
+        const licenseKey = urlParams.get('key');
+
+        if (!licenseKey) {
+            msg.innerHTML = '<span class="error">Invalid Access. Please use your unique installation link.</span>';
+            return;
+        }
+
+        // 4. Handle Device ID
+        let deviceId = localStorage.getItem("pwa_device_id");
+        if (!deviceId) {
+            deviceId = "DEV-" + crypto.randomUUID().substring(0, 8).toUpperCase();
+            localStorage.setItem("pwa_device_id", deviceId);
+        }
+
+        try {
+            const licenseRef = ref(db, `licenses/${licenseKey}`);
+            const snapshot = await get(licenseRef);
+
+            if (!snapshot.exists()) {
+                msg.innerHTML = '<span class="error">License Key Not Found!</span>';
+                return;
+            }
+
+            const data = snapshot.val();
+            const devices = data.devices || {};
+            
+            // Check if this specific device is already in the list
+            if (devices[deviceId]) {
+                grantAccess();
+            } else if (Object.keys(devices).length < 5) {
+                // New device, but space is available
+                await set(ref(db, `licenses/${licenseKey}/devices/${deviceId}`), {
+                    added: Date.now()
+                });
+                grantAccess();
+            } else {
+                msg.innerHTML = '<span class="error">Limit Reached! This key is already used on 5 devices.</span>';
+            }
+
+        } catch (err) {
+            msg.innerText = "Connection Error: " + err.message;
         }
     }
-</script>
-    
 
+    function grantAccess() {
+        localStorage.setItem("maths_verified", "true");
+        showApp();
+        // Register Service Worker now so they can install
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    }
+
+    function showApp() {
+        document.getElementById("gatekeeper").style.display = "none";
+        document.getElementById("app-content").style.display = "block";
+    }
+
+    runGatekeeper();
+    </script>
+
+  <script src="js/graph.js"></script>
+  <script src="js/line.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+  <div id="gatekeeper">
+    <p id="msg">Loading..</p>
+</div>
+  <div id="app-content">
+  <button id="menu-toggle">
+    ☰
+  </button>
+
+
+
+  <ul class="topic-list" id="topic-list">
+
+    <li>
+      <div><img src="img/on_your_mark.png" alt="On Your Mark" class="menu-icon">
+        <span>සිද්ධාන්ත</span>
+      </div>
+    <ul id="tute-list">
+      <a href="triangle.html"> <li data-file="triangle.html" class="active"> ත්‍රිකෝණ ප්‍රමේයයන්</li></a>
+      <a href="circle.html"> <li data-file="circle.html"> වෘත්ත ප්‍රමේයයන්</li></a>
+      <a href="log.html"> <li data-file="log.html"> ලඝුගණක</li></a>
+      <a href="trigonometry.html"> <li data-file="trigonometry.html"> ත්‍රිකෝණමිතිය</li></a>
+      <a href="graph.html"> <li data-file="triangle.html"> ශ්‍රිත/ප්‍රස්ථාර</li></a>
+     </ul>
+</li>
+    <li>
+      <div> <img src="img/get_set.png" alt="Get Set" class="menu-icon">
+        <span>ප්‍රශ්න/පිලිතුරු</span>
+      </div>
+      <ul class="mcq-list" id="mcq-list">
+        <li data-file="1.json" class="active">එකතු කිරීම් සහ අඩු කිරීම්</li>
+        <li data-file="2.json">ගුණ කිරීම</li>
+        <li data-file="3.json">බෙදීම</li>
+        <li data-file="4.json">ප්‍රථමක සාධක සෙවීම</li>
+        <li data-file="5.json">වර්ගමූල එකතු කිරීම හා අඩු කිරීම</li>
+        <li data-file="6.json">සමීකරණ</li>
+        <li data-file="7.json">අසමානතා 1</li>
+        <li data-file="8.json">අසමානතා 2</li>
+        <li data-file="9.json">අසමානතා 3</li>
+        <li data-file="10.json">සමගාමී සමීකරණ</li>
+        <li data-file="11.json">බහුපද ගුණ කිරීම</li>
+        <li data-file="12.json">කුඩාම පොදු ගුණාකාරය සෙවීම</li>
+        <li data-file="13.json">භාග එකතු කිරීම හා අඩු කිරීම</li>
+        <li data-file="14.json">භාග ගුණ කිරීම හා බෙදීම</li>
+        <li data-file="15.json">ද්වීපද ප්‍රකාශනයක සාධක සෙවීම</li>
+        <li data-file="16.json">භාග 1</li>
+        <li data-file="17.json">භාග 2</li>
+        <li data-file="18.json">ප්‍රතිශත 1 (සුලු පොලිය)</li>
+        <li data-file="19.json">ප්‍රතිශත 2 (වරිපනම් බදු)</li>
+        <li data-file="20.json">ප්‍රතිශත 3 (වැල් පොලී)</li>
+        <li data-file="21.json">ප්‍රතිශත 4 (හීන වන ශේශ ක්‍රමය)</li>
+        <li data-file="22.json">වීජීය පදවල කුඩාම පොදු ගුණාකාරය සෙවීම</li>
+        <li data-file="23.json">දර්ශක හා ලඝුගණක</li>
+        <li data-file="24.json">වීජීය සමීකරණ විසඳීම</li>
+        <li data-file="25.json">සාධකයක් සෙවීම</li>
+        <li data-file="26.json">ගුණෝන්තර ශ්‍රේඪි</li>
+        <li data-file="27.json">සම්භාවිතාව</li>
+        <li data-file="28.json">සිලින්ඩරයක පරිමාව</li>
+        <li data-file="29.json">සමීකරණ</li>
+        <li data-file="30.json">ලඝුගණක</li>
+        <li data-file="31.json">ත්‍රිපද වර්ගජ ප්‍රකාශනයක සාධක සෙවීම</li>
+        <li data-file="32.json">සමගාමී සමීකරණ විසඳීම</li>
+        <li data-file="33.json">ඛන්ඩාංක වලින් සමීකරණය සෙවීම</li>
+        <li data-file="34.json">අන්තඃඛණ්ඩය හා ඛණ්ඩාංක වලින් ප්‍රස්ථාරය සෙවීම</li>
+        <li data-file="35.json">ප්‍රස්ථාර මගින් අනුක්‍රමණය හා අන්තඃඛණ්ඩය සෙවීම</li>
+        <li data-file="36.json">ප්‍රස්ථාර මගින් සමීකරණය සෙවීම</li>
+        <li data-file="37.json">මිනිස් දින ගැටලු</li>
+        <li data-file="38.json">මධ්‍යන්‍යය(Mean)</li>
+        <li data-file="39.json">මධ්‍යස්ථය(Median)</li>
+        <li data-file="40.json">මාතය(mode)</li>
+        <li data-file="41.json">කොටස් හා ලාභාංශ</li>
+      </ul>
+
+    </li>
+    <li class="live_test">
+      <div> <img src="img/go.png" alt="Go" class="menu-icon">
+        <span>විභාග</span>
+      </div>
+    </li>
+
+    <li id="scores">
+      <div><img src="img/victory.png" alt="Victory" class="menu-icon">
+        <span>ප්‍රගති වාර්තාව</span>
+      </div>
+    </li>
+
+  </ul>
+  <h1></h1>
+  <p></p>
+
+
+<div id="tutes-panel">
+  <div id="questions-container">
+  </div>
+  <div id="prvnxt">
+    <button id="prev-btn">පෙර ප්‍රශ්නය</button>
+    <button id="next-btn">ඊළඟ ප්‍රශ්නය</button>
+
+  </div>
+  <button id="explain-btn">නිවැරදි පිලිතුර</button>
+</div>
+<div id="scores-panel" style="display:none;">
+  <p id="examscorehead">විභාග ලකුණු අනුව ප්‍රගතිය<br>(විභාග සඳහා <a href="#" class="live_test">මෙතනින්</a> පිවිසෙන්න)</p>
+  <div id="examChartWrapper">
+    <canvas id="examScoreChart"></canvas>
+    <div class="chart-empty" style="display:none;">
+      <p>No data available yet</p>
+      <button class="live_test btn">Start an Exam</button>
+    </div>
+  </div>
+  
+
+    <br><br>
+    <div>විභාග ලකුණු අනුව එක් එක් පාඩම් වල ප්‍රගතිය. <br> කෙටි තීරු වලින් ඇති පාඩම් නැවත බලා හැකියාව වර්දනය කිරීමට උත්සාහ කරන්න</div>
+    <div id="topicChartWrapper" style="height:1000px; overflow-y:auto;">
+    <canvas id="topicChart" style="margin-top:40px;"></canvas>
+    <div class="chart-empty" style="display:none;">
+      <p>No data available yet</p>
+      <button class="live_test btn">Start an Exam</button>
+    </div>
+  </div>
+  
+  </div>
+
+  <!-- Explanation popup -->
+  <div id="explanation-popup">
+    <button onclick="closePopup()" class="closebtn">&times;</button>
+    <p id="explanation-quiz"></p>
+    <p id="explanation-text"></p>
+
+  </div>
+  <div class="number-line-target">
+  </div>
+
+</div>
+  <script src="js/home.js"></script>
+
+  <button class="open-btn"><a href="/maths.html" target="_blank">🚀 Open App</a></button>
 </body>
 
 </html>
