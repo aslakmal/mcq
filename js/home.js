@@ -480,7 +480,21 @@ document.getElementById('mcq-list').addEventListener('click', (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const firstTopic = document.querySelector('#mcq-list li[data-file]');
-  if (firstTopic) loadQuestions(Math.floor(Math.random() * 40) + 1);
+  let randcat=Math.floor(Math.random() * 40) + 1
+  if (firstTopic) loadQuestions(randcat);
+
+  document.querySelectorAll("li").forEach(li => {
+    li.classList.remove("active");
+  });
+  
+  // Select the matching li using data-file
+  const activeLi = document.querySelector(
+    `li[data-file="${randcat}.json"]`
+  );
+  
+  if (activeLi) {
+    activeLi.classList.add("active");
+  }
 
   var topicList = document.getElementById('mcq-list');
 
