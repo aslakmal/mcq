@@ -624,7 +624,51 @@
 </div>
   <script src="js/home.js"></script>
 
-  <a href="/maths.html" target="_blank"><button class="open-btn">Open in App</button></a>
+  <button id="installBtn" class="open-btn">Open in App</button>
+
+  <script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+}    
+    /* ---- PWA Logic ---- */
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+// Check if already in standalone mode
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+// Initial Label Setup
+if (isStandalone) {
+    installBtn.textContent = 'Open in App';
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.textContent = 'Install App'; // Change text to Install
+});
+
+installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        // --- CASE 1: INSTALLING ---
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            installBtn.textContent = 'Open in App';
+        }
+        deferredPrompt = null;
+    } else {
+        // --- CASE 2: OPENING (The behavior you liked) ---
+        // window.open mimics target="_blank" and triggers the OS 'Open in App' intent
+        window.open('/maths.html', '_blank');
+    }
+});
+
+window.addEventListener('appinstalled', () => {
+    installBtn.textContent = 'Open in App';
+    deferredPrompt = null;
+});
+  </script>
 </body>
 
 </html>
