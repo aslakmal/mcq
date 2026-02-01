@@ -414,11 +414,11 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app
         <span>සිද්ධාන්ත</span>
       </div>
     <ul id="tute-list">
-      <a href="triangle.html"> <li data-file="triangle.html" class="active"> ත්‍රිකෝණ ප්‍රමේයයන්</li></a>
-      <a href="circle.html"> <li data-file="circle.html"> වෘත්ත ප්‍රමේයයන්</li></a>
-      <a href="log.html"> <li data-file="log.html"> ලඝුගණක</li></a>
-      <a href="trigonometry.html"> <li data-file="trigonometry.html"> ත්‍රිකෝණමිතිය</li></a>
-      <a href="graph.html"> <li data-file="triangle.html"> ශ්‍රිත/ප්‍රස්ථාර</li></a>
+      <a href="d4.html"> <li data-file="triangle.html" class="active"> ත්‍රිකෝණ ප්‍රමේයයන්</li></a>
+      <a href="d1.html"> <li data-file="circle.html"> වෘත්ත ප්‍රමේයයන්</li></a>
+      <a href="d3.html"> <li data-file="log.html"> ලඝුගණක</li></a>
+      <a href="d5.html"> <li data-file="trigonometry.html"> ත්‍රිකෝණමිතිය</li></a>
+      <a href="d2.html"> <li data-file="triangle.html"> ශ්‍රිත/ප්‍රස්ථාර</li></a>
      </ul>
 </li>
     <li>
@@ -532,7 +532,27 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app
 
 </div>
   <script src="js/home.js"></script>
-
+  <script>
+    // 1. Get the current URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const myKey = urlParams.get('key');
+  
+    // 2. If a key actually exists, attach it to the links
+    if (myKey) {
+      const links = document.querySelectorAll('#tute-list a');
+      
+      links.forEach(link => {
+        // Create a new URL object based on the link's href
+        const url = new URL(link.href, window.location.origin);
+        
+        // Add the key to the link's destination
+        url.searchParams.set('key', myKey);
+        
+        // Update the actual link on the page
+        link.href = url.toString();
+      });
+    }
+  </script>
 </body>
 
 </html>

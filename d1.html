@@ -190,6 +190,17 @@ body{    font-family: Arial, sans-serif;
   ">
   <span style="margin-right: 8px; font-weight: bold;">←</span> Back
 </button>
+<style>
+   #app-content { display: none; }
+  #gatekeeper { padding: 20px; font-family: sans-serif; text-align: center; }
+</style>
+<script type="module">
+  import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";import{getDatabase,ref,get,set}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";const firebaseConfig={apiKey:"AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",authDomain:"stable-synapse-241016.firebaseapp.com",databaseURL:"https://stable-synapse-241016-default-rtdb.firebaseio.com",projectId:"stable-synapse-241016",storageBucket:"stable-synapse-241016.firebasestorage.app",messagingSenderId:"311188310788",appId:"1:311188310788:web:888512a24236ba39c45e51",measurementId:"G-SY83EZT9J1"},app=initializeApp(firebaseConfig),db=getDatabase(app);async function runGatekeeper(){var a=document.getElementById("msg");window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone;if("true"===localStorage.getItem("maths_verified"))showApp();else{var s=new URLSearchParams(window.location.search).get("key");if(s){let e=localStorage.getItem("pwa_device_id");e||(e="DEV-"+crypto.randomUUID().substring(0,8).toUpperCase(),localStorage.setItem("pwa_device_id",e));try{var t,i=ref(db,"licenses/"+s),n=await get(i);n.exists()?(t=n.val().devices||{})[e]?grantAccess():Object.keys(t).length<5?(await set(ref(db,`licenses/${s}/devices/`+e),{added:Date.now()}),grantAccess()):a.innerHTML='<span class="error">Limit Reached! This key is already used on 5 devices.</span>':a.innerHTML='<span class="error">License Key Not Found!</span>'}catch(e){a.innerText="Connection Error: "+e.message}}else a.innerHTML='<span class="error">Invalid Access. Please use your unique installation link.</span>'}}function grantAccess(){localStorage.setItem("maths_verified","true"),showApp(),"serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js")}function showApp(){document.getElementById("gatekeeper").style.display="none",document.getElementById("app-content").style.display="block"}runGatekeeper();
+      </script>
+   <div id="gatekeeper">
+    <p id="msg">Loading..</p>
+</div>
+  <div id="app-content">    
   <div class="container">
   <h1>වෘත්ත ප්‍රමේයයන්</h1>
 <div class="center">
@@ -305,7 +316,8 @@ body{    font-family: Arial, sans-serif;
         </div>
       </div>
     </div>
-        <script> 
+  </div>
+  <script> 
       var equation=document.getElementById('eq')
       // Increased array sizes to accommodate more lines/angles
       const lines = [

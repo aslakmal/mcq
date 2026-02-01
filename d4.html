@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ත්‍රිකෝණ ප්‍රමේයයන්</title>
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 950px;
+    margin: auto;
+    }
+    .container {
+    padding: 15px;
+}
+    .center {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 20px;
+}
+    .diagram-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 20px 0;
+      background: transparent;
+    }
+
+    /* Triangle lines */
+    .line {
+      position: absolute;
+      height: 2px;
+      background: black;
+      transform-origin: left center;
+      width: 0;
+      transition: all 0.3s ease;
+    }
+
+    /* Angle styling (taken from circle code) */
+    .angle {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      height: 0;
+      transition: all 0.6s ease;
+    }
+
+    .angle-text {
+      position: absolute;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 15;
+      color: red;
+    }
+
+    .angle-arc {
+      position: absolute;
+      border: 2px solid black;
+      border-radius: 50%;
+      box-sizing: border-box;
+      border-color: black black transparent transparent;
+    }
+
+    /* Theorem list */
+    .theorem-list-container {
+      width: 90%;
+      max-width: 500px;
+      margin-bottom: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: auto;
+      height: 300px;
+    }
+
+    .theorem-item {
+      border-bottom: 1px solid #eee;
+    }
+
+    .theorem-item:last-child {
+      border-bottom: none;
+    }
+
+    .theorem-title {
+      cursor: pointer;
+      padding: 12px 15px;
+      background-color: #f8f8f8;
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.2s ease;
+    }
+
+    .theorem-title:hover {
+      background-color: #eef;
+    }
+
+    .theorem-title.active {
+      background-color: #03A9F4;
+      color: #fff;
+    }
+
+    .dropdown-icon {
+      font-size: 0.8em;
+      transition: transform 0.3s ease;
+      margin-left: 10px;
+    }
+
+    .theorem-title.active .dropdown-icon {
+      transform: rotate(90deg);
+    }
+
+    .theorem-description {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+      padding: 0 15px;
+      border-left: 4px solid #03A9F4;
+      color: #555;
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    .theorem-description.active {
+      max-height: 200px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    #eq {
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    .esymbol,
+    .asymbol {
+      display: none;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <button 
+  onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+  onmouseover="this.style.backgroundColor='#e0e0e0'" 
+  onmouseout="this.style.backgroundColor='#f8f9fa'"
+  style="
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    outline: none;
+    height:auto;width:auto;
+    margin:5px
+  ">
+  <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+</button>
+<style>
+  #app-content { display: none; }
+ #gatekeeper { padding: 20px; font-family: sans-serif; text-align: center; }
+</style>
+<script type="module">
+ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";import{getDatabase,ref,get,set}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";const firebaseConfig={apiKey:"AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",authDomain:"stable-synapse-241016.firebaseapp.com",databaseURL:"https://stable-synapse-241016-default-rtdb.firebaseio.com",projectId:"stable-synapse-241016",storageBucket:"stable-synapse-241016.firebasestorage.app",messagingSenderId:"311188310788",appId:"1:311188310788:web:888512a24236ba39c45e51",measurementId:"G-SY83EZT9J1"},app=initializeApp(firebaseConfig),db=getDatabase(app);async function runGatekeeper(){var a=document.getElementById("msg");window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone;if("true"===localStorage.getItem("maths_verified"))showApp();else{var s=new URLSearchParams(window.location.search).get("key");if(s){let e=localStorage.getItem("pwa_device_id");e||(e="DEV-"+crypto.randomUUID().substring(0,8).toUpperCase(),localStorage.setItem("pwa_device_id",e));try{var t,i=ref(db,"licenses/"+s),n=await get(i);n.exists()?(t=n.val().devices||{})[e]?grantAccess():Object.keys(t).length<5?(await set(ref(db,`licenses/${s}/devices/`+e),{added:Date.now()}),grantAccess()):a.innerHTML='<span class="error">Limit Reached! This key is already used on 5 devices.</span>':a.innerHTML='<span class="error">License Key Not Found!</span>'}catch(e){a.innerText="Connection Error: "+e.message}}else a.innerHTML='<span class="error">Invalid Access. Please use your unique installation link.</span>'}}function grantAccess(){localStorage.setItem("maths_verified","true"),showApp(),"serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js")}function showApp(){document.getElementById("gatekeeper").style.display="none",document.getElementById("app-content").style.display="block"}runGatekeeper();
+     </script>
+  <div id="gatekeeper">
+   <p id="msg">Loading..</p>
+</div>
+ <div id="app-content">  
+  <div class="container">
+  <h1>ත්‍රිකෝණ ප්‍රමේයයන්</h1>
+<div class="center">
+
+  <div class="diagram-container">
+    <!-- Triangle Lines -->
+    <div class="line" id="line1"></div>
+    <div class="line" id="line2"></div>
+    <div class="line" id="line3"></div>
+    <div class="line" id="line4"></div>
+    <div class="line" id="line5"></div>
+    <div class="line" id="line6"></div>
+
+    <!-- Angles with Arcs -->
+    <div class="angle" id="angleA">
+      <div class="angle-arc" id="arcA"></div>
+      <span class="angle-text" id="textA"></span>
+    </div>
+    <div class="angle" id="angleB">
+      <div class="angle-arc" id="arcB"></div>
+      <span class="angle-text" id="textB"></span>
+    </div>
+    <div class="angle" id="angleC">
+      <div class="angle-arc" id="arcC"></div>
+      <span class="angle-text" id="textC"></span>
+    </div>
+    <div class="esymbol" id="es1">&#8739;</div>
+    <div class="esymbol" id="es2">&#8739;</div>
+    <div class="esymbol" id="es3">&#8214;</div>
+    <div class="esymbol" id="es4">&#8214;</div>
+    <div class="esymbol" id="es5">&#8801;</div>
+    <div class="esymbol" id="es6">&#8801;</div>
+
+    <div class="asymbol" id="as1">></div>
+    <div class="asymbol" id="as2">></div>
+
+  </div>
+
+  <b id="eq"></b>
+
+  <!-- Theorem list -->
+  <div class="theorem-list-container">
+    <div class="theorem-item">
+      <div class="theorem-title" data-theorem="theorem1">
+        1. ත්‍රිකෝණයේ කෝණවල එකතුව පිළිබඳ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+      </div>
+      <div class="theorem-description">
+        <p>ත්‍රිකෝණයක අභ්‍යන්තර කෝණ තුනේ එකතුව සෑම විටම 180° වේ.</p>
+        <p>A + B + C = 180°</p>
+      </div>
+    </div>
+    <div class="theorem-item">
+      <div class="theorem-title" data-theorem="theorem2">
+        2. බාහිර කෝණය පිළිබඳ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+      </div>
+      <div class="theorem-description">
+        <p>ත්‍රිකෝණයක බාහිර කෝණයක් එහි ප්‍රතිවිරුද්ධ අභ්‍යන්තර කෝණ දෙකේ එකතුවට සමාන වේ.</p>
+      </div>
+    </div>
+    <div class="theorem-item">
+      <div class="theorem-title" data-theorem="theorem3">
+        3. සමද්විපාද ත්‍රිකෝණ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+      </div>
+      <div class="theorem-description">
+        <p>සමද්විපාද ත්‍රිකෝණයක, සමාන පාදවලට සම්මුඛ (ඉදිරියෙන් ඇති) කෝණ එකිනෙකට සමාන වේ.</p>
+      </div>
+    </div>
+    <div class="theorem-item">
+      <div class="theorem-title" data-theorem="theorem4">
+        4. සමපාද ත්‍රිකෝණයේ ගුණාංග <span class="dropdown-icon">▶</span>
+      </div>
+      <div class="theorem-description">
+        <p>සියලුම පැති සමාන වන අතර, සියලුම කෝණ 60° වේ.</p>
+      </div>
+    </div>
+    <div class="theorem-item">
+      <div class="theorem-title" data-theorem="theorem5">
+        5. මැදි ලක්ෂ්‍ය ප්‍රමේයය <span class="dropdown-icon">▶</span>
+      </div>
+      <div class="theorem-description">
+        <p>ත්‍රිකෝණයක පැති දෙකක මැදි ලක්ෂ්‍ය සම්බන්ධ කරන රේඛාව පාදයට සමාන්තර වන අතර එහි දිගෙන් අඩක් වේ.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+  <script>
+    const lines = [
+      document.getElementById('line1'),
+      document.getElementById('line2'),
+      document.getElementById('line3'),
+      document.getElementById('line4'),
+      document.getElementById('line5'),
+      document.getElementById('line6')
+    ];
+
+    const angles = {
+      A: document.getElementById('angleA'),
+      B: document.getElementById('angleB'),
+      C: document.getElementById('angleC')
+    };
+
+    const arcs = {
+      A: document.getElementById('arcA'),
+      B: document.getElementById('arcB'),
+      C: document.getElementById('arcC')
+    };
+
+    const texts = {
+      A: document.getElementById('textA'),
+      B: document.getElementById('textB'),
+      C: document.getElementById('textC')
+    };
+    const esymbl = [
+      document.getElementById('es1'),
+      document.getElementById('es2'),
+      document.getElementById('es3'),
+      document.getElementById('es4'),
+      document.getElementById('es5'),
+      document.getElementById('es6')
+    ];
+    const asymbl = [
+      document.getElementById('as1'),
+      document.getElementById('as2'),
+    ];
+
+    const eq = document.getElementById('eq');
+
+    function drawTriangle(theorem) {
+      // reset
+      document.querySelectorAll('.angle, .line').forEach(el => { el.style.width = '0'; });
+      document.querySelectorAll('.esymbol,.asymbol').forEach(el => { el.style.display = 'none'; });
+      Object.values(texts).forEach(t => t.textContent = '');
+      eq.innerHTML = '';
+
+
+      if (theorem === 'theorem1') {
+        lines[0].style.cssText = "width: 150px; top: 200px; left: 50px; transform: rotate(0deg);";
+        lines[1].style.cssText = "width: 160px;top: 200px;left: 50px;transform: rotate(-62deg);";
+        lines[2].style.cssText = "width: 160px;top: 200px;left: 200px;transform: rotate(-118deg);";
+
+        angles.A.style.cssText = "top: 170px;left: 51px;width: 40px;height: 40px;";
+        angles.B.style.cssText = "top: 168px;left: 159px;width: 40px;height: 40px;";
+        angles.C.style.cssText = "top: 66px;left: 104px;width: 40px;height: 40px;";
+
+        arcs.A.style.cssText = "width: 30px;height: 30px;transform: rotate(4deg);top: 5px;left: 5px;";
+        arcs.B.style.cssText = "width: 30px;height: 30px;transform: rotate(-102deg);top: 5px;left: 5px;";
+        arcs.C.style.cssText = "width: 30px;height: 30px;transform: rotate(127deg);top: 5px;left: 5px;";
+
+        texts.A.textContent = "A";
+        texts.B.textContent = "C";
+        texts.C.textContent = "B";
+
+       // eq.innerHTML = "A + B + C = 180°";
+      }
+
+      if (theorem === 'theorem2') {
+        lines[0].style.cssText = "width: 150px; top: 200px; left: 50px; transform: rotate(0deg);";
+        lines[1].style.cssText = "width: 160px;top: 200px;left: 50px;transform: rotate(-62deg);";
+        lines[2].style.cssText = "width: 160px;top: 200px;left: 200px;transform: rotate(-118deg);";
+        lines[3].style.cssText = "width: 34px;top: 200px;left: 200px;transform: rotate(0deg);";
+        angles.A.style.cssText = "top: 170px;left: 51px;width: 40px;height: 40px;";
+        angles.B.style.cssText = "top: 171px;left: 191px;width: 40px;height: 40px;";
+        angles.C.style.cssText = "top: 66px;left: 104px;width: 40px;height: 40px;";
+
+        arcs.A.style.cssText = "width: 30px;height: 30px;transform: rotate(4deg);top: 5px;left: 5px;";
+        arcs.B.style.cssText = "width: 40px;height: 37px;transform: rotate(-16deg);top: 4px;left: -2px;";
+        arcs.C.style.cssText = "width: 30px;height: 30px;transform: rotate(127deg);top: 5px;left: 5px;";
+
+        texts.A.textContent = "A";
+        texts.B.textContent = "A+B";
+        texts.C.textContent = "B";
+
+      //  eq.innerHTML = "A + B = C";
+      }
+
+      if (theorem === 'theorem3') {
+        lines[0].style.cssText = "width: 150px; top: 200px; left: 50px; transform: rotate(0deg);";
+        lines[1].style.cssText = "width: 160px;top: 200px;left: 50px;transform: rotate(-62deg);";
+        lines[2].style.cssText = "width: 160px;top: 200px;left: 200px;transform: rotate(-118deg);";
+        lines[3].style.cssText = "width: 10px;top: 135px;left: 160px;transform: rotate(-23deg);";
+        lines[4].style.cssText = "width: 10px;top: 130px;left: 81px;transform: rotate(29deg);";
+
+        angles.A.style.cssText = "top: 170px;left: 51px;width: 40px;height: 40px;";
+        angles.B.style.cssText = "top: 168px;left: 159px;width: 40px;height: 40px;";
+
+        arcs.A.style.cssText = "width: 30px;height: 30px;transform: rotate(4deg);top: 5px;left: 5px;";
+        arcs.B.style.cssText = "width: 30px;height: 30px;transform: rotate(-102deg);top: 5px;left: 5px;";
+
+        texts.A.textContent = "A";
+        texts.B.textContent = "A";
+
+      }
+      if (theorem === 'theorem4') {
+        lines[0].style.cssText = "width: 150px; top: 200px; left: 50px; transform: rotate(0deg);";
+        lines[1].style.cssText = "width: 160px;top: 200px;left: 50px;transform: rotate(-62deg);";
+        lines[2].style.cssText = "width: 160px;top: 200px;left: 200px;transform: rotate(-118deg);";
+        lines[3].style.cssText = "width: 10px;top: 135px;left: 160px;transform: rotate(-23deg);";
+        lines[4].style.cssText = "width: 10px;top: 130px;left: 81px;transform: rotate(29deg);";
+        lines[5].style.cssText = "width: 10px;top: 195px;left: 125px;transform: rotate(90deg);";
+
+        angles.A.style.cssText = "top: 170px;left: 51px;width: 40px;height: 40px;";
+        angles.B.style.cssText = "top: 168px;left: 159px;width: 40px;height: 40px;";
+        angles.C.style.cssText = "top: 66px;left: 104px;width: 40px;height: 40px;";
+
+        arcs.A.style.cssText = "width: 30px;height: 30px;transform: rotate(4deg);top: 5px;left: 5px;";
+        arcs.B.style.cssText = "width: 30px;height: 30px;transform: rotate(-102deg);top: 5px;left: 5px;";
+        arcs.C.style.cssText = "width: 30px;height: 30px;transform: rotate(127deg);top: 5px;left: 5px;";
+
+        texts.A.textContent = "60°";
+        texts.B.textContent = "60°";
+        texts.C.textContent = "60°";
+
+
+      }
+      if (theorem === 'theorem5') {
+        lines[0].style.cssText = "width: 150px; top: 200px; left: 50px; transform: rotate(0deg);";
+        lines[1].style.cssText = "width: 160px;top: 200px;left: 50px;transform: rotate(-62deg);";
+        lines[2].style.cssText = "width: 160px;top: 200px;left: 200px;transform: rotate(-118deg);";
+        lines[3].style.cssText = "width: 80px;top: 135px;left: 85px;transform: rotate(0deg);";
+
+        esymbl[0].style.cssText = "display: block;top: 95px;left: 99px;transform: rotate(-60deg);"
+        esymbl[1].style.cssText = "display: block;top: 95px;left: 147px;transform: rotate(-116deg);"
+        esymbl[2].style.cssText = "display: block;top: 150px;left: 70px;transform: rotate(-60deg);"
+        esymbl[3].style.cssText = "display: block;top: 150px;left: 174px;transform: rotate(60deg);"
+
+        asymbl[0].style.cssText = "display: block;top: 127px;left: 120px;transform: rotate(0deg);"
+        asymbl[1].style.cssText = "display: block;top: 192px;left: 120px;transform: rotate(0deg);"
+
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      drawTriangle('theorem1');
+
+      const theoremTitles = document.querySelectorAll('.theorem-title');
+      let activeTheorem = null;
+
+      theoremTitles.forEach(title => {
+        title.addEventListener('click', () => {
+          const theoremValue = title.dataset.theorem;
+          const description = title.nextElementSibling;
+
+          if (activeTheorem && activeTheorem !== title) {
+            activeTheorem.classList.remove('active');
+            activeTheorem.nextElementSibling.classList.remove('active');
+          }
+
+          title.classList.toggle('active');
+          description.classList.toggle('active');
+
+          drawTriangle(theoremValue);
+          activeTheorem = title.classList.contains('active') ? title : null;
+        });
+      });
+
+      if (theoremTitles.length > 0) {
+        theoremTitles[0].click();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

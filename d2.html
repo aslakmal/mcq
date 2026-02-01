@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ශ්‍රිත</title>
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <style>
+        body {
+            align-items: center;
+            justify-content: center;
+            padding: 0; /* p-4 */
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            max-width: 950px;
+    margin: auto;
+        }
+
+        .main-container {
+            background-color: #ffffff; 
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+            padding: 5px;
+            max-width: 36rem; 
+            width: 100%;
+            margin: auto;
+        }
+
+        @media (min-width: 768px) { /* md: */
+            .main-container {
+                padding: 2rem; /* md:p-8 */
+            }
+        }
+
+        /* Heading Styles */
+        .graph-heading {
+            font-size: 2.25rem; /* text-3xl */
+            font-weight: 800; /* font-extrabold */
+            text-align: center; /* text-center */
+            color: #1f2937; /* text-gray-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        /* Responsive heading for medium screens */
+        @media (min-width: 768px) { /* md: */
+            .graph-heading {
+                font-size: 2.5rem; /* md:text-4xl */
+            }
+        }
+
+        /* Blue text within heading */
+        .text-blue {
+            color: #2563eb; /* text-blue-600 */
+        }
+
+        /* Input and Button Container */
+        .input-button-container {
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        /* Responsive input/button layout for small screens */
+        @media (min-width: 640px) { /* sm: */
+            .input-button-container {
+                flex-direction: row; /* sm:flex-row */
+                gap: 1rem; /* sm:space-x-4 */
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Label Styles */
+        .input-label {
+            color: #374151; /* text-gray-700 */
+            font-weight: 600; /* font-semibold */
+            font-size: 1.125rem; /* text-lg */
+        }
+
+        /* Responsive label width for small screens */
+        @media (min-width: 640px) { /* sm: */
+            .input-label {
+                width: auto; /* sm:w-auto */
+            }
+        }
+
+        /* Input Field Styles */
+        .equation-input {
+            flex-grow: 1; /* flex-grow */
+            padding: 0.75rem; /* p-3 */
+            border: 2px solid #d1d5db; /* border-2 border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            outline: none; /* focus:outline-none */
+            font-size: 1.125rem; /* text-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            width: 100%; /* For smaller screens */
+        }
+
+        /* Input field focus styles */
+        .equation-input:focus {
+            border-color: #3b82f6; /* focus:ring-2 focus:ring-blue-500 */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* focus:ring-2 focus:ring-blue-500 */
+        }
+
+        /* Button Styles */
+        .update-button {
+            padding: 0.75rem 1.5rem;
+    background: linear-gradient(45deg, #9C27B0, #3F51B5);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: none;}
+
+        /* Button hover styles */
+        .update-button:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+            transform: scale(1.05); /* hover:scale-105 */
+        }
+
+        /* SVG Container Styles */
+        .graph-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%; /* Makes the container square (aspect-w-1 aspect-h-1) */
+            max-width: 32rem; /* max-w-lg */
+            margin-left: auto; /* mx-auto */
+            margin-right: auto; /* mx-auto */
+        }
+
+        /* SVG Element Styles */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* w-full */
+            height: 100%; /* h-full */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #fff; /* light background for graph area */
+        }
+
+        /* Error Message Styles */
+        .error-message {
+            color: #dc2626; /* text-red-600 */
+            text-align: center; /* text-center */
+            margin-top: 1rem; /* mt-4 */
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Responsive error message font size */
+        @media (min-width: 768px) { /* md: */
+            .error-message {
+                font-size: 1rem; /* md:text-base */
+            }
+        }
+
+        /* Information Text Styles */
+        .info-text {
+            color: #4b5563; /* text-gray-600 */
+            text-align: center; /* text-center */
+            margin-top: 0.5rem; /* mt-2 */
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Responsive info text font size */
+        @media (min-width: 768px) { /* md: */
+            .info-text {
+                font-size: 1rem; /* md:text-base */
+            }
+        }
+
+        /* Shadow for the graph line */
+        .line-shadow {
+             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); /* shadow-lg custom */
+        }
+
+        /* Tooltip Styles */
+        #tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            pointer-events: none; /* Allows mouse events to pass through */
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        /* Highlight style for axis labels */
+        .highlight-axis-label {
+            font-weight: bold;
+            fill: #dc2121; /* A darker blue */
+            transition: fill 0.2s, font-weight 0.2s;
+        }
+
+
+
+        .equation-display {
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Times New Roman", serif;
+}
+
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+  max-width: 300px;
+  margin: auto;
+}
+
+.control {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+  max-width: 300px;
+    margin: auto;
+}
+
+.control label {
+  flex: 1; 
+}
+
+
+.control button {
+  width: 30px;
+  height: 30px;
+  display: flex;            /* flexbox inside button */
+  align-items: center;      /* vertical center */
+  justify-content: center;  /* horizontal center */
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0;
+  box-sizing: border-box;
+  background: #e6e6e6;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+}
+
+.control input {
+  width: 60px;
+  padding: 5px;
+  outline: none;
+  border: 1px solid #eee;
+}
+
+
+.input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  width: fit-content;
+}
+
+.toggle-box {
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center;     /* Vertical centering */
+
+  /* Set a fixed size */
+  width: 30px; 
+  height: 30px; 
+  
+  font-size: 18px;
+  cursor: pointer; /* Important since it's replacing a button */
+  border-radius: 4px;
+}
+
+/* 3. Input Styling (Minimal) */
+.input-container input {
+  padding: 5px;
+  width: 20px;
+  text-align: center;
+}
+.power-tabs {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0px 4px 8px 0px #00000014;
+}
+
+/* hide radios */
+.power-tabs input[type="radio"] {
+  display: none;
+}
+
+.power-tabs label {
+  flex: 1;
+  padding: 2px 5px;
+  text-align: center;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
+}
+
+/* active tab */
+.power-tabs input[type="radio"]:checked + label {
+  background: #007bff;
+  color: #fff;
+ }
+.btn-wrapper{
+    display: flex;
+    gap:2px;
+}
+.container{padding: 15px;}
+
+/* Container setup */
+.ldesc {
+    display: grid;
+    /* This creates a responsive grid: boxes will be at least 300px wide */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* The Feature Card */
+.ldesc>li {
+    background: #ffffff;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Hover effect to make it feel interactive */
+.ldesc>li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: #007bff;
+}
+
+/* Heading style inside the card */
+.ldesc>li h4 {
+    margin: 0 0 12px 0;
+    color: #007bff;
+    font-size: 1.25rem;
+    padding-bottom: 8px;
+}
+
+/* Text style (Sinhala fonts usually need a bit more line-height) */
+.ldesc>li {
+    line-height: 1.8;
+    color: #333;
+    font-size: 1rem;
+}
+.accordion {
+  list-style: none;
+  padding: 0;
+}
+
+.accordion li {
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.accordion h4 {
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.accordion h4::after {
+  content: '+'; /* Visual indicator */
+}
+
+.accordion li.active h4::after {
+  content: '-';
+}
+
+.lcontent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; /* The sliding effect */
+  background: white;
+}
+    </style>
+</head>
+<body class="">
+
+    <button 
+    onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+    onmouseover="this.style.backgroundColor='#e0e0e0'" 
+    onmouseout="this.style.backgroundColor='#f8f9fa'"
+    style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;
+      margin:5px;
+    ">
+    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+  </button>
+  <style>
+    #app-content { display: none; }
+   #gatekeeper { padding: 20px; font-family: sans-serif; text-align: center; }
+ </style>
+ <script type="module">
+   import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";import{getDatabase,ref,get,set}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";const firebaseConfig={apiKey:"AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",authDomain:"stable-synapse-241016.firebaseapp.com",databaseURL:"https://stable-synapse-241016-default-rtdb.firebaseio.com",projectId:"stable-synapse-241016",storageBucket:"stable-synapse-241016.firebasestorage.app",messagingSenderId:"311188310788",appId:"1:311188310788:web:888512a24236ba39c45e51",measurementId:"G-SY83EZT9J1"},app=initializeApp(firebaseConfig),db=getDatabase(app);async function runGatekeeper(){var a=document.getElementById("msg");window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone;if("true"===localStorage.getItem("maths_verified"))showApp();else{var s=new URLSearchParams(window.location.search).get("key");if(s){let e=localStorage.getItem("pwa_device_id");e||(e="DEV-"+crypto.randomUUID().substring(0,8).toUpperCase(),localStorage.setItem("pwa_device_id",e));try{var t,i=ref(db,"licenses/"+s),n=await get(i);n.exists()?(t=n.val().devices||{})[e]?grantAccess():Object.keys(t).length<5?(await set(ref(db,`licenses/${s}/devices/`+e),{added:Date.now()}),grantAccess()):a.innerHTML='<span class="error">Limit Reached! This key is already used on 5 devices.</span>':a.innerHTML='<span class="error">License Key Not Found!</span>'}catch(e){a.innerText="Connection Error: "+e.message}}else a.innerHTML='<span class="error">Invalid Access. Please use your unique installation link.</span>'}}function grantAccess(){localStorage.setItem("maths_verified","true"),showApp(),"serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js")}function showApp(){document.getElementById("gatekeeper").style.display="none",document.getElementById("app-content").style.display="block"}runGatekeeper();
+       </script>
+    <div id="gatekeeper">
+     <p id="msg">Loading..</p>
+ </div>
+   <div id="app-content">  
+    <div class="container">
+        <h1>ශ්‍රිත/ප්‍රස්ථාර</h1>
+        <ul class="accordion ldesc">
+            <li>
+                <h4>ශ්‍රිත/ප්‍රස්ථාර කියන්නේ මොනවද?</h4>
+                <div class="lcontent">
+                    <p>යම් දෙයක් (x) වෙනස් වීමට අනුරූපව තවත් දෙයක් (y) වෙනස් වෙන විදිය රූප සටහනකින් පෙන්වන එක තමා අපි ප්‍රස්තාර වලින් කරන්නේ.</p>
+                </div>
+            </li>
+        
+            <li>
+                <h4>සරල රේඛීය ප්‍රස්ථාර (y = mx + c)</h4>
+                <div class="lcontent">
+                    <strong>උදාහරණය: ටැක්සි ගාස්තුව</strong>
+                    <ul>
+                        <li>ටැක්සියට ගොඩවුණු ගමන් අය කරන අනිවාර්ය මුදල = රු. 100 (මේක <strong>c</strong>)</li>
+                        <li>යන හැම කිලෝමීටරයකටම එකතු වන මුදල = රු. 50 (මේක <strong>m</strong>)</li>
+                        <li>ඔයා ගිය මුළු දුර = <strong>x</strong></li>
+                    </ul>
+                    <p>
+                        <strong>y = 50x + 100</strong><br>
+                        මෙහි <strong>y</strong> කියන්නේ ඔයා ගෙවිය යුතු මුළු ගාස්තුවයි.
+                    </p>
+                </div>
+            </li>
+        
+            <li>
+                <h4>වර්ගජ ප්‍රස්ථාර (y = ax² + c)</h4>
+                <div class="lcontent">
+                    <strong>උදාහරණය: කාමරයකට ටයිල් ඇල්ලීම</strong>
+                    <p>හිතන්න ඔයාගේ ළඟ සමචතුරස්‍රාකාර කාමරයක් තියෙනවා. ඒ කාමරේ පැත්තක දිග <strong>x</strong> මීටර් කියලා ගමු.</p>
+                    <ul>
+                        <li>කාමරේ වර්ගඵලය = <strong>x²</strong></li>
+                        <li>එක් වර්ග මීටරයකට යන ටයිල් ප්‍රමාණය = <strong>a</strong></li>
+                        <li>අමතරව ගෙන එන ටයිල් ප්‍රමාණය = <strong>c</strong></li>
+                    </ul>
+                    <p>
+                        <strong>y = ax² + c</strong><br>
+                        එතකොට කාමරේ පැත්තක දිග අනුව කාමරේට ඕනෑ කරන මුළු ටයිල් ප්‍රමාණය <strong>(y)</strong> මේකෙන් හොයන්න පුළුවන්.
+                    </p>
+                </div>
+            </li>
+        </ul>
+    
+        <p>අපි මේ කතාකරපු m අනුක්‍රමණය ලෙසත් c අණ්තඃඛණ්ඩය ලෙසත් හඳුන්වනවා.
+            පහලින් ඔයාට පුලුවන් අනුක්‍රමණය හා අණ්තඃඛණ්ඩය අනුව ප්‍රස්තාරයක වෙනස් වීම පරීක්ශා කරන්න.</p>
+    </div>   
+    <div class="main-container">
+     
+
+        <div class="input-button-container">
+<div id="controls">
+    <div class="power-tabs">
+        <input type="radio" id="power1" name="power" value="1" checked>
+        <label for="power1">රේඛීය ප්‍රස්ථාර</label>
+      
+        <input type="radio" id="power2" name="power" value="2">
+        <label for="power2">වර්ගජ ප්‍රස්ථාර</label>
+      </div>
+      
+      
+      
+
+    <div id="equationDisplay" class="equation-display">y = 2x² + 3</div>
+
+  
+
+  
+
+        </div>
+
+        <!-- SVG Container for the Graph -->
+        <div class="graph-container">
+         
+        </div>
+        <div class="control">
+            <span>අනුක්‍රමණය:</span>
+        <div class="btn-wrapper">
+              <button class="scroll-btn left">←</button> 
+              <input type="number" id="coef" value="2" min="-10" max="10" readonly>
+              <button class="scroll-btn right">→</button>
+            </div>
+          </div>
+          
+          <div class="control">
+            <span>අණ්තඃඛණ්ඩය:</span>
+            <div class="btn-wrapper">
+            <button class="scroll-btn left">←</button> 
+            <input type="number" id="constant" value="1" min="-50" max="50" readonly>
+            <button class="scroll-btn right">→</button>
+        </div>
+          </div>
+        <p id="errorMessage" class="error-message hidden">
+     </p>
+
+        <p class="info-text">
+         </p>
+    </div>
+</div>
+    <script src="js/graph.js"></script>
+    <script>
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".scroll-btn");
+  if (!btn) return;
+
+  const wrapper = btn.closest(".btn-wrapper");
+  if (!wrapper) return;
+
+  const input = wrapper.querySelector('input[type="number"]');
+  if (!input) return;
+
+  const step = input.step ? Number(input.step) : 1;
+  const min = input.min !== "" ? Number(input.min) : -Infinity;
+  const max = input.max !== "" ? Number(input.max) : Infinity;
+
+  let value = Number(input.value) || 0;
+
+  if (btn.classList.contains("left")) {
+    value -= step;
+  } else {
+    value += step;
+  }
+
+  // clamp value
+  value = Math.max(min, Math.min(max, value));
+
+  input.value = value;
+
+  // 🔥 trigger same logic as manual typing
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+});
+
+
+           createGraphSVG('.graph-container');
+
+
+
+const graphLine = document.getElementById('graphLine');
+const dotsGroup = document.getElementById('dotsGroup');
+const errorMessage = document.getElementById('errorMessage');
+const graphSVG = document.getElementById('graphSVG'); 
+
+
+
+const coefInput   = document.getElementById("coef");
+const constInput  = document.getElementById("constant");
+const powerRadios = document.querySelectorAll("input[name='power']");
+const eqDisplay   = document.getElementById("equationDisplay");
+
+[coefInput, constInput].forEach(el => {
+el.addEventListener("input", renderEquation);
+});
+powerRadios.forEach(radio => {
+radio.addEventListener("change", renderEquation);
+});
+
+function renderEquation() {
+const coef = parseFloat(coefInput.value) || 0;
+const constant = parseFloat(constInput.value) || 0;
+const power = document.querySelector("input[name='power']:checked").value;
+
+let displayEq = "y = ";
+let hasTerm = false;
+
+if (coef !== 0) {
+hasTerm = true;
+if (coef === 1) {
+displayEq += "x";
+} else if (coef === -1) {
+displayEq += "-x";
+} else {
+displayEq += coef + "x";
+}
+if (power === "2") displayEq += "²";
+}
+
+if (constant !== 0) {
+if (hasTerm) {
+displayEq += (constant > 0 ? " + " : " - ") + Math.abs(constant);
+} else {
+displayEq += constant;
+}
+hasTerm = true;
+}
+
+if (!hasTerm) {
+displayEq += "0";
+}
+
+eqDisplay.innerHTML = displayEq;
+
+// -------- Raw Equation String (parser) --------
+let rawEq = "y = ";
+if (coef !== 0) {
+rawEq += coef + "x";
+if (power === "2") rawEq += "^2";
+}
+if (constant !== 0) {
+if (coef !== 0) {
+rawEq += (constant > 0 ? "+" : "") + constant;
+} else {
+rawEq += constant;
+}
+}
+if (coef === 0 && constant === 0) {
+rawEq += "0";
+}
+
+updateGraph(rawEq);
+}
+
+
+
+// initial render
+renderEquation();
+document.querySelectorAll('.accordion > li').forEach(item => {
+  item.addEventListener('click', function(e) {
+    // Prevent the click from affecting parent menus if nested
+    e.stopPropagation();
+
+    const lcontent = this.querySelector(':scope > .lcontent');
+    if (!lcontent) return; // Exit if this specific LI has no content div
+
+    const isOpen = this.classList.contains('active');
+
+    // Close other top-level items
+    document.querySelectorAll('.accordion > li').forEach(el => {
+      el.classList.remove('active');
+      const childContent = el.querySelector(':scope > .lcontent');
+      if (childContent) childContent.style.maxHeight = null;
+    });
+
+    // Open this item
+    if (!isOpen) {
+      this.classList.add('active');
+      lcontent.style.maxHeight = lcontent.scrollHeight + "px";
+    }
+  });
+});
+    </script>
+</body>
+</html>

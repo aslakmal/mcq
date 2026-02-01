@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ත්‍රිකෝණමිතිය</title>
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <style>
+        :root {
+            --primary: #1e90ff;
+            --sec: #2ed573;
+            --acc: #ff4757;
+            --tan: #e67e22;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 10px;  max-width: 950px;
+    margin: auto;
+             }
+
+  
+
+
+
+        input[type="range"] {
+            cursor: pointer;
+            width: 150px;
+        }
+
+        button {
+    padding:5px 8px;
+    border-radius: 50%;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    width: 40px;
+    display: flex;
+    font-size: 18px;
+    height: 40px;
+    align-items: center;
+        }
+
+        .pause {
+            background: #e74c3c;
+        }
+
+        .play {
+            background: #27ae60;
+        }
+
+        #stage {
+            position: relative;
+            width: 95%;
+            max-width: 500px;
+            height: 300px;
+            margin: 50px 0;
+        }
+
+        .side {
+            position: absolute;
+            transition: none;
+        }
+
+        #adj {
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--acc);
+        }
+
+        #opp {
+            bottom: 0;
+            width: 5px;
+            background: var(--sec);
+        }
+
+        #hyp {
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--primary);
+            transform-origin: left bottom;
+        }
+
+
+        #inner-angle-label {
+            position: absolute;
+            bottom: 8px;
+            left: 45px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .label {
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        #calc-grid {
+            display: grid;
+            gap: 15px;
+            width: 95%;
+            max-width: 900px;
+        }
+
+        .card {
+            background: white;
+            padding: 0;
+            border-radius: 12px;
+            text-align: center;
+            border:none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 10px;
+        }
+        .control-group{margin: 10px;}
+        .math {
+            font-family: monospace;
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+
+   
+        @media (max-width: 600px) {
+            #stage {
+                height: 200px;
+            }
+
+            .label {
+                font-size: 10px;
+            }
+        }
+
+        .slider-wrapper {
+  position: relative;
+  width: 300px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+.slider-value {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* small arrow */
+.slider-value::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: contain;
+  color: white; /* icon color */
+}
+.play-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='6,4 20,12 6,20' fill='currentColor'/></svg>");
+}
+
+.pause-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='4' width='5' height='16' fill='currentColor'/><rect x='14' y='4' width='5' height='16' fill='black'/></svg>");
+}
+    </style>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                packages: { '[+]': ['ams'] }
+            },
+            options: {
+                enableMenu: false
+            },
+            chtml: {
+                mtextInheritFont: true
+            }
+        }
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+</head>
+
+<body>
+    <button 
+    onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+    onmouseover="this.style.backgroundColor='#e0e0e0'" 
+    onmouseout="this.style.backgroundColor='#f8f9fa'"
+    style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;margin:5px;
+    ">
+    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+  </button>
+  <style>
+    #app-content { display: none; }
+   #gatekeeper { padding: 20px; font-family: sans-serif; text-align: center; }
+ </style>
+ <script type="module">
+   import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";import{getDatabase,ref,get,set}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";const firebaseConfig={apiKey:"AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",authDomain:"stable-synapse-241016.firebaseapp.com",databaseURL:"https://stable-synapse-241016-default-rtdb.firebaseio.com",projectId:"stable-synapse-241016",storageBucket:"stable-synapse-241016.firebasestorage.app",messagingSenderId:"311188310788",appId:"1:311188310788:web:888512a24236ba39c45e51",measurementId:"G-SY83EZT9J1"},app=initializeApp(firebaseConfig),db=getDatabase(app);async function runGatekeeper(){var a=document.getElementById("msg");window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone;if("true"===localStorage.getItem("maths_verified"))showApp();else{var s=new URLSearchParams(window.location.search).get("key");if(s){let e=localStorage.getItem("pwa_device_id");e||(e="DEV-"+crypto.randomUUID().substring(0,8).toUpperCase(),localStorage.setItem("pwa_device_id",e));try{var t,i=ref(db,"licenses/"+s),n=await get(i);n.exists()?(t=n.val().devices||{})[e]?grantAccess():Object.keys(t).length<5?(await set(ref(db,`licenses/${s}/devices/`+e),{added:Date.now()}),grantAccess()):a.innerHTML='<span class="error">Limit Reached! This key is already used on 5 devices.</span>':a.innerHTML='<span class="error">License Key Not Found!</span>'}catch(e){a.innerText="Connection Error: "+e.message}}else a.innerHTML='<span class="error">Invalid Access. Please use your unique installation link.</span>'}}function grantAccess(){localStorage.setItem("maths_verified","true"),showApp(),"serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js")}function showApp(){document.getElementById("gatekeeper").style.display="none",document.getElementById("app-content").style.display="block"}runGatekeeper();
+       </script>
+    <div id="gatekeeper">
+     <p id="msg">Loading..</p>
+ </div>
+   <div id="app-content">  
+    <h3>දන්නවාද?</h3>
+    <p>මේ රූපයේ ගොඩනැගිල්ලේ උස(B-C) මනින්ඩ අපිට ඕනැ A-B දුර සහ Ò කෝණයේ අගය විතරයි.</p>
+    
+    <img src="img/trigono.jpeg" style="
+width: 400px;
+margin: auto;max-width: 100%;
+">
+    <p>මේක පැහැදිලි කරගන්න පහල තියන ත්‍රිකෝණයේ වෙනස් වීම බලන්න. ත්‍රිකෝණය කොච්චර විශාල උනත් පාද අතර අනුපාත වෙනස් වෙන්නේ
+        නෑ.
+        <i style="
+    padding: 12px;
+    display: block;
+">උදා:සම්මුඛ පාදයේ දිග බද්ධ පාදයේ දිගෙන් බෙදුවොත් හැම වෙලේම නියත අගයක්</i>
+      
+    </p>
+
+
+    <div id="stage">
+
+        <div id="inner-angle-label">θ = 30°</div>
+
+        <div id="adj" class="side"></div>
+        <div id="opp" class="side"></div>
+        <div id="hyp" class="side"></div>
+
+        <div id="l-adj" class="label" style="color: var(--acc);">බද්ධ</div>
+        <div id="l-opp" class="label" style="color: var(--sec);">සම්මුඛ</div>
+        <div id="l-hyp" class="label" style="color: var(--primary);">කර්ණය</div>
+    </div>
+    <div class="control-group">
+        <button id="toggleBtn" class="pause">
+            <span class="icon pause-icon"></span>
+          </button>
+    </div>
+    <div id="calc-grid">
+        <div class="card" style="border-color: var(--sec);">
+            <span id="sin-d">Sin 30°</span> =
+            <span class="math">\(\frac{\text{සම්මුඛ පාදය}}{\text{කර්ණය}}\)</span>
+            <span class="math" id="sin-m">...</span>
+            <span class="res" id="sin-r">=0.500</span>
+        </div>
+        <div class="card" style="border-color: var(--acc);">
+            <span id="cos-d">Cos 30°</span> =
+            <span class="math">\(\frac{\text{බද්ධ පාදය}}{\text{කර්ණය}}\)</span>
+            <span class="math" id="cos-m">...</span>
+            <span class="res" id="cos-r">=0.866</span>
+        </div>
+        <div class="card" style="border-color: var(--tan);">
+            <span id="tan-d">Tan 30°</span> =
+            <span class="math">\(\frac{\text{සම්මුඛ පාදය}}{\text{බද්ධ පාදය}}\)</span>
+            <span class="math" id="tan-m">...</span>
+            <span class="res" id="tan-r">=0.577</span>
+        </div>
+    </div>
+    <i>(මෙහි Sin,Cos,Tan යනු ත්‍රිකෝණයේ ඒ ඒ පාද දෙකේ අනුපාතයන් හඳුන්වන කෙටි නම් වේ)</i>
+    <p>  මේ නියතය වෙනස් වෙන්නෙ ත්‍රිකෝණයේ හැඩය වෙනස් උනොත් විතරයි.
+        කෝණය වෙනස් කරලා ඔයාටම ඒක බලන්න පුලුවන්.</p>
+    <div id="ui-layer">
+        <div class="control-group">
+        
+            <div class="slider-wrapper">
+                <input type="range" id="angleSlider" min="25" max="75" value="30">
+                <div class="slider-value" id="angle-display">30°</div>
+              </div>
+              
+        </div>
+       
+    </div>
+    
+
+    <p>ඉතින් මේ ත්‍රිකෝණය ඉහත ගොඩනැගිල්ලේ මුදුන දක්වාම විශාල උනා කියලා හිතන්න. එතකොට ඒ ත්‍රිකෝණයේ සම්මුඛ පාදය වෙන්නේ ගොඩනැගිල්ලේ උසයි.
+        අපි ඒ උස දැනගන්න අනුපාතයට බද්ද පාදයේ දිග ආදේශ කරන්න විතරයි තියෙන්නේ.</p>
+        <p>බද්ධ පාදයෙ එනම් ලමයා සහ ගොඩනැගිල්ල අතර දිග මීටර් 200ක් උනොත් සහ කෝණය 30 නම්. ගොඩනැගිල්ලේ උස \(x\) සෙවීමට </p>
+        <p>මෙතනදී අපිට වැදගත් බද්ධ පාදය හා සම්මුඛ පාදය නිසා එම අනුපාතය එනම් Tan ගන්න ඕනැ.Sin,Cos අනුපාත දෙකටම ත්‍රිකෝණයේ කර්ණයත් සම්බන්ධ නිසා ඒ දෙක ගන්න බෑ මේ ගැටලුවට</p> 
+         <div class="math-box">
+            $$\tan 30^\circ = \frac{\text{සම්මුඛ පාදය}}{\text{බද්ධ පාදය}}$$
+        </div>
+    
+      
+        
+        <div class="math-box">
+            $$\tan 30^\circ = \frac{x}{200}$$
+            
+           <p>\(\tan 30^\circ\) යනු ඉහල ඉගෙගත් ආකාරයට 0.577</p> 
+            $$0.577 = \frac{x}{200}$$
+            
+            $$x = 0.577 \times 200$$
+            
+            $$x = 115.4 \text{ m}$$
+        </div>
+    
+        <p><strong>පිළිතුර:</strong> සම්මුඛ පාදයේ දිග මීටර් 115.4 කි.</p>
+
+
+
+<h3>Sin අනුපාතය භාවිතයට උදාහරණයක්</h3>
+<div class="container">
+    <p>අංශක 65ක කෝණයකින් ඉහල ගිය සරුංගලයක් නූල මීටර් 100ක් නම් පොලොවේ ඉඳන් සරුංගලය කොච්චර උසකින් තියනවාද ගනනය කරමු.</p>
+    
+    
+    <div class="step">
+        $$\sin(\theta) = \frac{\text{සම්මුඛ පාදය}}{\text{කර්ණය}}$$
+    </div>
+
+    <p>අප සතු දත්ත:</p>
+    <ul>
+        <li>කර්ණය (සරුංගල් නූලේ දිග) = 100 m</li>
+        <li>කෝණය (\(\theta\)) = 65&deg;</li>
+        <li>සම්මුඛ පාදය (සරුංගලයේ උස) = \(h\)</li>
+    </ul>
+
+    <div class="step">
+        $$\sin 65^\circ = \frac{h}{100}$$
+        
+        <p>අගයන් ආදේශ කිරීම (\(\sin 65^\circ = 0.9063\)):</p>
+        
+        $$0.9063 = \frac{h}{100}$$
+        
+        $$h = 0.9063 \times 100$$
+        
+        $$h = 90.63 \text{ m}$$
+    </div>
+
+    <div class="result-box">
+        පිළිතුර: සරුංගලය පොළොවේ සිට මීටර් 90.63 ක උසකින් පවතී.
+    </div>
+</div>
+<h3>Cos අනුපාතය භාවිතයට උදාහරණයක්</h3>
+<div class="container">
+    <p>අඩි 10ක් පලල ස්තෝප්පුවට අංශක 25ක හැඩයට වහලයක් හදන්න ඕනැ කරන ශීට් වල දිග මනිමු</p>
+    
+    
+    <div class="step">
+        $$\cos(\theta) = \frac{\text{බද්ධ පාදය}}{\text{කර්ණය}}$$
+    </div>
+
+    <p>අප සතු දත්ත:</p>
+    <ul>
+        <li>බද්ධ පාදය (ස්තෝප්පුවේ පළල) = 10 ft</li>
+        <li>කෝණය (\(\theta\)) = 25&deg;</li>
+        <li>කර්ණය (ශීට් එකේ දිග) = \(x\)</li>
+    </ul>
+
+    <div class="step">
+        $$\cos 25^\circ = \frac{10}{x}$$
+        
+        <p>අගයන් ආදේශ කිරීම (\(\cos 25^\circ = 0.9063\)):</p>
+        
+        $$0.9063 = \frac{10}{x}$$
+        
+        $$x = \frac{10}{0.9063}$$
+        
+        $$x = 11.03 \text{ ft}$$
+    </div>
+
+    <div class="result-box">
+        පිළිතුර: අවශ්‍ය වන ශීට් එකක දිග දළ වශයෙන් අඩි 11.03 කි.
+    </div>
+</div>
+</div>
+    <script>
+        const slider = document.getElementById('angleSlider');
+        const angleDisp = document.getElementById('angle-display');
+        const innerAngleLabel = document.getElementById('inner-angle-label');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sind = document.getElementById('sin-d');
+        const cosd = document.getElementById('cos-d');
+        const tand = document.getElementById('tan-d');
+        
+
+        let angleDeg = 30;
+        let time = 0;
+        let isPaused = false;
+        let frame;
+
+        slider.addEventListener('input', (e) => {
+            angleDeg = parseInt(e.target.value);
+            angleDisp.innerText = angleDeg;
+            innerAngleLabel.innerText = `θ = ${angleDeg}°`;
+            sind.innerHTML=`Sin ${angleDeg}°`
+            cosd.innerHTML=`Cos ${angleDeg}°`
+            tand.innerHTML=`tan ${angleDeg}°`
+            if (isPaused) update();
+        });
+
+        toggleBtn.addEventListener('click', () => {
+    isPaused = !isPaused;
+
+    toggleBtn.innerHTML = `<span class="icon ${isPaused ? 'play-icon' : 'pause-icon'}"></span>`;
+    toggleBtn.className = isPaused ? "play" : "pause";
+
+    if (!isPaused) update();
+});
+
+
+        function update() {
+            const angleRad = angleDeg * (Math.PI / 180);
+
+            const baseSize = window.innerWidth < 600 ? 160 : 360;
+            const amp = window.innerWidth < 600 ? 50 : 100;
+
+            const hLen = baseSize + Math.sin(time) * amp;
+            const oLen = hLen * Math.sin(angleRad);
+            const aLen = hLen * Math.cos(angleRad);
+
+            // Update Sides
+            document.getElementById('adj').style.width = `${aLen}px`;
+            document.getElementById('opp').style.height = `${oLen}px`;
+            document.getElementById('opp').style.left = `${aLen}px`;
+            document.getElementById('hyp').style.width = `${hLen}px`;
+            document.getElementById('hyp').style.transform = `rotate(-${angleDeg}deg)`;
+
+            // Update Labels
+            setLabel('l-adj', aLen / 2 - 20, -30, `බද්ධ පාදය ${aLen.toFixed(1)} cm`);
+            setLabel('l-opp', aLen + 10, oLen / 2, `සම්මුක පාදය ${oLen.toFixed(1)} cm`);
+            setLabel('l-hyp', aLen / 3, oLen / 2 + 30, `කර්ණය ${hLen.toFixed(1)} cm`);
+
+            // Positioning inner theta label based on current scale
+            innerAngleLabel.style.left = `${Math.min(aLen * 0.2, 50)}px`;
+            innerAngleLabel.style.bottom = `${Math.min(oLen * 0.05, 15)}px`;
+
+            // Ratios
+            updateMath('sin', oLen, hLen);
+            updateMath('cos', aLen, hLen);
+            updateMath('tan', oLen, aLen);
+
+            if (!isPaused) {
+                time += 0.01;
+                frame = requestAnimationFrame(update);
+            }
+        }
+
+        function setLabel(id, left, bottom, text) {
+            const el = document.getElementById(id);
+            el.style.left = `${left}px`;
+            el.style.bottom = `${bottom}px`;
+            el.innerText = text;
+        }
+
+        function updateMath(prefix, num, den) {
+          //  document.getElementById(`${prefix}-m`).innerText = `= \\( = \\frac{${num.toFixed(1)}}{${den.toFixed(1)}} \\)`;
+            document.getElementById(`${prefix}-m`).innerText = `${den.toFixed(1)}`;
+            document.getElementById(`${prefix}-r`).innerText = `= ${(num / den).toFixed(3)}`;
+
+            const latex = `\\( = \\frac{${num.toFixed(1)}}{${den.toFixed(1)}} \\)`;
+            const output = document.getElementById(`${prefix}-m`);
+            output.innerHTML = latex;
+            MathJax.typesetPromise([output]).then(() => {
+                console.log("Fraction updated and rendered!");
+            });
+        }
+
+        update();
+        window.addEventListener('resize', () => { if (isPaused) update(); });
+   
+const valueLabel = document.getElementById("angle-display");
+
+function updateSliderValue() {
+  const min = slider.min;
+  const max = slider.max;
+  const val = slider.value;
+
+  const percent = (val - min) / (max - min);
+  const sliderWidth = slider.offsetWidth;
+
+  valueLabel.style.left = `${percent * sliderWidth}px`;
+  valueLabel.textContent = `${val}°`;
+}
+
+slider.addEventListener("input", updateSliderValue);
+window.addEventListener("resize", updateSliderValue);
+
+updateSliderValue();
+
+    </script>
+</body>
+
+</html>
