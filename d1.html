@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>වෘත්ත ප්‍රමේයයන්</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<style>
+
+body{    font-family: Arial, sans-serif;
+  max-width: 950px;
+    margin: auto;
+}
+.theorem-list-container {
+    width: 90%;
+    max-width: 500px; 
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    height: 300px; 
+}
+.center{    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+     padding-top: 20px;}
+.container{padding: 15px;}
+.theorem-item {
+    border-bottom: 1px solid #eee; 
+}
+.theorem-item:last-child {
+    border-bottom: none; 
+}
+
+.theorem-title {
+    cursor: pointer;
+    padding: 12px 15px;
+    background-color: #f8f8f8;
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.2s ease;
+}
+
+.theorem-title:hover {
+    background-color: #eef;
+}
+
+.theorem-title.active {
+    background-color: #03A9F4; 
+    color:#fff;
+}
+
+.dropdown-icon {
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+}
+
+.theorem-title.active .dropdown-icon {
+    transform: rotate(90deg); 
+}
+
+
+.theorem-description {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out; 
+    padding: 0 15px; 
+    border-left: 4px solid #03A9F4; 
+    color: #555;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.theorem-description.active {
+    max-height: 200px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.diagram-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0 130px;
+    scale: 130%;
+
+}
+
+.circle-outline {
+    width: 190px;
+    height: 190px;
+    border: 2px solid #03A9F4;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.4);
+    background-color: transparent;
+}
+
+.center-point {
+    width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10; 
+}
+
+.line {
+    background-color: black;
+    position: absolute;
+    height: 1px;
+    transform-origin: left center;
+    transition: all 0.6s ease;
+    width: 0;
+}
+
+.angle {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow:hidden;
+    height: 0;
+    transition: all 0.6s ease;
+}
+
+.angle-text {
+    position: absolute;
+    font-size: 10px;
+    font-weight: bold; 
+    z-index: 15; 
+}
+
+.angle-arc {
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border-color: black black transparent transparent;
+}
+#eq{height: 50px;}
+.rotate-handle {
+  width: 10px;
+  height: 10px;
+  background: blue;
+  border-radius: 50%;
+  position: absolute;
+  right: -15px;
+  top: -5px;
+  cursor: grab;
+}
+</style>
+</head>
+<body>
+  <button 
+  onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+  onmouseover="this.style.backgroundColor='#e0e0e0'" 
+  onmouseout="this.style.backgroundColor='#f8f9fa'"
+  style="
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    outline: none;
+    height:auto;width:auto;
+    margin:5px
+  ">
+  <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+</button>
+  <div class="container">
+  <h1>වෘත්ත ප්‍රමේයයන්</h1>
+<div class="center">
+  
+      <div class="diagram-container">
+        <div class="circle-outline" id="circle">
+          <div class="center-point"></div>
+
+          <div class="line" id="line1"></div>
+          <div class="line" id="line2"></div>
+          <div class="line" id="line3"></div>
+          <div class="line" id="line4"></div>
+          <div class="line" id="line5"></div>
+          <div class="line" id="line6"></div> 
+          <div class="line" id="line7"></div> 
+          <div class="line" id="line8"></div> 
+          
+          <div class="angle" id="angle1" >
+            <div class="angle-arc" id="arc1"></div>
+           <span class="angle-text" id="text1" ></span>
+          </div>
+
+          <div class="angle" id="angle2" >
+            <div class="angle-arc" id="arc2"></div>
+           <span class="angle-text" id="text2" ></span>
+          </div>
+          <div class="angle" id="angle3" >
+            <div class="angle-arc" id="arc3"></div>
+            <span class="angle-text" id="text3" ></span>
+          </div>
+          <div class="angle" id="angle4" >
+            <div class="angle-arc" id="arc4"></div>
+            <span class="angle-text" id="text4" ></span>
+          </div>
+        </div>
+      </div>
+      <b id="eq"></b>
+
+      <div class="theorem-list-container">
+        <div class="theorem-item">
+        <div class="theorem-title" data-theorem="theorem1">
+        1. කේන්ද්‍රයේ සහ පරිධියේ කෝණ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+        </div>
+        <div class="theorem-description">
+        <p>වෘත්ත චාපයක් මගින් වෘත්ත කේන්ද්‍රයේ ආපාතනය කරන කෝණය, එම චාපය මගින් වෘත්ත පරිධියේ ඉතිරි කොටසේ ඕනෑම ලක්ෂ්‍යයක ආපාතනය කරන කෝණය මෙන් දෙගුණයකි.</p>
+        </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem2">
+                2. එකම ඛණ්ඩයේ කෝණ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>වෘත්තයක එකම චාපයක් මගින් එකම ඛණ්ඩයේ ආපාතනය කරන කෝණ සමාන වේ.</p>
+            </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem3">
+                3. අර්ධ වෘත්තයක කෝණ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>වෘත්තයක විෂ්කම්භයක් මගින් වෘත්ත පරිධියේ ඕනෑම ලක්ෂ්‍යයක ආපාතනය කරන කෝණය සෑම විටම සෘජු කෝණයක් (අංශක 90) වේ.</p>
+            </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem4">
+                4. චක්‍රීය චතුරස්‍ර ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>ශීර්ෂ හතරම වෘත්ත පරිධිය මත පිහිටි චතුරස්‍රයක, ප්‍රතිමුඛ කෝණවල එකතුව අංශක 180 කි.</p>
+                <div>A+C=180°</div>
+                <div>B+D=180°</div>
+            </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem5">
+                5. ස්පර්ශකය සහ අරය ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>වෘත්තයක ස්පර්ශක ලක්ෂ්‍යයේදී අඳින ලද ස්පර්ශකය, එම ස්පර්ශක ලක්ෂ්‍යයට ඇඳි අරයට ලම්බක වේ.</p>
+            </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem6">
+                6. බාහිර ලක්ෂ්‍යයකින් අඳින ලද ස්පර්ශක ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>වෘත්තයකට බාහිර ලක්ෂ්‍යයකින් අඳින ලද ස්පර්ශක ඛණ්ඩ දෙකෙහි දිග සමාන වේ.</p>
+            </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem7">
+                7. ප්‍රත්‍යාවර්ත ඛණ්ඩ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>ස්පර්ශක ලක්ෂ්‍යයක් හරහා යන ස්පර්ශකයක් සහ ජ්‍යායක් අතර කෝණය, ප්‍රත්‍යාවර්ත ඛණ්ඩයේ ඇති කෝණයට සමාන වේ.</p>
+            </div>
+        </div>
+        
+        <div class="theorem-item">
+            <div class="theorem-title" data-theorem="theorem8">
+                8. ජ්‍යාය සමච්ඡේදනය කිරීමේ ප්‍රමේයය <span class="dropdown-icon">▶</span>
+            </div>
+            <div class="theorem-description">
+                <p>වෘත්තයක කේන්ද්‍රයේ සිට ජ්‍යායකට අඳින ලද ලම්බකය, ජ්‍යාය සමච්ඡේදනය කරයි (සමාන කොටස් දෙකකට බෙදයි).</p>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+        <script> 
+      var equation=document.getElementById('eq')
+      // Increased array sizes to accommodate more lines/angles
+      const lines = [
+        document.getElementById('line1'),
+        document.getElementById('line2'),
+        document.getElementById('line3'),
+        document.getElementById('line4'),
+        document.getElementById('line5'),
+        document.getElementById('line6'),
+        document.getElementById('line7'),
+        document.getElementById('line8')
+      ];
+
+      const angles = [
+        document.getElementById('angle1'),
+        document.getElementById('angle2'),
+        document.getElementById('angle3'),
+        document.getElementById('angle4')
+      ];
+
+      const arcs = [
+        document.getElementById('arc1'),
+        document.getElementById('arc2'),
+        document.getElementById('arc3'),
+        document.getElementById('arc4')
+      ];
+
+      const texts = [
+        document.getElementById('text1'),
+        document.getElementById('text2'),
+        document.getElementById('text3'),
+        document.getElementById('text4')
+      ];
+
+      // New array for square 90-degree angle markers
+      const squareArcs = [
+        document.getElementById('square-arc1'),
+        document.getElementById('square-arc2'),
+        document.getElementById('square-arc3'),
+        document.getElementById('square-arc4')
+      ];
+
+      const select = document.getElementById('theoremSelect');
+      const circleOutline = document.getElementById('circle');
+      const centerPoint = document.querySelector('.center-point');
+
+      function circlethorem(val) {
+   // const val = e.target.value;
+    document.querySelectorAll('.angle, .line').forEach(el => {el.style.width = '0';});
+    texts.forEach(el => {el.textContent = '';});
+    equation.innerHTML=''
+        if (val === 'theorem1') {
+          lines[0].style.cssText = "width:175px; top:-2px; left:95px; transform:rotate(115deg);";
+          lines[1].style.cssText = "width:174px; top:-2px; left:95px; transform:rotate(65deg);";
+          lines[2].style.cssText = "width:96px; top:95px; left:94px; transform:rotate(140deg);";
+          lines[3].style.cssText = "width:95px; top:95px; left:96px; transform:rotate(40deg);";
+          lines[4].style.cssText = "width: 179px;top: 97px;left: -1px;transform: rotate(19deg);";
+          lines[5].style.cssText = "width: 63px;top: 97px;left: -1px;transform: rotate(70deg);";
+          
+          angles[0].style.cssText = "top:6px; left:50%; transform:translateX(-50%); width:40px; height:40px; ";
+          angles[1].style.cssText = "top:82px; left:50%; transform:translateX(-50%); width:40px; height:40px; ";
+          angles[2].style.cssText = "top: 90px;left: 20px;transform: translateX(-50%);width: 40px;height: 40px;";
+
+          arcs[0].style.cssText = "width:24px; height:24px; transform:rotate(135deg); top:5px; left:8px;";
+          arcs[1].style.cssText = "width:30px; height:30px; transform:rotate(135deg); top:10px; left:5px;";
+          arcs[2].style.cssText = "width: 26px;height: 26px;transform: rotate(97deg);top: 12px;left: 5px;";
+
+          texts[0].style.cssText = "top: 10px;";
+          texts[1].style.cssText = "top: 22px;";
+          texts[2].style.cssText = "top: 20px;left: 15px;";
+          texts[0].textContent = "A";
+          texts[1].textContent = "2A";
+          texts[2].textContent = "A";
+
+          
+            }
+
+        if (val === 'theorem2') {
+          lines[0].style.cssText = "width: 144px;top: 140px;left: 10px;transform: rotate(290deg);";
+          lines[1].style.cssText = "width:181px; top:5px; left:59px; transform:rotate(48deg);";
+          lines[2].style.cssText = "width:69px; top:141px; left:180px; transform:rotate(277deg);";
+          lines[3].style.cssText = "width:192px; top:140px; left:10px; transform:rotate(339deg);";
+          lines[4].style.cssText = "width: 170px; top: 140px; left: 9px; transform: rotate(0);";
+       
+          angles[0].style.cssText = "top: 7px;left: 50px;width: 30px;height: 30px;";
+          angles[1].style.cssText = "top: 64px;left: 165px;width: 30px;height: 30px;";
+          
+          arcs[0].style.cssText = "width: 22px;height: 22px;transform: rotate(120deg);top: 5px;left: 1px;";
+          arcs[1].style.cssText = "width: 20px;height: 20px;transform: rotate(172deg);top: 10px;left: 4px;";
+          
+          texts[0].style.cssText = "top: 8px;left: 9px;";
+          texts[1].style.cssText = "top: 15px;"; 
+          texts[0].textContent = "A";
+          texts[1].textContent = "A";
+        }
+
+        if (val === 'theorem3') {
+            lines[0].style.cssText = "width: 108px;top: 95px;left: 0px;transform: rotate(-57deg);";
+            lines[1].style.cssText = "width:160px; top:4px; left:59px; transform:rotate(34deg);";
+            lines[2].style.cssText = "width: 69px;top: 94px;left: 191px;transform: rotate(249deg);";
+            lines[3].style.cssText = "width: 179px;top: 94px;left: 0px;transform: rotate(339deg);";
+            lines[4].style.cssText = "width: 190px; top: 94px; left: 0px; transform: rotate(0);";
+
+            angles[0].style.cssText = "top: 6px;left: 47px;width: 30px;height: 30px;";
+            angles[1].style.cssText = "top: 30px;left: 146px;width: 30px;height: 30px;";
+
+            arcs[0].style.cssText = "width: 20px;height: 20px;transform: rotate(120deg);top: 3px;left: 5px;border-radius: 0px;";
+            arcs[1].style.cssText = "width: 20px;height: 20px;transform: rotate(160deg);top: 4px;left: 4px;border-radius: 0px;";
+
+
+            texts[0].style.cssText = "top: 8px;";
+            texts[1].style.cssText = "top: 10px;";
+            texts[0].textContent = "90°";
+            texts[1].textContent = "90°"; }
+
+        if (val === 'theorem4') {
+
+          lines[0].style.cssText = "width: 111px;top: 16px;left: 40px;transform: rotate(0deg);";
+          lines[1].style.cssText = "width:110px; top:16px; left:151px; transform:rotate(70deg);";
+          lines[2].style.cssText = "width: 176px;top: 149px;left: 15px;transform: rotate(-10deg);";
+          lines[3].style.cssText = "width: 134px;top: 16px;left: 40px;transform: rotate(100deg);";
+     
+
+         
+          angles[0].style.cssText = "top: 10px;left: 30px;width: 30px;height: 30px;";
+          arcs[0].style.cssText = "width: 20px;height: 20px;transform: rotate(90deg);top: 5px;left: 5px;";
+          texts[0].textContent = "A";
+          texts[0].style.cssText = "top: 10px;left: 13px;";
+
+          angles[1].style.cssText = "top: 8px; left: 132px; width: 30px; height: 30px;";
+          arcs[1].style.cssText = "width: 20px; height: 20px; transform: rotate(170deg); top: 5px; left: 5px;";
+          texts[1].textContent = "B";
+          texts[1].style.cssText = "top: 12px; left: 11px;";
+
+          angles[2].style.cssText = "top: 100px; left: 163px; width: 30px; height: 30px;";
+          arcs[2].style.cssText = "width: 20px; height: 20px; transform: rotate(271deg); top: 5px; left: 5px;";
+          texts[2].textContent = "C";
+          texts[2].style.cssText = "top: 9px; left: 12px;";
+
+          angles[3].style.cssText = "top: 125px; left: 13px; width: 30px; height: 30px;";
+          arcs[3].style.cssText = "width: 20px; height: 20px; transform: rotate(-10deg); top: 5px; left: 5px;";
+          texts[3].textContent = "D";
+          texts[3].style.cssText = "top: 10px; left: 12px;";
+          //equation.innerHTML=`<div>A+C=180°</div><div>B+D=180°</div>`
+        }
+
+        if (val === 'theorem5') {
+   
+          lines[0].style.cssText = "width: 96px; top: 95px; left: 95px; transform: rotate(90deg);";
+          lines[1].style.cssText = "width: 150px; top: 191px; left: 22px; transform: rotate(0deg);";
+
+
+          angles[0].style.cssText = "top: 163px; left: 94px; width: 36px; height: 36px; transform: rotate(0);";
+          arcs[0].style.cssText = "width: 36px; height: 29px; transform: rotate(0); top: 0px; left: 0px; border-radius: 0;";
+          texts[0].textContent = "90°";
+          texts[0].style.cssText = "top: 8px;";
+        }
+
+        if (val === 'theorem6') {
+   
+          lines[0].style.cssText = "width: 136px; top: 145px; left: 176px; transform: rotate(122deg);";
+          lines[1].style.cssText = "width: 134px; top: 260px; left: 105px; transform: rotate(231deg);";
+
+          lines[2].style.cssText = "width: 95px; top: 94px; left: 96px; transform: rotate(33deg);";
+          lines[3].style.cssText = "width: 96px; top: 93px; left: 95px; transform: rotate(139deg);"; 
+          lines[4].style.cssText = "width: 16px; top: 196px; left: 136px; transform: rotate(37deg);";
+          lines[5].style.cssText = "width: 16px; top: 200px; left: 67px; transform: rotate(138deg);";
+
+          angles[0].style.cssText = "top: 147px; left: 18px; width: 25px; height: 25px;";
+          arcs[0].style.cssText = "width: 12px; height: 12px; transform: rotate(50deg); top: 5px; left: 5px; border-radius: 0px;";
+          
+          angles[1].style.cssText = "top: 137px; left: 158px; width: 25px; height: 25px;";
+          arcs[1].style.cssText = "width: 12px; height: 12px; transform: rotate(213deg); top: 5px; left: 5px; border-radius: 0px;";
+         /* texts[0].textContent = "x";
+          texts[0].style.cssText = "top: 60px; left: 140px;";
+          texts[1].textContent = "x";
+          texts[1].style.cssText = "top: 120px; left: 140px;";*/
+        }
+
+        if (val === 'theorem7') {
+
+          lines[0].style.cssText = "width: 182px; top: 52px; left: 9px; transform: rotate(8deg);";
+          lines[1].style.cssText = "width: 150px; top: 190px; left: 22px; transform: rotate(0deg);";
+          lines[2].style.cssText = "width: 150px; top: 191px; left: 92px; transform: rotate(-49deg);"; 
+          lines[3].style.cssText = "width: 161px; top: 52px; left: 10px; transform: rotate(59deg);";
+
+          angles[0].style.cssText = "top: 68px;left: 159px;width: 30px;height: 30px;";
+          arcs[0].style.cssText = "width: 20px; height: 20px; transform: rotate(184deg); top: 5px; left: 5px;border-color: red red transparent transparent;";
+          texts[0].textContent = "A";
+          texts[0].style.cssText = "top: 10px;left: 12px;color: red;";
+
+          angles[1].style.cssText = "top: 48px; left: 11px; width: 30px; height: 30px;";
+          arcs[1].style.cssText = "width: 20px; height: 20px; transform: rotate(84deg); top: 5px; left: 5px;border-color: green green transparent transparent;";
+          texts[1].textContent = "B";
+          texts[1].style.cssText = "top: 9px; left: 12px;color: green;";
+
+          angles[2].style.cssText = "top: 168px; left: 96px; width: 30px; height: 30px;";
+          arcs[2].style.cssText = "width: 20px; height: 20px; transform: rotate(14deg); top: 5px; left: 5px;border-color: green green transparent transparent;";
+          texts[2].textContent = "B";
+          texts[2].style.cssText = "top: 9px; left: 12px;color: green;";
+
+          angles[3].style.cssText = "top: 167px; left: 63px; width: 30px; height: 30px;";
+          arcs[3].style.cssText = "width: 20px; height: 20px; transform: rotate(242deg); top: 5px; left: 5px;border-color: red red transparent transparent;";
+          texts[3].textContent = "A";
+          texts[3].style.cssText = "top: 10px; left: 12px;color: red;";
+        }
+
+        if (val === 'theorem8') {
+
+          lines[0].style.cssText = "width: 140px; top: 160px; left: 25px; transform: rotate(0deg);";
+          lines[1].style.cssText = "width: 64px; top: 96px; left: 95px; transform: rotate(90deg);"; 
+          lines[2].style.cssText = "width: 97px; top: 93px; left: 95px; transform: rotate(136deg);"; 
+          lines[3].style.cssText = "width: 97px; top: 93px; left: 95px; transform: rotate(44deg);";
+          lines[4].style.cssText = "width: 16px; top: 152px; left: 65px; transform: rotate(90deg);";
+          lines[5].style.cssText = "width: 16px; top: 152px; left: 125px; transform: rotate(90deg);";
+
+          angles[0].style.cssText = "top: 144px; left: 87px; width: 30px; height: 30px;";
+          arcs[0].style.cssText = "width: 12px; height: 12px; transform: rotate(0deg); top: 5px; left: 8px; border-radius: 0;";
+          
+          texts[0].textContent = "";
+        
+        }
+      }
+      window.addEventListener('DOMContentLoaded', () => {
+        circlethorem('theorem1')
+        const theoremTitles = document.querySelectorAll('.theorem-title');
+          let activeTheorem = null; // To keep track of the currently active theorem for collapsing others
+
+          theoremTitles.forEach(title => {
+              title.addEventListener('click', () => {
+                  const theoremValue = title.dataset.theorem;
+                  const description = title.nextElementSibling; // Get the description div
+
+                  // Close any currently open description (optional: if you want only one open at a time)
+                  if (activeTheorem && activeTheorem !== title) {
+                      activeTheorem.classList.remove('active');
+                      activeTheorem.nextElementSibling.classList.remove('active');
+                  }
+
+                  // Toggle active class on the title and description
+                  title.classList.toggle('active');
+                  description.classList.toggle('active');
+
+                  // Call the main function to draw the diagram
+                  circlethorem(theoremValue);
+
+                  // Update active theorem
+                  activeTheorem = title.classList.contains('active') ? title : null;
+              });
+          });
+
+          // Automatically trigger the first theorem on load
+          // Find the first theorem title and simulate a click
+          if (theoremTitles.length > 0) {
+              theoremTitles[0].click();
+          }
+      });
+
+      </script>
+<script>/*
+    let isDragging = false;
+    let isRotating = false;
+    let activeLine = null;
+    let startX, startY, startLeft, startTop;
+    
+    // 1. ADD ROTATE HANDLE TO ALL LINES
+    document.querySelectorAll('.line').forEach(line => {
+      const rotateHandle = document.createElement('div');
+      rotateHandle.classList.add('rotate-handle');
+      line.appendChild(rotateHandle);
+    });
+    
+    // 2. EVENT LISTENERS
+    document.querySelectorAll('.line').forEach(line => {
+      const rotateHandle = line.querySelector('.rotate-handle');
+    
+      // DRAG
+      line.addEventListener('mousedown', e => {
+        if (e.target === rotateHandle) return; // skip if clicked rotate handle
+        isDragging = true;
+        activeLine = line;
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = parseFloat(line.style.left) || 0;
+        startTop = parseFloat(line.style.top) || 0;
+      });
+    
+      // ROTATE
+      rotateHandle.addEventListener('mousedown', e => {
+        isRotating = true;
+        activeLine = line;
+        e.stopPropagation(); // prevent drag
+      });
+    });
+    
+    // 3. GLOBAL MOUSE MOVE / UP HANDLERS
+    document.addEventListener('mousemove', e => {
+      if (isDragging && activeLine) {
+        let dx = e.clientX - startX;
+        let dy = e.clientY - startY;
+        activeLine.style.left = (startLeft + dx) + 'px';
+        activeLine.style.top = (startTop + dy) + 'px';
+      }
+    
+      if (isRotating && activeLine) {
+        let rect = activeLine.getBoundingClientRect();
+        let cx = rect.left;
+        let cy = rect.top + rect.height / 2;
+        let angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
+        activeLine.style.transform = `rotate(${angle}deg)`;
+      }
+    });
+    
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      isRotating = false;
+      activeLine = null;
+    });
+    */</script>
+    
+      </body>
+      </html>
