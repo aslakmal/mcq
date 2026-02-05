@@ -1,4 +1,4 @@
-const CACHE_NAME = "kkkjook";
+const CACHE_NAME = "kbugm";
 
 // 1. Pre-cache core local assets
 // Note: Only include the main CDN entry points here. 
