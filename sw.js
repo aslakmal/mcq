@@ -1,4 +1,4 @@
-const CACHE_NAME = "kbugm";
+const CACHE_NAME = "dedwd";
 
 // 1. Pre-cache core local assets
 // Note: Only include the main CDN entry points here. 
