@@ -19,6 +19,7 @@
             margin: 0;
             padding: 10px;  max-width: 950px;
     margin: auto;
+    background: linear-gradient(135deg, #eef2ff, #f0fdf4);
              }
 
   
@@ -112,6 +113,7 @@
             gap: 15px;
             width: 95%;
             max-width: 900px;
+            margin: auto;
         }
 
         .card {
@@ -143,7 +145,8 @@
 
         .slider-wrapper {
   position: relative;
-  width: 300px;
+  width: 260px;
+    margin: auto;
 }
 
 input[type="range"] {
@@ -188,6 +191,11 @@ input[type="range"] {
 .pause-icon {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='4' width='5' height='16' fill='currentColor'/><rect x='14' y='4' width='5' height='16' fill='black'/></svg>");
 }
+.section{background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);}
     </style>
     <script>
         MathJax = {
@@ -230,13 +238,15 @@ input[type="range"] {
     ">
     <span style="margin-right: 8px; font-weight: bold;">←</span> Back
   </button>
+  <div class="section">
     <h3>දන්නවාද?</h3>
     <p>මේ රූපයේ ගොඩනැගිල්ලේ උස(B-C) මනින්ඩ අපිට ඕනැ A-B දුර සහ Ò කෝණයේ අගය විතරයි.</p>
     
     <img src="img/trigono.jpeg" style="
 width: 400px;
 margin: auto;max-width: 100%;
-">
+"></div>
+ <div class="section">
     <p>මේක පැහැදිලි කරගන්න පහල තියන ත්‍රිකෝණයේ වෙනස් වීම බලන්න. ත්‍රිකෝණය කොච්චර විශාල උනත් පාද අතර අනුපාත වෙනස් වෙන්නේ
         නෑ.
         <i style="
@@ -264,6 +274,7 @@ margin: auto;max-width: 100%;
             <span class="icon pause-icon"></span>
           </button>
     </div>
+</div>
     <div id="calc-grid">
         <div class="card" style="border-color: var(--sec);">
             <span id="sin-d">Sin 30°</span> =
@@ -284,8 +295,8 @@ margin: auto;max-width: 100%;
             <span class="res" id="tan-r">=0.577</span>
         </div>
     </div>
-    <i>(මෙහි Sin,Cos,Tan යනු ත්‍රිකෝණයේ ඒ ඒ පාද දෙකේ අනුපාතයන් හඳුන්වන කෙටි නම් වේ)</i>
-    <p>  මේ නියතය වෙනස් වෙන්නෙ ත්‍රිකෝණයේ හැඩය වෙනස් උනොත් විතරයි.
+    <i style="padding: 24px;">(මෙහි Sin,Cos,Tan යනු ත්‍රිකෝණයේ ඒ ඒ පාද දෙකේ අනුපාතයන් හඳුන්වන කෙටි නම් වේ)</i>
+    <p style="padding: 24px;">  මේ නියතය වෙනස් වෙන්නෙ ත්‍රිකෝණයේ හැඩය වෙනස් උනොත් විතරයි.
         කෝණය වෙනස් කරලා ඔයාටම ඒක බලන්න පුලුවන්.</p>
     <div id="ui-layer">
         <div class="control-group">
@@ -299,7 +310,7 @@ margin: auto;max-width: 100%;
        
     </div>
     
-
+    <div class="section">
     <p>ඉතින් මේ ත්‍රිකෝණය ඉහත ගොඩනැගිල්ලේ මුදුන දක්වාම විශාල උනා කියලා හිතන්න. එතකොට ඒ ත්‍රිකෝණයේ සම්මුඛ පාදය වෙන්නේ ගොඩනැගිල්ලේ උසයි.
         අපි ඒ උස දැනගන්න අනුපාතයට බද්ද පාදයේ දිග ආදේශ කරන්න විතරයි තියෙන්නේ.</p>
         <p>බද්ධ පාදයෙ එනම් ලමයා සහ ගොඩනැගිල්ල අතර දිග මීටර් 200ක් උනොත් සහ කෝණය 30 නම්. ගොඩනැගිල්ලේ උස \(x\) සෙවීමට </p>
@@ -322,9 +333,9 @@ margin: auto;max-width: 100%;
         </div>
     
         <p><strong>පිළිතුර:</strong> සම්මුඛ පාදයේ දිග මීටර් 115.4 කි.</p>
+    </div>
 
-
-
+        <div class="section">
 <h3>Sin අනුපාතය භාවිතයට උදාහරණයක්</h3>
 <div class="container">
     <p>අංශක 65ක කෝණයකින් ඉහල ගිය සරුංගලයක් නූල මීටර් 100ක් නම් පොලොවේ ඉඳන් සරුංගලය කොච්චර උසකින් තියනවාද ගනනය කරමු.</p>
@@ -357,6 +368,8 @@ margin: auto;max-width: 100%;
         පිළිතුර: සරුංගලය පොළොවේ සිට මීටර් 90.63 ක උසකින් පවතී.
     </div>
 </div>
+</div>
+<div class="section">
 <h3>Cos අනුපාතය භාවිතයට උදාහරණයක්</h3>
 <div class="container">
     <p>අඩි 10ක් පලල ස්තෝප්පුවට අංශක 25ක හැඩයට වහලයක් හදන්න ඕනැ කරන ශීට් වල දිග මනිමු</p>
@@ -389,7 +402,7 @@ margin: auto;max-width: 100%;
         පිළිතුර: අවශ්‍ය වන ශීට් එකක දිග දළ වශයෙන් අඩි 11.03 කි.
     </div>
 </div>
-
+</div>
     <script>
         const slider = document.getElementById('angleSlider');
         const angleDisp = document.getElementById('angle-display');
