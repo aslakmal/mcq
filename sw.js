@@ -12,6 +12,7 @@ const CORE_ASSETS = [
   "./triangle.html",
   "./log.html",
   "./trigonometry.html",
+  "./gs.html",
   ...Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`),
   "js/graph.js",
   "js/line.js",
