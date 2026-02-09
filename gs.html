@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ගණිත ශ්‍රේඪි - Interactive Tutorial</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                packages: { '[+]': ['ams'] }
+            },
+            options: { enableMenu: false },
+            chtml: { mtextInheritFont: true }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            max-width: 850px;
+            margin: auto;
+            padding: 5px;
+            background-color: #f8fafc;
+        }
+
+        .card {
+            background: white;
+            padding: 5px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: #e2e8f0;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-top: 0;
+        }
+
+        .chart-box {
+            height: 320px;
+            width: 100%;
+            margin: 10px 0;
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            width: 225px;
+            margin: 5px 0;
+        }
+
+        .control span {
+            font-weight: 600;
+        }
+
+        .btn-wrapper {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .scroll-btn {
+            background: #e6e6e6;
+            color: #000;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+
+        input[type="number"] {
+            width: 30px;
+            text-align: center;
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            outline: none;
+            height: 29px;
+        }
+
+        .example-box {
+            background: #fffbeb;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 6px solid #f59e0b;
+            font-size: 1.05em;
+        }
+
+        .formula-card {
+            display: none;
+        }
+
+        .formula-card.active {
+            display: block;
+        }
+
+        .formula-display {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            border: 1px solid #bfdbfe;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <button 
+    onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+    onmouseover="this.style.backgroundColor='#e0e0e0'" 
+    onmouseout="this.style.backgroundColor='#f8f9fa'"
+    style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;
+      margin:5px;
+    ">
+    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+  </button>
+<h2>ශ්‍රේඪි</h2>
+<p>ශ්‍රේඪියක් කියන්නේ කිසියම් නිශ්චිත රටාවකට හෝ නීතියකට අනුව පෙළගස්වන ලද සංඛ්‍යා සමූහයක එකතුවටයි.<br>
+    අපි සංඛ්‍යා රටාවක් ගැන හිතමු. උදාහරණයකට: $2, 4, 6, 8, ...$ <br>
+    මෙහි සෑම පදයක්ම පෙර පදයට $2$ ක් එකතු කිරීමෙන් ලැබෙන්නේ. මෙවැනි සංඛ්‍යා රටාවක පද එකිනෙක එකතු කළ විට එය ශ්‍රේඪියක් ලෙස හඳුන්වනවා.<br>
+    පාසල් විශය නිර්දේශයට අනුව ප්‍රධාන වශයෙන් ශ්‍රේඪි වර්ග දෙකක් ගැන උගන්වනවා:</p>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('AP', this)">සමාන්තර ශ්‍රේඪි</button>
+        <button class="tab-btn" onclick="switchTab('GP', this)">ගුණෝන්තර ශ්‍රේඪි</button>
+    </div>
+
+    <div class="card">
+        <div class="chart-box">
+            <canvas id="mainChart"></canvas>
+        </div>
+        <div id="main-desc">
+            <p>සමාන්තර ශ්‍රේඪි කියන්නේ සමාන අන්තර එනම් සෑම ඉලක්කම් දෙකක් අතරම පරතරය සමානව තියන ශ්‍රේඪි වලට. උදාහරණ: $2, 5, 8, 11, ...$ වේ</p>
+            <div>
+                
+                <h3>උදාහරණ:කැටයට/බංකුවට සල්ලි දාන එක 💰</h3>
+                <div>
+                    <p>ඔයා ළඟ මුලින් රු. 100 ක් තියෙනවා. හැමදාම රු. 20 බැගින් එකතු කරනවා.</p>
+
+                </div>
+
+                <div>
+                    <p><b>දින 10 කට පස්සේ කීයක් ඉතුරුද බලන්නෙ කොහොමද:</b></p>
+                    සමීකරණය:$T_n = a + (n-1)d$ <br>
+                    <p>මෙහි පලමු පදය $a=100$ සහ පොදු අන්තරය $d=20$ වේ.</p>
+              
+                    $T_{10} = 100 + (10-1)20 = \mathbf{280}$
+                    <p>දින 10 ක් අවසානයේ ඔයා ළඟ රු. 280 ක් තියෙනවා.</p>
+                </div>
+                <div>
+                    <h3>සමීකරණය හැදෙන විදිය</h3>
+                  
+                    <ul>
+                        <li><b>1 වන පදය ($T_1$):</b> $100$ (මෙය $a$ වේ)</li>
+                        <li><b>2 වන පදය ($T_2$):</b> $100 + 20 = 120$ (මෙය $a + 1d$ වේ)</li>
+                        <li><b>3 වන පදය ($T_3$):</b> $100 + 20 + 20 = 140$ (මෙය $a + 2d$ වේ)</li>
+                        <li><b>4 වන පදය ($T_4$):</b> $100 + 20 + 20 + 20 = 160$ (මෙය $a + 3d$ වේ)</li>
+                    </ul>
+                
+                    
+                
+                    <h4>බලන්න:</h4>
+                    <p>පදයේ අංකයට වඩා <b>එකක් අඩුවෙන්</b> තමයි $d$ (පොදු අන්තරය) එකතු වෙලා තියෙන්නේ.</p>
+                    
+                    <ul>
+                        <li>$T_2$ වලදී $d$ එකතු වෙලා තියෙන්නේ $1$ පාරයි.</li>
+                        <li>$T_3$ වලදී $d$ එකතු වෙලා තියෙන්නේ $2$ පාරයි.</li>
+                        <li>$T_4$ වලදී $d$ එකතු වෙලා තියෙන්නේ $3$ පාරයි.</li>
+                    </ul>
+                
+                    <p>ඒ අනුව, <b>$n$ වැනි පදය ($T_n$)</b> හොයන්න නම් පළමු පදය වන $a$ ට, $d$ ඒවා <b>$(n-1)$</b> වතාවක් එකතු කරන්න ඕනේ.</p>
+                
+                    <p><b>සමීකරණය:</b></p>
+                    <p style="font-size: 1.5em; font-weight: bold;">$T_n = a + (n-1)d$</p>
+                </div>
+
+            </div>
+
+            
+        </div>
+
+       
+
+       <!--<div class="controls-container">
+            <div class="control">
+                <span>පළමු පදය ($a$):</span>
+                <div class="btn-wrapper">
+                    <button class="scroll-btn" onclick="stepValue('coef', -1)">←</button>
+                    <input type="number" id="coef" value="3" readonly>
+                    <button class="scroll-btn" onclick="stepValue('coef', 1)">→</button>
+                </div>
+            </div>
+
+            <div class="control">
+                <span id="ratio-label">පොදු අන්තරය ($d$):</span>
+                <div class="btn-wrapper">
+                    <button class="scroll-btn" onclick="stepValue('constant', -1)">←</button>
+                    <input type="number" id="constant" value="2" readonly>
+                    <button class="scroll-btn" onclick="stepValue('constant', 1)">→</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dynamic-example" class="example-box"></div>-->
+    </div>
+
+    <div id="GP-formulas" class="formula-card active card">
+        <h2>ගුණෝන්තර ශ්‍රේඪි සමීකරණ</h2>
+        <div class="formula-display">$n$ පදය: $T_n = a r^{n-1}$</div>
+        <div class="formula-display">එකතුව: $S_n = \frac{a(r^n - 1)}{r - 1}$</div>
+    </div>
+
+    <div id="AP-formulas" class="formula-card card">
+        <h2>සමාන්තර ශ්‍රේඪි සමීකරණ</h2>
+        <div class="formula-display">$n$ පදය: $T_n = a + (n-1)d$</div>
+        <div class="formula-display">එකතුව: $S_n = \frac{n}{2}[2a + (n-1)d]$</div>
+    </div>
+
+    <script>
+        let currentMode = 'AP'; // Default mode
+        let mainChart;
+        
+        function switchTab(mode, btn=false) {
+            currentMode = mode;
+
+            // Update Tab buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if(btn)btn.classList.add('active');
+            // Update Titles and Formulas
+           // document.getElementById('ratio-label').innerText = (mode === 'GP') ? 'පොදු අනුපාතය ($r$):' : 'පොදු අන්තරය ($d$):';
+            document.getElementById('main-desc').innerHTML = (mode === 'GP') ? `<p>ගුණෝත්තර ශ්‍රේඪි කියන්නේ ඉලක්කම් අතර අන්තරය(වෙනස) පියවරෙන් පියවර ගුණවෙන ශ්‍රේඪි වලට.උදාහරණ: $2, 6, 18, 54, ...$ (මෙහි සෑම පදයක්ම $3$ න් ගුණ වී ඇත. පොදු අනුපාතය $3$ වේ)</p><div>
+                <h3>උදාහරණ:youtube video එකක් Viral යන එක 🚀</h3>
+                <p>video එකක් ශෙයා වෙන්නෙ<b>ගුණෝන්තර ශ්‍රේඪි</b> ක්‍රමයට!</p>
+
+                <div>
+                    <p>ඔයා 2 දෙනෙක්ට යවනවා, ඒ අයත් තව 3 දෙනෙක්ට බැගින් Share කරනවා.</p>
+                    <p>එතකොට මේක,<br>
+                        $ 
+    \\begin{aligned}
+    2 \\times 3 &= 6 \\\\
+    6 \\times 3 &= 18 \\\\
+    18 \\times 3 &= 54
+    \\end{aligned}
+    $
+                        <br>විදියට වැඩි වෙනවා
+                    </p>
+
+                    <p>මෙහි පළමු පදය $a=2$ සහ පොදු අන්තරය $r=3$ වේ.</p>
+                </div>
+
+                <div>
+                    <p><b>පියවර 10 කින් කී දෙනෙක් අතර ශෙයා වෙලද බලන්නේ කොහොමද:</b></p>
+                    සමීකරණය:$T_n = a r^{n-1}$ <br>
+                    $T_{10} = 2 \\times 3^9 = \\mathbf{39,366}$
+                   
+                </div>
+                <div>
+                    <h3>සමීකරණය හැදෙන විදිය</h3>
+                 
+                    <ul>
+                        <li><b>1 වන පදය ($T_1$):</b> $2$ (මෙය $a$ වේ)</li>
+                        <li><b>2 වන පදය ($T_2$):</b> $2 \\times 3 = 6$ (මෙය $a \\times r^1$ වේ)</li>
+                        <li><b>3 වන පදය ($T_3$):</b> $2 \\times 3 \\times 3 = 18$ (මෙය $a \\times r^2$ වේ)</li>
+                        <li><b>4 වන පදය ($T_4$):</b> $2 \\times 3 \\times 3 \\times 3 = 54$ (මෙය $a \\times r^3$ වේ)</li>
+                    </ul>
+                
+                    
+                
+                    <h4>බලන්න:</h4>
+                    <p>ඕනෑම පදයක් ගත්තම, එතන තියෙන $r$ වල බලය හැමතිස්සෙම පදයේ අංකයට වඩා <b>එකක් අඩුවෙන්</b> තියෙන්නේ.</p>
+                    
+                    <ul>
+                        <li>$T_2$ වලදී $r$ තියෙන්නේ $1$ පාරයි.</li>
+                        <li>$T_3$ වලදී $r$ තියෙන්නේ $2$ පාරයි.</li>
+                        <li>$T_4$ වලදී $r$ තියෙන්නේ $3$ පාරයි.</li>
+                    </ul>
+                
+                    <p>ඒ අනුව, <b>$n$ වැනි පදය ($T_n$)</b> හොයන්න නම් පළමු පදය වන $a$ ව, $r$ වලින් <b>$(n-1)$</b> වතාවක් ගුණ කරන්න ඕනේ.</p>
+                
+                    <p><b>සමීකරණය:</b></p>
+                    <p style="font-size: 1.5em; font-weight: bold;">$T_n = a r^{n-1}$</p>
+                </div>
+            </div>` : `<p>සමාන්තර ශ්‍රේඪි කියන්නේ සමාන අන්තර එනම් සෑම ඉලක්කම් දෙකක් අතරම පරතරය සමානව තියන ශ්‍රේඪි වලට.උදාහරණ: $2, 5, 8, 11, ...$ (මෙහි පොදු වෙනස $2$ වේ)</p><div>
+                <h3>උදාහරණ:කැටයට/බංකුවට සල්ලි දාන එක 💰</h3>
+                <div>
+                    <p>ඔයා ළඟ මුලින් රු. 100 ක් තියෙනවා. හැමදාම රු. 20 බැගින් ඉතිරි කරනවා.</p>
+
+                </div>
+
+                <div>
+                    <p><b>දින 10 කට පස්සේ කීයක් ඉතුරුද බලන්නෙ කොහොමද:</b></p>
+                    සමීකරණය:$T_n = a + (n-1)d$ <br>
+                    <p>මෙහි පලමු පදය $a=100$ සහ පොදු අන්තරය $d=20$ වේ.</p>
+              
+                    $T_{10} = 100 + (10-1)20 = \\mathbf{280}$
+                    <p>දින 10 ක් අවසානයේ ඔයා ළඟ රු. 280 ක් තියෙනවා.</p>
+                </div>
+                <div>
+                    <h3>සමීකරණය හැදෙන විදිය</h3>
+                  
+                    <ul>
+                        <li><b>1 වන පදය ($T_1$):</b> $100$ (මෙය $a$ වේ)</li>
+                        <li><b>2 වන පදය ($T_2$):</b> $100 + 20 = 120$ (මෙය $a + 1d$ වේ)</li>
+                        <li><b>3 වන පදය ($T_3$):</b> $100 + 20 + 20 = 140$ (මෙය $a + 2d$ වේ)</li>
+                        <li><b>4 වන පදය ($T_4$):</b> $100 + 20 + 20 + 20 = 160$ (මෙය $a + 3d$ වේ)</li>
+                    </ul>
+                
+                    
+                
+                    <h4>බලන්න:</h4>
+                    <p>පදයේ අංකයට වඩා <b>එකක් අඩුවෙන්</b> තමයි $d$ (පොදු අන්තරය) එකතු වෙලා තියෙන්නේ.</p>
+                    
+                    <ul>
+                        <li>$T_2$ වලදී $d$ එකතු වෙලා තියෙන්නේ $1$ පාරයි.</li>
+                        <li>$T_3$ වලදී $d$ එකතු වෙලා තියෙන්නේ $2$ පාරයි.</li>
+                        <li>$T_4$ වලදී $d$ එකතු වෙලා තියෙන්නේ $3$ පාරයි.</li>
+                    </ul>
+                
+                    <p>ඒ අනුව, <b>$n$ වැනි පදය ($T_n$)</b> හොයන්න නම් පළමු පදය වන $a$ ට, $d$ ඒවා <b>$(n-1)$</b> වතාවක් එකතු කරන්න ඕනේ.</p>
+                
+                    <p><b>සමීකරණය:</b></p>
+                    <p style="font-size: 1.5em; font-weight: bold;">$T_n = a + (n-1)d$</p>
+                </div>
+
+            </div>`;
+
+            document.querySelectorAll('.formula-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(mode + '-formulas').classList.add('active');
+            if (window.MathJax) { 
+        MathJax.typesetPromise(); 
+    }
+            updateAll();
+      
+        }
+
+        function stepValue(id, step) {
+            const input = document.getElementById(id);
+            let val = parseFloat(input.value);
+            let newVal = val + step;
+
+            if (id === 'coef' && newVal < 1) return false;
+            if (currentMode === 'GP' && id === 'constant' && newVal <= 0) return false;
+            if (id === 'constant' && newVal > 20) newVal = 20;
+            if (id === 'constant' && newVal < -10) newVal = -10;
+
+            input.value = newVal;
+            updateAll();
+        }
+
+        function updateAll() {
+            const a = 2;// parseFloat(document.getElementById('coef').value);
+            const r_or_d = 3;// parseFloat(document.getElementById('constant').value);
+
+            // Chart එක destroy කරන්නේ නැතුව දත්ත විතරක් update කරනවා
+            updateChartData(a, r_or_d);
+           // updateExample(a, r_or_d);
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise().catch((err) => console.log(err));
+            }
+        }
+
+        function updateChartData(a, val) {
+            const newData = [];
+            for (let i = 1; i <= 6; i++) {
+                let term = (currentMode === 'GP') ? a * Math.pow(val, i - 1) : a + (i - 1) * val;
+                newData.push(Number(term.toFixed(2)));
+            }
+
+            // Chart එක දැනටමත් තියෙනවා නම් ඒකේ data විතරක් මාරු කරනවා
+            if (mainChart) {
+                mainChart.data.datasets[0].data = newData;
+                mainChart.data.datasets[0].backgroundColor = (currentMode === 'GP') ? '#3b82f6' : '#10b981';
+                mainChart.update(); // මෙතනදී තමයි smooth animation එක වෙන්නේ
+            } else {
+                // පළමු වතාවට පමණක් Chart එක නිර්මාණය කරයි
+                const ctx = document.getElementById('mainChart').getContext('2d');
+                mainChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['පදය 1', 'පදය 2', 'පදය 3', 'පදය 4', 'පදය 5', 'පදය 6'],
+                        datasets: [{
+                            data: newData,
+                            backgroundColor: (currentMode === 'GP') ? '#3b82f6' : '#10b981',
+                            borderRadius: 5,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 600, // Animation එකේ වේගය (milliseconds)
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: { legend: { display: false },tooltip: { enabled: false }},
+                        scales: { y: { beginAtZero: true, grid: { display: false } } }
+                    },
+                    plugins: [{
+                        id: 'valueLabel',
+                        afterDraw: (chart) => {
+                            const ctx = chart.ctx;
+                            chart.data.datasets.forEach((dataset, i) => {
+                                const meta = chart.getDatasetMeta(i);
+                                meta.data.forEach((bar, index) => {
+                                    const value = dataset.data[index];
+                                    ctx.fillStyle = '#1e293b';
+                                    ctx.font = 'bold 12px sans-serif';
+                                    ctx.textAlign = 'center';
+                                    ctx.fillText(value, bar.x, bar.y - 8);
+                                });
+                            });
+                        }
+                    }]
+                });
+            }
+        }
+
+        function updateExample(a, val) {
+            const n = 5;
+            const exampleDiv = document.getElementById('dynamic-example');
+
+            if (currentMode === 'GP') {
+                const tn = a * Math.pow(val, n - 1);
+                const rPowN = Math.pow(val, n);
+                const sn = (val === 1) ? a * n : (a * (rPowN - 1)) / (val - 1);
+
+                exampleDiv.innerHTML = `
+            <b>දී ඇති අගයන්:</b> $a = ${a}, r = ${val}$ <br><br>
+            
+            <b>5 වන පදය ($T_5$) සෙවීම:</b><br>
+            සමීකරණය:$T_n = a r^{n-1}$ <br>
+            ආදේශ කිරීම:$T_5 = ${a} \\times ${val}^{(5-1)}$ <br>
+            $= ${tn.toFixed(2)}$ <br><br>
+            
+            <b>මුල් පද 5 හි එකතුව ($S_5$) සෙවීම:</b><br>
+            සමීකරණය:$S_n = \\frac{a(r^n - 1)}{r - 1}$ <br>
+            ආදේශ කිරීම:$S_5 = \\frac{${a}(${val}^5 - 1)}{${val} - 1}$ <br>
+            $= \\frac{${a}(${(rPowN - 1).toFixed(2)})}{${(val - 1).toFixed(2)}}$ <br>
+            $= ${sn.toFixed(2)}$
+        `;
+            } else {
+                const tn = a + (n - 1) * val;
+                const sn = (n / 2) * (2 * a + (n - 1) * val);
+
+                exampleDiv.innerHTML = `
+            <b>දී ඇති අගයන්:</b> $a = ${a}, d = ${val}$ <br><br>
+            
+            <b>5 වන පදය ($T_5$) සෙවීම:</b><br>
+            $T_n = a + (n-1)d$ <br>
+            $T_5 = ${a} + (5-1)(${val})$ <br>
+            $T_5 = ${tn.toFixed(2)}$ <br><br>
+            
+            <b>මුල් පද 5 හි එකතුව ($S_5$) සෙවීම:</b><br>
+            සමීකරණය:$S_n = \\frac{n}{2}[2a + (n-1)d]$ <br>
+            ආදේශ කිරීම:$S_5 = \\frac{5}{2}[2(${a}) + (5-1)(${val})]$ <br>
+            $S_5 = 2.5[${2 * a} + 4(${val})]$ <br>
+            $S_5 = ${sn.toFixed(2)}$
+        `;
+            }
+        }
+
+        window.onload = updateAll;
+    </script>
+</body>
+
+</html>
