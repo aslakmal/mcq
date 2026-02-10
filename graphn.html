@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ශ්‍රිත</title>
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <style>
+        body {
+            align-items: center;
+            justify-content: center;
+            padding: 0; /* p-4 */
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            max-width: 950px;
+    margin: auto;
+        }
+
+        .main-container {
+            background-color: #ffffff; 
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+            padding: 5px;
+            max-width: 36rem; 
+            width: 100%;
+            margin: auto;
+        }
+
+        @media (min-width: 768px) { /* md: */
+            .main-container {
+                padding: 2rem; /* md:p-8 */
+            }
+        }
+
+        /* Heading Styles */
+        .graph-heading {
+            font-size: 2.25rem; /* text-3xl */
+            font-weight: 800; /* font-extrabold */
+            text-align: center; /* text-center */
+            color: #1f2937; /* text-gray-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        /* Responsive heading for medium screens */
+        @media (min-width: 768px) { /* md: */
+            .graph-heading {
+                font-size: 2.5rem; /* md:text-4xl */
+            }
+        }
+
+        /* Blue text within heading */
+        .text-blue {
+            color: #2563eb; /* text-blue-600 */
+        }
+
+        /* Input and Button Container */
+        .input-button-container {
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        /* Responsive input/button layout for small screens */
+        @media (min-width: 640px) { /* sm: */
+            .input-button-container {
+                flex-direction: row; /* sm:flex-row */
+                gap: 1rem; /* sm:space-x-4 */
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Label Styles */
+        .input-label {
+            color: #374151; /* text-gray-700 */
+            font-weight: 600; /* font-semibold */
+            font-size: 1.125rem; /* text-lg */
+        }
+
+        /* Responsive label width for small screens */
+        @media (min-width: 640px) { /* sm: */
+            .input-label {
+                width: auto; /* sm:w-auto */
+            }
+        }
+
+        /* Input Field Styles */
+        .equation-input {
+            flex-grow: 1; /* flex-grow */
+            padding: 0.75rem; /* p-3 */
+            border: 2px solid #d1d5db; /* border-2 border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            outline: none; /* focus:outline-none */
+            font-size: 1.125rem; /* text-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            width: 100%; /* For smaller screens */
+        }
+
+        /* Input field focus styles */
+        .equation-input:focus {
+            border-color: #3b82f6; /* focus:ring-2 focus:ring-blue-500 */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* focus:ring-2 focus:ring-blue-500 */
+        }
+
+        /* Button Styles */
+        .update-button {
+            padding: 0.75rem 1.5rem;
+    background: linear-gradient(45deg, #9C27B0, #3F51B5);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: none;}
+
+        /* Button hover styles */
+        .update-button:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+            transform: scale(1.05); /* hover:scale-105 */
+        }
+
+        /* SVG Container Styles */
+        .graph-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%; /* Makes the container square (aspect-w-1 aspect-h-1) */
+            max-width: 32rem; /* max-w-lg */
+            margin-left: auto; /* mx-auto */
+            margin-right: auto; /* mx-auto */
+        }
+
+        /* SVG Element Styles */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* w-full */
+            height: 100%; /* h-full */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #fff; /* light background for graph area */
+        }
+
+        /* Error Message Styles */
+        .error-message {
+            color: #dc2626; /* text-red-600 */
+            text-align: center; /* text-center */
+            margin-top: 1rem; /* mt-4 */
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Responsive error message font size */
+        @media (min-width: 768px) { /* md: */
+            .error-message {
+                font-size: 1rem; /* md:text-base */
+            }
+        }
+
+        /* Information Text Styles */
+        .info-text {
+            color: #4b5563; /* text-gray-600 */
+            text-align: center; /* text-center */
+            margin-top: 0.5rem; /* mt-2 */
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Responsive info text font size */
+        @media (min-width: 768px) { /* md: */
+            .info-text {
+                font-size: 1rem; /* md:text-base */
+            }
+        }
+
+        /* Shadow for the graph line */
+        .line-shadow {
+             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); /* shadow-lg custom */
+        }
+
+        /* Tooltip Styles */
+        #tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            pointer-events: none; /* Allows mouse events to pass through */
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        /* Highlight style for axis labels */
+        .highlight-axis-label {
+            font-weight: bold;
+            fill: #dc2121; /* A darker blue */
+            transition: fill 0.2s, font-weight 0.2s;
+        }
+
+
+
+        .equation-display {
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Times New Roman", serif;
+}
+
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+  max-width: 300px;
+  margin: auto;
+}
+
+.control {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+  max-width: 300px;
+    margin: auto;
+}
+
+.control label {
+  flex: 1; 
+}
+
+
+.control button {
+  width: 30px;
+  height: 30px;
+  display: flex;            /* flexbox inside button */
+  align-items: center;      /* vertical center */
+  justify-content: center;  /* horizontal center */
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0;
+  box-sizing: border-box;
+  background: #e6e6e6;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+}
+
+.control input {
+  width: 60px;
+  padding: 5px;
+  outline: none;
+  border: 1px solid #eee;
+}
+
+
+.input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  width: fit-content;
+}
+
+.toggle-box {
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center;     /* Vertical centering */
+
+  /* Set a fixed size */
+  width: 30px; 
+  height: 30px; 
+  
+  font-size: 18px;
+  cursor: pointer; /* Important since it's replacing a button */
+  border-radius: 4px;
+}
+
+/* 3. Input Styling (Minimal) */
+.input-container input {
+  padding: 5px;
+  width: 20px;
+  text-align: center;
+}
+.power-tabs {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0px 4px 8px 0px #00000014;
+}
+
+/* hide radios */
+.power-tabs input[type="radio"] {
+  display: none;
+}
+
+.power-tabs label {
+  flex: 1;
+  padding: 2px 5px;
+  text-align: center;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
+}
+
+/* active tab */
+.power-tabs input[type="radio"]:checked + label {
+  background: #007bff;
+  color: #fff;
+ }
+.btn-wrapper{
+    display: flex;
+    gap:2px;
+}
+.container{padding: 15px;}
+
+/* Container setup */
+.ldesc {
+    display: grid;
+    /* This creates a responsive grid: boxes will be at least 300px wide */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* The Feature Card */
+.ldesc>li {
+    background: #ffffff;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Hover effect to make it feel interactive */
+.ldesc>li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: #007bff;
+}
+
+/* Heading style inside the card */
+.ldesc>li h4 {
+    margin: 0 0 12px 0;
+    color: #007bff;
+    font-size: 1.25rem;
+    padding-bottom: 8px;
+}
+
+/* Text style (Sinhala fonts usually need a bit more line-height) */
+.ldesc>li {
+    line-height: 1.8;
+    color: #333;
+    font-size: 1rem;
+}
+.accordion {
+  list-style: none;
+  padding: 0;
+}
+
+.accordion li {
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.accordion h4 {
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.accordion h4::after {
+  content: '+'; /* Visual indicator */
+}
+
+.accordion li.active h4::after {
+  content: '-';
+}
+
+.lcontent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; /* The sliding effect */
+  background: white;
+}
+    </style>
+<style>
+    .info-icon {
+        background: #3498db;
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        cursor: pointer;
+        margin-left: 5px;
+        position: relative;
+    }
+
+    /* Desktop Tooltip Style */
+    .info-icon::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2c3e50;
+        color: #fff;
+        padding: 8px;
+        border-radius: 5px;
+        font-size: 12px;
+        width: 200px;
+        z-index: 100;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .info-icon:hover::after {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* --- Mobile Fix --- */
+    @media only screen and (max-width: 600px) {
+        .info-icon::after {
+            position: fixed; /* Screen එකට සාපේක්ෂව පෙන්වීමට */
+            bottom: 20px;    /* Screen එකේ පහළින්ම පෙන්වීමට */
+            left: 5%;
+            right: 5%;
+            width: 90%;      /* මුළු Screen එකම ආවරණය වන සේ */
+            transform: none;
+            box-sizing: border-box;
+            background: #34495e; /* වෙනස් වර්ණයක් */
+            font-size: 14px;     /* කියවීමට පහසු වීමට */
+            padding: 12px;
+        }
+    }
+</style>
+</head>
+<body class="">
+    <button 
+    onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+    onmouseover="this.style.backgroundColor='#e0e0e0'" 
+    onmouseout="this.style.backgroundColor='#f8f9fa'"
+    style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;
+      margin:5px;
+    ">
+    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+  </button>
+    <div class="container">
+        <h1>ශ්‍රිත/ප්‍රස්ථාර</h1>
+        <ul class="accordion ldesc">
+            <li>
+                <h4>ශ්‍රිත/ප්‍රස්ථාර කියන්නේ මොනවද?</h4>
+                <div class="lcontent">
+                    <p>යම් දෙයක් (x) වෙනස් වීමට අනුරූපව තවත් දෙයක් (y) වෙනස් වෙන විදිය රූප සටහනකින් පෙන්වන එක තමා අපි ප්‍රස්තාර වලින් කරන්නේ.</p>
+                </div>
+            </li>
+        
+            <li>
+                <h4>සරල රේඛීය ප්‍රස්ථාර (y = mx + c)</h4>
+                <div class="lcontent">
+                    <strong>උදාහරණය: ටැක්සි ගාස්තුව</strong>
+                    <ul>
+                        <li>ටැක්සියට ගොඩවුණු ගමන් අය කරන අනිවාර්ය මුදල = රු. 100 (මේක <strong>c</strong>)</li>
+                        <li>යන හැම කිලෝමීටරයකටම එකතු වන මුදල = රු. 50 (මේක <strong>m</strong>)</li>
+                        <li>ඔයා ගිය මුළු දුර = <strong>x</strong></li>
+                    </ul>
+                    <p>
+                        <strong>y = 50x + 100</strong><br>
+                        මෙහි <strong>y</strong> කියන්නේ ඔයා ගෙවිය යුතු මුළු ගාස්තුවයි.
+                    </p>
+                </div>
+            </li>
+        
+            <li>
+                <h4>වර්ගජ ප්‍රස්ථාර (y = ax² + c)</h4>
+                <div class="lcontent">
+                    <strong>උදාහරණය: කාමරයකට ටයිල් ඇල්ලීම</strong>
+                    <p>හිතන්න ඔයාගේ ළඟ සමචතුරස්‍රාකාර කාමරයක් තියෙනවා. ඒ කාමරේ පැත්තක දිග <strong>x</strong> මීටර් කියලා ගමු.</p>
+                    <ul>
+                        <li>කාමරේ වර්ගඵලය = <strong>x²</strong></li>
+                        <li>එක් වර්ග මීටරයකට යන ටයිල් ප්‍රමාණය = <strong>a</strong></li>
+                        <li>අමතරව ගෙන එන ටයිල් ප්‍රමාණය = <strong>c</strong></li>
+                    </ul>
+                    <p>
+                        <strong>y = ax² + c</strong><br>
+                        එතකොට කාමරේ පැත්තක දිග අනුව කාමරේට ඕනෑ කරන මුළු ටයිල් ප්‍රමාණය <strong>(y)</strong> මේකෙන් හොයන්න පුළුවන්.
+                    </p>
+                </div>
+            </li>
+        </ul>
+    
+        <p>අපි මේ කතාකරපු m අනුක්‍රමණය ලෙසත් c අණ්තඃඛණ්ඩය ලෙසත් හඳුන්වනවා.
+            පහලින් ඔයාට පුලුවන් අනුක්‍රමණය හා අණ්තඃඛණ්ඩය අනුව ප්‍රස්තාරයක වෙනස් වීම පරීක්ශා කරන්න.</p>
+    </div>   
+    <div class="main-container">
+     
+
+        <div class="input-button-container">
+<div id="controls">
+    <div class="power-tabs">
+        <input type="radio" id="power1" name="power" value="1" checked>
+        <label for="power1">රේඛීය ප්‍රස්ථාර</label>
+      
+        <input type="radio" id="power2" name="power" value="2">
+        <label for="power2">වර්ගජ ප්‍රස්ථාර</label>
+      </div>
+      
+      
+      
+
+    <div id="equationDisplay" class="equation-display">y = 2x² + 3</div>
+
+  
+
+  
+
+        </div>
+
+        <!-- SVG Container for the Graph -->
+        <div class="graph-container">
+         
+        </div>
+        <div class="control">
+            <span>අනුක්‍රමණය:</span>
+        <div class="btn-wrapper">
+              <button class="scroll-btn left">←</button> 
+              <input type="number" id="coef" value="2" min="-10" max="10" readonly>
+              <button class="scroll-btn right">→</button>
+            </div>
+          </div>
+          
+          <div class="control">
+            <span>අණ්තඃඛණ්ඩය:</span>
+            <div class="btn-wrapper">
+            <button class="scroll-btn left">←</button> 
+            <input type="number" id="constant" value="1" min="-50" max="50" readonly>
+            <button class="scroll-btn right">→</button>
+        </div>
+          </div>
+          <div class="control">
+            <span>x හි සංගුණකය:</span>
+            <div class="btn-wrapper">
+            <button class="scroll-btn left">←</button> 
+            <input type="number" id="bValue" value="0" min="-10" max="10" readonly>
+            <button class="scroll-btn right">→</button>
+        </div>
+          </div>
+          
+        <p id="errorMessage" class="error-message hidden">
+     </p>
+
+        <p class="info-text">
+         </p>
+    </div>
+    <div id="graphData"></div>
+    <script src="js/graph.js"></script>
+    <script>
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".scroll-btn");
+  if (!btn) return;
+
+  const wrapper = btn.closest(".btn-wrapper");
+  if (!wrapper) return;
+
+  const input = wrapper.querySelector('input[type="number"]');
+  if (!input) return;
+
+  const step = input.step ? Number(input.step) : 1;
+  const min = input.min !== "" ? Number(input.min) : -Infinity;
+  const max = input.max !== "" ? Number(input.max) : Infinity;
+
+  let value = Number(input.value) || 0;
+
+  if (btn.classList.contains("left")) {
+    value -= step;
+  } else {
+    value += step;
+  }
+
+  // clamp value
+  value = Math.max(min, Math.min(max, value));
+
+  input.value = value;
+
+  // 🔥 trigger same logic as manual typing
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+});
+
+
+           createGraphSVG('.graph-container');
+
+
+
+const graphLine = document.getElementById('graphLine');
+const dotsGroup = document.getElementById('dotsGroup');
+const errorMessage = document.getElementById('errorMessage');
+const graphSVG = document.getElementById('graphSVG'); 
+
+
+const coefInput   = document.getElementById("coef"); // මේක a පදය (x^2 සංගුණකය)
+const bInput      = document.getElementById("bValue"); // අලුතින් එකතු කළ b පදය
+const constInput  = document.getElementById("constant"); // මේක c පදය
+const powerRadios = document.querySelectorAll("input[name='power']");
+const eqDisplay   = document.getElementById("equationDisplay");
+
+[coefInput, bInput, constInput].forEach(el => {
+    el.addEventListener("input", renderEquation);
+});
+
+powerRadios.forEach(radio => {
+    radio.addEventListener("change", renderEquation);
+});
+
+function renderEquation() {
+    const a = parseFloat(coefInput.value) || 0;
+    const b = parseFloat(bInput.value) || 0;
+    const c = parseFloat(constInput.value) || 0;
+    const power = document.querySelector("input[name='power']:checked").value;
+
+    let displayEq = "y = ";
+    let rawEq = "y = ";
+    let parts = [];
+    let rawParts = [];
+
+    // 1. x^2 හෝ x පදය (ප්‍රධාන සංගුණකය)
+    if (a !== 0) {
+        let term = (a === 1 ? "" : a === -1 ? "-" : a) + "x";
+        let rawTerm = a + "x";
+        if (power === "2") {
+            term += "²";
+            rawTerm += "^2";
+        }
+        parts.push(term);
+        rawParts.push(rawTerm);
+    }
+
+    // 2. b පදය (x හි සංගුණකය) - මෙය පෙන්වන්නේ power එක 2 නම් පමණි
+    if (power === "2" && b !== 0) {
+        let term = (b === 1 ? "x" : b === -1 ? "-x" : b + "x");
+        let rawTerm = b + "x";
+        
+        // ලකුණ හැසිරවීම (+ හෝ -)
+        if (parts.length > 0 && b > 0) {
+            parts.push("+ " + term);
+            rawParts.push("+" + rawTerm);
+        } else {
+            parts.push(term);
+            rawParts.push(rawTerm);
+        }
+    }
+
+    // 3. නියතය (c)
+    if (c !== 0) {
+        if (parts.length > 0) {
+            parts.push((c > 0 ? "+ " : "- ") + Math.abs(c));
+            rawParts.push((c > 0 ? "+" : "") + c);
+        } else {
+            parts.push(c);
+            rawParts.push(c);
+        }
+    }
+
+    // කිසිවක් නැතිනම් 0 පෙන්වන්න
+    if (parts.length === 0) {
+        displayEq += "0";
+        rawEq += "0";
+    } else {
+        displayEq += parts.join(" ");
+        rawEq += rawParts.join("");
+    }
+
+    eqDisplay.innerHTML = displayEq;
+    updateGraph(rawEq);
+    analyzeQuadratic(rawEq)
+}
+
+
+
+// initial render
+renderEquation();
+document.querySelectorAll('.accordion > li').forEach(item => {
+  item.addEventListener('click', function(e) {
+    // Prevent the click from affecting parent menus if nested
+    e.stopPropagation();
+
+    const lcontent = this.querySelector(':scope > .lcontent');
+    if (!lcontent) return; // Exit if this specific LI has no content div
+
+    const isOpen = this.classList.contains('active');
+
+    // Close other top-level items
+    document.querySelectorAll('.accordion > li').forEach(el => {
+      el.classList.remove('active');
+      const childContent = el.querySelector(':scope > .lcontent');
+      if (childContent) childContent.style.maxHeight = null;
+    });
+
+    // Open this item
+    if (!isOpen) {
+      this.classList.add('active');
+      lcontent.style.maxHeight = lcontent.scrollHeight + "px";
+    }
+  });
+});
+
+
+
+function analyzeQuadratic(equation) {
+    const container = document.getElementById("graphData");
+    let str = equation.replace(/\s+/g, '').replace('y=', '');
+
+    let a = 0, b = 0, c = 0;
+    const x2Match = str.match(/([+-]?\d*)x\^2/);
+    if (x2Match) {
+        let val = x2Match[1];
+        a = (val === "" || val === "+") ? 1 : (val === "-") ? -1 : parseFloat(val);
+        str = str.replace(x2Match[0], ''); 
+    }
+    const xMatch = str.match(/([+-]?\d*)x(?!\^)/);
+    if (xMatch) {
+        let val = xMatch[1];
+        b = (val === "" || val === "+") ? 1 : (val === "-") ? -1 : parseFloat(val);
+        str = str.replace(xMatch[0], '');
+    }
+    const cMatch = str.match(/[+-]?\d+(\.\d+)?/);
+    if (cMatch) { c = parseFloat(cMatch[0]); }
+
+    if (a === 0) {
+        container.innerHTML = "කරුණාකර x^2 පදයක් සහිත ශ්‍රිතයක් ඇතුළත් කරන්න.";
+        return;
+    }
+
+    const xSym = -b / (2 * a);
+    const yVal = (a * xSym * xSym) + (b * xSym) + c;
+    const type = a > 0 ? "අවම (Minimum)" : "උපරිම (Maximum)";
+    const disc = (b * b) - (4 * a * c);
+    
+    let roots = "තාත්වික මූල නොමැත";
+    if (disc >= 0) {
+        let r1 = ((-b + Math.sqrt(disc)) / (2 * a)).toFixed(2);
+        let r2 = ((-b - Math.sqrt(disc)) / (2 * a)).toFixed(2);
+        roots = (r1 === r2) ? `x = ${r1}` : `x = ${r1} හෝ x = ${r2}`;
+    }
+
+    // Helper function to create tooltip
+    const info = (msg) => `<span class="info-icon" data-tip="${msg}">?</span>`;
+
+    container.innerHTML = `
+        <div style="font-family: 'Segoe UI', sans-serif; border: 1px solid #ddd; padding: 20px; border-radius: 12px; background: #fff; max-width: 450px;">
+            <h2 style="color: #2c3e50; margin-top:0;">ප්‍රස්ථාර විශ්ලේෂණය</h2>
+            <p><strong>සමීකරණය:</strong> ${equation}</p>
+            <hr>
+            
+            <p><strong>1. ස්වභාවය:</strong> ${type} ${info("x^2 හි සංගුණකය ධන නම් 'U' හැඩය (අවම) ද, සෘණ නම් කපන ලද සීනුවක හැඩය (උපරිම) ද ලැබේ.")}</p>
+            
+            <p><strong>2. ශීර්ෂය:</strong> (${xSym.toFixed(2)}, ${yVal.toFixed(2)}) ${info("ප්‍රස්ථාරය හැරෙන ලක්ෂ්‍යය මෙලෙස හැඳින්වේ.")}</p>
+            
+            <p><strong>3. සමමිතිය අක්ෂය:</strong> x = ${xSym.toFixed(2)} ${info("ප්‍රස්ථාරය හරියටම මැදින් දෙකට බෙදන සිරස් රේඛාවයි.")}</p>
+            
+            <p><strong>4. ${type} අගය:</strong> ${yVal.toFixed(2)} ${info("ශ්‍රිතයේ ඇති කුඩාම හෝ විශාලම y අගයයි.")}</p>
+            
+            <p><strong>5. y-අන්තඃඛණ්ඩය:</strong> ${c} ${info("ප්‍රස්ථාරය y අක්ෂය කපාගෙන යන ලක්ෂ්‍යයයි.")}</p>
+            
+            <p><strong>6. මූලයන්:</strong> <span style="color: #27ae60;">${roots}</span> ${info("ප්‍රස්ථාරය x අක්ෂය ඡේදනය කරන ලක්ෂ්‍යයන්හි x අගයන් වේ.")}</p>
+        </div>
+    `;
+}
+
+
+    </script>
+</body>
+</html>
