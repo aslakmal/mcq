@@ -1,4 +1,4 @@
-const CACHE_NAME = "gfhhf";
+const CACHE_NAME = "jjjjjjju";
 
 // 1. Pre-cache core local assets
 // Note: Only include the main CDN entry points here. 
