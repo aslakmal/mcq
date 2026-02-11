@@ -56,31 +56,29 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-// Fetch: Cache-First Strategy (Ideal for libraries like MathJax)
 self.addEventListener("fetch", (e) => {
-  if (e.request.method !== "GET") return;
-  if (!e.request.url.startsWith("http")) return;
-
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-
-      const networkFetch = fetch(e.request).then((networkResponse) => {
-        if (
-          networkResponse &&
-          (networkResponse.status === 200 || networkResponse.status === 0)
-        ) {
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, networkResponse.clone());
-          });
+    if (e.request.method !== "GET") return;
+  
+    // FIX: Only process http and https requests
+    if (!e.request.url.startsWith('http')) return;
+  
+    e.respondWith(
+      caches.match(e.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
         }
-        return networkResponse;
-      }).catch(() => {
-        // optional offline fallback
-      });
-
-      // 👉 Serve cache immediately, update in background
-      return cachedResponse || networkFetch;
-    })
-  );
-});
-
+  
+        return fetch(e.request).then((networkResponse) => {
+          if (networkResponse && (networkResponse.status === 200 || networkResponse.status === 0)) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(e.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        }).catch(() => {
+          // Fallback logic could go here
+        });
+      })
+    );
+  });
