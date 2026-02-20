@@ -772,7 +772,9 @@ document.addEventListener('click', e => {
 
   document.getElementById('page-loader').style.display = 'flex';
 });
-
+window.addEventListener('load', () => {
+  document.getElementById('page-loader').style.display = 'none';
+});
   </script>
 </body>
 
