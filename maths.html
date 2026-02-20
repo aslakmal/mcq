@@ -772,9 +772,14 @@ document.addEventListener('click', e => {
 
   document.getElementById('page-loader').style.display = 'flex';
 });
-window.addEventListener('load', () => {
-  document.getElementById('page-loader').style.display = 'none';
-});
+function hideLoader() {
+  const loader = document.getElementById('page-loader');
+  if (loader) loader.style.display = 'none';
+}
+
+
+window.addEventListener('load', hideLoader);
+window.addEventListener('pageshow', hideLoader);
   </script>
 </body>
 
