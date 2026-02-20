@@ -56,29 +56,45 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-self.addEventListener("fetch", (e) => {
-    if (e.request.method !== "GET") return;
-  
-    // FIX: Only process http and https requests
-    if (!e.request.url.startsWith('http')) return;
-  
-    e.respondWith(
-      caches.match(e.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-  
-        return fetch(e.request).then((networkResponse) => {
-          if (networkResponse && (networkResponse.status === 200 || networkResponse.status === 0)) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(e.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        }).catch(() => {
-          // Fallback logic could go here
-        });
-      })
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
+  if (!event.request.url.startsWith("http")) return;
+
+  // ✅ HANDLE PAGE NAVIGATION (HTML)
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match(event.request).then(cached => {
+          const networkFetch = fetch(event.request)
+            .then(response => {
+              if (response && response.status === 200) {
+                cache.put(event.request, response.clone());
+              }
+              return response;
+            })
+            .catch(() => cached);
+
+          // ⚡ Serve cached page instantly if exists
+          return cached || networkFetch;
+        })
+      )
     );
-  });
+    return;
+  }
+
+  // ✅ HANDLE STATIC FILES (JS, CSS, images)
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(event.request).then(response => {
+        if (response && response.status === 200) {
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, response.clone());
+          });
+        }
+        return response;
+      });
+    })
+  );
+});
