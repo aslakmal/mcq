@@ -1,9 +1,17 @@
-const CACHE_NAME = "lkjk";
+/* =========================
+   CACHE NAMES
+========================= */
 
-// 1. Pre-cache core local assets
-// Note: Only include the main CDN entry points here. 
-// Sub-files (fonts/modules) will be caught by the fetch handler.
-const CORE_ASSETS = [
+const APP_CACHE = "app-shell-v1";     // change ONLY when HTML/JS changes
+const QUIZ_CACHE = "quiz-data";       // persistent (no version)
+const CDN_CACHE = "cdn-static";
+
+/* =========================
+   FILE LISTS
+========================= */
+
+// App shell (versioned)
+const APP_ASSETS = [
   "./",
   "./index.html",
   "./maths.html",
@@ -13,88 +21,133 @@ const CORE_ASSETS = [
   "./log.html",
   "./trigonometry.html",
   "./gs.html",
-  ...Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`),
-  "js/graph.js",
-  "js/line.js",
-  "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js",
-  "https://cdn.jsdelivr.net/npm/chart.js",
-  "https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap"
+  "./js/graph.js",
+  "./js/line.js"
 ];
 
-self.addEventListener("install", (e) => {
-  self.skipWaiting();
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      console.log("Caching core assets...");
-      
-      // We still want to be resilient, but we 'await' the process
-      const results = await Promise.allSettled(
-        CORE_ASSETS.map((url) => 
-          fetch(url).then((response) => {
-            if (!response.ok) throw new Error(`Failed to fetch ${url}`);
-            return cache.put(url, response);
-          })
-        )
-      );
+// ALL quiz JSON files (required for random quiz)
+const QUIZ_FILES = Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`);
 
-      // Check if critical items failed (Optional)
-      const failed = results.filter(r => r.status === 'rejected');
-      if (failed.length > 0) {
-        console.warn(`${failed.length} assets failed to cache, but SW installed anyway.`);
-      }
-    })
+/* =========================
+   INSTALL
+========================= */
+
+self.addEventListener("install", event => {
+  self.skipWaiting();
+
+  event.waitUntil(
+    (async () => {
+      // Cache app shell
+      const appCache = await caches.open(APP_CACHE);
+      await appCache.addAll(APP_ASSETS);
+
+      // Cache ALL quiz files (first install delay is OK)
+      const quizCache = await caches.open(QUIZ_CACHE);
+      await quizCache.addAll(QUIZ_FILES);
+    })()
   );
 });
 
-// Activate: Clean up old caches
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((names) =>
-      Promise.all(names.map((n) => n !== CACHE_NAME && caches.delete(n)))
+/* =========================
+   ACTIVATE
+========================= */
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (![APP_CACHE, QUIZ_CACHE, CDN_CACHE].includes(key)) {
+            return caches.delete(key);
+          }
+        })
+      )
     )
   );
+
   self.clients.claim();
 });
 
+/* =========================
+   FETCH
+========================= */
+
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
-  if (!event.request.url.startsWith("http")) return;
 
-  // ✅ HANDLE PAGE NAVIGATION (HTML)
+  const url = new URL(event.request.url);
+
+  /* ---------- HTML (network-first) ---------- */
   if (event.request.mode === "navigate") {
     event.respondWith(
-      caches.open(CACHE_NAME).then(cache =>
-        cache.match(event.request).then(cached => {
-          const networkFetch = fetch(event.request)
-            .then(response => {
-              if (response && response.status === 200) {
-                cache.put(event.request, response.clone());
-              }
-              return response;
-            })
-            .catch(() => cached);
+      fetch(event.request)
+        .then(res => {
+          caches.open(APP_CACHE).then(c =>
+            c.put(event.request, res.clone())
+          );
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
 
-          // ⚡ Serve cached page instantly if exists
-          return cached || networkFetch;
+  /* ---------- QUIZ JSON (network-first, per-file update) ---------- */
+  if (url.pathname.endsWith(".json")) {
+    event.respondWith(
+      fetch(event.request)
+        .then(res => {
+          caches.open(QUIZ_CACHE).then(c =>
+            c.put(event.request, res.clone())
+          );
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  /* ---------- CDN FILES (cache-on-demand) ---------- */
+  if (
+    url.hostname.includes("cdn.jsdelivr.net") ||
+    url.hostname.includes("fonts.googleapis.com") ||
+    url.hostname.includes("fonts.gstatic.com")
+  ) {
+    event.respondWith(
+      caches.match(event.request).then(cached =>
+        cached ||
+        fetch(event.request).then(res => {
+          caches.open(CDN_CACHE).then(c =>
+            c.put(event.request, res.clone())
+          );
+          return res;
         })
       )
     );
     return;
   }
 
-  // ✅ HANDLE STATIC FILES (JS, CSS, images)
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
+  /* ---------- JS / CSS (stale-while-revalidate) ---------- */
+  if (
+    event.request.destination === "script" ||
+    event.request.destination === "style"
+  ) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        const fetchPromise = fetch(event.request).then(res => {
+          caches.open(APP_CACHE).then(c =>
+            c.put(event.request, res.clone())
+          );
+          return res;
+        });
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
 
-      return fetch(event.request).then(response => {
-        if (response && response.status === 200) {
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, response.clone());
-          });
-        }
-        return response;
-      });
-    })
+  /* ---------- DEFAULT ---------- */
+  event.respondWith(
+    caches.match(event.request).then(res => res || fetch(event.request))
   );
 });
