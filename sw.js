@@ -2,15 +2,14 @@
    CACHE NAMES
 ========================= */
 
-const APP_CACHE = "app-shell-v1";     // change ONLY when HTML/JS changes
-const QUIZ_CACHE = "quiz-data";       // persistent (no version)
+const APP_CACHE = "app-shell-v1";
+const QUIZ_CACHE = "quiz-data";
 const CDN_CACHE = "cdn-static";
 
 /* =========================
    FILE LISTS
 ========================= */
 
-// App shell (versioned)
 const APP_ASSETS = [
   "./",
   "./index.html",
@@ -25,7 +24,6 @@ const APP_ASSETS = [
   "./js/line.js"
 ];
 
-// ALL quiz JSON files (required for random quiz)
 const QUIZ_FILES = Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`);
 
 /* =========================
@@ -34,16 +32,10 @@ const QUIZ_FILES = Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`);
 
 self.addEventListener("install", event => {
   self.skipWaiting();
-
   event.waitUntil(
     (async () => {
-      // Cache app shell
-      const appCache = await caches.open(APP_CACHE);
-      await appCache.addAll(APP_ASSETS);
-
-      // Cache ALL quiz files (first install delay is OK)
-      const quizCache = await caches.open(QUIZ_CACHE);
-      await quizCache.addAll(QUIZ_FILES);
+      await caches.open(APP_CACHE).then(c => c.addAll(APP_ASSETS));
+      await caches.open(QUIZ_CACHE).then(c => c.addAll(QUIZ_FILES));
     })()
   );
 });
@@ -56,15 +48,14 @@ self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.map(key => {
-          if (![APP_CACHE, QUIZ_CACHE, CDN_CACHE].includes(key)) {
-            return caches.delete(key);
+        keys.map(k => {
+          if (![APP_CACHE, QUIZ_CACHE, CDN_CACHE].includes(k)) {
+            return caches.delete(k);
           }
         })
       )
     )
   );
-
   self.clients.claim();
 });
 
@@ -77,70 +68,68 @@ self.addEventListener("fetch", event => {
 
   const url = new URL(event.request.url);
 
-  /* ---------- HTML (network-first) ---------- */
+  /* ---------- HTML ---------- */
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request)
-        .then(res => {
-          caches.open(APP_CACHE).then(c =>
-            c.put(event.request, res.clone())
-          );
-          return res;
+        .then(response => {
+          const clone = response.clone();
+          caches.open(APP_CACHE).then(c => c.put(event.request, clone));
+          return response;
         })
         .catch(() => caches.match(event.request))
     );
     return;
   }
 
-  /* ---------- QUIZ JSON (network-first, per-file update) ---------- */
+  /* ---------- QUIZ JSON ---------- */
   if (url.pathname.endsWith(".json")) {
     event.respondWith(
       fetch(event.request)
-        .then(res => {
-          caches.open(QUIZ_CACHE).then(c =>
-            c.put(event.request, res.clone())
-          );
-          return res;
+        .then(response => {
+          const clone = response.clone();
+          caches.open(QUIZ_CACHE).then(c => c.put(event.request, clone));
+          return response;
         })
         .catch(() => caches.match(event.request))
     );
     return;
   }
 
-  /* ---------- CDN FILES (cache-on-demand) ---------- */
+  /* ---------- CDN ---------- */
   if (
     url.hostname.includes("cdn.jsdelivr.net") ||
     url.hostname.includes("fonts.googleapis.com") ||
     url.hostname.includes("fonts.gstatic.com")
   ) {
     event.respondWith(
-      caches.match(event.request).then(cached =>
-        cached ||
-        fetch(event.request).then(res => {
-          caches.open(CDN_CACHE).then(c =>
-            c.put(event.request, res.clone())
-          );
-          return res;
-        })
-      )
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+
+        return fetch(event.request).then(response => {
+          const clone = response.clone();
+          caches.open(CDN_CACHE).then(c => c.put(event.request, clone));
+          return response;
+        });
+      })
     );
     return;
   }
 
-  /* ---------- JS / CSS (stale-while-revalidate) ---------- */
+  /* ---------- JS / CSS ---------- */
   if (
     event.request.destination === "script" ||
     event.request.destination === "style"
   ) {
     event.respondWith(
       caches.match(event.request).then(cached => {
-        const fetchPromise = fetch(event.request).then(res => {
-          caches.open(APP_CACHE).then(c =>
-            c.put(event.request, res.clone())
-          );
-          return res;
+        if (cached) return cached;
+
+        return fetch(event.request).then(response => {
+          const clone = response.clone();
+          caches.open(APP_CACHE).then(c => c.put(event.request, clone));
+          return response;
         });
-        return cached || fetchPromise;
       })
     );
     return;
