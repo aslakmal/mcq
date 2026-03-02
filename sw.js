@@ -1,18 +1,17 @@
 /* =========================
    CACHE NAMES
 ========================= */
-
-const APP_CACHE = "app-shell-v1";
-const QUIZ_CACHE = "quiz-data";
-const CDN_CACHE = "cdn-static";
+const APP_CACHE = "app-shell-v2"; // Incremented version
+const QUIZ_CACHE = "quiz-data-v2";
+const CDN_CACHE = "cdn-static-v1";
 
 /* =========================
    FILE LISTS
 ========================= */
-
 const APP_ASSETS = [
   "./",
   "./index.html",
+  "./1.html",
   "./maths.html",
   "./circle.html",
   "./graph.html",
@@ -24,26 +23,38 @@ const APP_ASSETS = [
   "./js/line.js"
 ];
 
+// Generates ./1.json to ./41.json
 const QUIZ_FILES = Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`);
 
 /* =========================
    INSTALL
+   Pre-caches everything immediately
 ========================= */
-
 self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(
-    (async () => {
-      await caches.open(APP_CACHE).then(c => c.addAll(APP_ASSETS));
-      await caches.open(QUIZ_CACHE).then(c => c.addAll(QUIZ_FILES));
-    })()
+    Promise.all([
+      caches.open(APP_CACHE).then(cache => cache.addAll(APP_ASSETS)),
+      caches.open(QUIZ_CACHE).then(async (cache) => {
+        // We use map + fetch to prevent one 404 from breaking the whole install
+        const promises = QUIZ_FILES.map(url => 
+          fetch(url)
+            .then(response => {
+              if (response.ok) return cache.put(url, response);
+              throw new Error(`Failed to fetch ${url}`);
+            })
+            .catch(err => console.warn("Pre-cache warning:", url))
+        );
+        return Promise.all(promises);
+      })
+    ])
   );
 });
 
 /* =========================
    ACTIVATE
+   Cleans up old caches
 ========================= */
-
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -60,43 +71,52 @@ self.addEventListener("activate", event => {
 });
 
 /* =========================
-   FETCH
+   FETCH STRATEGIES
 ========================= */
-
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
   const url = new URL(event.request.url);
 
-  /* ---------- HTML ---------- */
+  /* 1. QUIZ JSON & APP ASSETS (Cache-First) 
+     We check cache first because we pre-cached these during install.
+  */
+  if (url.pathname.endsWith(".json") || APP_ASSETS.some(asset => url.pathname.endsWith(asset.replace('./', '')))) {
+    event.respondWith(
+      caches.match(event.request).then(cachedResponse => {
+        if (cachedResponse) return cachedResponse;
+        
+        // If not in cache (e.g. a new file), fetch and save
+        return fetch(event.request).then(networkResponse => {
+          const clone = networkResponse.clone();
+          const targetCache = url.pathname.endsWith(".json") ? QUIZ_CACHE : APP_CACHE;
+          caches.open(targetCache).then(cache => cache.put(event.request, clone));
+          return networkResponse;
+        });
+      })
+    );
+    return;
+  }
+
+  /* 2. NAVIGATION (HTML)
+     Network-First, falling back to cache if offline.
+  */
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request)
         .then(response => {
           const clone = response.clone();
-          caches.open(APP_CACHE).then(c => c.put(event.request, clone));
+          caches.open(APP_CACHE).then(cache => cache.put(event.request, clone));
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => caches.match(event.request) || caches.match("./index.html"))
     );
     return;
   }
 
-  /* ---------- QUIZ JSON ---------- */
-  if (url.pathname.endsWith(".json")) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const clone = response.clone();
-          caches.open(QUIZ_CACHE).then(c => c.put(event.request, clone));
-          return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
-  /* ---------- CDN ---------- */
+  /* 3. CDN & STATIC LIBS
+     Cache-First with Network Update
+  */
   if (
     url.hostname.includes("cdn.jsdelivr.net") ||
     url.hostname.includes("fonts.googleapis.com") ||
@@ -105,10 +125,9 @@ self.addEventListener("fetch", event => {
     event.respondWith(
       caches.match(event.request).then(cached => {
         if (cached) return cached;
-
         return fetch(event.request).then(response => {
           const clone = response.clone();
-          caches.open(CDN_CACHE).then(c => c.put(event.request, clone));
+          caches.open(CDN_CACHE).then(cache => cache.put(event.request, clone));
           return response;
         });
       })
@@ -116,26 +135,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  /* ---------- JS / CSS ---------- */
-  if (
-    event.request.destination === "script" ||
-    event.request.destination === "style"
-  ) {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        if (cached) return cached;
-
-        return fetch(event.request).then(response => {
-          const clone = response.clone();
-          caches.open(APP_CACHE).then(c => c.put(event.request, clone));
-          return response;
-        });
-      })
-    );
-    return;
-  }
-
-  /* ---------- DEFAULT ---------- */
+  /* 4. DEFAULT (Network with Cache Fallback) */
   event.respondWith(
     caches.match(event.request).then(res => res || fetch(event.request))
   );
