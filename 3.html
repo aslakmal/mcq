@@ -1,137 +1,100 @@
 <!DOCTYPE html>
 <html lang="si">
+
 <head>
     <meta charset="UTF-8">
-    <title>🔠 6 ශ්‍රේණිය ගණිතය: වීජ ගණිතය සරලව</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Smartboard - Algebra Balance</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="stylesheet" href="css/scale.css">
     <style>
-        body {
-            font-family: 'Iskoola Pota', 'Noto Sans Sinhala', sans-serif;
-            background-color: #f7f9fc;
-            color: #34495e;
-            line-height: 1.6;
-            margin: 20px;
-        }
-        h1 {
-            color: #8e44ad;
-            border-bottom: 3px solid #8e44ad;
-            padding-bottom: 10px;
-            text-align: center;
-        }
-        h2 {
-            color: #27ae60;
-            margin-top: 30px;
-            border-left: 5px solid #27ae60;
-            padding-left: 10px;
-        }
-        h3 {
-            color: #e67e22;
-            margin-top: 15px;
-        }
-        .content-box {
-            background-color: #ffffff;
-            padding: 18px;
-            border-radius: 10px;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
-        }
-        .reason-box {
-            background-color: #ecf0f1;
-            padding: 15px;
-            border-left: 5px solid #3498db;
-            margin: 15px 0;
-            font-size: 1.05em;
-        }
-        .example-block {
-            background-color: #f0f8ff;
-            padding: 12px;
-            border-radius: 5px;
-            border: 1px dashed #cccccc;
-            margin-top: 10px;
-        }
-        ul {
-            list-style-type: '👉 ';
-            padding-left: 25px;
-        }
-        .tip {
-            color: #c0392b;
-            font-weight: bold;
-        }
+
     </style>
 </head>
+
 <body>
 
-    <h1>🔠 වීජ ගණිතය: අකුරු සහ සංඛ්‍යා!</h1>
+    <h2 style="margin:0">සමීකරණ තරාදිය</h2>
+    <ul class="ldesc accordion">
+        <li>
+            <h4>මොකක්ද මේ?</h4>
+            <div class="lcontent">
+               අපේ අලුත්ම සමීකරණ තරාදිය. මේකෙන් ඔයාට පුළුවන් සමීකරණයක දෙපැත්ත හරියටම සමාන වෙන්නේ කොහොමද කියලා ඇස් දෙකෙන්ම දැකගන්න.
+            </div>
+        </li>
+        <li>
+            <h4>මේකෙන් වෙන්නේ මොකක්ද?</h4>
+            <div class="lcontent">
+                තරාදියක් වගේම තමයි! සමීකරණයේ එක පැත්තක අගයක් වෙනස් කරද්දී අනිත් පැත්තට වෙන දේ බලාගන්න පුළුවන්. එකතු කිරීම්, අඩු කිරීම් කරද්දී තියෙන්න ඕනැ නීති ටික ලේසියෙන්ම ඔලුවට යනවා.
+            </div>
+        </li>
+        <li>
+            <h4>කාටද මේක වැදගත් වෙන්නේ?</h4>
+            <div class="lcontent">
+                ඔයා Math Expert කෙනෙක් වුණත්, නැතත් මේ සමීකරණ තරාදිය එකෙන් වැරදීම් අඩු කරගෙන ගණන් හදන එක සෙල්ලමක් වගේ ලේසියෙන් කරගන්න පුළුවන්. වැඩේ ගොඩදාගන්න දැන් හරිම ලේසී!
+            </div>
+        </li>
+    </ul>
+    <div id="stage">
+        <div class="pillar">
+            <div class="pivot">=</div>
+        </div>
 
-    <h2>❓ වීජ ගණිතය අපට වැදගත් ඇයි?</h2>
-    <div class="reason-box">
-        <p>
-            වීජ ගණිතය අපට වැදගත් වෙන්නේ, අපිට නොදන්නා දේවල් (අගයන්) සොයා ගන්න එය උදව් කරන නිසයි.
-        </p>
-        <ul>
-            <li>නොදන්නා දේ සොයන්න: ඔයා ළඟ කොපමණ මුදලක් තියෙනවාද කියලා නොදැන ඉන්න වෙලාවට.</li>
-            <li>ලොකු දේවල් ගණන් කරන්න: ගොඩනැගිල්ලක උස කීයද? නැතිනම් බස් එකක ගමන් වේගය කීයද?</li>
-        </ul>
-    </div>
-    
-    <h2>✨ 1. එකම දේවල් එකතු කරමු (වීජීය ප්‍රකාශන සරල කිරීම)</h2>
-    <div class="content-box">
-        <p>
-            වීජීය ප්‍රකාශනයක් කියන්නේ සංඛ්‍යා, අකුරු, සහ එකතු කිරීම/අඩු කිරීම් එකට තියෙන එකට.
-        </p>
+        <div id="beam">
+            <div class="pan-assembly left-pan-pos">
+                <div class="cable-container">
+                    <div class="cable cable-l"></div>
+                    <div class="cable cable-r"></div>
+                </div>
+                <div class="bowl">
+                    <div id="left-pan" class="pan-text"></div>
+                </div>
+            </div>
 
-        <h3>🍎 සමාන යාලුවෝ (සමාන පද)</h3>
-        <p>
-            වීජ ගණිතයේදී, එකම අකුර තියෙන පද විතරයි අපිට එකට එකතු කරන්න හෝ අඩු කරන්න පුළුවන් වෙන්නේ.
-        </p>
-
-        <p class="example-block">
-      
-            ඔබේ කූඩයේ ඇපල් 5ක් සහ දොඩම් 2ක් තිබුණා. අම්මා තවත් ඇපල් 3ක් දැම්මා.
-            <br>
-            <span class="tip">ඇපල් a කියලා සහ දොඩම් d කියලා අපි සමීකරණය ලියමු.</span> $5a + 2d + 3a$
-            <p>ඔයාට එකතු කරන්න පුළුවන් වෙන්නේ ඇපල් විතරයි.ඔබට කවදාවත් ඇපල් සහ දොඩම් එකට එකතු කරන්න බැහැ!</p>
-          
-            <span class="tip"> සරල කළ විට:</span> 
-            <br>
-            $(5a + 3a) + 2d = 8a + 2d$
-            <br>
-            දැන්: ඇපල් 8යි, දොඩම් 2යි. 
-        </p>
-    </div>
-
-    <h2>⚖️ 2. නොදන්නා දේ සොයමු (සරල සමීකරණ විසඳීම)</h2>
-    <div class="content-box">
-  
-            <h3>සමීකරණ විසඳමු:</h3>
-        
-        <p class="example-block">
-         
-            ඔයා ළඟ ස්ටිකර් කීයක් තිබුණද කියලා ඔයාට අමතකයි 
-            <br>
-            ඔයා තවත් ස්ටිකර් 4ක් යාළුවෙක්ගෙන් ගත්තා.
-            <br>
-            දැන් ඔයා ළඟ මුළු ස්ටිකර් 10ක් තියෙනවා.
-            නොදන්නා ස්ටිකර් ගණන $x$ කියලා හිතමු.
-            <br>
-            <span class="tip">අපේ සමීකරණය:</span> $x + 4 = 10$
-            <br>
-            විසඳුම: $x$ (නොදන්නා ස්ටිකර් ගණන) තනි කරමු.
-            <br>
-            අපිට වම් පැත්තේ තියෙන +4 එපා. ඒක නැති කරන්න 4ක් අඩු කරමු. (එතකොට අනිත් පැත්තෙනුත් 4ක් අඩු කරන්න ඕන!)
-            <br>
-            $x = 10 - 4$
-            <br>
-            පිළිතුර: $x = 6$
-            <br>
-            (මුලින් ඔයා ළඟ ස්ටිකර් 6ක් තිබිලා තියෙනවා!)
-        </p>
+            <div class="pan-assembly right-pan-pos">
+                <div class="cable-container">
+                    <div class="cable cable-l"></div>
+                    <div class="cable cable-r"></div>
+                </div>
+                <div class="bowl">
+                    <div id="right-pan" class="pan-text"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <hr>
-    
-    <p style="text-align: center;">
-        🎉 වීජ ගණිතය කියන්නේ ප්‍රහේලිකා විසඳනවා වගේ දෙයක්. ඒක හරිම ලේසියි!
-    </p>
+    <div class="controls">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setTab('+', this)">+</button>
+            <button class="tab-btn" onclick="setTab('-', this)">-</button>
+            <button class="tab-btn" onclick="setTab('*', this)">×</button>
+            <button class="tab-btn" onclick="setTab('/', this)">÷</button>
+            <button class="tab-btn" onclick="setTab('^', this)">x²</button>
+            <button class="tab-btn" onclick="setTab('sqrt', this)">√</button>
+        </div>
 
+        <div class="input-group">
+            <input type="number" id="op-value" inputmode="numeric" value="1">
+            <span id="prompt-text">ක් එකතු කරන්න</span>
+        </div>
+
+        <div class="action-grid">
+            <button class="side-btn btn-left" onclick="applyOp('left')">වමට</button>
+            <button class="side-btn btn-right" onclick="applyOp('right')">දකුණට</button>
+            <div>
+                <button id="undo-btn" class="side-btn" style="background:#e74c3c" onclick="undo()"
+                    disabled><span>&#8634;</span></button>
+                <button id="redo-btn" class="side-btn" style="background:#3498db" onclick="redo()"
+                    disabled><span>&#8635;</span></button>
+            </div> <button class="side-btn" style="background:#27ae60" onclick="initGame()">වෙනත් ගැටලුවක්</button>
+        </div>
+    </div>
+
+
+
+    <script src="js/scale.js"> </script>
 </body>
+
 </html>
