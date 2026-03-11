@@ -27,11 +27,8 @@
 </head>
 
 <body>
-    <button 
-    onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
-    onmouseover="this.style.backgroundColor='#e0e0e0'" 
-    onmouseout="this.style.backgroundColor='#f8f9fa'"
-    style="
+    <button onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+        onmouseover="this.style.backgroundColor='#e0e0e0'" onmouseout="this.style.backgroundColor='#f8f9fa'" style="
       display: inline-flex;
       align-items: center;
       padding: 8px 16px;
@@ -47,136 +44,219 @@
       outline: none;
       height:auto;width:auto;margin:5px;
     ">
-    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
-  </button>
-  <div class="container">
-    <div class="header">
-        <h1>ලඝුගණක</h1>
-    </div>
-<div class="lbody section">
- 
-    <ul class="ldesc accordion">
-        
-        <li><h4>මොකද්ද මේ?</h4><div class="lcontent">ලඝුගණක පොත කියන්නෙ ලේසියෙන් ගනන් හදන්න උදව් කරන පොතක්</div></li>
-        
-        <li><h4>මොකටද?</h4><div class="lcontent">කැල්කියුලේටර් එහෙම නැති කාලෙ ලොකු ගනන් ගුණ කරන්න බෙදන්න ඕනැ උනාම ලඝුපොත තමයි පාවිච්චි කරේ</div></li>
-        
-        <li><h4>කොහොමද?</h4><div class="lcontent">ලොකු ඉලක්කම් දෙකක් ගුණ කරන්නනම් ඒ ඉලක්කම් දෙකට අදාල ලඝුපොතේ ඉලක්කම් දෙක හොයලා ඒ දෙක එකතු කරලා ඒ එන ඉලක්කමට
-            අදාල ප්‍රතිලඝු අංකය ලඝුපොතෙන්ම බලලා හොයාගන්න විතරයි තියෙන්නේ</div></li>
-            
-        <li><h4>වාසිය?</h4><div class="lcontent">මෙතනදී දීර්ඝ ගුණකිරීම එකතු කිරීමක් බවට මාරු උන නිසා වැඩේ ලේසි වෙනවා</div></li>
-        
-        <li><h4>ගුණකරන්න විතරද?</h4><div class="lcontent">ගුණකිරීම් විතරක් නෙමෙයි.බෙදන්න,බලය/වර්ගමූලය හොයන්නත් ලඝුගණක වලින් පුලුවන්
-            <ul style="padding: 0;">
+        <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+    </button>
+    <div class="container">
+        <div class="header">
+            <h1>ලඝුගණක</h1>
+        </div>
+        <div class="lbody section">
+
+            <ul class="ldesc accordion">
+
                 <li>
-                    <strong>ගුණකිරීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>එකතු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-                    <p>$$\log(m \times n) = \log(m) + \log(n)$$</p>
-                    <i>මෙතනදි log() යන්නෙන් සංකේතවත් වෙන්නෙ වරහන් ඇතුලේ ඇති ඉලක්කමේ 10 පාදයට ලඝුගණකය යන්නයි.
-                        මෙය කෙටියෙන් lg() ලෙසද ලිවිය හැක.</i>    
+                    <h4>මොකද්ද මේ?</h4>
+                    <div class="lcontent">ලඝුගණක පොත කියන්නෙ ලේසියෙන් ගනන් හදන්න උදව් කරන පොතක්</div>
                 </li>
+
                 <li>
-                    <strong>බෙදීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>අඩු</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-                    <p>$$\log\left(\frac{m}{n}\right) = \log(m) - \log(n)$$</p>
+                    <h4>මොකටද?</h4>
+                    <div class="lcontent">කැල්කියුලේටර් එහෙම නැති කාලෙ ලොකු ගනන් ගුණ කරන්න බෙදන්න ඕනැ උනාම ලඝුපොත තමයි
+                        පාවිච්චි කරේ</div>
                 </li>
+
                 <li>
-                    <strong>බලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>ගුණ</strong> කරලා ප්‍රතිලඝු හොයන්න ඕනැ.
-                    <p>$$\log(m^n) = n \times \log(m)$$</p>
+                    <h4>කොහොමද?</h4>
+                    <div class="lcontent">ලොකු ඉලක්කම් දෙකක් ගුණ කරන්නනම් ඒ ඉලක්කම් දෙකට අදාල ලඝුපොතේ ඉලක්කම් දෙක හොයලා
+                        ඒ දෙක එකතු කරලා ඒ එන ඉලක්කමට
+                        අදාල ප්‍රතිලඝු අංකය ලඝුපොතෙන්ම බලලා හොයාගන්න විතරයි තියෙන්නේ</div>
                 </li>
+
                 <li>
-                    <strong>වර්ගමූලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>බෙදලා</strong> ප්‍රතිලඝු හොයන්න ඕනැ.
-                    <p>$$\log(\sqrt{m}) = \frac{1}{n} \times \log(m)$$</p>
+                    <h4>වාසිය?</h4>
+                    <div class="lcontent">මෙතනදී දීර්ඝ ගුණකිරීම එකතු කිරීමක් බවට මාරු උන නිසා වැඩේ ලේසි වෙනවා</div>
+                </li>
+
+                <li>
+                    <h4>ගුණකරන්න විතරද?</h4>
+                    <div class="lcontent">ගුණකිරීම් විතරක් නෙමෙයි.බෙදන්න,බලය/වර්ගමූලය හොයන්නත් ලඝුගණක වලින් පුලුවන්
+                        <ul style="padding: 0;">
+                            <li>
+                                <strong>ගුණකිරීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>එකතු</strong> කරලා
+                                ප්‍රතිලඝු හොයන්න ඕනැ.
+                                <p>$$\log(m \times n) = \log(m) + \log(n)$$</p>
+                                <i>මෙතනදි log() යන්නෙන් සංකේතවත් වෙන්නෙ වරහන් ඇතුලේ ඇති ඉලක්කමේ 10 පාදයට ලඝුගණකය යන්නයි.
+                                    මෙය කෙටියෙන් lg() ලෙසද ලිවිය හැක.</i>
+                            </li>
+                            <li>
+                                <strong>බෙදීමක්</strong> නම් ඉලක්කම් දෙකේ ලඝුගණකය හොයලා <strong>අඩු</strong> කරලා
+                                ප්‍රතිලඝු හොයන්න ඕනැ.
+                                <p>$$\log\left(\frac{m}{n}\right) = \log(m) - \log(n)$$</p>
+                            </li>
+                            <li>
+                                <strong>බලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>ගුණ</strong> කරලා ප්‍රතිලඝු
+                                හොයන්න ඕනැ.
+                                <p>$$\log(m^n) = n \times \log(m)$$</p>
+                            </li>
+                            <li>
+                                <strong>වර්ගමූලයක්</strong> නම් ඉලක්කමේ ලඝුගණකය හොයලා <strong>බෙදලා</strong> ප්‍රතිලඝු
+                                හොයන්න ඕනැ.
+                                <p>$$\log(\sqrt{m}) = \frac{1}{n} \times \log(m)$$</p>
+                            </li>
+                        </ul>
+
+                    </div>
                 </li>
             </ul>
 
-        </div></li>
-    </ul>
+            <h3>
 
-    <h3>
-   
-    </h3>
+            </h3>
 
-   
-    <p>ලඝු අංකයක පූර්නාංශය,දශමංශය කියලා කොටස් දෙකක් තියනවා. </p>
-    <p>උදා: 2.6558</p>
 
-    
+            <p>ලඝු අංකයක පූර්නාංශය,දශමංශය කියලා කොටස් දෙකක් තියනවා. </p>
+            <p>උදා: 2.6558</p>
 
-    <div style="font-family: Arial, sans-serif; padding: 20px; margin: auto; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; text-align: center; width: fit-content;">
-        <div style="font-size: 40px; font-weight: bold; margin-bottom: 20px;"> <span
-                style="color: #27ae60; border: 2px solid #27ae60; border-radius: 50%; padding: 5px 15px; display: inline-block;">2</span>
-            <span style="color: #333;">.</span> <span
-                style="color: #03A9F4; border: 2px solid #03A9F4; border-radius: 15px; padding: 5px 15px; display: inline-block;">6558</span>
-        </div>
 
-        <div style="display: flex; justify-content: flex-start; gap: 50px;">
-            <div style="text-align: center;">
-                <div style="font-size: 24px; color: #27ae60;">↑</div>
-                <div style="font-weight: bold; color: #27ae60;">පූර්ණාංශය</div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 24px; color: #03A9F4;">↑</div>
-                <div style="font-weight: bold; color: #03A9F4;">දශමාංශය</div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="section">
-    <h3>ලඝුපොත</h3>
-    <p>පහල තියෙන්නෙ ඩිජිටල් ලඝුපොතක්.ඕනිම ඉලක්කමක ලඝුගණකය හොයන්නත් ඕනැම ලඝුගණකයට ප්‍රතිලඝු හොයන්නත් මේ ඩිජිටල් ලඝුපොතෙන් ඉක්මනින්ම පුලුවන්.</p>
-  
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'logSection')">ලඝුගණක (Log)</button>
-            <button class="tab-btn" onclick="openTab(event, 'antilogSection')">ප්‍රතිලඝුගණක (Antilog)</button>
-        </div>
+            <div
+                style="font-family: Arial, sans-serif; padding: 20px; margin: auto; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; text-align: center; width: fit-content;">
+                <div style="font-size: 40px; font-weight: bold; margin-bottom: 20px;"> <span
+                        style="color: #27ae60; border: 2px solid #27ae60; border-radius: 50%; padding: 5px 15px; display: inline-block;">2</span>
+                    <span style="color: #333;">.</span> <span
+                        style="color: #03A9F4; border: 2px solid #03A9F4; border-radius: 15px; padding: 5px 15px; display: inline-block;">6558</span>
+                </div>
 
-        <div id="logSection" class="content active">
-            <h2>ලඝු වගුව භාවිතා කර ලඝුගණක සෙවීම</h2>
-            <div class="input-group">
-                අංකය ඇතුළු කරන්න: <div style="display: flex;"><input id="logInput" type="number" step="0.001" value="452.7">
-                <button onclick="renderLog()">lg() සොයන්න</button></div>
-            </div>
-            <div id="logOutput"></div>
-        </div>
-
-        <div id="antilogSection" class="content">
-            <h2>ලඝු වගුව භාවිතා කර ප්‍රතිලඝු සෙවීම</h2>
-            <div class="input-group">
-                ලඝු අගය: <div style="display: flex;"><input id="antiInput" type="text" value="2.6558">
-                <button onclick="renderAntilog()">ප්‍රතිලඝු සොයන්න</button></div>
-                <p style="font-size: 0.8em; color: #666;">* සෘණ අගයන් සඳහා -2.6558 ලෙස ඇතුළත් කළ හැක.</p>
-            </div>
-            <div id="antiOutput"></div>
-        </div>
-</div>
-
-    <div class="section">
-        <div class="containerr">
-            <div class="header">
-              <h3>දැන් අපි බලමු කැල්කියුලේටර් එකෙනුයි ලඝුපොතෙනුයි ගනන් හැදුවම එකම උත්තරේ එනවද කියලා.</h3>
-            </div>
-        
-            <div class="display-area">
-
-                <div id="equation">--</div>
-              
-            </div>
-            <div class="steps-container">
-                <div class="step-title">කැල්කියුලේටර් එකෙන් උත්තරේ: </div>
-                <div id="directAnswer">--</div>
-            </div>
-
-            <div class="steps-container" id="stepsContent">
-                <div id="stepsInner">
+                <div style="display: flex; justify-content: flex-start; gap: 50px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; color: #27ae60;">↑</div>
+                        <div style="font-weight: bold; color: #27ae60;">පූර්ණාංශය</div>
                     </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; color: #03A9F4;">↑</div>
+                        <div style="font-weight: bold; color: #03A9F4;">දශමාංශය</div>
+                    </div>
+                </div>
             </div>
-        
-            <div class="btn-group">
-                <button class="btn-main" onclick="generate()">වෙනත් ගැටලුවක්</button>
-            </div>
-        </div> </div>
-</div>
+        </div>
+        <div class="section">
+            <h3>ලඝුපොත</h3>
+            <p>පහල තියෙන්නෙ ඩිජිටල් ලඝුපොතක්.ඕනිම ඉලක්කමක ලඝුගණකය හොයන්නත් ඕනැම ලඝුගණකයට ප්‍රතිලඝු හොයන්නත් මේ ඩිජිටල්
+                ලඝුපොතෙන් ඉක්මනින්ම පුලුවන්.</p>
 
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'logSection')">ලඝුගණක (Log)</button>
+                <button class="tab-btn" onclick="openTab(event, 'antilogSection')">ප්‍රතිලඝුගණක (Antilog)</button>
+            </div>
+
+            <div id="logSection" class="content active">
+                <h2>ලඝු වගුව භාවිතා කර ලඝුගණක සෙවීම</h2>
+                <div class="input-group">
+                    අංකය ඇතුළු කරන්න: <div style="display: flex;"><input id="logInput" type="number" step="0.001"
+                            value="452.7">
+                        <button onclick="renderLog()">lg() සොයන්න</button>
+                    </div>
+                </div>
+                <div id="logOutput"></div>
+            </div>
+
+            <div id="antilogSection" class="content">
+                <h2>ලඝු වගුව භාවිතා කර ප්‍රතිලඝු සෙවීම</h2>
+                <div class="input-group">
+                    ලඝු අගය: <div style="display: flex;"><input id="antiInput" type="text" value="2.6558">
+                        <button onclick="renderAntilog()">ප්‍රතිලඝු සොයන්න</button>
+                    </div>
+                    <p style="font-size: 0.8em; color: #666;">* සෘණ අගයන් සඳහා -2.6558 ලෙස ඇතුළත් කළ හැක.</p>
+                </div>
+                <div id="antiOutput"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="containerr">
+                <div class="header">
+                    <h3>දැන් අපි බලමු කැල්කියුලේටර් එකෙනුයි ලඝුපොතෙනුයි ගනන් හැදුවම එකම උත්තරේ එනවද කියලා.</h3>
+                </div>
+
+                <div class="display-area">
+
+                    <div id="equation">--</div>
+
+                </div>
+                <div class="steps-container">
+                    <div class="step-title">කැල්කියුලේටර් එකෙන් උත්තරේ: </div>
+                    <div id="directAnswer">--</div>
+                </div>
+
+                <div class="steps-container" id="stepsContent">
+                    <div id="stepsInner">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-main" onclick="generate()">වෙනත් ගැටලුවක්</button>
+                </div>
+            </div>
+        </div>
+<div class="section">
+   
+      <p>  අපිට o/l වලදි ලඝුගණක පාවිච්චි කරලා ලොකු ගනන් හදන්න තියනවා. ඒක විනෝදයි හැබැයි.
+        පහල තියෙන්නේ 2024 ගණිත පේපර් එකෙ රචනා ප්‍රශ්නයක අහපු ගානක්. </p>
+        <div class="question">
+            <strong>ප්‍රශ්නය:</strong><br>
+            \( P = \frac{\sqrt{25.26} \times 0.78}{2.47} \) නම්, ලඝුගණක වගු භාවිතයෙන් \( P \) හි අගය පළමු දශමස්ථානයට සොයන්න.
+        </div>
+    
+        <div class="solution">
+            <h3>විසඳුම සහ පැහැදිලි කිරීම:</h3>
+            
+            <div class="step">
+                <strong>පියවර 1:</strong> දෙපසටම ලඝුගණක (\(\log_{10}\)) යෙදීම.
+                \[ \log P = \log \left( \frac{\sqrt{25.26} \times 0.78}{2.47} \right) \]
+            </div>
+    
+            <div class="step">
+                <strong>පියවර 2:</strong> ලඝුගණක නීති භාවිතයෙන් ප්‍රකාශනය සුළු කිරීම.
+                <p>මෙච්චර වෙලා තනි තනි ඉලක්කම් ගුණ කරන්න, වර්ගමූලය හොයන්න වගේ පුරුදු උනාට මේකෙදි ඒවා ගොඩක් එකට තියෙන්නේ. 
+                    එතකොට කරන්න තියෙන්නෙ වෙන වෙනම ලඝු හොයලා ඒවා එකිනෙකට සම්බන්ද වෙලා තියන විදියට ලඝුනීති දාන්න.
+                    උදා: ඉලක්කම් දෙකක් අතර ගුණකිරීමක් තිබුනොත් එකතු කිරීමක් වෙනවා.</p>
+                \[ \log P = \log(25.26)^{\frac{1}{2}} + \log(0.78) - \log(2.47) \]
+                \[ \log P = \frac{1}{2} \log(25.26) + \log(0.78) - \log(2.47) \]
+            </div>
+    
+            <div class="step">
+                <strong>පියවර 3:</strong> වගු භාවිතයෙන් අගයන් ආදේශ කිරීම.
+                <ul>
+                    <li>\( \log(25.26) = 1.4024 \)</li>
+                    <li>\( \log(0.78) = \bar{1}.8921 \)</li>
+                    <li>\( \log(2.47) = 0.3927 \)</li>
+                </ul>
+            </div>
+    
+            <div class="step">
+                <strong>පියවර 4:</strong> ගණනය කිරීම.
+                \[ \frac{1}{2}(1.4024) = 0.7012 \]
+                \[ \log P = 0.7012 + \bar{1}.8921 - 0.3927 \]
+                \[ \log P = 0.5933 - 0.3927 \]
+                \[ \log P = 0.2006 \]
+            </div>
+    
+            <div class="step">
+                <strong>පියවර 5:</strong> ප්‍රතිලඝුගණක (Antilog) සෙවීම.
+                \[ P = \text{antilog}(0.2006) \]
+                \[ P = 1.587 \]
+            </div>
+    
+            <div class="step">
+                <strong>පළමු දශමස්ථානයට පිළිතුර:</strong>
+                <h4>\( P = 1.6 \)</h4>
+            </div>
+        </div>
+        
+    </div>
+    <p class="section">මේවාගෙ ගැටලු 20ක් හදන විදිය අපි ගැටලු සාකච්චා කොටසේ දාලා තියනවා.ගිහින් බලමුද?</p>
+</div>
     <script src="js/log.js"></script>
 
 
