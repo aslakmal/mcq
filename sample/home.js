@@ -488,7 +488,7 @@ document.getElementById('mcq-list').addEventListener('click', (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const firstTopic = document.querySelector('#mcq-list li[data-file]');
-  let randcat= [1,6,16,27,37,41][Math.floor(Math.random()*6)];
+  let randcat= [1,6,16,27,37,18][Math.floor(Math.random()*6)];
   if (firstTopic) loadQuestions(randcat);
 
   document.querySelectorAll("li").forEach(li => {
