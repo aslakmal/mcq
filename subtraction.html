@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <title>දිගු අඩු කිරීම - Step-by-Step</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; background: #fdfefe; padding: 20px; }
+        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 100%; max-width: 550px; }
+        .math-grid { font-family: 'Courier New', monospace; font-size: 2.2rem; text-align: right; white-space: pre; line-height: 1.2; letter-spacing: 8px; margin-bottom: 20px; color: #2c3e50; }
+        .borrow-row { color: #e74c3c; font-size: 1.2rem; height: 1.5rem; }
+        .line { border-bottom: 3px solid #333; margin: 10px 0; }
+        .controls { margin-bottom: 25px; display: flex; gap: 10px; align-items: center; }
+        input { padding: 10px; font-size: 1.1rem; width: 120px; border: 2px solid #ddd; border-radius: 8px; }
+        button { padding: 10px 20px; font-size: 1.1rem; cursor: pointer; background: #e67e22; color: white; border: none; border-radius: 8px; }
+        .explanation { background: #fff5f5; padding: 15px; border-radius: 8px; border-left: 5px solid #e74c3c; line-height: 1.8; font-size: 1.1rem; }
+        .highlight { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h2>දිගු අඩු කිරීමේ සහායක</h2>
+
+    <div class="controls">
+        <input type="number" id="num1" value="500">
+        <span>-</span>
+        <input type="number" id="num2" value="125">
+        <button onclick="calculateSubtraction()">ගණනය කරන්න</button>
+    </div>
+
+    <div class="container">
+        <div id="math-output"></div>
+        <div id="explanation-output" class="explanation"></div>
+    </div>
+
+    <script>
+  function calculateSubtraction() {
+    let n1_val = document.getElementById('num1').value;
+    let n2_val = document.getElementById('num2').value;
+    
+    if (parseInt(n2_val) > parseInt(n1_val)) {
+        alert("පළමු අංකය විශාල විය යුතුය.");
+        return;
+    }
+
+    const maxLen = Math.max(n1_val.length, n2_val.length);
+    let s1 = n1_val.padStart(maxLen, '0').split('').map(Number);
+    let s2 = n2_val.padStart(maxLen, '0').split('').map(Number);
+    
+    let borrows = Array(maxLen).fill(' '); // ණයට ගත් 10 පෙන්වීමට
+    let remainders = Array(maxLen).fill(' '); // අඩු වූ පසු ඉතිරි අගය පෙන්වීමට
+    let result = [];
+    let steps = [];
+    
+    let workingS1 = [...s1];
+    const colNames = ["එකස්ථානය", "දසස්ථානය", "සියස්ථානය", "දහස්ථානය", "දසදහස්ථානය"];
+
+    for (let i = maxLen - 1; i >= 0; i--) {
+        let colName = colNames[maxLen - 1 - i] || "ඊළඟ ස්ථානය";
+        let topDigit = workingS1[i];
+        let bottomDigit = s2[i];
+
+        if (topDigit < bottomDigit) {
+            // ණයට ගැනීමේ ක්‍රියාවලිය
+            let oldFrontDigit = workingS1[i-1];
+            workingS1[i] += 10;
+            workingS1[i-1] -= 1;
+            
+            borrows[i] = "10";
+            remainders[i-1] = workingS1[i-1]; // ඉදිරි පේළියේ අඩුවූ අගය සටහන් කිරීම
+
+            let diff = workingS1[i] - bottomDigit;
+            steps.push(`${topDigit} න් ${bottomDigit} ක් අඩු කරන්න බැරි නිසා වම් පැත්තේ <b>${oldFrontDigit}</b> න් 1 ක් ගත්තා. (එවිට වම් පැත්තේ ඉතිරි වන්නේ <b>${workingS1[i-1]}</b> යි.) දැන් මෙහි අගය 10 + ${topDigit} = ${workingS1[i]} වේ. <br>දැන්, ${workingS1[i]} - ${bottomDigit} = <b>${diff}</b> යි.`);
+            result.unshift(diff);
+        } else {
+            let diff = topDigit - bottomDigit;
+            steps.push(`${topDigit} - ${bottomDigit} = <b>${diff}</b> යි.`);
+            result.unshift(diff);
+        }
+    }
+
+    display(s1.join(''), s2.join(''), borrows, remainders, result.join(''), steps);
+}
+
+function display(s1, s2, borrows, remainders, res, steps) {
+    // res අගය අනිවාර්යයෙන්ම String එකක් බවට පත් කරන්න
+    const resStr = String(res);
+    
+    let mathHtml = `<div class="math-grid" style="color: #555;">`;
+    
+    // ණයට දුන් පසු ඉතිරි වූ අගය (නිල් පැහැයෙන්)
+    mathHtml += `<div style="color: blue; font-size: 1.2rem; height: 1.2rem;">  ${remainders.join(' ')}</div>`;
+    
+    // ණයට ගත් 10 (රතු පැහැයෙන්)
+    mathHtml += `<div style="color: red; font-size: 1.2rem; height: 1.2rem;">  ${borrows.join(' ')}</div>`;
+    
+    mathHtml += `<div style="color: black;">  ${s1}</div>`;
+    mathHtml += `<div style="color: black;">- ${s2}</div>`;
+    mathHtml += `<div class="line"></div>`;
+    
+    // දැන් resStr එක String එකක් නිසා padStart නිවැරදිව වැඩ කරයි
+    mathHtml += `<div style="color: black;"> ${resStr.padStart(s1.length, ' ')}</div>`;
+    mathHtml += `</div>`;
+    
+    document.getElementById('math-output').innerHTML = mathHtml;
+
+    let expHtml = `<strong>පියවරෙන් පියවර පැහැදිලි කිරීම:</strong><br><br>`;
+    steps.forEach((step, index) => {
+        expHtml += `<div style="margin-bottom:15px;">${index + 1}. ${step}</div>`;
+    });
+    document.getElementById('explanation-output').innerHTML = expHtml;
+}
+
+    
+
+        calculateSubtraction();
+    </script>
+</body>
+</html>

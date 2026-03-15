@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiBook - Fixed Sets</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: rgba(255, 255, 255, 0.05);
+            --highlight: #00d2d3;
+            --text: #f1f2f6;
+            --accent: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--text);
+            padding: 5px;
+            background:linear-gradient(135deg, #eef2ff, #f0fdf4)
+        }
+
+        .dashboard {
+            background: #fff;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 550px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            /* Initial state before JS scaling */
+        transform-origin: center center;
+        margin: 60px auto;
+        }
+
+        .answer-box {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            min-height: 25px;
+            grid-column: span 4;
+        }
+
+        svg {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            margin: 10px 0;
+            border: none;
+        }
+
+        .base-circle {
+            fill: none;
+            stroke: #64748b;
+            stroke-width: 2;
+        }
+
+        .highlight-path {
+            fill: var(--highlight);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .show {
+            opacity: 0.45;
+        }
+
+        .label-title {
+            fill: #94a3b8;
+            font-size: 16px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .data-point {
+            fill: #201e1e;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        button {
+            padding: 10px 5px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #00BCD4, #2196F3);
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            box-shadow: 0 0 2px 2px #00000024;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-gen {
+            background: linear-gradient(45deg, #9C27B0, #009688);
+            grid-column: span 4;
+            font-weight: bold;
+            height: 45px;
+            margin-bottom: 10px;
+        }
+        #vennSvg{width: 100%;max-width: 500px;height: auto;}
+    </style>
+</head>
+
+<body>
+    <h3>කුලක </h3>
+    <div class="dashboard">
+
+
+        <svg viewBox="0 0 500 300" id="vennSvg">
+            <defs>
+                <circle id="circleA" cx="190" cy="150" r="90" />
+                <circle id="circleB" cx="310" cy="150" r="90" />
+
+                <clipPath id="clipB">
+                    <use xlink:href="#circleB" />
+                </clipPath>
+                <mask id="maskAOnly">
+                    <rect width="100%" height="100%" fill="white" />
+                    <use xlink:href="#circleB" fill="black" />
+                </mask>
+                <mask id="maskBOnly">
+                    <rect width="100%" height="100%" fill="white" />
+                    <use xlink:href="#circleA" fill="black" />
+                </mask>
+                <mask id="maskOuter">
+                    <rect width="100%" height="100%" fill="white" />
+                    <use xlink:href="#circleA" fill="black" />
+                    <use xlink:href="#circleB" fill="black" />
+                </mask>
+            </defs>
+
+            <rect id="h-u" x="5" y="5" width="490" height="290" fill="var(--highlight)" opacity="0"
+                class="highlight-path" mask="url(#maskOuter)" />
+            <use id="h-a-only" xlink:href="#circleA" class="highlight-path" mask="url(#maskAOnly)" />
+            <use id="h-b-only" xlink:href="#circleB" class="highlight-path" mask="url(#maskBOnly)" />
+            <use id="h-inter" xlink:href="#circleA" class="highlight-path" clip-path="url(#clipB)" />
+
+            <rect x="5" y="5" width="490" height="290" fill="none" stroke="#eee" stroke-width="2" />
+            <use xlink:href="#circleA" class="base-circle" />
+            <use xlink:href="#circleB" class="base-circle" />
+
+            <text x="20" y="30" class="label-title">ε</text>
+            <text x="106" y="95" class="label-title">A</text>
+            <text x="380" y="95" class="label-title">B</text>
+
+            <g id="dataGroup"></g>
+        </svg>
+
+        <div class="controls">
+            <button class="btn-gen" onclick="generate()">Generate Random Data</button>
+            <div id="answerArea" class="answer-box">Generate to start</div>
+            <button style="background:#b91c1c" onclick="clearAll()">Reset</button>
+            <button onclick="updateView('A')">A</button>
+            <button onclick="updateView('B')">B</button>
+            <button onclick="updateView('union')">A ∪ B</button>
+            <button onclick="updateView('inter')">A ∩ B</button>
+            <button onclick="updateView('a-only')">A ∩ B'</button>
+            <button onclick="updateView('b-only')">A' ∩ B</button>
+            <button onclick="updateView('comp')">(A ∪ B)'</button>
+        </div>
+    </div>
+
+    <script>
+
+        function adjustScale() {
+            const dashboard = document.querySelector('.dashboard');
+            const padding = 40; // Space to leave around the edges
+            const designHeight = dashboard.offsetHeight;
+            const designWidth = dashboard.offsetWidth;
+
+            const scaleHeight = (window.innerHeight - padding) / designHeight;
+            const scaleWidth = (window.innerWidth - padding) / designWidth;
+
+            // Pick the smaller scale so it doesn't cut off on narrow phones
+            const finalScale = Math.min(scaleHeight, scaleWidth, 1.2); // Cap at 1.2x max
+
+            dashboard.style.transform = `scale(${finalScale})`;
+        }
+
+        // Run on load and whenever window is resized
+        window.addEventListener('load', adjustScale);
+        window.addEventListener('resize', adjustScale);
+        // FIX YOUR COORDINATES HERE
+        const positionMap = {
+            'a-only': [{ x: 130, y: 130 }, { x: 160, y: 180 }, { x: 180, y: 120 }],
+            'b-only': [{ x: 370, y: 130 }, { x: 340, y: 180 }, { x: 300, y: 150 }],
+            'inter': [{ x: 250, y: 120 }, { x: 250, y: 150 }, { x: 250, y: 180 }],
+            'u': [{ x: 450, y: 50 }, { x: 60, y: 260 }, { x: 440, y: 260 }]
+        };
+        let allnum;
+        let currentSets = { a: [], b: [], inter: [], u: [] };
+        const svgNS = "http://www.w3.org/2000/svg";
+
+        function generate() {
+            document.querySelectorAll('.highlight-path').forEach(el => el.classList.remove('show'));
+
+            // Total numbers reduced for clarity
+            const full = Array.from({ length: 8 }, (_, i) => i + 1);
+            currentSets = { a: [], b: [], inter: [], u: [] };
+            document.getElementById('dataGroup').innerHTML = "";
+
+            const counters = { 'a-only': 0, 'b-only': 0, 'inter': 0, 'u': 0 };
+
+            full.forEach(num => {
+                const r = Math.random();
+                let region = 'u';
+
+                if (r < 0.25 && counters['inter'] < 3) region = 'inter';
+                else if (r < 0.5 && counters['a-only'] < 3) region = 'a-only';
+                else if (r < 0.75 && counters['b-only'] < 3) region = 'b-only';
+                else region = 'u';
+
+                const targetKey = (region === 'inter' ? 'inter' : (region === 'a-only' ? 'a' : (region === 'b-only' ? 'b' : 'u')));
+                currentSets[targetKey].push(num);
+
+                const pos = positionMap[region][counters[region]];
+                createSvgText(num, pos.x, pos.y);
+                counters[region]++;
+            });
+
+            // UPDATED: Show Universal Set notation on generate
+            const sortedFull = full.sort((x, y) => x - y);
+            allnum = `ε = { ${sortedFull.join(', ')} }`
+            document.getElementById('answerArea').textContent = allnum;
+
+            // clearAllHighlights(); // Reset highlights but keep the epsilon text
+            // Only shuffle the middle buttons (exclude 'Generate' and 'Reset')
+            const controls = document.querySelector('.controls');
+            const buttons = Array.from(controls.querySelectorAll('button:not(.btn-gen):not([style*="background:#b91c1c"])'));
+
+            for (let i = buttons.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [buttons[i], buttons[j]] = [buttons[j], buttons[i]];
+            }
+
+            // Re-append only the math buttons to their grid area
+            buttons.forEach(btn => controls.appendChild(btn));
+        }
+
+        function createSvgText(val, x, y) {
+            const text = document.createElementNS(svgNS, "text");
+            text.setAttribute("x", x); text.setAttribute("y", y);
+            text.setAttribute("class", "data-point");
+            text.setAttribute("text-anchor", "middle");
+            text.textContent = val;
+            document.getElementById('dataGroup').appendChild(text);
+        }
+
+        function updateView(type) {
+            clearAll();
+            const map = {
+                'A': { l: "A", ids: ['h-a-only', 'h-inter'], d: [...currentSets.a, ...currentSets.inter] },
+                'B': { l: "B", ids: ['h-b-only', 'h-inter'], d: [...currentSets.b, ...currentSets.inter] },
+                'union': { l: "A ∪ B", ids: ['h-a-only', 'h-b-only', 'h-inter'], d: [...currentSets.a, ...currentSets.b, ...currentSets.inter] },
+                'inter': { l: "A ∩ B", ids: ['h-inter'], d: currentSets.inter },
+                'a-only': { l: "A ∩ B'", ids: ['h-a-only'], d: currentSets.a },
+                'b-only': { l: "A' ∩ B", ids: ['h-b-only'], d: currentSets.b },
+                'comp': { l: "(A ∪ B)'", ids: ['h-u'], d: currentSets.u }
+            };
+            const cfg = map[type];
+            cfg.ids.forEach(id => document.getElementById(id).classList.add('show'));
+            document.getElementById('answerArea').textContent = `${cfg.l} = { ${cfg.d.sort((x, y) => x - y).join(', ')} }`;
+        }
+
+        function clearAll() {
+            document.querySelectorAll('.highlight-path').forEach(el => el.classList.remove('show'));
+            document.getElementById('answerArea').textContent = allnum
+        }
+    </script>
+</body>
+
+</html>
