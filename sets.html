@@ -15,17 +15,17 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            color: var(--text);
-            padding: 5px;
-            background:linear-gradient(135deg, #eef2ff, #f0fdf4)
-        }
-
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--text);
+    padding: 0;
+    background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+}
         .dashboard {
             background: #fff;
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px;
+            padding: 0;
             border-radius: 24px;
             text-align: center;
             max-width: 550px;
@@ -80,7 +80,7 @@
 
         .data-point {
             fill: #201e1e;
-            font-size: 16px;
+            font-size: 25px;
             font-family: 'Courier New', monospace;
             font-weight: bold;
         }
@@ -89,6 +89,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
+            margin: 10px;
         }
 
         button {
@@ -108,11 +109,12 @@
         }
 
         .btn-gen {
-            background: linear-gradient(45deg, #9C27B0, #009688);
-            grid-column: span 4;
-            font-weight: bold;
-            height: 45px;
-            margin-bottom: 10px;
+            background: #4f46e5;
+    grid-column: span 4;
+    font-weight: bold;
+    height: 45px;
+    margin: auto;
+    min-width: 250px;
         }
         #vennSvg{width: 100%;max-width: 500px;height: auto;}
     </style>
