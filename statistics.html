@@ -45,6 +45,9 @@
             margin: 0;
             padding: 20px;
             color: #1e293b;
+            max-width: 1250px;
+            margin: auto;
+            padding: 5px;
         }
 
         .container {
@@ -86,7 +89,7 @@
         .table-wrapper {
             overflow-x: auto;
             background: #fff;
-            margin: 20px;
+            margin: 20px 0;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
@@ -186,11 +189,10 @@
         }
 
         .formula-box {
-            background: #1e293b;
-            color: #fff;
             padding: 20px;
             border-radius: 12px;
             margin: 20px;
+            font-size: 13px;
         }
 
         .modal-row {
@@ -206,6 +208,7 @@
         .carousel {
             position: relative;
             width: 100%;
+            overflow: hidden;
         }
 
         .carousel-track {
@@ -249,6 +252,9 @@
         #pieCharft {
             margin: auto;
         }
+        @media only screen and (max-width: 760px) {
+            .formula-box{margin: 0;}
+        }
     </style>
 </head>
 
@@ -273,18 +279,17 @@
       ">
         <span style="margin-right: 8px; font-weight: bold;">←</span> Back
     </button>
+     <h1>සංඛ්‍යානය</h1>
     <div id="overlay" class="overlay">
         <div class="popup">
             <button class="close-btn" onclick="closePopup()">&times;</button>
-            <h3 id="popupTitle" style="color:var(--primary); margin-top:0;">මාතෘකාව</h3>
-            <p id="popupContent" style="line-height:1.8; color:#475569;">විස්තරය මෙතන දිස්වේවි.</p>
+            <h3 id="popupTitle" style="color:var(--primary); margin-top:0;"></h3>
+            <p id="popupContent" style="line-height:1.8; color:#475569;"></p>
         </div>
     </div>
 
     <div class="container">
-        <header>
-            <h1>සංඛ්‍යානය</h1>
-        </header>
+      
 
         <div class="table-wrapper">
             <table>
@@ -458,9 +463,12 @@
             if (typeof MathJax !== 'undefined') {
                 const mean = a + (sumFd / totalF);
                 document.getElementById('mathDisplay').innerHTML = `
-            $$\\text{මධ්‍යන්‍යය } (\\bar{x}) = a + \\frac{\\sum fd}{\\sum f}$$
-            $$\\bar{x} = ${a} + \\frac{${sumFd}}{${totalF}} = ${mean.toFixed(2)}$$
-            $$\\text{මධ්‍යස්ථය පවතින ස්ථානය } = \\frac{N}{2} = \\frac{${totalF}}{2} = ${medianPos.toFixed(1)} \\text{ වන අගය}$$
+            $$\\text{මධ්‍යන්‍යය } (\\bar{x}) = A + \\frac{\\sum fd}{\\sum f}$$
+            $$\\bar{x} = ${a} + \\frac{${sumFd}}{${totalF}} $$
+            $$= ${mean.toFixed(2)}$$
+            $$\\text{මධ්‍යස්ථය පවතින ස්ථානය } $$
+            $$= \\frac{N}{2} = \\frac{${totalF}}{2} $$
+            $$= ${medianPos.toFixed(1)} \\text{ වන අගය}$$
             $$\\text{පරාසය} = ${startValue + (5 * step)} - ${startValue} = ${5 * step}$$
         `;
                 MathJax.typeset();
