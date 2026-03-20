@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfect Alignment Graph</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --axis: #1e293b;
+            --grid-line: #e2e8f0;
+            --cell: min(12vw, 50px); /* Responsive cell size */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+            padding: 20px;
+        }
+        .body{display: flex;
+            justify-content: center;
+            }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        /* ප්‍රධාන ග්‍රිඩ් එක */
+        .graph-wrapper {
+            display: inline-grid;
+            /* Y-axis column (30px) + Data columns */
+            grid-template-columns: 30px repeat(var(--cols), var(--cell));
+            /* Data rows + X-axis row (30px) */
+            grid-template-rows: repeat(var(--rows), var(--cell)) 30px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid var(--grid-line);
+            border-right: 1px solid var(--grid-line);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* අක්ෂ රේඛා තදින් පෙන්වීම */
+        .y-axis-area { border-right: 3px solid var(--axis) !important; }
+        .x-axis-area { border-top: 3px solid var(--axis) !important; }
+
+        /* ලේබල් ස්ටයිල් */
+        .label {
+            font-weight: 800;
+            color: var(--axis);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Y ලේබල් × සමඟ එකම පේළියේ තැබීමට */
+        .y-label {
+            justify-content: flex-end;
+            padding-right: 10px;
+        }
+
+        /* X ලේබල් × සමඟ එකම තීරුවේ තැබීමට */
+        .x-label {
+            align-items: flex-start;
+            padding-top: 10px;
+        }
+
+        .cross {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            font-weight: bold;
+            transition: 0.4s ease;
+        }
+
+        .marked {
+            color: #ef4444;
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 50%;
+            width: 80%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(1);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <button onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+        onmouseover="this.style.backgroundColor='#e0e0e0'" onmouseout="this.style.backgroundColor='#f8f9fa'" style="
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-family: sans-serif;
+        color: #333;
+        background-color: #f8f9fa;
+        border: 1px solid #dcdcdc;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        outline: none;
+        height:auto;width:auto;
+        margin:5px
+      ">
+        <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+      </button>
+      <div class="body">
+    <h3 style="color:var(--primary)">සම්භවිතාව-නියැදි අවකාශය</h3>
+<div class="card">
+    
+   
+    
+    <div id="q" style="margin-bottom:15px; font-weight:600;"></div>
+
+    <div id="wrapper" class="graph-wrapper">
+        </div>
+
+    <div id="res" style="background:#f1f5f9; padding:10px; border-radius:8px; font-weight:bold;"></div>
+    <br>
+    <button class="btn" onclick="generate()">වෙනත් නියැදි අවකාශයක්</button>
+</div>
+</div>
+<script>
+function scaleElement(selector, baseWidth = 1200) {
+    const el = document.querySelector(selector);
+
+    function updateScale() {
+        const screenWidth = window.innerWidth;
+        if(screenWidth>800){ console.log(screenWidth)
+        const scale = (screenWidth / baseWidth);
+
+        el.style.transform = `scale(${scale})`;
+         el.style.transformOrigin = "top center";
+el.style.margin = "0 auto";
+display = "block";}
+    }
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+}
+
+// usage
+//scaleElement('.card');
+
+generate()
+    function generate() {
+        const sizeX = Math.floor(Math.random() * 3) + 3;
+        const sizeY = Math.floor(Math.random() * 3) + 3;
+        const t = Math.floor(Math.random() * (sizeX + sizeY - 3)) + 3;
+        
+        const wrapper = document.getElementById('wrapper');
+        wrapper.style.setProperty('--cols', sizeX);
+        wrapper.style.setProperty('--rows', sizeY);
+        wrapper.innerHTML = '';
+
+        document.getElementById('q').innerText = `x + y > ${t}`;
+
+        let hits = 0;
+
+        // Y-axis සහ Data සෛල නිර්මාණය (උඩ සිට පහළට)
+        for (let y = sizeY; y >= 1; y--) {
+            // 1. Y Axis Label
+            const yl = document.createElement('div');
+            yl.className = 'label y-label y-axis-area';
+            yl.innerText = y;
+            wrapper.appendChild(yl);
+
+            // 2. Data Cells (× icons)
+            for (let x = 1; x <= sizeX; x++) {
+                const isMatch = (x + y) > t;
+                if(isMatch) hits++;
+                
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.innerHTML = `<span class="cross">×</span>`;
+                
+                if (isMatch) {
+                    setTimeout(() => {
+                        cell.querySelector('.cross').classList.add('marked');
+                    }, (x + y) * 50);
+                }
+                wrapper.appendChild(cell);
+            }
+        }
+
+        // 3. Origin (0,0)
+        const origin = document.createElement('div');
+        origin.className = 'label y-axis-area x-axis-area';
+        origin.style.justifyContent = 'flex-end';
+        origin.style.paddingRight = '10px';
+        origin.innerText = '0';
+        wrapper.appendChild(origin);
+
+        // 4. X Axis Labels
+        for (let x = 1; x <= sizeX; x++) {
+            const xl = document.createElement('div');
+            xl.className = 'label x-label x-axis-area';
+            xl.innerText = x;
+            wrapper.appendChild(xl);
+        }
+
+        document.getElementById('res').innerText = `සම්භාවිතාව: ${hits} / ${sizeX * sizeY}`;
+        // සම්භාවිතාව භාගයක් ලෙස පෙන්වීමට සහ MathJax වලින් render කිරීමට
+const total = sizeX * sizeY;
+const resultDiv = document.getElementById('res');
+
+// භාගය LaTeX ආකාරයට ලියන්න
+resultDiv.innerHTML = `සම්භාවිතාව: \\( \\frac{${hits}}{${sizeX * sizeY}} \\)`;
+
+// අලුතින් ලියන ලද LaTeX කොටස render කිරීමට MathJax ට දන්වන්න
+if (window.MathJax) {
+    MathJax.typesetPromise([resultDiv]).catch((err) => console.log(err.message));
+}
+    }
+    function adjustScale() {
+            const dashboard = document.querySelector('.card');
+            const padding = 40; // Space to leave around the edges
+            const designHeight = dashboard.offsetHeight;
+            const designWidth = dashboard.offsetWidth;
+
+            const scaleHeight = (window.innerHeight - padding) / designHeight;
+            const scaleWidth = (window.innerWidth - padding) / designWidth;
+
+            // Pick the smaller scale so it doesn't cut off on narrow phones
+            const finalScale = Math.min(scaleHeight, scaleWidth, 1.2); // Cap at 1.2x max
+
+            dashboard.style.transform = `scale(${finalScale})`;
+        }
+
+        // Run on load and whenever window is resized
+        window.addEventListener('load', adjustScale);
+        window.addEventListener('resize', adjustScale);
+</script>
+
+</body>
+</html>
