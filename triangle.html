@@ -138,16 +138,25 @@
       padding-bottom: 10px;
     }
 
-    #eq {
-      margin: 10px;
-      font-weight: bold;
-    }
+  
 
     .esymbol,
     .asymbol {
       display: none;
       position: absolute;
     }
+    @media only screen and (min-width: 760px) {
+    .center {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .diagram-container {
+        scale: 220%;
+        width: unset;
+        z-index: -1;
+    }
+    .theorem-list-container{width:40%}
+}
   </style>
 </head>
 <body>
@@ -212,7 +221,6 @@
 
   </div>
 
-  <b id="eq"></b>
 
   <!-- Theorem list -->
   <div class="theorem-list-container">
@@ -301,14 +309,12 @@
       document.getElementById('as2'),
     ];
 
-    const eq = document.getElementById('eq');
 
     function drawTriangle(theorem) {
       // reset
       document.querySelectorAll('.angle, .line').forEach(el => { el.style.width = '0'; });
       document.querySelectorAll('.esymbol,.asymbol').forEach(el => { el.style.display = 'none'; });
       Object.values(texts).forEach(t => t.textContent = '');
-      eq.innerHTML = '';
 
 
       if (theorem === 'theorem1') {
@@ -327,8 +333,6 @@
         texts.A.textContent = "A";
         texts.B.textContent = "C";
         texts.C.textContent = "B";
-
-       // eq.innerHTML = "A + B + C = 180°";
       }
 
       if (theorem === 'theorem2') {
@@ -347,8 +351,6 @@
         texts.A.textContent = "A";
         texts.B.textContent = "A+B";
         texts.C.textContent = "B";
-
-      //  eq.innerHTML = "A + B = C";
       }
 
       if (theorem === 'theorem3') {
