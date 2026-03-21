@@ -1,9 +1,9 @@
 /* =========================
    CACHE NAMES
 ========================= */
-const APP_CACHE = "app-shell-v8"; // Incremented version
-const QUIZ_CACHE = "quiz-data-v8";
-const CDN_CACHE = "cdn-static-v8";
+const APP_CACHE = "app-shell-v9"; // Incremented version
+const QUIZ_CACHE = "quiz-data-v9";
+const CDN_CACHE = "cdn-static-v9";
 
 /* =========================
    FILE LISTS
