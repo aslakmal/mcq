@@ -1,8 +1,8 @@
 /* =========================
    CACHE NAMES
 ========================= */
-const APP_CACHE = "app-shell-v4"; // Incremented version
-const QUIZ_CACHE = "quiz-data-v4";
+const APP_CACHE = "app-shell-v5"; // Incremented version
+const QUIZ_CACHE = "quiz-data-v5";
 const CDN_CACHE = "cdn-static-v1";
 
 /* =========================
