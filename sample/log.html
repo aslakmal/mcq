@@ -23,6 +23,62 @@
         }
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SY83EZT9J1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag(){
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'G-SY83EZT9J1', {
+    send_page_view: true
+  });
+  function trackEvent(name, params = {}) {
+  if (navigator.onLine) {
+    gtag('event', name, params);
+  } else {
+    saveEventOffline({ name, params, time: Date.now() });
+  }
+}
+function saveEventOffline(event) {
+  let request = indexedDB.open("ga-offline-db", 1);
+
+  request.onupgradeneeded = e => {
+    e.target.result.createObjectStore("events", { autoIncrement: true });
+  };
+
+  request.onsuccess = e => {
+    let db = e.target.result;
+    let tx = db.transaction("events", "readwrite");
+    tx.objectStore("events").add(event);
+  };
+}
+window.addEventListener("online", sendOfflineEvents);
+
+function sendOfflineEvents() {
+  let request = indexedDB.open("ga-offline-db", 1);
+
+  request.onsuccess = e => {
+    let db = e.target.result;
+    let tx = db.transaction("events", "readwrite");
+    let store = tx.objectStore("events");
+
+    store.getAll().onsuccess = ev => {
+      ev.target.result.forEach(event => {
+        gtag('event', event.name, event.params);
+      });
+      store.clear();
+    };
+  };
+}
+trackEvent("lesson_completed", {
+  lesson: "maths_chapter_1"
+});
+
+</script>
 
 </head>
 
