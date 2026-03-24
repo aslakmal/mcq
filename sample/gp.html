@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ශ්‍රිත</title>
+    <link rel="icon" type="image/png" href="../icons/icon-192.png">
+    <link rel="stylesheet" href="../css/graph.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SY83EZT9J1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag(){
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'G-SY83EZT9J1', {
+    send_page_view: true
+  });
+  function trackEvent(name, params = {}) {
+  if (navigator.onLine) {
+    gtag('event', name, params);
+  } else {
+    saveEventOffline({ name, params, time: Date.now() });
+  }
+}
+function saveEventOffline(event) {
+  let request = indexedDB.open("ga-offline-db", 1);
+
+  request.onupgradeneeded = e => {
+    e.target.result.createObjectStore("events", { autoIncrement: true });
+  };
+
+  request.onsuccess = e => {
+    let db = e.target.result;
+    let tx = db.transaction("events", "readwrite");
+    tx.objectStore("events").add(event);
+  };
+}
+window.addEventListener("online", sendOfflineEvents);
+
+function sendOfflineEvents() {
+  let request = indexedDB.open("ga-offline-db", 1);
+
+  request.onsuccess = e => {
+    let db = e.target.result;
+    let tx = db.transaction("events", "readwrite");
+    let store = tx.objectStore("events");
+
+    store.getAll().onsuccess = ev => {
+      ev.target.result.forEach(event => {
+        gtag('event', event.name, event.params);
+      });
+      store.clear();
+    };
+  };
+}
+trackEvent("lesson_completed", {
+  lesson: "maths_chapter_1"
+});
+
+</script>
+</head>
+<body>
+    <button 
+    onclick="window.history.length > 1 ? history.back() : window.location.href='/index.html';"
+    onmouseover="this.style.backgroundColor='#e0e0e0'" 
+    onmouseout="this.style.backgroundColor='#f8f9fa'"
+    style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;
+      margin:5px;
+    ">
+    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+  </button>
+    <div class="container">
+        <h1>ශ්‍රිත/ප්‍රස්ථාර</h1>
+        <ul class="accordion ldesc">
+            <li>
+                <h4>ශ්‍රිත/ප්‍රස්ථාර කියන්නේ මොනවද?</h4>
+                <div class="lcontent">
+                    <p>යම් දෙයක් (x) වෙනස් වීමට අනුරූපව තවත් දෙයක් (y) වෙනස් වෙන විදිය රූප සටහනකින් පෙන්වන එක තමා අපි ප්‍රස්තාර වලින් කරන්නේ.</p>
+                </div>
+            </li>
+        
+            <li>
+                <h4>සරල රේඛීය ප්‍රස්ථාර (y = mx + c)</h4>
+                <div class="lcontent">
+                    <strong>උදාහරණය: ටැක්සි ගාස්තුව</strong>
+                    <ul>
+                        <li>ටැක්සියට ගොඩවුණු ගමන් අය කරන අනිවාර්ය මුදල = රු. 100 (මේක <strong>c</strong>)</li>
+                        <li>යන හැම කිලෝමීටරයකටම එකතු වන මුදල = රු. 50 (මේක <strong>m</strong>)</li>
+                        <li>ඔයා ගිය මුළු දුර = <strong>x</strong></li>
+                    </ul>
+                    <p>
+                        <strong>y = 50x + 100</strong><br>
+                        මෙහි <strong>y</strong> කියන්නේ ඔයා ගෙවිය යුතු මුළු ගාස්තුවයි.
+                    </p>
+                </div>
+            </li>
+        
+            <li>
+                <h4>වර්ගජ ප්‍රස්ථාර (y = ax² + c)</h4>
+                <div class="lcontent">
+                    <strong>උදාහරණය: කාමරයකට ටයිල් ඇල්ලීම</strong>
+                    <p>හිතන්න ඔයාගේ ළඟ සමචතුරස්‍රාකාර කාමරයක් තියෙනවා. ඒ කාමරේ පැත්තක දිග <strong>x</strong> මීටර් කියලා ගමු.</p>
+                    <ul>
+                        <li>කාමරේ වර්ගඵලය = <strong>x²</strong></li>
+                        <li>එක් වර්ග මීටරයකට යන ටයිල් ප්‍රමාණය = <strong>a</strong></li>
+                        <li>අමතරව ගෙන එන ටයිල් ප්‍රමාණය = <strong>c</strong></li>
+                    </ul>
+                    <p>
+                        <strong>y = ax² + c</strong><br>
+                        එතකොට කාමරේ පැත්තක දිග අනුව කාමරේට ඕනෑ කරන මුළු ටයිල් ප්‍රමාණය <strong>(y)</strong> මේකෙන් හොයන්න පුළුවන්.
+                    </p>
+                </div>
+            </li>
+        </ul>
+    
+        <p>අපි මේ කතාකරපු m අනුක්‍රමණය ලෙසත් c අණ්තඃඛණ්ඩය ලෙසත් හඳුන්වනවා.
+            පහලින් ඔයාට පුලුවන් අනුක්‍රමණය හා අණ්තඃඛණ්ඩය අනුව ප්‍රස්තාරයක වෙනස් වීම පරීක්ශා කරන්න.</p>
+    </div>   
+    <div class="main-container">
+     
+
+        <div class="input-button-container">
+    <div id="controls">
+    <div class="power-tabs">
+        <input type="radio" id="power1" name="power" value="1" checked>
+        <label for="power1">රේඛීය ප්‍රස්ථාර</label>
+      
+        <input type="radio" id="power2" name="power" value="2">
+        <label for="power2">වර්ගජ ප්‍රස්ථාර</label>
+      </div>
+      
+      
+      
+
+    <div id="equationDisplay" class="equation-display">y = 2x² + 3</div>
+
+  
+
+  
+
+        </div>
+
+        <!-- SVG Container for the Graph -->
+        <div class="graph-container">
+         
+        </div>
+ 
+          
+        <p id="errorMessage" class="error-message hidden">
+     </p>
+
+        <p class="info-text">
+         </p>
+    </div>
+    <div class="control-container">
+    
+    <div class="control">
+        <span>අනුක්‍රමණය:</span>
+    <div class="btn-wrapper">
+          <button class="scroll-btn left">←</button> 
+          <input type="number" id="coef" value="2" min="-10" max="10" readonly>
+          <button class="scroll-btn right">→</button>
+        </div>
+      </div>
+      
+      <div class="control">
+        <span>අණ්තඃඛණ්ඩය:</span>
+        <div class="btn-wrapper">
+        <button class="scroll-btn left">←</button> 
+        <input type="number" id="constant" value="1" min="-50" max="50" readonly>
+        <button class="scroll-btn right">→</button>
+    </div>
+      </div>
+      <div class="control xvalue">
+        <span>x හි සංගුණකය:</span>
+        <div class="btn-wrapper">
+        <button class="scroll-btn left">←</button> 
+        <input type="number" id="bValue" value="0" min="-10" max="10" readonly>
+        <button class="scroll-btn right">→</button>
+    </div>
+      </div>
+      <div id="graphData"></div>
+      <div id="valuetbl"></div>
+
+      
+    </div>
+</div>
+<div>
+    <div id="rangeDetails"></div>
+    
+</div>
+    
+    <script src="../js/graph.js"></script>
+    <script src="../js/graph2.js"></script>
+    <style>
+    .whatsapp-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(45deg, #25D366, #128C7E);
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 -3px 15px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+/* Icon */
+.whatsapp-icon {
+    font-size: 22px;
+    animation: bounce 1.5s infinite;
+}
+
+/* Hover effect */
+.whatsapp-btn:hover {
+    background: linear-gradient(45deg, #128C7E, #25D366);
+    letter-spacing: 1px;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+    .whatsapp-btn {
+        font-size: 16px;
+        height: 55px;
+    }
+}
+  </style>
+  <a href="#" onclick="openWhatsApp()" class="whatsapp-btn">
+    <span class="whatsapp-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="
+    height: 20px;
+"></span>
+    <span class="whatsapp-text">Chat with us</span>
+</a>
+
+<script>
+function openWhatsApp() {
+    let phone = "94764042528";
+    let message = "Hello! I need more details";
+    let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
+}
+</script>
+</body>
+</html>
