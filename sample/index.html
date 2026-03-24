@@ -497,7 +497,7 @@ trackEvent("lesson_completed", {
       <a href="triangle.html"> <li data-file="triangle.html"> ත්‍රිකෝණ ප්‍රමේයයන්</li></a>
       <a href="circle.html"> <li data-file="circle.html"> වෘත්ත ප්‍රමේයයන්</li></a>
       <a href="log.html"> <li data-file="log.html"> ලඝුගණක</li></a>
-      <a href="graph.html"> <li> ශ්‍රිත/ප්‍රස්ථාර</li></a>
+      <a href="gp.html"> <li> ශ්‍රිත/ප්‍රස්ථාර</li></a>
 
       <a class="disabled"> <li> ප්‍රථමක සාධක</li></a>
       <a  class="disabled"> <li> ත්‍රිකෝණමිතිය</li></a>
@@ -704,6 +704,11 @@ window.addEventListener('pageshow', hideLoader);
 </a>
 
 <script>
+  document.querySelectorAll('.disabled').forEach(el => {
+  el.addEventListener('click', function(e) {
+    openWhatsApp();
+  });
+});
 function openWhatsApp() {
     let phone = "94764042528";
     let message = "Hello! I need more details";
