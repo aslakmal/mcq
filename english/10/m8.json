@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "question": "Singithi likes rice for breakfast ______ her brother likes string hoppers.",
+    "options": [
+      "while",
+      "whenever",
+      "against",
+      "during"
+    ],
+    "answerIndex": 0,
+    "explanation": "'While' is used to show a contrast between two different ideas."
+  },
+  {
+    "id": 2,
+    "question": "______ many people skip breakfast, it is still the most important meal.",
+    "options": [
+      "Whenever",
+      "Although",
+      "Before",
+      "Upon"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Although' connects two ideas that seem to disagree with each other."
+  },
+  {
+    "id": 3,
+    "question": "Mrs. Perera enjoys making pittu ______ it takes a lot of time.",
+    "options": [
+      "even though",
+      "whenever",
+      "while",
+      "after"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Even though' shows that she enjoys it despite the time it takes."
+  },
+  {
+    "id": 4,
+    "question": "I do not know how to cook laddu ______ I have tasted it before.",
+    "options": [
+      "whenever",
+      "though",
+      "while",
+      "against"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Though' is used to connect these two contrasting facts."
+  },
+  {
+    "id": 5,
+    "question": "Some people eat fast food ______ its health risks.",
+    "options": [
+      "in spite of",
+      "whenever",
+      "before",
+      "during"
+    ],
+    "answerIndex": 0,
+    "explanation": "'In spite of' is followed by a noun phrase to show contrast."
+  },
+  {
+    "id": 6,
+    "question": "Riyaza likes to buy manioc ______ she goes to the market.",
+    "options": [
+      "although",
+      "even though",
+      "whenever",
+      "while"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Whenever' means every time she goes to the market."
+  },
+  {
+    "id": 7,
+    "question": "The teacher handed out the new ______ for the English class.",
+    "options": [
+      "syllabuses",
+      "syllabi",
+      "syllabus",
+      "syllabuss"
+    ],
+    "answerIndex": 2,
+    "explanation": "The sentence asks for a singular word, so 'syllabus' is correct."
+  },
+  {
+    "id": 8,
+    "question": "Selection is based on three main ______.",
+    "options": [
+      "criterions",
+      "criteria",
+      "criterias",
+      "criterion"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Criteria' is the plural form of the singular word 'criterion'."
+  },
+  {
+    "id": 9,
+    "question": "Several ______ stopped to help the injured man.",
+    "options": [
+      "passer-bies",
+      "passer-bys",
+      "passers-by",
+      "passers-bys"
+    ],
+    "answerIndex": 2,
+    "explanation": "In compound nouns, we add the 's' to the main word (passers)."
+  },
+  {
+    "id": 10,
+    "question": "The news was shared through different ______.",
+    "options": [
+      "mediums",
+      "medias",
+      "media",
+      "medies"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Media' is the traditional irregular plural form of 'medium'."
+  },
+  {
+    "id": 11,
+    "question": "Our school follows the national ______.",
+    "options": [
+      "curriculum",
+      "curricula",
+      "curriculums",
+      "curriculi"
+    ],
+    "answerIndex": 0,
+    "explanation": "Use 'curriculum' for the singular subject."
+  },
+  {
+    "id": 12,
+    "question": "Two ______ were invited to the school ceremony.",
+    "options": [
+      "guest-of-honours",
+      "guests-of-honour",
+      "guest-of-honour",
+      "guests-of-honours"
+    ],
+    "answerIndex": 1,
+    "explanation": "We add 's' to the main noun 'guests' to make it plural."
+  },
+  {
+    "id": 13,
+    "question": "The scientist wrote down several ______ for the experiment.",
+    "options": [
+      "formulae",
+      "formuli",
+      "formulaes",
+      "formulax"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Formulae' is the foreign irregular plural form."
+  },
+  {
+    "id": 14,
+    "question": "Please label the X and Y ______ on your paper.",
+    "options": [
+      "axis",
+      "axises",
+      "axes",
+      "axies"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Axes' (pronounced ax-eez) is the plural of 'axis'."
+  },
+  {
+    "id": 15,
+    "question": "Add two ______ of honey to the tea.",
+    "options": [
+      "spoonsful",
+      "spoonfuls",
+      "spoonful",
+      "spoonsfuls"
+    ],
+    "answerIndex": 1,
+    "explanation": "For 'spoonful', we add the 's' at the end of the whole word."
+  },
+  {
+    "id": 16,
+    "question": "Look at the ______ at the back of the book.",
+    "options": [
+      "indices",
+      "indexs",
+      "indixes",
+      "indici"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Indices' is the common irregular plural form for index."
+  },
+  {
+    "id": 17,
+    "question": "______ it was raining, the children played outside.",
+    "options": [
+      "While",
+      "Although",
+      "Whenever",
+      "During"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Although' shows contrast between the rain and playing."
+  },
+  {
+    "id": 18,
+    "question": "She drinks water ______ she feels thirsty.",
+    "options": [
+      "whenever",
+      "although",
+      "while",
+      "in spite of"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Whenever' is used for every time a situation happens."
+  },
+  {
+    "id": 19,
+    "question": "The hikers explored many ______ in the village.",
+    "options": [
+      "by-wayes",
+      "bies-way",
+      "by-ways",
+      "byes-way"
+    ],
+    "answerIndex": 2,
+    "explanation": "The plural of 'by-way' is 'by-ways'."
+  },
+  {
+    "id": 20,
+    "question": "He stayed healthy ______ eating some sweets.",
+    "options": [
+      "while",
+      "whenever",
+      "in spite of",
+      "although"
+    ],
+    "answerIndex": 2,
+    "explanation": "'In spite of' is used before the phrase 'eating some sweets'."
+  }
+]

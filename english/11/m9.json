@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "If you look at those dark clouds, it ______ rain during the cricket match, but we aren't sure.",
+    "options": ["will", "might", "must", "would"],
+    "answerIndex": 1,
+    "explanation": "'Might' is used to express a possibility that is not certain."
+  },
+  {
+    "id": 2,
+    "question": "What is the correct plural form of the word 'shelf'?",
+    "options": ["shelfs", "shelves", "shelve", "shelvies"],
+    "answerIndex": 1,
+    "explanation": "Nouns ending in -f or -fe usually change the 'f' to 'v' and add 'es' for the plural."
+  },
+  {
+    "id": 3,
+    "question": "The athlete was the ______ person in the team after winning the gold medal.",
+    "options": ["luckyest", "luckiest", "luckyer", "luckist"],
+    "answerIndex": 1,
+    "explanation": "When adding -est to a word ending in a consonant + y, the 'y' changes to 'i'."
+  },
+  {
+    "id": 4,
+    "question": "A 'gosling' is the young one of a ______.",
+    "options": ["Goat", "Goose", "Horse", "Duck"],
+    "answerIndex": 1,
+    "explanation": "A young goose is called a gosling."
+  },
+  {
+    "id": 5,
+    "question": "Animals that are active at night, like owls, are described as ______.",
+    "options": ["nocturnal", "hoaxers", "swampy", "mysterious"],
+    "answerIndex": 0,
+    "explanation": "'Nocturnal' refers to organisms that are active during the night and sleep during the day."
+  },
+  {
+    "id": 6,
+    "question": "The strange lights in the sky ______ the villagers for many years.",
+    "options": ["mystery", "mysterious", "mystify", "mystifyed"],
+    "answerIndex": 2,
+    "explanation": "'Mystify' is the verb form of the root word 'mystery'."
+  },
+  {
+    "id": 7,
+    "question": "If I won the lottery, I ______ buy a big farm in Puttalam.",
+    "options": ["will", "would", "may", "can"],
+    "answerIndex": 1,
+    "explanation": "'Would' is used for hypothetical or imaginary situations."
+  },
+  {
+    "id": 8,
+    "question": "The little boy ______ to open the gift as soon as he received it.",
+    "options": ["hurryed", "hurried", "hurryied", "hurriedly"],
+    "answerIndex": 1,
+    "explanation": "To form the past tense of 'hurry', the 'y' changes to 'i' before adding -ed."
+  },
+  {
+    "id": 9,
+    "question": "We saw a large ______ of geese flying over the lake.",
+    "options": ["box", "gooses", "geese", "geeses"],
+    "answerIndex": 2,
+    "explanation": "'Geese' is the irregular plural form of 'goose'."
+  },
+  {
+    "id": 10,
+    "question": "A 'foal' is the young of a ______.",
+    "options": ["Horse", "Goat", "Goose", "Sheep"],
+    "answerIndex": 0,
+    "explanation": "A young horse is specifically called a foal."
+  },
+  {
+    "id": 11,
+    "question": "Be careful while walking near the lake; the ground is very ______.",
+    "options": ["nocturnal", "hoaxer", "swampy", "mysterious"],
+    "answerIndex": 2,
+    "explanation": "'Swampy' is a synonym for muddy or boggy ground."
+  },
+  {
+    "id": 12,
+    "question": "The detective looked ______ at the footprints found at the scene.",
+    "options": ["mystery", "mysterious", "mysteriously", "mystify"],
+    "answerIndex": 2,
+    "explanation": "'Mysteriously' is the adverb form, describing how the detective looked."
+  },
+  {
+    "id": 13,
+    "question": "The teacher ______ give us a surprise quiz today, so we should be prepared.",
+    "options": ["could", "would", "will", "must"],
+    "answerIndex": 0,
+    "explanation": "'Could' is used to express a possibility that something might happen."
+  },
+  {
+    "id": 14,
+    "question": "Which of the following is the correct spelling for the adverb of 'happy'?",
+    "options": ["happyly", "happily", "happiely", "happely"],
+    "answerIndex": 1,
+    "explanation": "When adding -ly to 'happy', the 'y' changes to 'i'."
+  },
+  {
+    "id": 15,
+    "question": "In autumn, the ______ of the trees turn brown and fall to the ground.",
+    "options": ["leafs", "leaves", "leafes", "leafies"],
+    "answerIndex": 1,
+    "explanation": "The plural of 'leaf' is 'leaves'."
+  },
+  {
+    "id": 16,
+    "question": "A person who plays a practical joke or trick on others is called a ______.",
+    "options": ["hoaxer", "nocturnal", "swampy", "physician"],
+    "answerIndex": 0,
+    "explanation": "A 'hoaxer' is someone who creates a trick or a practical joke."
+  },
+  {
+    "id": 17,
+    "question": "A 'kid' is the young one of a ______.",
+    "options": ["Goose", "Horse", "Goat", "Cat"],
+    "answerIndex": 2,
+    "explanation": "The offspring of a goat is known as a kid."
+  },
+  {
+    "id": 18,
+    "question": "There are many ______ filled with old books in the library.",
+    "options": ["boxs", "boxes", "boxies", "boxses"],
+    "answerIndex": 1,
+    "explanation": "Nouns ending in 'x' form their plural by adding -es."
+  },
+  {
+    "id": 19,
+    "question": "The case was very ______, and no one could solve it for years.",
+    "options": ["mystery", "mysterious", "mysteriously", "mystify"],
+    "answerIndex": 1,
+    "explanation": "'Mysterious' is the adjective form used to describe the noun 'case'."
+  },
+  {
+    "id": 20,
+    "question": "The children played ______ in the garden all evening.",
+    "options": ["merryly", "merrily", "merryied", "merriest"],
+    "answerIndex": 1,
+    "explanation": "The 'y' in 'merry' changes to 'i' when the suffix -ly is added."
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "question": "The boy is very ______. (Noun: Success. Suffix: -ful)",
+    "options": [
+      "successive",
+      "successful",
+      "successless",
+      "successive"
+    ],
+    "answerIndex": 1,
+    "explanation": "We add the suffix '-ful' to the noun 'success' to form the adjective 'successful'."
+  },
+  {
+    "id": 2,
+    "question": "A person who does not take care is a ______ person. (Suffix: -less)",
+    "options": [
+      "careful",
+      "careive",
+      "careless",
+      "caresource"
+    ],
+    "answerIndex": 2,
+    "explanation": "The suffix '-less' means 'without'. A person without care is 'careless'."
+  },
+  {
+    "id": 3,
+    "question": "The medicine was very ______ and cured the fever. (Suffix: -ive)",
+    "options": [
+      "effectful",
+      "effectless",
+      "effective",
+      "effectous"
+    ],
+    "answerIndex": 2,
+    "explanation": "The suffix '-ive' is added to 'effect' to create the adjective 'effective'."
+  },
+  {
+    "id": 4,
+    "question": "The loud noise was very ______. (Noun: Trouble. Suffix: -some)",
+    "options": [
+      "troubleful",
+      "troubleless",
+      "troublesome",
+      "troubleive"
+    ],
+    "answerIndex": 2,
+    "explanation": "The suffix '-some' is used with 'trouble' to form the adjective 'troublesome'."
+  },
+  {
+    "id": 5,
+    "question": "It was a ______ noise in the dark forest. (Noun: Mystery. Suffix: -ous)",
+    "options": [
+      "mysteryive",
+      "mysterious",
+      "mysteryless",
+      "mysterysome"
+    ],
+    "answerIndex": 1,
+    "explanation": "We use the suffix '-ous' to change 'mystery' into 'mysterious'."
+  },
+  {
+    "id": 6,
+    "question": "I will wait for my friend ______ 5:00 PM.",
+    "options": [
+      "towards",
+      "until",
+      "off",
+      "round"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Until' or 'till' shows the time when an action finishes."
+  },
+  {
+    "id": 7,
+    "question": "The hikers walked ______ the mountain top.",
+    "options": [
+      "towards",
+      "since",
+      "within",
+      "off"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Towards' is a preposition of direction. It means moving in that direction."
+  },
+  {
+    "id": 8,
+    "question": "I have been a student here ______ last year.",
+    "options": [
+      "within",
+      "since",
+      "round",
+      "until"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Since' is used to show the starting point of a period of time."
+  },
+  {
+    "id": 9,
+    "question": "The moon moves ______ the earth.",
+    "options": [
+      "round",
+      "since",
+      "within",
+      "off"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Round' describes movement in a circle or around an object."
+  },
+  {
+    "id": 10,
+    "question": "You must finish the exam ______ two hours.",
+    "options": [
+      "towards",
+      "since",
+      "within",
+      "off"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Within' means inside a specific time limit."
+  },
+  {
+    "id": 11,
+    "question": "The monkey jumped ______ the branch.",
+    "options": [
+      "within",
+      "since",
+      "until",
+      "off"
+    ],
+    "answerIndex": 3,
+    "explanation": "'Off' is used to show movement away from a place or surface."
+  },
+  {
+    "id": 12,
+    "question": "Please stay at the gate ______ I return.",
+    "options": [
+      "towards",
+      "till",
+      "off",
+      "within"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Till' is a shorter form of 'until' used for time."
+  },
+  {
+    "id": 13,
+    "question": "The sun is moving ______ the west.",
+    "options": [
+      "towards",
+      "since",
+      "within",
+      "off"
+    ],
+    "answerIndex": 0,
+    "explanation": "We use 'towards' to show the direction of movement."
+  },
+  {
+    "id": 14,
+    "question": "He has been sick ______ Monday.",
+    "options": [
+      "within",
+      "since",
+      "round",
+      "until"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Since' marks the beginning of the time he was sick."
+  },
+  {
+    "id": 15,
+    "question": "A worker must be ______. (Noun: Skill. Suffix: -ful)",
+    "options": [
+      "skillous",
+      "skillive",
+      "skillful",
+      "skillless"
+    ],
+    "answerIndex": 2,
+    "explanation": "Adding '-ful' to 'skill' makes the adjective 'skillful'."
+  },
+  {
+    "id": 16,
+    "question": "Don't be ______ with your money. (Suffix: -less)",
+    "options": [
+      "thoughtful",
+      "thoughtless",
+      "thoughtive",
+      "thoughtous"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Thoughtless' means acting without thinking (careless)."
+  },
+  {
+    "id": 17,
+    "question": "The little girl was very ______. (Noun: Play. Suffix: -ful)",
+    "options": [
+      "playful",
+      "playive",
+      "playless",
+      "playous"
+    ],
+    "answerIndex": 0,
+    "explanation": "Adding '-ful' to 'play' creates 'playful'."
+  },
+  {
+    "id": 18,
+    "question": "The children ran ______ the playground.",
+    "options": [
+      "since",
+      "within",
+      "round",
+      "off"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Round' is used to show they ran all around the area."
+  },
+  {
+    "id": 19,
+    "question": "I am traveling ______ Colombo today.",
+    "options": [
+      "towards",
+      "since",
+      "within",
+      "off"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Towards' shows the direction of the travel."
+  },
+  {
+    "id": 20,
+    "question": "Wait here ______ the rain stops.",
+    "options": [
+      "towards",
+      "since",
+      "until",
+      "off"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Until' indicates the time when the waiting will end."
+  }
+]

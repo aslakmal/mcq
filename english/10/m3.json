@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Prefixes are added at the start of a word. Suffixes are added at the _______.",
+    "options": ["Middle", "Start", "End", "Verb"],
+    "answerIndex": 2,
+    "explanation": "Suffixes are added to the end of a word."
+  },
+  {
+    "id": 2,
+    "question": "What is the prefix in 'unhappy'?",
+    "options": ["un", "happy", "py", "ha"],
+    "answerIndex": 0,
+    "explanation": "The prefix 'un' is at the beginning of the word."
+  },
+  {
+    "id": 3,
+    "question": "The word 'sad' is an adjective. 'Sadness' is a _______.",
+    "options": ["Verb", "Noun", "Prefix", "Pronoun"],
+    "answerIndex": 1,
+    "explanation": "Adding '-ness' changes the adjective into a noun."
+  },
+  {
+    "id": 4,
+    "question": "I have to untie my shoes. What is the base word of 'untie'?",
+    "options": ["un", "tie", "tieing", "untied"],
+    "answerIndex": 1,
+    "explanation": "The base word is 'tie'. 'un' is the prefix."
+  },
+  {
+    "id": 5,
+    "question": "Which word has a suffix?",
+    "options": ["Untie", "Unhappy", "Careless", "Unknown"],
+    "answerIndex": 2,
+    "explanation": "'-less' is a suffix at the end of the word."
+  },
+  {
+    "id": 6,
+    "question": "The suffix '-ful' means 'full of'. Which word uses it correctly?",
+    "options": ["Fully", "Beautiful", "Fullness", "Unfull"],
+    "answerIndex": 1,
+    "explanation": "Beautiful means 'full of beauty'."
+  },
+  {
+    "id": 7,
+    "question": "Does 'unhappy' change the word class? Happy is an adjective.",
+    "options": ["Yes", "No, it stays an adjective.", "It becomes a noun.", "It becomes a verb."],
+    "answerIndex": 1,
+    "explanation": "Prefixes like 'un' change the meaning but not the word class."
+  },
+  {
+    "id": 8,
+    "question": "Which suffix changes 'care' (verb) into an adjective?",
+    "options": ["-ness", "-less", "un-", "-sion"],
+    "answerIndex": 1,
+    "explanation": "'Careless' is an adjective."
+  },
+  {
+    "id": 9,
+    "question": "What is the root of the word 'beautiful'?",
+    "options": ["Beaut", "Beauty", "Full", "Fully"],
+    "answerIndex": 1,
+    "explanation": "The base noun is 'beauty'."
+  },
+  {
+    "id": 10,
+    "question": "Prefixes change the _______ of the word.",
+    "options": ["Meaning", "Class", "Spelling", "None"],
+    "answerIndex": 0,
+    "explanation": "Prefixes like 'un' change the meaning to the opposite."
+  },
+  {
+    "id": 11,
+    "question": "A suffix is added to the _______ of a word.",
+    "options": ["Beginning", "End", "Middle", "Prefix"],
+    "answerIndex": 1,
+    "explanation": "Suffixes always come at the end."
+  },
+  {
+    "id": 12,
+    "question": "Which word is a noun?",
+    "options": ["Happy", "Sad", "Sadness", "Careless"],
+    "answerIndex": 2,
+    "explanation": "'-ness' forms a noun."
+  },
+  {
+    "id": 13,
+    "question": "What is the suffix in 'discussion'?",
+    "options": ["di", "cuss", "sion", "dis"],
+    "answerIndex": 2,
+    "explanation": "'-sion' is the suffix at the end."
+  },
+  {
+    "id": 14,
+    "question": "The word 'untie' is a verb. What was the word 'tie'?",
+    "options": ["Noun", "Adjective", "Verb", "Adverb"],
+    "answerIndex": 2,
+    "explanation": "Both 'tie' and 'untie' are verbs."
+  },
+  {
+    "id": 15,
+    "question": "Which of these is a prefix?",
+    "options": ["-ly", "-ness", "un-", "-ful"],
+    "answerIndex": 2,
+    "explanation": "'un-' is a prefix because it goes at the start."
+  },
+  {
+    "id": 16,
+    "question": "Adding '-ly' to 'sad' makes it 'sadly'. What is '-ly'?",
+    "options": ["Prefix", "Suffix", "Noun", "Verb"],
+    "answerIndex": 1,
+    "explanation": "'-ly' is a suffix."
+  },
+  {
+    "id": 17,
+    "question": "What does 'un-' mean in the word 'unhappy'?",
+    "options": ["Very", "Again", "Not", "Always"],
+    "answerIndex": 2,
+    "explanation": "'un' means not."
+  },
+  {
+    "id": 18,
+    "question": "Which word shows a change from noun to adjective?",
+    "options": ["Untie", "Sadness", "Beautiful", "Unhappy"],
+    "answerIndex": 2,
+    "explanation": "Beauty (noun) becomes beautiful (adjective)."
+  },
+  {
+    "id": 19,
+    "question": "Affixes are prefixes and _______.",
+    "options": ["Verbs", "Nouns", "Suffixes", "Adjectives"],
+    "answerIndex": 2,
+    "explanation": "Affixes is the name for both prefixes and suffixes."
+  },
+  {
+    "id": 20,
+    "question": "The word 'careless' means _______.",
+    "options": ["Full of care", "No care", "Very careful", "To care again"],
+    "answerIndex": 1,
+    "explanation": "'-less' means without or no."
+  }
+]

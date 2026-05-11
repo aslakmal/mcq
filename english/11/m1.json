@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "The students ______ their project before the bell rang.",
+    "options": ["finish", "had finished", "were finishing", "have finished"],
+    "answerIndex": 1,
+    "explanation": "Past Perfect (had + V3) is used for an action completed before another action in the past (the bell ringing)."
+  },
+  {
+    "id": 2,
+    "question": "While the players ______ on the field, it started to rain heavily.",
+    "options": ["practiced", "had practiced", "were practicing", "have practiced"],
+    "answerIndex": 2,
+    "explanation": "Past Continuous (were practicing) describes an ongoing action that was interrupted by another event."
+  },
+  {
+    "id": 3,
+    "question": "Which suffix can be added to the noun 'vandal' to turn it into a verb?",
+    "options": ["-ism", "-ize", "-ity", "-ness"],
+    "answerIndex": 1,
+    "explanation": "Adding the suffix '-ize' to 'vandal' creates the verb 'vandalize'."
+  },
+  {
+    "id": 4,
+    "question": "You ______ follow the rules of the library to avoid being fined.",
+    "options": ["can", "must", "might", "could"],
+    "answerIndex": 1,
+    "explanation": "'Must' is used to express a strong obligation or responsibility."
+  },
+  {
+    "id": 5,
+    "question": "Identify the sentence with the correct use of the apostrophe for possession.",
+    "options": ["The boys's bags are in the room.", "The boys bags' are in the room.", "The boys' bags are in the room.", "The boy's bags' are in the room."],
+    "answerIndex": 2,
+    "explanation": "For plural nouns ending in 's', the apostrophe is placed after the 's' (boys')."
+  },
+  {
+    "id": 6,
+    "question": "I ______ for three hours before I finally solved the math problem.",
+    "options": ["had been working", "was working", "worked", "have been working"],
+    "answerIndex": 0,
+    "explanation": "Past Perfect Continuous (had been working) shows an action that continued up to a specific point in the past."
+  },
+  {
+    "id": 7,
+    "question": "The prefix 'un-' in the word 'unhappy' changes the meaning to ______.",
+    "options": ["very happy", "not happy", "again happy", "half happy"],
+    "answerIndex": 1,
+    "explanation": "The prefix 'un-' means 'not', which creates the opposite meaning of the base word."
+  },
+  {
+    "id": 8,
+    "question": "If you are feeling unwell, you ______ see a doctor immediately.",
+    "options": ["need", "ought to", "can", "might"],
+    "answerIndex": 1,
+    "explanation": "'Ought to' is used to give advice or indicate what is the right thing to do."
+  },
+  {
+    "id": 9,
+    "question": "Which punctuation mark is missing: 'Where are you going ______'",
+    "options": [".", ",", "!", "?"],
+    "answerIndex": 3,
+    "explanation": "A question mark (?) is used at the end of a direct question."
+  },
+  {
+    "id": 10,
+    "question": "Last year, our team ______ the championship trophy.",
+    "options": ["win", "won", "had won", "was winning"],
+    "answerIndex": 1,
+    "explanation": "Simple Past (won) is used for a completed action at a specific time in the past (last year)."
+  },
+  {
+    "id": 11,
+    "question": "The suffix '-ism' added to 'vandal' results in 'vandalism', which is a/an ______.",
+    "options": ["Verb", "Adjective", "Noun", "Adverb"],
+    "answerIndex": 2,
+    "explanation": "The suffix '-ism' is commonly used to form nouns representing a practice, system, or philosophy."
+  },
+  {
+    "id": 12,
+    "question": "We ______ finish the assignment by tomorrow; it is a strict deadline.",
+    "options": ["should", "must", "can", "may"],
+    "answerIndex": 1,
+    "explanation": "'Must' expresses a firm necessity or a requirement that cannot be ignored."
+  },
+  {
+    "id": 13,
+    "question": "Which sentence uses a contraction correctly?",
+    "options": ["Its' a beautiful day.", "It's a beautiful day.", "Its a beautiful day.", "I'ts a beautiful day."],
+    "answerIndex": 1,
+    "explanation": "'It's' is the contraction for 'It is'."
+  },
+  {
+    "id": 14,
+    "question": "They ______ the house for ten years before they decided to sell it.",
+    "options": ["owned", "were owning", "had owned", "have owned"],
+    "answerIndex": 2,
+    "explanation": "Past Perfect (had owned) is used here to show a state that existed before a past action."
+  },
+  {
+    "id": 15,
+    "question": "The word 'kindness' is formed by adding a suffix to a/an ______.",
+    "options": ["Noun", "Verb", "Adjective", "Pronoun"],
+    "answerIndex": 2,
+    "explanation": "The suffix '-ness' is added to the adjective 'kind' to form the noun 'kindness'."
+  },
+  {
+    "id": 16,
+    "question": "You ______ to be more careful when crossing the busy road.",
+    "options": ["should", "need", "must", "can"],
+    "answerIndex": 1,
+    "explanation": "'Need' is followed by 'to' to express necessity (You need to...)."
+  },
+  {
+    "id": 17,
+    "question": "Choose the correctly punctuated list:",
+    "options": ["I bought pens, pencils, and erasers.", "I bought pens pencils and erasers.", "I bought pens, pencils and, erasers.", "I bought, pens, pencils, and erasers."],
+    "answerIndex": 0,
+    "explanation": "Commas are used to separate items in a list."
+  },
+  {
+    "id": 18,
+    "question": "At 8 PM yesterday, I ______ my English lessons.",
+    "options": ["studied", "was studying", "had studied", "had been studying"],
+    "answerIndex": 1,
+    "explanation": "Past Continuous (was studying) is used for an action in progress at a specific time in the past."
+  },
+  {
+    "id": 19,
+    "question": "Adding the prefix 'dis-' to 'agree' turns the word into its ______.",
+    "options": ["Synonym", "Opposite", "Noun form", "Past tense"],
+    "answerIndex": 1,
+    "explanation": "The prefix 'dis-' is often used to form the antonym (opposite) of a verb."
+  },
+  {
+    "id": 20,
+    "question": "Children ______ obey their parents and teachers.",
+    "options": ["should", "might", "can", "could"],
+    "answerIndex": 0,
+    "explanation": "'Should' is used to express a duty or a piece of good advice."
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "A person who is ______ figures and enjoys solving problems is often an Accountant.",
+    "options": ["bad at", "good at", "afraid of", "ignoring"],
+    "answerIndex": 1,
+    "explanation": "Accountants must be 'good at' numbers (figures) to perform their duties."
+  },
+  {
+    "id": 2,
+    "question": "The report ______ (finish) by the clerk before the manager arrived.",
+    "options": ["has been finished", "had been finished", "was being finished", "is finished"],
+    "answerIndex": 1,
+    "explanation": "The Past Perfect Passive (had been + V3) is used for an action completed before another past action."
+  },
+  {
+    "id": 3,
+    "question": "A Journalist must be a good ______ because they talk to many people.",
+    "options": ["driver", "communicator", "beautician", "operator"],
+    "answerIndex": 1,
+    "explanation": "Communication is the core skill required for gathering and sharing news."
+  },
+  {
+    "id": 4,
+    "question": "The application ______ (send) by Radha before the deadline passed.",
+    "options": ["had been sent", "was sent", "has been sent", "had sent"],
+    "answerIndex": 0,
+    "explanation": "We use 'had been sent' to show the application was completed before the deadline."
+  },
+  {
+    "id": 5,
+    "question": "A ______ needs an artistic sense to make people look better.",
+    "options": ["Journalist", "Hairdresser", "Accountant", "Clerk"],
+    "answerIndex": 1,
+    "explanation": "Hairdressers use artistic skills to style hair and improve appearance."
+  },
+  {
+    "id": 6,
+    "question": "Change to Passive: 'They had not invited the candidates.'",
+    "options": ["The candidates were not invited.", "The candidates had not been invited.", "The candidates has not been invited.", "The candidates had not invited."],
+    "answerIndex": 1,
+    "explanation": "The active 'had not invited' becomes 'had not been invited' in the passive voice."
+  },
+  {
+    "id": 7,
+    "question": "The letters ______ (type) before the office closed for the day.",
+    "options": ["had been typed", "were typing", "have been typed", "was typed"],
+    "answerIndex": 0,
+    "explanation": "The typing happened before the closing, so we use the Past Perfect Passive."
+  },
+  {
+    "id": 8,
+    "question": "A person who does not mind sitting for long hours to write is a ______.",
+    "options": ["Driver", "Journalist", "Beautician", "Salesman"],
+    "answerIndex": 1,
+    "explanation": "Journalism requires long hours of writing and editing articles."
+  },
+  {
+    "id": 9,
+    "question": "The classroom ______ (clean) by the students before the principal visited.",
+    "options": ["is cleaned", "has been cleaned", "had been cleaned", "was cleaning"],
+    "answerIndex": 2,
+    "explanation": "Past Perfect Passive is used to show the cleaning was finished before the visit."
+  },
+  {
+    "id": 10,
+    "question": "An Accountant is a professional role that requires ______.",
+    "options": ["artistic sense", "mathematical skill", "driving license", "cooking ability"],
+    "answerIndex": 1,
+    "explanation": "Accountants need strong math skills to manage financial data."
+  },
+  {
+    "id": 11,
+    "question": "Change to Passive: 'The company had selected the best applicant.'",
+    "options": ["The best applicant had been selected.", "The best applicant was selected.", "The best applicant has been selected.", "The best applicant had selected."],
+    "answerIndex": 0,
+    "explanation": "The structure for Past Perfect Passive is 'had been' + past participle."
+  },
+  {
+    "id": 12,
+    "question": "A Driver is a person who is ______ for the lives of the passengers.",
+    "options": ["responsible", "ignorant", "unaware", "fearful"],
+    "answerIndex": 0,
+    "explanation": "Responsibility for safety is the most important part of a driver's job."
+  },
+  {
+    "id": 13,
+    "question": "The interview ______ (conduct) by the panel before noon.",
+    "options": ["had been conducted", "was conducting", "has been conducted", "is conducted"],
+    "answerIndex": 0,
+    "explanation": "This describes a completed action that happened before a specific time in the past."
+  },
+  {
+    "id": 14,
+    "question": "Which career requires the skill to make people ______ better?",
+    "options": ["speak", "look", "run", "read"],
+    "answerIndex": 1,
+    "explanation": "Beauticians and hairdressers focus on the physical appearance of clients."
+  },
+  {
+    "id": 15,
+    "question": "The mistake ______ (notice) by the teacher before the exam ended.",
+    "options": ["was noticed", "has been noticed", "had been noticed", "is noticed"],
+    "answerIndex": 2,
+    "explanation": "The teacher found the mistake earlier in the past, requiring the Past Perfect Passive."
+  },
+  {
+    "id": 16,
+    "question": "A person who is undergoing ______ for a job is called a trainee.",
+    "options": ["training", "vacation", "retirement", "sleep"],
+    "answerIndex": 0,
+    "explanation": "A trainee is someone learning the skills needed for their new role."
+  },
+  {
+    "id": 17,
+    "question": "Change to Passive: 'The fire had destroyed the documents.'",
+    "options": ["The documents were destroyed.", "The documents had been destroyed.", "The documents has been destroyed.", "The documents had destroyed."],
+    "answerIndex": 1,
+    "explanation": "Active 'had destroyed' changes to 'had been destroyed' in the passive."
+  },
+  {
+    "id": 18,
+    "question": "If you are a good communicator, you might enjoy being a ______.",
+    "options": ["Driver", "Journalist", "Mechanic", "Farmer"],
+    "answerIndex": 1,
+    "explanation": "Journalists rely heavily on their ability to communicate with others."
+  },
+  {
+    "id": 19,
+    "question": "The results ______ (release) by the board before the holidays started.",
+    "options": ["had been released", "were releasing", "has been released", "are released"],
+    "answerIndex": 0,
+    "explanation": "The release of results happened before the holidays, which is another past event."
+  },
+  {
+    "id": 20,
+    "question": "The Past Perfect Passive structure is: Subject + had + ______ + V3.",
+    "options": ["being", "be", "been", "was"],
+    "answerIndex": 2,
+    "explanation": "The word 'been' is essential for all perfect passive tenses."
+  }
+]

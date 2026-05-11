@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "If it ______ tomorrow, we will stay at home. (Type 1)",
+    "options": ["rains", "rained", "will rain", "had rained"],
+    "answerIndex": 0,
+    "explanation": "Type 1 conditionals use the Simple Present in the 'if' clause for real future possibilities."
+  },
+  {
+    "id": 2,
+    "question": "If I ______ a million dollars, I would buy a large farm. (Type 2)",
+    "options": ["have", "had", "will have", "had had"],
+    "answerIndex": 1,
+    "explanation": "Type 2 conditionals use the Simple Past in the 'if' clause to describe imaginary or unlikely situations."
+  },
+  {
+    "id": 3,
+    "question": "If he ______ the map, he would not have gotten lost. (Type 3)",
+    "options": ["brought", "has brought", "had brought", "brings"],
+    "answerIndex": 2,
+    "explanation": "Type 3 conditionals use the Past Perfect for impossible past situations that cannot be changed."
+  },
+  {
+    "id": 4,
+    "question": "By the year 2030, scientists ______ a cure for the disease.",
+    "options": ["will find", "will have found", "found", "have found"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect (will have + V3) describes an action finished by a specific point in the future."
+  },
+  {
+    "id": 5,
+    "question": "The ______ system is an old method of exchanging goods without using money.",
+    "options": ["Banking", "Barter", "Credit", "Digital"],
+    "answerIndex": 1,
+    "explanation": "The barter system involves the direct exchange of goods or services between two parties."
+  },
+  {
+    "id": 6,
+    "question": "Mr. Mumble Jumble missed the train. 'If I ______ earlier, I would have caught it.'",
+    "options": ["leave", "left", "had left", "will leave"],
+    "answerIndex": 2,
+    "explanation": "Since the event already happened in the past, Type 3 (had + V3) is required to show regret."
+  },
+  {
+    "id": 7,
+    "question": "By 9:00 PM tonight, I ______ my English homework.",
+    "options": ["will finish", "will have finished", "finished", "finish"],
+    "answerIndex": 1,
+    "explanation": "The phrase 'By 9:00 PM' indicates a deadline, requiring the Future Perfect tense."
+  },
+  {
+    "id": 8,
+    "question": "If I ______ you, I would take that job offer.",
+    "options": ["am", "was", "were", "be"],
+    "answerIndex": 2,
+    "explanation": "In Type 2 imaginary situations, 'were' is used for all subjects (I, he, she, it)."
+  },
+  {
+    "id": 9,
+    "question": "If you don't water the plants, they ______.",
+    "options": ["die", "will die", "would die", "had died"],
+    "answerIndex": 1,
+    "explanation": "This is a Type 1 conditional showing a likely result of a present action."
+  },
+  {
+    "id": 10,
+    "question": "By the end of this month, the workers ______ the new bridge.",
+    "options": ["will complete", "will have completed", "completed", "completes"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect is used to show the completion of the bridge before the month ends."
+  },
+  {
+    "id": 11,
+    "question": "In a barter system, you must find someone who ______.",
+    "options": ["has money", "wants what you have", "is a banker", "sells digital goods"],
+    "answerIndex": 1,
+    "explanation": "Bartering requires a double coincidence of wants—both parties must need what the other offers."
+  },
+  {
+    "id": 12,
+    "question": "If Mr. Mumble Jumble ______ more careful, he wouldn't have broken the vase.",
+    "options": ["is", "was", "had been", "will be"],
+    "answerIndex": 2,
+    "explanation": "The vase is already broken, so we use the Past Perfect (Type 3) to discuss the impossible past."
+  },
+  {
+    "id": 13,
+    "question": "If I ______ wings, I would fly to the moon.",
+    "options": ["have", "had", "will have", "has"],
+    "answerIndex": 1,
+    "explanation": "Having wings is an imaginary situation, requiring the Simple Past in the 'if' clause (Type 2)."
+  },
+  {
+    "id": 14,
+    "question": "By the year 2099, humans ______ a colony on Mars.",
+    "options": ["will build", "will have built", "built", "build"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect (will have + past participle) is used for long-term future deadlines."
+  },
+  {
+    "id": 15,
+    "question": "What is the structure of the result clause in a Type 2 Conditional?",
+    "options": ["will + verb", "would + verb", "would have + V3", "shall + verb"],
+    "answerIndex": 1,
+    "explanation": "Type 2 result clauses use 'would' followed by the base form of the verb."
+  },
+  {
+    "id": 16,
+    "question": "If they ______ to the party, they would have had a great time.",
+    "options": ["come", "came", "had come", "will come"],
+    "answerIndex": 2,
+    "explanation": "The 'would have had' in the main clause tells us this is a Type 3 (Past Perfect) condition."
+  },
+  {
+    "id": 17,
+    "question": "Choose the Future Perfect form: 'She ______ her dinner by 8 PM.'",
+    "options": ["will eat", "will have eaten", "has eaten", "ate"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect follows the structure: Subject + will have + past participle (V3)."
+  },
+  {
+    "id": 18,
+    "question": "If she ______ enough time, she will visit her grandmother.",
+    "options": ["has", "had", "will have", "have"],
+    "answerIndex": 0,
+    "explanation": "In Type 1, the 'if' clause must be in the Simple Present (has)."
+  },
+  {
+    "id": 19,
+    "question": "If I ______ the lottery, I would buy a motorcycle.",
+    "options": ["win", "won", "had won", "wins"],
+    "answerIndex": 1,
+    "explanation": "Winning the lottery is unlikely/imaginary, so we use the Simple Past (Type 2)."
+  },
+  {
+    "id": 20,
+    "question": "Mr. Mumble Jumble tripped. 'If I ______ where I was going, I wouldn't have fallen.'",
+    "options": ["look", "looked", "had looked", "will look"],
+    "answerIndex": 2,
+    "explanation": "This is a past impossible situation (Type 3), so we use 'had looked'."
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Change to Passive: 'The students will plant trees.'",
+    "options": ["Trees will plant by students.", "Trees will be planted by students.", "Trees are planted by students.", "Trees will be plant by students."],
+    "answerIndex": 1,
+    "explanation": "The future passive structure is 'will + be + past participle (V3)'."
+  },
+  {
+    "id": 2,
+    "question": "The new hospital _______ opened by the President next month.",
+    "options": ["will", "will be", "is", "was"],
+    "answerIndex": 1,
+    "explanation": "Since the hospital is the receiver of the action, we use the passive 'will be'."
+  },
+  {
+    "id": 3,
+    "question": "Active: 'I will write a letter.' What is the Passive form?",
+    "options": ["A letter will be written by me.", "A letter will write by me.", "A letter is written by me.", "I will be written a letter."],
+    "answerIndex": 0,
+    "explanation": "'Written' is the past participle of 'write' used in the passive voice."
+  },
+  {
+    "id": 4,
+    "question": "In the sentence 'The birds will fly south', the verb is in _______.",
+    "options": ["Active Voice", "Passive Voice", "Past Tense", "Present Tense"],
+    "answerIndex": 0,
+    "explanation": "It is Active because the subject (birds) is doing the action."
+  },
+  {
+    "id": 5,
+    "question": "Passive: 'The homework _______ by the teacher tomorrow.'",
+    "options": ["will check", "will be checked", "is checking", "checked"],
+    "answerIndex": 1,
+    "explanation": "Future passive requires 'will be' plus the V3 form 'checked'."
+  },
+  {
+    "id": 6,
+    "question": "Which sentence is in the Active Voice?",
+    "options": ["The food will be cooked.", "She will cook the food.", "The food is cooked.", "The food was cooked."],
+    "answerIndex": 1,
+    "explanation": "'She will cook' follows the active structure: Subject + will + infinitive."
+  },
+  {
+    "id": 7,
+    "question": "The prizes _______ distributed at the end of the meeting.",
+    "options": ["will be", "will", "are", "were"],
+    "answerIndex": 0,
+    "explanation": "Prizes cannot distribute themselves, so we use the passive 'will be'."
+  },
+  {
+    "id": 8,
+    "question": "What is the past participle (V3) of the verb 'give'?",
+    "options": ["Gave", "Giving", "Given", "Gives"],
+    "answerIndex": 2,
+    "explanation": "'Given' is the V3 form used in passive voice sentences."
+  },
+  {
+    "id": 9,
+    "question": "Active: 'We will clean the classroom.' Passive: 'The classroom _______.'",
+    "options": ["will clean by us", "will be cleaned by us", "is cleaned by us", "will be clean by us"],
+    "answerIndex": 1,
+    "explanation": "The passive form uses 'will be' + 'cleaned'."
+  },
+  {
+    "id": 10,
+    "question": "Which of these shows the correct Future Passive structure?",
+    "options": ["will + V3", "will + be + V3", "will + be + -ing", "will + V1"],
+    "answerIndex": 1,
+    "explanation": "The rule for future passive is 'will + be + past participle'."
+  },
+  {
+    "id": 11,
+    "question": "The match _______ won by our team. Fill in the blank.",
+    "options": ["will", "will be", "is", "be"],
+    "answerIndex": 1,
+    "explanation": "'Will be won' is the correct passive form."
+  },
+  {
+    "id": 12,
+    "question": "Active: 'Someone will steal your bike.' Passive: 'Your bike _______.'",
+    "options": ["will be stolen", "will steal", "is stolen", "will be steal"],
+    "answerIndex": 0,
+    "explanation": "'Stolen' is the past participle of 'steal'."
+  },
+  {
+    "id": 13,
+    "question": "The invitations _______ sent next week. Choose the best phrase.",
+    "options": ["will", "will be", "shall", "be"],
+    "answerIndex": 1,
+    "explanation": "Invitations are the object, so we use 'will be' + V3 (sent)."
+  },
+  {
+    "id": 14,
+    "question": "In 'The city will be destroyed by the storm', what is the doer?",
+    "options": ["The city", "The storm", "Destroyed", "Will be"],
+    "answerIndex": 1,
+    "explanation": "The storm is the 'doer' because it is performing the action."
+  },
+  {
+    "id": 15,
+    "question": "Change to Active: 'The cake will be eaten by Ravi.'",
+    "options": ["Ravi will eat the cake.", "Ravi will be eat the cake.", "Ravi eats the cake.", "Ravi will eaten the cake."],
+    "answerIndex": 0,
+    "explanation": "The active form is Subject (Ravi) + will + Verb (eat) + Object (cake)."
+  },
+  {
+    "id": 16,
+    "question": "The results _______ announced tomorrow morning.",
+    "options": ["will", "is", "will be", "were"],
+    "answerIndex": 2,
+    "explanation": "'Announced' is a V3 verb, and 'results' is the object, so we need 'will be'."
+  },
+  {
+    "id": 17,
+    "question": "Which sentence is grammatically correct?",
+    "options": ["The house will build next year.", "The house will be build next year.", "The house will be built next year.", "The house will built next year."],
+    "answerIndex": 2,
+    "explanation": "'Built' is the correct past participle form for 'build'."
+  },
+  {
+    "id": 18,
+    "question": "Passive: 'English _______ spoken all over the world.'",
+    "options": ["will be", "is", "will", "was"],
+    "answerIndex": 1,
+    "explanation": "While 'will be' is future, 'is spoken' is present passive. In this context, both work, but 'will be' fits the future theme."
+  },
+  {
+    "id": 19,
+    "question": "Active: 'They will invite us.' Passive: 'We _______ by them.'",
+    "options": ["will invite", "will be invited", "are invited", "will be invite"],
+    "answerIndex": 1,
+    "explanation": "We change 'us' to 'we' and use 'will be invited'."
+  },
+  {
+    "id": 20,
+    "question": "The road _______ closed for repairs tomorrow.",
+    "options": ["will", "be", "will be", "is"],
+    "answerIndex": 2,
+    "explanation": "Future passive: The road (object) + will be + closed (V3)."
+  }
+]

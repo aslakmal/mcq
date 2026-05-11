@@ -1,0 +1,147 @@
+[
+  {
+    "id": 1,
+    "question": "The staff _______ currently attending a training workshop together.",
+    "options": ["is", "are", "be", "being"],
+    "answerIndex": 0,
+    "explanation": "We use a singular verb (is) because the staff is acting as a single unit to attend the workshop."
+  },
+  {
+    "id": 2,
+    "question": "The jury _______ arguing with each other about the verdict.",
+    "options": ["was", "were", "is", "has"],
+    "answerIndex": 1,
+    "explanation": "We use a plural verb (were) because the members of the jury are acting as individuals (arguing with each other)."
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct preposition: She is very good _______ swimming.",
+    "options": ["in", "on", "at", "with"],
+    "answerIndex": 2,
+    "explanation": "The preposition 'at' is used before the -ing form of a verb to show a skill or ability."
+  },
+  {
+    "id": 4,
+    "question": "Complete the sentence: I borrowed a pen _______ him.",
+    "options": ["to", "from", "at", "by"],
+    "answerIndex": 1,
+    "explanation": "The preposition 'from' is used here before the pronoun 'him' to show the source."
+  },
+  {
+    "id": 5,
+    "question": "The family _______ all going their separate ways for the holidays.",
+    "options": ["is", "are", "was", "has"],
+    "answerIndex": 1,
+    "explanation": "A plural verb (are) is used because the family members are acting as individuals going to different places."
+  },
+  {
+    "id": 6,
+    "question": "Birds build their nests _______ trees.",
+    "options": ["at", "on", "in", "to"],
+    "answerIndex": 2,
+    "explanation": "The preposition 'in' is used before the noun 'trees' to show position."
+  },
+  {
+    "id": 7,
+    "question": "The committee _______ made a final decision regarding the project.",
+    "options": ["has", "have", "are", "were"],
+    "answerIndex": 0,
+    "explanation": "The singular verb 'has' is used because the committee acted as a single unit to reach one decision."
+  },
+  {
+    "id": 8,
+    "question": "Which sentence shows a preposition followed by an -ing verb?",
+    "options": [
+      "He lives in a big house.",
+      "They are interested in playing cricket.",
+      "Give the book to me.",
+      "The army is marching."
+    ],
+    "answerIndex": 1,
+    "explanation": "In this sentence, the preposition 'in' is followed by 'playing' (the -ing form)."
+  },
+  {
+    "id": 9,
+    "question": "The audience _______ clapping their hands loudly after the show.",
+    "options": ["was", "were", "is", "has"],
+    "answerIndex": 1,
+    "explanation": "The plural verb 'were' is used because the audience members are seen as a group of people acting individually."
+  },
+  {
+    "id": 10,
+    "question": "A team _______ made up of eleven players.",
+    "options": ["is", "are", "were", "be"],
+    "answerIndex": 0,
+    "explanation": "We use 'is' because the team is being described as a single whole unit."
+  },
+  {
+    "id": 11,
+    "question": "Identify the preposition in this sentence: 'I often go to the library with her.'",
+    "options": ["often", "go", "with", "library"],
+    "answerIndex": 2,
+    "explanation": "'With' is the preposition linking the action to the pronoun 'her'."
+  },
+  {
+    "id": 12,
+    "question": "The public _______ requested to stay behind the line.",
+    "options": ["is", "are", "be", "were"],
+    "answerIndex": 0,
+    "explanation": "The public is treated as a single unit being addressed by an authority."
+  },
+  {
+    "id": 13,
+    "question": "He is afraid _______ falling down the stairs.",
+    "options": ["in", "at", "of", "to"],
+    "answerIndex": 2,
+    "explanation": "The preposition 'of' is used here before the -ing verb 'falling'."
+  },
+  {
+    "id": 14,
+    "question": "The orchestra _______ tuning their instruments before the concert.",
+    "options": ["is", "are", "was", "has"],
+    "answerIndex": 1,
+    "explanation": "We use 'are' because each member of the orchestra is tuning their own individual instrument."
+  },
+  {
+    "id": 15,
+    "question": "Which of these is a collective noun?",
+    "options": ["Suresh", "Crew", "Water", "Books"],
+    "answerIndex": 1,
+    "explanation": "'Crew' is a collective noun referring to a group of people working together."
+  },
+  {
+    "id": 16,
+    "question": "The board _______ meeting in the conference room right now.",
+    "options": ["is", "are", "were", "be"],
+    "answerIndex": 0,
+    "explanation": "The singular verb 'is' is used because the board is acting as one unit for the meeting."
+  },
+  {
+    "id": 17,
+    "question": "My best friend lives _______ Kandy.",
+    "options": ["at", "on", "in", "to"],
+    "answerIndex": 2,
+    "explanation": "'In' is the correct preposition used before the name of a city (noun)."
+  },
+  {
+    "id": 18,
+    "question": "The band _______ playing their different parts of the song.",
+    "options": ["is", "are", "has", "was"],
+    "answerIndex": 1,
+    "explanation": "Since they are playing 'different parts' as individuals, the plural verb 'are' is used."
+  },
+  {
+    "id": 19,
+    "question": "We use a _______ verb when members of a collective noun act as individuals.",
+    "options": ["singular", "plural", "past", "future"],
+    "answerIndex": 1,
+    "explanation": "According to the rule, plural verbs are used when group members act as individuals."
+  },
+  {
+    "id": 20,
+    "question": "Prepositions are used before nouns, pronouns, and _______.",
+    "options": ["adjectives", "adverbs", "-ing verbs", "conjunctions"],
+    "answerIndex": 2,
+    "explanation": "The learning point states prepositions are used before nouns, pronouns, and the -ing form of verbs."
+  }
+]

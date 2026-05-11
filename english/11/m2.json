@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Direct: 'I love water rafting,' said Sam. Indirect: Sam said that he ______ water rafting.",
+    "options": ["love", "loved", "will love", "loves"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, the present simple 'love' shifts to the past simple 'loved'."
+  },
+  {
+    "id": 2,
+    "question": "Safety is the priority in skydiving; you ______ check your parachute twice before jumping.",
+    "options": ["can", "might", "must", "shouldn't"],
+    "answerIndex": 2,
+    "explanation": "'Must' is used for a strong necessity or a strict safety rule."
+  },
+  {
+    "id": 3,
+    "question": "Direct: 'The waves will be high tomorrow,' the surfer said. Indirect: The surfer said that the waves ______ high the next day.",
+    "options": ["will be", "would be", "are", "were"],
+    "answerIndex": 1,
+    "explanation": "In indirect speech, the modal 'will' shifts to 'would'."
+  },
+  {
+    "id": 4,
+    "question": "Identify the word-class of 'bravely' in the sentence: 'He jumped bravely from the plane.'",
+    "options": ["Noun", "Adjective", "Verb", "Adverb"],
+    "answerIndex": 3,
+    "explanation": "'Bravely' describes how the action (jumping) was done, making it an adverb."
+  },
+  {
+    "id": 5,
+    "question": "You ______ go white water rafting if you don't know how to swim; it's very dangerous.",
+    "options": ["mustn't", "should", "can", "must"],
+    "answerIndex": 0,
+    "explanation": "'Mustn't' is used for a strong prohibition or a warning against dangerous actions."
+  },
+  {
+    "id": 6,
+    "question": "Direct: 'I am practicing pole vaulting,' said the athlete. Indirect: The athlete said that she ______ pole vaulting.",
+    "options": ["is practicing", "was practicing", "had practiced", "practiced"],
+    "answerIndex": 1,
+    "explanation": "Present continuous 'is practicing' shifts to past continuous 'was practicing' in reported speech."
+  },
+  {
+    "id": 7,
+    "question": "In the sentence 'The powerful waves crashed against the shore,' the word 'powerful' is a/an ______.",
+    "options": ["Noun", "Verb", "Adjective", "Adverb"],
+    "answerIndex": 2,
+    "explanation": "'Powerful' describes the noun 'waves,' so it is an adjective."
+  },
+  {
+    "id": 8,
+    "question": "If you want to try surfing, you ______ start with a large, stable board for better balance.",
+    "options": ["should", "mustn't", "can't", "ought not to"],
+    "answerIndex": 0,
+    "explanation": "'Should' is used here to give helpful advice to a beginner."
+  },
+  {
+    "id": 9,
+    "question": "Direct: 'We can see the reef from here,' they said. Indirect: They said that they ______ see the reef from there.",
+    "options": ["can", "could", "will", "would"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, 'can' usually shifts to 'could'."
+  },
+  {
+    "id": 10,
+    "question": "Identify the noun in the sentence: 'The instructor checked the safety harness carefully.'",
+    "options": ["Checked", "Safety", "Instructor", "Carefully"],
+    "answerIndex": 2,
+    "explanation": "'Instructor' is the person performing the action, which makes it a noun."
+  },
+  {
+    "id": 11,
+    "question": "Divers ______ hold their breath for too long while ascending to the surface.",
+    "options": ["must", "should", "mustn't", "can"],
+    "answerIndex": 2,
+    "explanation": "'Mustn't' indicates a critical safety prohibition in diving."
+  },
+  {
+    "id": 12,
+    "question": "Direct: 'I have visited the Kelani river for rafting,' she said. Indirect: She said that she ______ the Kelani river for rafting.",
+    "options": ["visited", "has visited", "had visited", "is visiting"],
+    "answerIndex": 2,
+    "explanation": "Present perfect 'have visited' shifts to past perfect 'had visited' in reported speech."
+  },
+  {
+    "id": 13,
+    "question": "In the phrase 'The climber gripped the rock tightly,' what is the verb?",
+    "options": ["Climber", "Gripped", "Rock", "Tightly"],
+    "answerIndex": 1,
+    "explanation": "'Gripped' is the action being performed, making it the verb."
+  },
+  {
+    "id": 14,
+    "question": "You ______ wear a life jacket at all times during water rafting.",
+    "options": ["can", "must", "might", "shouldn't"],
+    "answerIndex": 1,
+    "explanation": "'Must' is used to express a mandatory safety requirement."
+  },
+  {
+    "id": 15,
+    "question": "Identify the adverb in: 'The pole vaulter ran fast toward the bar.'",
+    "options": ["Vaulter", "Ran", "Fast", "Toward"],
+    "answerIndex": 2,
+    "explanation": "'Fast' describes how the vaulter ran, so it functions as an adverb here."
+  },
+  {
+    "id": 16,
+    "question": "Direct: 'I don't like heights,' said the boy. Indirect: The boy said that he ______ heights.",
+    "options": ["doesn't like", "didn't like", "won't like", "not like"],
+    "answerIndex": 1,
+    "explanation": "Present simple 'don't like' shifts to past simple 'didn't like' in indirect speech."
+  },
+  {
+    "id": 17,
+    "question": "Adventurous sports ______ be exciting, but they also require proper training.",
+    "options": ["can", "mustn't", "shouldn't", "ought"],
+    "answerIndex": 0,
+    "explanation": "'Can' is used here to express a general possibility or characteristic."
+  },
+  {
+    "id": 18,
+    "question": "In the sentence 'The skydiving equipment is very expensive,' the word 'equipment' is a ______.",
+    "options": ["Noun", "Adjective", "Verb", "Adverb"],
+    "answerIndex": 0,
+    "explanation": "'Equipment' is a thing/object, making it a noun."
+  },
+  {
+    "id": 19,
+    "question": "You ______ try rock climbing; it's a great way to build strength.",
+    "options": ["should", "mustn't", "can't", "wouldn't"],
+    "answerIndex": 0,
+    "explanation": "'Should' is appropriate here for making a positive recommendation or giving advice."
+  },
+  {
+    "id": 20,
+    "question": "Direct: 'I will help you with the surfboard,' said Kamal. Indirect: Kamal said that he ______ help me with the surfboard.",
+    "options": ["will", "would", "shall", "can"],
+    "answerIndex": 1,
+    "explanation": "The future modal 'will' shifts to 'would' in reported speech."
+  }
+]

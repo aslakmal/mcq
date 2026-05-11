@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "A ______ is a professional who is skilled in playing a musical instrument.",
+    "options": ["musition", "musician", "musicion", "musishen"],
+    "answerIndex": 1,
+    "explanation": "Words describing people with a specific skill or trade often end in the suffix '-cian'."
+  },
+  {
+    "id": 2,
+    "question": "What is the feminine form of the noun 'Duke'?",
+    "options": ["Dukess", "Duchess", "Dukina", "Dutchess"],
+    "answerIndex": 1,
+    "explanation": "The feminine equivalent of a Duke is a Duchess."
+  },
+  {
+    "id": 3,
+    "question": "Currently, the performers ______ on the stage for the final act of the drama.",
+    "options": ["dance", "are dancing", "have danced", "have been dancing"],
+    "answerIndex": 1,
+    "explanation": "The word 'currently' indicates an action happening now, requiring the Present Continuous tense."
+  },
+  {
+    "id": 4,
+    "question": "I saw ______ interesting film yesterday, but ______ title escapes me now.",
+    "options": ["a / a", "an / the", "the / an", "some / the"],
+    "answerIndex": 1,
+    "explanation": "We use 'an' before a vowel sound (interesting) and 'the' to refer to a specific title mentioned."
+  },
+  {
+    "id": 5,
+    "question": "Which term describes a theatrical work in which most of the text is sung to music?",
+    "options": ["Drama", "Film", "Opera", "Documentary"],
+    "answerIndex": 2,
+    "explanation": "An opera is a form of entertainment where the dialogue is primarily sung rather than spoken."
+  },
+  {
+    "id": 6,
+    "question": "The ______ for the new theater project was approved by the committee.",
+    "options": ["extention", "extension", "extenssion", "extencion"],
+    "answerIndex": 1,
+    "explanation": "The word 'extension' is correctly spelled with the suffix '-sion'."
+  },
+  {
+    "id": 7,
+    "question": "He ______ the guitar since he was five years old and is now a master.",
+    "options": ["plays", "is playing", "has played", "has been playing"],
+    "answerIndex": 3,
+    "explanation": "Present Perfect Continuous (has been playing) shows an action that started in the past and is still continuing."
+  },
+  {
+    "id": 8,
+    "question": "Which of these words is a gender-neutral term?",
+    "options": ["Stallion", "Toddler", "Goddess", "Mare"],
+    "answerIndex": 1,
+    "explanation": "'Toddler' refers to a young child of either gender, whereas the others are gender-specific."
+  },
+  {
+    "id": 9,
+    "question": "The ______ of the film was so loud that we had to leave the hall.",
+    "options": ["transmittion", "transmission", "transmition", "transmision"],
+    "answerIndex": 1,
+    "explanation": "The correct spelling is 'transmission' with '-ssion'."
+  },
+  {
+    "id": 10,
+    "question": "I need ______ help with my acting script; do you have ______ time?",
+    "options": ["any / some", "some / any", "the / a", "a / an"],
+    "answerIndex": 1,
+    "explanation": "We use 'some' in affirmative requests and 'any' is common in questions regarding quantity."
+  },
+  {
+    "id": 11,
+    "question": "Every weekend, the local theater ______ a different classical drama.",
+    "options": ["is showing", "shows", "has shown", "showed"],
+    "answerIndex": 1,
+    "explanation": "Simple Present (shows) is used for habitual or repeated actions like 'every weekend'."
+  },
+  {
+    "id": 12,
+    "question": "The female version of a 'Stallion' is called a ______.",
+    "options": ["Mare", "Doe", "Ewe", "Vixen"],
+    "answerIndex": 0,
+    "explanation": "A mare is a mature female horse, the opposite of a stallion."
+  },
+  {
+    "id": 13,
+    "question": "The ______ of the ancient monument took over five years to complete.",
+    "options": ["restoracion", "restoration", "restorasion", "restorassion"],
+    "answerIndex": 1,
+    "explanation": "The noun 'restoration' uses the common suffix '-tion'."
+  },
+  {
+    "id": 14,
+    "question": "She ______ three different operas so far this year.",
+    "options": ["is watching", "watches", "has watched", "has been watching"],
+    "answerIndex": 2,
+    "explanation": "Present Perfect (has watched) is used for actions connected to the present where the total number is emphasized."
+  },
+  {
+    "id": 15,
+    "question": "A ______ is a story that is told through moving pictures and sound.",
+    "options": ["Painting", "Drama", "Film", "Sculpture"],
+    "answerIndex": 2,
+    "explanation": "A film (or movie) is defined by its use of moving images."
+  },
+  {
+    "id": 16,
+    "question": "The ______ asked for permission to go to the playground.",
+    "options": ["grandchild", "grandson", "granddaughter", "All of the above"],
+    "answerIndex": 3,
+    "explanation": "While 'grandchild' is neutral, all these terms correctly identify a child in relation to a grandparent."
+  },
+  {
+    "id": 17,
+    "question": "Could you pass me ______ those scripts over there?",
+    "options": ["this", "that", "these", "those"],
+    "answerIndex": 3,
+    "explanation": "'Those' is a determiner used for plural objects that are at a distance from the speaker."
+  },
+  {
+    "id": 18,
+    "question": "The lead ______ gave an amazing performance as the tragic hero.",
+    "options": ["actor", "actress", "Both are correct", "None are correct"],
+    "answerIndex": 2,
+    "explanation": "While 'actress' is feminine, 'actor' is increasingly used as a gender-neutral term for both men and women."
+  },
+  {
+    "id": 19,
+    "question": "We were waiting for the ______ to arrive for the heart surgery.",
+    "options": ["optician", "physician", "magician", "technician"],
+    "answerIndex": 1,
+    "explanation": "A 'physician' is a doctor, while the other '-cian' words refer to different professions."
+  },
+  {
+    "id": 20,
+    "question": "Are there ______ tickets left for the evening dance performance?",
+    "options": ["any", "some", "a", "an"],
+    "answerIndex": 0,
+    "explanation": "'Any' is the standard determiner used for questions involving plural nouns."
+  }
+]

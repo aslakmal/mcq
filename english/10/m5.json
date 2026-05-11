@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "What is the adverb form of the word 'happy'?",
+    "options": ["happies", "happily", "happyly", "happiness"],
+    "answerIndex": 1,
+    "explanation": "For adjectives ending in '-y', we change the 'y' to 'i' and add 'ly'."
+  },
+  {
+    "id": 2,
+    "question": "He crossed the busy road ______ so he would stay safe.",
+    "options": ["carelessly", "quickly", "carefully", "noisily"],
+    "answerIndex": 2,
+    "explanation": "'Carefully' is the correct adverb to use when talking about safety."
+  },
+  {
+    "id": 3,
+    "question": "In a formal letter, where does the 'Date' usually go?",
+    "options": ["At the very end", "Below the sender's address", "Inside the body", "After the signature"],
+    "answerIndex": 1,
+    "explanation": "The standard order is: Sender's address, then the Date, then the Recipient's details."
+  },
+  {
+    "id": 4,
+    "question": "Which of these is a correct 'Salutation' for a formal letter?",
+    "options": ["Hi friend,", "Dear Sir/Madam,", "Yours faithfully,", "Best wishes,"],
+    "answerIndex": 1,
+    "explanation": "'Dear Sir/Madam' is a formal way to greet someone in a business letter."
+  },
+  {
+    "id": 5,
+    "question": "Identify the 'Imperative' (command) verb in this sentence: 'Wait for the signal.'",
+    "options": ["Wait", "For", "The", "Signal"],
+    "answerIndex": 0,
+    "explanation": "Imperative verbs are used to give orders or instructions."
+  },
+  {
+    "id": 6,
+    "question": "Which sentence expresses 'Surprise' using an exclamation mark?",
+    "options": ["Good morning!", "I can't believe my eyes!", "Sit down!", "Wonderful!"],
+    "answerIndex": 1,
+    "explanation": "'I can't believe my eyes!' shows that the speaker is very surprised."
+  },
+  {
+    "id": 7,
+    "question": "A teacher says: 'Don't talk in the library.' This is an example of an _______.",
+    "options": ["Adverb", "Exclamation", "Instruction", "Riddle"],
+    "answerIndex": 2,
+    "explanation": "Negative imperatives (Don't + verb) are used to give instructions or rules."
+  },
+  {
+    "id": 8,
+    "question": "Why is a river very rich? Because it has two _______.",
+    "options": ["Fish", "Boats", "Banks", "Bridges"],
+    "answerIndex": 2,
+    "explanation": "This is a pun; 'banks' can mean the sides of a river or a place where money is kept."
+  },
+  {
+    "id": 9,
+    "question": "Which adverb is formed correctly from 'successful'?",
+    "options": ["successly", "successfully", "successfuly", "success"],
+    "answerIndex": 1,
+    "explanation": "We add 'ly' to the adjective 'successful' to make it an adverb."
+  },
+  {
+    "id": 10,
+    "question": "What is the purpose of a 'Notice'?",
+    "options": ["To tell a story", "To give information to the public", "To write a poem", "To ask a riddle"],
+    "answerIndex": 1,
+    "explanation": "Public notices are used to inform people about events, dates, and locations."
+  },
+  {
+    "id": 11,
+    "question": "Which of these is a 'Closing' for a formal letter?",
+    "options": ["Dear Sir,", "Subject:", "Yours faithfully,", "Date:"],
+    "answerIndex": 2,
+    "explanation": "'Yours faithfully' or 'Yours sincerely' are standard formal closings."
+  },
+  {
+    "id": 12,
+    "question": "The children played _______ in the park.",
+    "options": ["noisily", "noisy", "noisier", "noises"],
+    "answerIndex": 0,
+    "explanation": "'Noisily' describes the action 'played' (Verb + Adverb)."
+  },
+  {
+    "id": 13,
+    "question": "'Wonderful!' expresses which feeling?",
+    "options": ["Negative feeling", "Surprise", "Positive feeling", "Greeting"],
+    "answerIndex": 2,
+    "explanation": "'Wonderful' is used to show happiness or a positive reaction."
+  },
+  {
+    "id": 14,
+    "question": "Who would most likely say: 'Open your books at page 10'?",
+    "options": ["A doctor", "A teacher", "A pilot", "A driver"],
+    "answerIndex": 1,
+    "explanation": "This is a common instruction used by a teacher in a classroom."
+  },
+  {
+    "id": 15,
+    "question": "In a formal letter, 'Subject:' is used to _______.",
+    "options": ["Write the date", "State the purpose of the letter", "Sign your name", "Greet the reader"],
+    "answerIndex": 1,
+    "explanation": "The subject line gives a quick summary of what the letter is about."
+  },
+  {
+    "id": 16,
+    "question": "Which word is an adverb?",
+    "options": ["Quick", "Slowly", "Quiet", "Happy"],
+    "answerIndex": 1,
+    "explanation": "Most adverbs end in '-ly' and describe how an action is done."
+  },
+  {
+    "id": 17,
+    "question": "If a notice says 'Venue: School Hall', what does 'Venue' mean?",
+    "options": ["The Time", "The Date", "The Location", "The People"],
+    "answerIndex": 2,
+    "explanation": "'Venue' is a formal word for the place where an event happens."
+  },
+  {
+    "id": 18,
+    "question": "What kind of punctuation is used for 'Hurry up!'?",
+    "options": ["Comma", "Full stop", "Exclamation mark", "Question mark"],
+    "answerIndex": 2,
+    "explanation": "Exclamation marks are used for strong commands or urgent instructions."
+  },
+  {
+    "id": 19,
+    "question": "He waited _______ for the bus to arrive.",
+    "options": ["patiently", "patient", "patients", "patience"],
+    "answerIndex": 0,
+    "explanation": "'Patiently' is the adverb form that describes how he waited."
+  },
+  {
+    "id": 20,
+    "question": "Change 'angry' to an adverb.",
+    "options": ["angrys", "angryly", "angrily", "angriness"],
+    "answerIndex": 2,
+    "explanation": "Like 'happily', 'angry' changes the 'y' to 'i' before adding 'ly'."
+  }
+]

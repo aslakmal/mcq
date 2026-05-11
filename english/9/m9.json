@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "question": "If I go to the pharmacy, I _______ a roll of bandage.",
+    "options": ["bought", "will buy", "would buy", "buy"],
+    "answerIndex": 1,
+    "explanation": "Type 1 conditional uses 'If + simple present' followed by 'simple future' for likely actions."
+  },
+  {
+    "id": 2,
+    "question": "If I _______ his phone number, I would give him a call.",
+    "options": ["know", "knows", "knew", "will know"],
+    "answerIndex": 2,
+    "explanation": "Type 2 conditional uses 'If + simple past' to talk about situations contrary to fact."
+  },
+  {
+    "id": 3,
+    "question": "Choose the correct sentence. (Notice the comma)",
+    "options": [
+      "If he is here he will help us.",
+      "If he is here, he will help us.",
+      "He will help us, if he is here.",
+      "If he is here; he will help us."
+    ],
+    "answerIndex": 1,
+    "explanation": "We use a comma only if the 'If clause' comes first."
+  },
+  {
+    "id": 4,
+    "question": "If I _______ a bird, I would fly around the world.",
+    "options": ["am", "will be", "were", "been"],
+    "answerIndex": 2,
+    "explanation": "In Type 2 conditionals, 'were' can be used with any subject (singular or plural)."
+  },
+  {
+    "id": 5,
+    "question": "What is the prefix used to make 'happy' the opposite?",
+    "options": ["in-", "im-", "un-", "dis-"],
+    "answerIndex": 2,
+    "explanation": "The prefix 'un-' is added to 'happy' to make 'unhappy'."
+  },
+  {
+    "id": 6,
+    "question": "The word 'beautifully' is formed by adding a _______.",
+    "options": ["Prefix", "Suffix", "Affix", "Root"],
+    "answerIndex": 1,
+    "explanation": "A suffix is added to the end of a word (beauty + fully)."
+  },
+  {
+    "id": 7,
+    "question": "If it _______ tomorrow, we will stay at home.",
+    "options": ["rain", "rains", "rained", "raining"],
+    "answerIndex": 1,
+    "explanation": "In Type 1, the 'if clause' takes the simple present tense (it rains)."
+  },
+  {
+    "id": 8,
+    "question": "If I saw a robbery, I _______ the police.",
+    "options": ["will call", "would call", "call", "called"],
+    "answerIndex": 1,
+    "explanation": "Type 2 structure is 'If + simple past, would + verb'."
+  },
+  {
+    "id": 9,
+    "question": "Which word is an adverb?",
+    "options": ["Angry", "Angrily", "Anger", "Angries"],
+    "answerIndex": 1,
+    "explanation": "Adding the suffix '-ly' to the adjective 'angry' makes it an adverb."
+  },
+  {
+    "id": 10,
+    "question": "If he _______ here, he would help us. (Singular subject)",
+    "options": ["is", "was", "will be", "be"],
+    "answerIndex": 1,
+    "explanation": "Nowadays, people often use 'was' with singular subjects in Type 2 conditionals."
+  },
+  {
+    "id": 11,
+    "question": "I will buy a bandage _______ I go to the pharmacy.",
+    "options": ["if", "but", "so", "because"],
+    "answerIndex": 0,
+    "explanation": "The 'if' clause provides the condition for the result."
+  },
+  {
+    "id": 12,
+    "question": "What is the noun form of the adjective 'happy'?",
+    "options": ["Happily", "Unhappy", "Happiness", "Happier"],
+    "answerIndex": 2,
+    "explanation": "The suffix '-ness' is added to 'happy' to create the noun 'happiness'."
+  },
+  {
+    "id": 13,
+    "question": "If I _______ rich, I would travel everywhere.",
+    "options": ["am", "will", "were", "be"],
+    "answerIndex": 2,
+    "explanation": "'If I were' is used for unlikely or imaginary situations (Type 2)."
+  },
+  {
+    "id": 14,
+    "question": "The opposite of 'polite' is _______.",
+    "options": ["unpolite", "impolite", "inpolite", "dispolite"],
+    "answerIndex": 1,
+    "explanation": "The prefix 'im-' is used with 'polite' to make it 'impolite'."
+  },
+  {
+    "id": 15,
+    "question": "If you study hard, you _______ the exam.",
+    "options": ["pass", "would pass", "will pass", "passed"],
+    "answerIndex": 2,
+    "explanation": "This is a realistic situation (Type 1), so we use 'will pass'."
+  },
+  {
+    "id": 16,
+    "question": "She _______ buy a new car if she won the lottery.",
+    "options": ["will", "would", "shall", "is"],
+    "answerIndex": 1,
+    "explanation": "Winning the lottery is unlikely, so we use Type 2 (would + verb)."
+  },
+  {
+    "id": 17,
+    "question": "Adding 'ful' to 'forget' makes it an _______.",
+    "options": ["Noun", "Verb", "Adjective", "Adverb"],
+    "answerIndex": 2,
+    "explanation": "'Forgetful' is an adjective used to describe a person."
+  },
+  {
+    "id": 18,
+    "question": "If they _______ faster, they would win the race.",
+    "options": ["run", "ran", "will run", "running"],
+    "answerIndex": 1,
+    "explanation": "Type 2 conditional requires the past tense 'ran' in the if-clause."
+  },
+  {
+    "id": 19,
+    "question": "Which sentence has NO comma because of the clause order?",
+    "options": [
+      "If I go, I will see.",
+      "I will see if I go.",
+      "If, I go I will see.",
+      "I, will see if I go."
+    ],
+    "answerIndex": 1,
+    "explanation": "When the main clause comes first, no comma is needed."
+  },
+  {
+    "id": 20,
+    "question": "The prefix 'un-' in 'unhealthy' means _______.",
+    "options": ["Very", "Not", "Again", "Before"],
+    "answerIndex": 1,
+    "explanation": "Prefixes like 'un-' and 'im-' are often used to mean 'not' or to show the opposite."
+  }
+]

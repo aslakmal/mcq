@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "What do we call a group of ducks?",
+    "options": ["A brood", "A bunch", "A drove", "A fleet"],
+    "answerIndex": 1,
+    "explanation": "'A bunch of ducks' is the collective noun used in the text."
+  },
+  {
+    "id": 2,
+    "question": "Which collective noun is used for a group of young chickens?",
+    "options": ["A galaxy", "A panel", "A brood", "A chain"],
+    "answerIndex": 2,
+    "explanation": "'A brood of chickens' refers to a group of young birds produced at one hatching."
+  },
+  {
+    "id": 3,
+    "question": "A group of pigs is called _______.",
+    "options": ["A drove", "A bunch", "A fleet", "A chain"],
+    "answerIndex": 0,
+    "explanation": "The text identifies 'a drove of pigs' as the correct collective noun."
+  },
+  {
+    "id": 4,
+    "question": "A _______ of islands. Fill in the blank.",
+    "options": ["Galaxy", "Chain", "Panel", "Brood"],
+    "answerIndex": 1,
+    "explanation": "A series or group of islands is called a 'chain of islands'."
+  },
+  {
+    "id": 5,
+    "question": "Which collective noun describes many ships together?",
+    "options": ["A galaxy", "A bunch", "A fleet", "A panel"],
+    "answerIndex": 2,
+    "explanation": "'A fleet of ships' is the specific term for a group of naval vessels."
+  },
+  {
+    "id": 6,
+    "question": "A _______ of stars. Fill in the blank.",
+    "options": ["Chain", "Drove", "Galaxy", "Fleet"],
+    "answerIndex": 2,
+    "explanation": "'A galaxy of stars' is the collective term for a massive system of stars."
+  },
+  {
+    "id": 7,
+    "question": "We use the word 'bunch' for ducks and also for _______.",
+    "options": ["Islands", "Bananas", "Pigs", "Experts"],
+    "answerIndex": 1,
+    "explanation": "The word 'bunch' is commonly used for both ducks and fruit like 'a bunch of bananas'."
+  },
+  {
+    "id": 8,
+    "question": "A _______ of experts. Fill in the blank.",
+    "options": ["Drove", "Brood", "Panel", "Fleet"],
+    "answerIndex": 2,
+    "explanation": "When a group of specialists are gathered together, they are called 'a panel of experts'."
+  },
+  {
+    "id": 9,
+    "question": "Which of these is a collective noun for animals?",
+    "options": ["Fleet", "Galaxy", "Drove", "Panel"],
+    "answerIndex": 2,
+    "explanation": "'Drove' is used for animals like pigs or cattle."
+  },
+  {
+    "id": 10,
+    "question": "What is a collective noun?",
+    "options": ["A word for one thing", "A word for a group of things", "An action word", "A describing word"],
+    "answerIndex": 1,
+    "explanation": "Collective nouns are names given to a group of people, animals, or things."
+  },
+  {
+    "id": 11,
+    "question": "Which is correct: 'A _______ of experts'?",
+    "options": ["bunch", "chain", "panel", "brood"],
+    "answerIndex": 2,
+    "explanation": "Specialists or judges are referred to as a 'panel'."
+  },
+  {
+    "id": 12,
+    "question": "If you see many ships in the harbor, you see a _______.",
+    "options": ["fleet", "galaxy", "drove", "chain"],
+    "answerIndex": 0,
+    "explanation": "The collective noun for a group of ships is 'fleet'."
+  },
+  {
+    "id": 13,
+    "question": "A _______ of chicken. Fill in the blank.",
+    "options": ["bunch", "brood", "fleet", "panel"],
+    "answerIndex": 1,
+    "explanation": "As per the text, 'brood' is the correct term for chickens."
+  },
+  {
+    "id": 14,
+    "question": "The Maldives is a _______ of islands.",
+    "options": ["galaxy", "chain", "drove", "panel"],
+    "answerIndex": 1,
+    "explanation": "Islands arranged in a line or group are called a 'chain'."
+  },
+  {
+    "id": 15,
+    "question": "Which collective noun is NOT for animals?",
+    "options": ["Drove", "Brood", "Galaxy", "Bunch of ducks"],
+    "answerIndex": 2,
+    "explanation": "'Galaxy' is used for stars, which are non-living things."
+  },
+  {
+    "id": 16,
+    "question": "I bought a _______ of bananas at the market.",
+    "options": ["panel", "bunch", "fleet", "drove"],
+    "answerIndex": 1,
+    "explanation": "Bananas come in a 'bunch'."
+  },
+  {
+    "id": 17,
+    "question": "A group of pigs moving together is a _______.",
+    "options": ["drove", "chain", "galaxy", "panel"],
+    "answerIndex": 0,
+    "explanation": "'Drove' describes a group of animals being driven together."
+  },
+  {
+    "id": 18,
+    "question": "Astronomers study a _______ of stars.",
+    "options": ["bunch", "brood", "galaxy", "chain"],
+    "answerIndex": 2,
+    "explanation": "The scientific and collective term for stars is 'galaxy'."
+  },
+  {
+    "id": 19,
+    "question": "Which of these pairs is CORRECT?",
+    "options": ["Fleet of pigs", "Chain of experts", "Galaxy of stars", "Panel of ships"],
+    "answerIndex": 2,
+    "explanation": "'Galaxy of stars' is a correct pairing of a noun and its collective noun."
+  },
+  {
+    "id": 20,
+    "question": "How many pigs are in a 'drove'?",
+    "options": ["Only one", "A group", "Zero", "Exactly two"],
+    "answerIndex": 1,
+    "explanation": "Collective nouns like 'drove' always refer to a group, not a single item."
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "By next month, I _______ my project.",
+    "options": ["will finish", "will have finished", "finished", "finishing"],
+    "answerIndex": 1,
+    "explanation": "We use 'will have + V3' for actions finished by a certain time."
+  },
+  {
+    "id": 2,
+    "question": "What is the Future Perfect form of 'do'?",
+    "options": ["will do", "will be doing", "will have done", "did"],
+    "answerIndex": 2,
+    "explanation": "The structure is 'will have' plus the past participle 'done'."
+  },
+  {
+    "id": 3,
+    "question": "A: 'I am a student.' B: '_______ am I.'",
+    "options": ["So", "Neither", "But", "Too"],
+    "answerIndex": 0,
+    "explanation": "We use 'So am I' to agree with a positive statement."
+  },
+  {
+    "id": 4,
+    "question": "The phone cost me 'an arm and a leg'. What does this mean?",
+    "options": ["It was cheap.", "It was very expensive.", "It was a gift.", "It was broken."],
+    "answerIndex": 1,
+    "explanation": "This idiom means something is very costly."
+  },
+  {
+    "id": 5,
+    "question": "Which word has a silent letter 'k'?",
+    "options": ["Kite", "Knowledge", "Keep", "Kind"],
+    "answerIndex": 1,
+    "explanation": "In 'knowledge', we do not pronounce the 'k'."
+  },
+  {
+    "id": 6,
+    "question": "Don't 'let the cat out of the bag'. This means _______.",
+    "options": ["Tell a secret", "Open a bag", "Buy a cat", "Keep a secret"],
+    "answerIndex": 0,
+    "explanation": "This idiom means to tell a secret by mistake."
+  },
+  {
+    "id": 7,
+    "question": "A: 'I like apples.' B: 'So _______ I.'",
+    "options": ["am", "have", "do", "will"],
+    "answerIndex": 2,
+    "explanation": "We use 'So do I' to agree with a simple present verb."
+  },
+  {
+    "id": 8,
+    "question": "Which word has a silent 'g'?",
+    "options": ["Garden", "Goat", "Foreign", "Glass"],
+    "answerIndex": 2,
+    "explanation": "In 'foreign', the 'g' is silent."
+  },
+  {
+    "id": 9,
+    "question": "He is 'sitting on the fence'. This means he _______.",
+    "options": ["Is tired", "Cannot decide", "Is climbing", "Is happy"],
+    "answerIndex": 1,
+    "explanation": "This idiom means someone cannot make a choice."
+  },
+  {
+    "id": 10,
+    "question": "Which question word asks about a reason?",
+    "options": ["What", "Where", "Who", "Why"],
+    "answerIndex": 3,
+    "explanation": "'Why' is used to find out the reason for something."
+  },
+  {
+    "id": 11,
+    "question": "By 5:00 PM, she _______ the office.",
+    "options": ["will leave", "will have left", "leaves", "left"],
+    "answerIndex": 1,
+    "explanation": "This is a completed action in the future."
+  },
+  {
+    "id": 12,
+    "question": "Which word has a silent 'p'?",
+    "options": ["Pencil", "Paper", "Pneumonia", "Play"],
+    "answerIndex": 2,
+    "explanation": "In 'pneumonia', the 'p' is not sounded."
+  },
+  {
+    "id": 13,
+    "question": "An interview for a job is a _______ situation.",
+    "options": ["Formal", "Informal", "Friendly", "Private"],
+    "answerIndex": 0,
+    "explanation": "Job interviews require professional and formal language."
+  },
+  {
+    "id": 14,
+    "question": "A: 'I have a pen.' B: 'So _______ I.'",
+    "options": ["do", "have", "am", "will"],
+    "answerIndex": 1,
+    "explanation": "We use 'So have I' when the first person uses 'have'."
+  },
+  {
+    "id": 15,
+    "question": "What should you do in a picture description task?",
+    "options": ["Read a story", "Describe what you see", "Write a letter", "Sing a song"],
+    "answerIndex": 1,
+    "explanation": "You must explain the visual details of the scene."
+  },
+  {
+    "id": 16,
+    "question": "Which idiom means to tell a secret?",
+    "options": ["Sit on the fence", "Cost an arm and a leg", "Let the cat out of the bag", "So do I"],
+    "answerIndex": 2,
+    "explanation": "This phrase is used for revealing hidden information."
+  },
+  {
+    "id": 17,
+    "question": "By the end of this year, they _______ to a new house.",
+    "options": ["will move", "move", "will have moved", "moved"],
+    "answerIndex": 2,
+    "explanation": "The move will be finished by the end of the year."
+  },
+  {
+    "id": 18,
+    "question": "Which question word asks about a place?",
+    "options": ["When", "Where", "How", "Which"],
+    "answerIndex": 1,
+    "explanation": "'Where' is used to ask about location."
+  },
+  {
+    "id": 19,
+    "question": "The phrase 'I have to' shows _______.",
+    "options": ["A wish", "A choice", "A necessity", "A secret"],
+    "answerIndex": 2,
+    "explanation": "'I have to' means it is something you must do."
+  },
+  {
+    "id": 20,
+    "question": "Tongue twisters help to improve _______.",
+    "options": ["Writing", "Fluency", "Reading", "Spelling"],
+    "answerIndex": 1,
+    "explanation": "Tongue twisters help you speak more clearly and fast."
+  }
+]

@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "question": "Which sentence uses commas correctly to separate a series of nouns?",
+    "options": [
+      "I bought a pen a pencil and a ruler.",
+      "I bought a pen, a pencil and a ruler.",
+      "I bought a pen a pencil, and a ruler.",
+      "I bought, a pen a pencil and a ruler."
+    ],
+    "answerIndex": 1,
+    "explanation": "Commas are used to separate items in a list, such as a series of nouns."
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct sentence involving a choice between two possibilities:",
+    "options": [
+      "You can neither walk or take the bus.",
+      "You can either walk nor take the bus.",
+      "You can either walk or take the bus.",
+      "You can either walk and take the bus."
+    ],
+    "answerIndex": 2,
+    "explanation": "'Either... or' is used to talk about a choice between two possibilities."
+  },
+  {
+    "id": 3,
+    "question": "Where should the comma be placed in this tag question: 'You are coming aren't you?'",
+    "options": [
+      "After 'aren't'",
+      "Before 'coming'",
+      "Before 'aren't'",
+      "After 'you'"
+    ],
+    "answerIndex": 2,
+    "explanation": "A comma is used specifically before tag questions."
+  },
+  {
+    "id": 4,
+    "question": "Complete the sentence: Neither Ravi _______ Abdul plays football.",
+    "options": ["or", "nor", "and", "but"],
+    "answerIndex": 1,
+    "explanation": "'Neither' is always paired with 'nor' to join two negative ideas."
+  },
+  {
+    "id": 5,
+    "question": "Which sentence uses a comma correctly after an interjection?",
+    "options": [
+      "Hello how are you?",
+      "Hello, how are you?",
+      "Hello how, are you?",
+      "Hello how are, you?"
+    ],
+    "answerIndex": 1,
+    "explanation": "Commas are used after interjections like 'Hello', 'Yes', or 'Well'."
+  },
+  {
+    "id": 6,
+    "question": "Choose the correct verb form: Either you or Ganesh _______ to bring the register.",
+    "options": ["have", "has", "having", "are"],
+    "answerIndex": 1,
+    "explanation": "When using 'either... or' with singular subjects, the singular verb 'has' is used."
+  },
+  {
+    "id": 7,
+    "question": "Identify the correct use of commas to enclose details:",
+    "options": [
+      "Suresh who is an avid reader, buys books.",
+      "Suresh who is an avid reader buys, books.",
+      "Suresh, who is an avid reader, buys books.",
+      "Suresh who, is an avid reader buys books."
+    ],
+    "answerIndex": 2,
+    "explanation": "Commas are used to enclose extra details about a person or subject."
+  },
+  {
+    "id": 8,
+    "question": "Complete the sentence: Neither my sister nor my brothers _______ how to swim.",
+    "options": ["knows", "know", "knowing", "is know"],
+    "answerIndex": 1,
+    "explanation": "When the subject closest to the verb is plural (brothers), we use the plural verb 'know'."
+  },
+  {
+    "id": 9,
+    "question": "Where is the comma needed? 'When I go to Kandy I always visit my aunt.'",
+    "options": [
+      "After 'I'",
+      "After 'always'",
+      "After 'Kandy'",
+      "No comma is needed"
+    ],
+    "answerIndex": 2,
+    "explanation": "A comma is used after a dependent clause when it starts the sentence."
+  },
+  {
+    "id": 10,
+    "question": "Which sentence does NOT require a comma?",
+    "options": [
+      "I always visit my aunt when I go to Kandy.",
+      "When I go to Kandy I always visit my aunt.",
+      "It was a rainy day yet I went to school.",
+      "Yes I do."
+    ],
+    "answerIndex": 0,
+    "explanation": "When the dependent clause follows the independent clause, a comma is not used."
+  },
+  {
+    "id": 11,
+    "question": "Which sentence uses commas correctly for a series of adjectives?",
+    "options": [
+      "My mother is beautiful kind, and intelligent.",
+      "My mother is beautiful, kind and intelligent.",
+      "My mother is, beautiful kind and intelligent.",
+      "My mother, is beautiful, kind and intelligent."
+    ],
+    "answerIndex": 1,
+    "explanation": "Commas separate a series of adjectives in a list."
+  },
+  {
+    "id": 12,
+    "question": "Which coordinating conjunction requires a comma before it in this sentence: 'It was a rainy day ___ I went to school.'",
+    "options": ["because", "yet", "that", "since"],
+    "answerIndex": 1,
+    "explanation": "Commas are used between two independent clauses joined by coordinating conjunctions like 'yet'."
+  },
+  {
+    "id": 13,
+    "question": "Neither the students nor the teacher _______ to come tomorrow.",
+    "options": ["have", "has", "are", "were"],
+    "answerIndex": 1,
+    "explanation": "Since 'teacher' is the singular subject closest to the verb, 'has' is the correct choice."
+  },
+  {
+    "id": 14,
+    "question": "Which sentence is correct for a series of verbs?",
+    "options": [
+      "The boy ran stumbled and fell down.",
+      "The boy ran, stumbled and fell down.",
+      "The boy, ran stumbled and fell down.",
+      "The boy ran stumbled, and fell down."
+    ],
+    "answerIndex": 1,
+    "explanation": "Commas are used to separate a series of verbs (ran, stumbled, fell)."
+  },
+  {
+    "id": 15,
+    "question": "What is 'neither... nor' used for?",
+    "options": [
+      "To show a choice",
+      "To join two negative ideas",
+      "To list many items",
+      "To ask a question"
+    ],
+    "answerIndex": 1,
+    "explanation": "Neither... nor is specifically used to join two negative ideas."
+  },
+  {
+    "id": 16,
+    "question": "Where should the comma go: 'No I don't.'",
+    "options": [
+      "After 'I'",
+      "After 'No'",
+      "After 'don't'",
+      "Before 'No'"
+    ],
+    "answerIndex": 1,
+    "explanation": "A comma follows interjections like 'No' or 'Yes'."
+  },
+  {
+    "id": 17,
+    "question": "Either my father or my uncles _______ our annual family trip.",
+    "options": ["organize", "organizes", "organizing", "has organize"],
+    "answerIndex": 0,
+    "explanation": "Because 'uncles' is plural and closest to the verb, we use the plural form 'organize'."
+  },
+  {
+    "id": 18,
+    "question": "Which sentence correctly uses commas to enclose a location detail?",
+    "options": [
+      "Sri Lanka one of the most beautiful countries, is my home.",
+      "Sri Lanka, one of the most beautiful countries is my home.",
+      "Sri Lanka, one of the most beautiful countries, is my home.",
+      "Sri Lanka one of the most beautiful countries is, my home."
+    ],
+    "answerIndex": 2,
+    "explanation": "Details describing the subject (Sri Lanka) must be enclosed by commas on both sides."
+  },
+  {
+    "id": 19,
+    "question": "Choose the correct sentence:",
+    "options": [
+      "He neither came to school or joined the trip.",
+      "He neither came to school nor joined the trip.",
+      "He either came to school nor joined the trip.",
+      "He neither came to school but joined the trip."
+    ],
+    "answerIndex": 1,
+    "explanation": "'Neither' must be followed by 'nor' to maintain the negative relationship between both actions."
+  },
+  {
+    "id": 20,
+    "question": "What is the purpose of a comma before a coordinating conjunction (and, but, so)?",
+    "options": [
+      "To separate a list",
+      "To join two independent clauses",
+      "To show a choice",
+      "To ask a question"
+    ],
+    "answerIndex": 1,
+    "explanation": "It is used between two independent clauses (complete sentences) that are joined together."
+  }
+]

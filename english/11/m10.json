@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "If the rain stops soon, we ______ the cricket match as planned. (Type 1)",
+    "options": ["will start", "would start", "would have started", "started"],
+    "answerIndex": 0,
+    "explanation": "Type 1 conditionals use 'will + verb' for real and possible future situations."
+  },
+  {
+    "id": 2,
+    "question": "By the end of this year, the developers ______ the new educational app.",
+    "options": ["will finish", "will have finished", "finish", "are finishing"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect (will have + V3) is used for an action that will be completed by a specific time in the future."
+  },
+  {
+    "id": 3,
+    "question": "If I ______ more time, I would help you with the farming project. (Type 2)",
+    "options": ["have", "had", "will have", "had had"],
+    "answerIndex": 1,
+    "explanation": "Type 2 conditionals use the Simple Past in the 'if' clause to describe imaginary or unlikely situations."
+  },
+  {
+    "id": 4,
+    "question": "The noun form of the verb 'emigrate' is ______.",
+    "options": ["emigrating", "emigrated", "emigration", "emigrantly"],
+    "answerIndex": 2,
+    "explanation": "The suffix '-ion' is added to the verb 'emigrate' to form the noun 'emigration'."
+  },
+  {
+    "id": 5,
+    "question": "At this time tomorrow, I ______ across the lagoon in a motorboat.",
+    "options": ["will travel", "will be traveling", "travel", "have traveled"],
+    "answerIndex": 1,
+    "explanation": "Future Continuous (will be + V-ing) is used for an action that will be in progress at a specific time in the future."
+  },
+  {
+    "id": 6,
+    "question": "If they ______ the map, they wouldn't have gotten lost in the forest. (Type 3)",
+    "options": ["bring", "brought", "had brought", "have brought"],
+    "answerIndex": 2,
+    "explanation": "Type 3 conditionals use the Past Perfect (had + V3) for impossible past situations that cannot be changed."
+  },
+  {
+    "id": 7,
+    "question": "The company made a ______ profit this year, which helped them expand.",
+    "options": ["considerable", "consider", "considering", "considerably"],
+    "answerIndex": 0,
+    "explanation": "'Considerable' is an adjective and a synonym for 'substantial'."
+  },
+  {
+    "id": 8,
+    "question": "Look at those dark clouds! It ______ rain very soon.",
+    "options": ["will", "is going to", "shall", "rains"],
+    "answerIndex": 1,
+    "explanation": "'Be going to' is used to make predictions based on present evidence (the dark clouds)."
+  },
+  {
+    "id": 9,
+    "question": "If I ______ you, I would study hard for the upcoming English exam.",
+    "options": ["am", "was", "were", "be"],
+    "answerIndex": 2,
+    "explanation": "In Type 2 'If' clauses, 'were' is used for all subjects when giving advice or imagining a situation."
+  },
+  {
+    "id": 10,
+    "question": "Next month, the farmers ______ chili peppers for exactly three months.",
+    "options": ["will be growing", "will have been growing", "will grow", "are growing"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect Continuous (will have been + V-ing) emphasizes the duration of an action up to a future point."
+  },
+  {
+    "id": 11,
+    "question": "What is the synonym for the word 'substantial'?",
+    "options": ["Small", "Considerable", "Weak", "Temporary"],
+    "answerIndex": 1,
+    "explanation": "'Substantial' and 'considerable' both mean large in size, value, or importance."
+  },
+  {
+    "id": 12,
+    "question": "If you ______ the water, it will eventually boil. (Type 1)",
+    "options": ["heat", "heated", "will heat", "had heated"],
+    "answerIndex": 0,
+    "explanation": "In Type 1 conditionals, the 'if' clause is always in the Simple Present tense."
+  },
+  {
+    "id": 13,
+    "question": "I ______ my business partner at the office at 10:00 AM tomorrow.",
+    "options": ["meet", "am meeting", "met", "have met"],
+    "answerIndex": 1,
+    "explanation": "Present Continuous is often used to describe fixed future arrangements or plans."
+  },
+  {
+    "id": 14,
+    "question": "If he ______ faster, he would have won the race. (Type 3)",
+    "options": ["runs", "ran", "had run", "has run"],
+    "answerIndex": 2,
+    "explanation": "Type 3 uses 'had + V3' (had run) to reflect on a past event that did not happen."
+  },
+  {
+    "id": 15,
+    "question": "The ______ of new technology has improved the education system.",
+    "options": ["introduce", "introduced", "introduction", "introductory"],
+    "answerIndex": 2,
+    "explanation": "'Introduction' is the noun form of the verb 'introduce'."
+  },
+  {
+    "id": 16,
+    "question": "By next Sunday, we ______ in this new house for a week.",
+    "options": ["will stay", "will be staying", "will have stayed", "stayed"],
+    "answerIndex": 2,
+    "explanation": "Future Perfect is used here to show the completion of a state (staying) by a future time."
+  },
+  {
+    "id": 17,
+    "question": "If it ______ tonight, we will not go to the outdoor concert.",
+    "options": ["rains", "rained", "will rain", "had rained"],
+    "answerIndex": 0,
+    "explanation": "This is a Type 1 conditional; the condition 'rains' is a real possibility."
+  },
+  {
+    "id": 18,
+    "question": "If she ______ wings, she would fly across the ocean. (Type 2)",
+    "options": ["has", "had", "will have", "had had"],
+    "answerIndex": 1,
+    "explanation": "This is a purely imaginary situation, so we use the Simple Past 'had'."
+  },
+  {
+    "id": 19,
+    "question": "The word 'migration' comes from the verb ______.",
+    "options": ["migrate", "migratory", "migrated", "migrating"],
+    "answerIndex": 0,
+    "explanation": "'Migrate' is the base verb from which the noun 'migration' is formed."
+  },
+  {
+    "id": 20,
+    "question": "They ______ to Jaffna next week to visit their relatives.",
+    "options": ["go", "are going", "went", "have gone"],
+    "answerIndex": 1,
+    "explanation": "'Are going' (Present Continuous) expresses a definite future plan."
+  }
+]

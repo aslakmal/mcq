@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Personality is a ______ set of behaviors, feelings, and thoughts.",
+    "options": ["static", "dynamic", "random", "simple"],
+    "answerIndex": 1,
+    "explanation": "Personality is dynamic because it can evolve and change over time through experiences."
+  },
+  {
+    "id": 2,
+    "question": "Our personality is formed by both our birth and our ______.",
+    "options": ["height", "environment", "clothes", "bank balance"],
+    "answerIndex": 1,
+    "explanation": "Personality is shaped by genetics (nature) and the environment we grow up in (nurture)."
+  },
+  {
+    "id": 3,
+    "question": "Which of these is a 'Positive' personality quality?",
+    "options": ["Deceptive", "Cynical", "Ambitious", "Hot-tempered"],
+    "answerIndex": 2,
+    "explanation": "Ambitious is a positive trait showing a strong desire to achieve success."
+  },
+  {
+    "id": 4,
+    "question": "What is the opposite (antonym) of the word 'Maximum'?",
+    "options": ["Many", "Minimum", "Minority", "Most"],
+    "answerIndex": 1,
+    "explanation": "Minimum is the lowest amount, while maximum is the highest."
+  },
+  {
+    "id": 5,
+    "question": "We ______ to help the poor and needy people.",
+    "options": ["ought", "need", "could", "might"],
+    "answerIndex": 0,
+    "explanation": "'Ought to' is used to express a moral duty or pieces of advice."
+  },
+  {
+    "id": 6,
+    "question": "The two friends promised to help ______ with their studies.",
+    "options": ["one another", "each other", "themselves", "ourselves"],
+    "answerIndex": 1,
+    "explanation": "We use 'each other' when referring to specifically two people."
+  },
+  {
+    "id": 7,
+    "question": "The students in the large group discussed the project with ______.",
+    "options": ["each other", "one another", "himself", "myself"],
+    "answerIndex": 1,
+    "explanation": "We use 'one another' when referring to more than two people in a group."
+  },
+  {
+    "id": 8,
+    "question": "A person who is 'loyal' is always ______ to their friends.",
+    "options": ["angry", "faithful", "dishonest", "weak"],
+    "answerIndex": 1,
+    "explanation": "Loyalty means being faithful and giving firm support to others."
+  },
+  {
+    "id": 9,
+    "question": "You ______ a passport if you want to travel abroad.",
+    "options": ["ought", "need", "should", "might"],
+    "answerIndex": 1,
+    "explanation": "'Need' is used to express a requirement or necessity."
+  },
+  {
+    "id": 10,
+    "question": "Which word means 'existing as the only one of its type'?",
+    "options": ["Unique", "Common", "Double", "Simple"],
+    "answerIndex": 0,
+    "explanation": "Unique means being the only one of its kind; unlike anything else."
+  },
+  {
+    "id": 11,
+    "question": "In a graph, ______ means more than half of the total amount.",
+    "options": ["the minimum", "the majority", "approximately", "the minority"],
+    "answerIndex": 1,
+    "explanation": "The majority refers to the greater number or more than 50%."
+  },
+  {
+    "id": 12,
+    "question": "During an interview, you should discuss your ______ for the future.",
+    "options": ["yesterday", "plans", "old toys", "bad habits"],
+    "answerIndex": 1,
+    "explanation": "Successful interviewees share their future goals and ambitions."
+  },
+  {
+    "id": 13,
+    "question": "According to the poem 'Human Values', we should avoid the ______ race.",
+    "options": ["running", "materialistic", "gentle", "slow"],
+    "answerIndex": 1,
+    "explanation": "The poem suggests that chasing only money and objects (materialism) is bad for values."
+  },
+  {
+    "id": 14,
+    "question": "In the 1-10 letter word list, 'Ego' is something we should ______.",
+    "options": ["increase", "avoid", "buy", "show"],
+    "answerIndex": 1,
+    "explanation": "Ego is often seen as a barrier to personal growth and should be minimized."
+  },
+  {
+    "id": 15,
+    "question": "Which word is the antonym of 'Weak'?",
+    "options": ["Strong", "Soft", "Slow", "Small"],
+    "answerIndex": 0,
+    "explanation": "Strong is the opposite of weak."
+  },
+  {
+    "id": 16,
+    "question": "Personality traits that can be changed help us become a ______ person.",
+    "options": ["hot-tempered", "well-rounded", "cynical", "deceptive"],
+    "answerIndex": 1,
+    "explanation": "A well-rounded individual has a variety of good qualities and skills."
+  },
+  {
+    "id": 17,
+    "question": "If something is ______ 75%, it is very close to that number.",
+    "options": ["minimum", "exactly", "approximately", "majority"],
+    "answerIndex": 2,
+    "explanation": "Approximately means almost, but not exactly, accurate."
+  },
+  {
+    "id": 18,
+    "question": "Knowledge is a value that we should ______ throughout our life.",
+    "options": ["lose", "acquire", "forget", "hate"],
+    "answerIndex": 1,
+    "explanation": "To acquire means to learn or develop a skill or quality."
+  },
+  {
+    "id": 19,
+    "question": "A person who gets angry very quickly is ______.",
+    "options": ["loyal", "honest", "hot-tempered", "ambitious"],
+    "answerIndex": 2,
+    "explanation": "Hot-tempered people lose their temper easily."
+  },
+  {
+    "id": 20,
+    "question": "Grace is more important than ______ others to win.",
+    "options": ["helping", "deceiving", "loving", "teaching"],
+    "answerIndex": 1,
+    "explanation": "Human values emphasize being honest rather than cheating or deceiving others."
+  }
+]

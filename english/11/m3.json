@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "King Buddhadasa ______ a great physician and a king of ancient Sri Lanka.",
+    "options": ["is", "was", "were", "been"],
+    "answerIndex": 1,
+    "explanation": "We use 'was' as the simple past of 'is' for a single person in the past."
+  },
+  {
+    "id": 2,
+    "question": "The ______ King Buddhadasa even cured an injured snake.",
+    "options": ["kind", "kindly", "kindness", "kinder"],
+    "answerIndex": 0,
+    "explanation": "'Kind' is an adjective that describes the character of the king."
+  },
+  {
+    "id": 3,
+    "question": "King Kashyapa ______ the magnificent Sigiriya fortress on a massive rock.",
+    "options": ["build", "builds", "built", "building"],
+    "answerIndex": 2,
+    "explanation": "'Built' is the irregular simple past form of the verb 'build'."
+  },
+  {
+    "id": 4,
+    "question": "Sigiriya is a ______ site that attracts many tourists today.",
+    "options": ["history", "historically", "historic", "historian"],
+    "answerIndex": 2,
+    "explanation": "'Historic' is the adjective used to describe something famous or important in history."
+  },
+  {
+    "id": 5,
+    "question": "Many people ______ the stories of the king’s wisdom long ago.",
+    "options": ["hear", "heard", "hears", "hearing"],
+    "answerIndex": 1,
+    "explanation": "'Heard' is the simple past form of 'hear'."
+  },
+  {
+    "id": 6,
+    "question": "The ______ frescoes at Sigiriya still look colorful after many centuries.",
+    "options": ["beautiful", "beauty", "beautify", "beautifully"],
+    "answerIndex": 0,
+    "explanation": "'Beautiful' is the adjective describing the noun 'frescoes'."
+  },
+  {
+    "id": 7,
+    "question": "King Buddhadasa ______ many hospitals for both humans and animals.",
+    "options": ["start", "starts", "started", "starting"],
+    "answerIndex": 2,
+    "explanation": "For regular verbs like 'start', we add '-ed' to form the simple past."
+  },
+  {
+    "id": 8,
+    "question": "The ancient irrigation systems were ______ and very advanced.",
+    "options": ["cleverly", "clever", "cleverness", "cleverer"],
+    "answerIndex": 1,
+    "explanation": "'Clever' is an adjective describing the irrigation systems."
+  },
+  {
+    "id": 9,
+    "question": "King Kashyapa ______ to the top of the rock to build his palace.",
+    "options": ["go", "goes", "went", "gone"],
+    "answerIndex": 2,
+    "explanation": "'Went' is the irregular simple past form of the verb 'go'."
+  },
+  {
+    "id": 10,
+    "question": "UNESCO named Sigiriya a ______ World Heritage Site in 1982.",
+    "options": ["valuable", "value", "valuing", "valuably"],
+    "answerIndex": 0,
+    "explanation": "'Valuable' is an adjective describing the World Heritage Site."
+  },
+  {
+    "id": 11,
+    "question": "The king ______ a monk who was traveling across the country.",
+    "options": ["meet", "met", "meets", "meeting"],
+    "answerIndex": 1,
+    "explanation": "'Met' is the irregular simple past form of 'meet'."
+  },
+  {
+    "id": 12,
+    "question": "Ancient Sri Lanka had ______ kings who protected the island.",
+    "options": ["brave", "bravery", "bravely", "braver"],
+    "answerIndex": 0,
+    "explanation": "'Brave' is an adjective describing the noun 'kings'."
+  },
+  {
+    "id": 13,
+    "question": "King Buddhadasa ______ a surgical instrument to treat the snake.",
+    "options": ["use", "used", "uses", "using"],
+    "answerIndex": 1,
+    "explanation": "The simple past of the verb 'use' is 'used'."
+  },
+  {
+    "id": 14,
+    "question": "The ______ lion staircase is a famous feature of Sigiriya.",
+    "options": ["giant", "gigantic", "Both are correct", "None are correct"],
+    "answerIndex": 2,
+    "explanation": "Both 'giant' and 'gigantic' can act as adjectives to describe something very large."
+  },
+  {
+    "id": 15,
+    "question": "The soldiers ______ the orders of the king during the battle.",
+    "options": ["follow", "followed", "follows", "following"],
+    "answerIndex": 1,
+    "explanation": "'Followed' is the simple past form of the regular verb 'follow'."
+  },
+  {
+    "id": 16,
+    "question": "Archaeologists found ______ artifacts inside the ancient city.",
+    "options": ["rare", "rarely", "rareness", "rarity"],
+    "answerIndex": 0,
+    "explanation": "'Rare' is the adjective describing the noun 'artifacts'."
+  },
+  {
+    "id": 17,
+    "question": "The kingdom ______ peaceful during the reign of certain wise kings.",
+    "options": ["become", "became", "becomes", "becoming"],
+    "answerIndex": 1,
+    "explanation": "'Became' is the irregular simple past form of 'become'."
+  },
+  {
+    "id": 18,
+    "question": "The ______ mirror wall at Sigiriya contains ancient graffiti.",
+    "options": ["smooth", "smoothly", "smoothness", "smoothed"],
+    "answerIndex": 0,
+    "explanation": "'Smooth' is the adjective describing the 'mirror wall'."
+  },
+  {
+    "id": 19,
+    "question": "King Buddhadasa ______ a famous book on medicine called 'Sarartha Sangrahaya'.",
+    "options": ["write", "writes", "wrote", "written"],
+    "answerIndex": 2,
+    "explanation": "'Wrote' is the irregular simple past form of 'write'."
+  },
+  {
+    "id": 20,
+    "question": "The ______ gardens of Sigiriya are a masterpiece of landscape architecture.",
+    "options": ["water", "watery", "watered", "waterless"],
+    "answerIndex": 0,
+    "explanation": "In this context, 'water' acts as an attributive adjective to describe the specific 'Water Gardens'."
+  }
+]

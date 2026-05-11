@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
+  <!--<link rel="manifest" href="manifest.json">-->
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <meta name="theme-color" content="#162367">
   <style>
@@ -70,7 +70,7 @@
       margin-bottom: 10px;
     }
 
-    .options ul {
+    .options ul,.disabledoptions ul {
       list-style-type: none;
       padding: 0;
     }
@@ -211,7 +211,7 @@
     .topic-list li,
     .mcq-list li {
       padding: 10px 15px;
-      background: linear-gradient(112deg, #009688, #009688, #43A047);
+      background: linear-gradient(239deg, #009688, #009688, #43A047);
       margin: 5px 0;
       border-radius: 5px;
       cursor: pointer;
@@ -219,7 +219,7 @@
     }
 
     .topic-list li ul li {
-      background: #293c89;
+      background: linear-gradient(328deg, #009688, #009688, #4CAF50);
     }
 
     .mcq-list li:hover,
@@ -251,6 +251,7 @@
       cursor: pointer;
       user-select: none;
       font-weight: 400;
+      font-size: 16px;
     }
 
     #topic-list span {
@@ -598,119 +599,16 @@
   cursor: not-allowed;
 }
 .share-btn{border: none;
-    border-radius: 3px;
+    border-radius: 10px;
     color: #fff;
-    padding: 5px;
-    background: #262826;
-  display: block;}
-  .share-btn.active{background: #4CAF50;}
-  .share-btn.paused{background: #ef6c00;}
-
-
-  .subject-list{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.subject-list li{
-    display: flex;
-    justify-content: space-between;
+    padding: 10px 15px;
+    background: #162577;
+  display: flex;
     align-items: center;
+    gap: 8px;}
+ 
 
-    padding: 16px 18px;
-    margin-bottom: 14px;
 
-    background: linear-gradient(145deg, #ffffff, #f5f7fb);
-    border: 1px solid #e4e7ec;
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 4px 10px rgba(0,0,0,0.05),
-        0 1px 2px rgba(0,0,0,0.04);
-
-    transition: 0.25s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.subject-list li::before{
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 5px;
-    height: 100%;
-    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
-}
-
-.subject-list li:hover{
-    transform: translateY(-3px);
-    box-shadow:
-        0 10px 20px rgba(0,0,0,0.08),
-        0 3px 6px rgba(0,0,0,0.05);
-}
-
-.subject-title{
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-    padding-right: 15px;
-    line-height: 1.4;
-}
-
-.share-btn{
-    border: none;
-    padding: 8px 16px;
-
-    border-radius: 12px;
-
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
-
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.2s ease;
-
-    white-space: nowrap;
-
-    box-shadow: 0 4px 10px rgba(79,70,229,0.3);
-}
-
-.share-btn:hover{
-    transform: scale(1.05);
-    opacity: 0.95;
-}
-
-.share-btn.active{
-    background: linear-gradient(135deg, #009688, #00bfa5);
-    box-shadow: 0 4px 12px rgba(0,150,136,0.3);
-}
-
-/* Mobile */
-@media(max-width:600px){
-
-    .subject-list li{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
-    }
-
-    .share-btn{
-        width: 100%;
-    }
-}
-.share-btn.active{
-    background: linear-gradient(135deg, #009688, #00bfa5);
-    box-shadow: 0 4px 12px rgba(0,150,136,0.3);
-
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Blinking live dot */
 .share-btn.active::after{
     content: "";
     width: 10px;
@@ -721,7 +619,14 @@
 
     box-shadow: 0 0 8px #00ff88;
 
-    animation: liveBlink 1s infinite;
+    animation: liveBlink 2s infinite;
+}
+.share-btn.paused::after{
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #c8800e;
 }
 
 @keyframes liveBlink{
@@ -822,66 +727,55 @@
           </a>
         </ul>
       </li>-->
-      <li>
+      <li class="open">
         <div> <img src="img/get_set.png" alt="Get Set" class="menu-icon">
           <span>Subjects</span>
         </div>
         <ul class="mcq-list" id="mcq-list">
-          <div>grade 9</div>
-          <li data-file="9/m1.json">Everybody is good at something</li>
-          <li data-file="9/m2.json">May I help you?</li>
-          <li data-file="9/m3.json">Meeting</li>
-          <li data-file="9/m4.json">Extinct friends</li>
-          <li data-file="9/m5.json">A second chance called tomorrow</li>
-          <li data-file="9/m6.json">Art</li>
-          <li data-file="9/m7.json">Where we are.</li>
-          <li data-file="9/m8.json">Success through creativity</li>
-          <li data-file="9/m9.json">The greatest wealth</li>
-          <li data-file="9/m10.json">Be happy, be bright, be you!</li>
-
-          <div>grade 10</div>
-          <li data-file="10/m1.json">People</li>
-          <li data-file="10/m2.json">On Your Way</li>
-          <li data-file="10/m3.json">Travel</li>
-          <li data-file="10/m4.json">Let s Talk</li>
-          <li data-file="10/m5.json">Best Practices</li>
-          <li data-file="10/m6.json">Information</li>
-          <li data-file="10/m7.json">Learning is Fun</li>
-          <li data-file="10/m8.json">Healthy Food</li>
-          <li data-file="10/m9.json">Nature</li>
-          <li data-file="10/m10.json">Personality</li>
-          <li data-file="10/m11.json">The Right Career</li>
-          <li data-file="10/m12.json">Success</li>
-          <li data-file="10/m13.json">Future</li>
-          <li data-file="10/m14.json">Sports</li>
-
-
-          <div>grade 11</div>
-          <li data-file="11/m1.json">Our Responsibilities</li>
-          <li data-file="11/m2.json">Facing Challenges</li>
-          <li data-file="11/m3.json">Great Lanka</li>
-          <li data-file="11/m4.json">For A Better Tomorrow</li>
-          <li data-file="11/m5.json">Best Use Of Time</li>
-          <li data-file="11/m6.json">A Moment Of Fun</li>
-          <li data-file="11/m7.json">A Simple Living</li>
-          <li data-file="11/m8.json">Reading Is Fun</li>
-          <li data-file="11/m9.json">Enigma</li>
-          <li data-file="11/m10.json">Choices In Life</li>
-
+          <section class="grade english_9">
+          <h3>grade 9</h3>
+          <li data-file="9/m1.json">1. Everybody is good at something</li>
+          <li data-file="9/m2.json">2. May I help you?</li>
+          <li data-file="9/m3.json">3. Meeting</li>
+          <li data-file="9/m4.json">4. Extinct friends</li>
+          <li data-file="9/m5.json">5. A second chance called tomorrow</li>
+          <li data-file="9/m6.json">6. Art</li>
+          <li data-file="9/m7.json">7. Where we are.</li>
+          <li data-file="9/m8.json">8. Success through creativity</li>
+          <li data-file="9/m9.json">9. The greatest wealth</li>
+          <li data-file="9/m10.json">10. Be happy, be bright, be you!</li>
+        </section>
+        <section class="grade english_10">
+          <h3>grade 10</h3>
+          <li data-file="10/m1.json">1. People</li>
+          <li data-file="10/m2.json">2. On Your Way</li>
+          <li data-file="10/m3.json">3. Travel</li>
+          <li data-file="10/m4.json">4. Let’s Talk</li>
+          <li data-file="10/m5.json">5. Best Practices</li>
+          <li data-file="10/m6.json">6. Information</li>
+          <li data-file="10/m7.json">7. Learning is Fun</li>
+          <li data-file="10/m8.json">8. Healthy Food</li>
+          <li data-file="10/m9.json">9. Nature</li>
+          <li data-file="10/m10.json">10. Personality</li>
+          <li data-file="10/m11.json">11. The Right Career</li>
+          <li data-file="10/m12.json">12. Success</li>
+          <li data-file="10/m13.json">13. Future</li>
+          <li data-file="10/m14.json">14. Sports</li>
+        </section>
+          <section class="grade english_11">
+          <h3>grade 11</h3>
+          <li data-file="11/m1.json">1. Our Responsibilities</li>
+          <li data-file="11/m2.json">2. Facing Challenges</li>
+          <li data-file="11/m3.json">3. Great Lanka</li>
+          <li data-file="11/m4.json">4. For A Better Tomorrow</li>
+          <li data-file="11/m5.json">5. Best Use Of Time</li>
+          <li data-file="11/m6.json">6. A Moment Of Fun</li>
+          <li data-file="11/m7.json">7. A Simple Living</li>
+          <li data-file="11/m8.json">8. Reading Is Fun</li>
+          <li data-file="11/m9.json">9. Enigma</li>
+          <li data-file="11/m10.json">10. Choices In Life</li>
+        </section>
         </ul>
-
-      </li>
-      <li class="live_test">
-        <div> <img src="img/go.png" alt="Go" class="menu-icon">
-          <span>Exam</span>
-        </div>
-      </li>
-
-      <li id="scores">
-        <div><img src="img/victory.png" alt="Victory" class="menu-icon">
-          <span>Progress report</span>
-        </div>
-      </li>
 
     </ul>
     <h1></h1>

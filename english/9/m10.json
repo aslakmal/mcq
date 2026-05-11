@@ -1,0 +1,147 @@
+[
+  {
+    "id": 1,
+    "question": "Direct: 'I am happy now.' Reported: He said that he was happy _______.",
+    "options": ["now", "then", "today", "tomorrow"],
+    "answerIndex": 1,
+    "explanation": "In Reported Speech, 'now' changes to 'then' to show a shift in time."
+  },
+  {
+    "id": 2,
+    "question": "When changing Direct to Reported speech, the 'Present Tense' usually changes to:",
+    "options": ["Future Tense", "Past Tense", "Past Perfect", "Stay the same"],
+    "answerIndex": 1,
+    "explanation": "This is called a 'backshift'; present simple becomes past simple."
+  },
+  {
+    "id": 3,
+    "question": "Direct: 'I saw a movie yesterday.' Reported: She said she had seen a movie _______.",
+    "options": ["yesterday", "the day before", "tomorrow", "that day"],
+    "answerIndex": 1,
+    "explanation": "'Yesterday' changes to 'the day before' or 'the previous day' in reported speech."
+  },
+  {
+    "id": 4,
+    "question": "Which of these is an Abstract Noun?",
+    "options": ["Table", "Happiness", "Water", "Sri Lanka"],
+    "answerIndex": 1,
+    "explanation": "Abstract nouns refer to feelings, states, or ideas that you cannot touch physically."
+  },
+  {
+    "id": 5,
+    "question": "Which of these is a Proper Noun?",
+    "options": ["City", "Gayan", "Boy", "River"],
+    "answerIndex": 1,
+    "explanation": "Proper nouns name specific individuals or places and always start with a capital letter."
+  },
+  {
+    "id": 6,
+    "question": "A _______ noun refers to physical things like objects and people.",
+    "options": ["Concrete", "Abstract", "Mass", "Proper"],
+    "answerIndex": 0,
+    "explanation": "Concrete nouns are things you can see, touch, or smell."
+  },
+  {
+    "id": 7,
+    "question": "Which sentence uses 'hair' as a Count Noun?",
+    "options": [
+      "Her hair is long.",
+      "I found a hair in my soup.",
+      "She has brown hair.",
+      "Hair grows fast."
+    ],
+    "answerIndex": 1,
+    "explanation": "When we talk about a single strand, it is countable. When talking about all the hair on a head, it is a mass noun."
+  },
+  {
+    "id": 8,
+    "question": "Reported: He said that he _______ go the following week.",
+    "options": ["will", "would", "is", "was"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, 'will' changes to 'would'."
+  },
+  {
+    "id": 9,
+    "question": "Mass nouns normally have _______ form.",
+    "options": ["a plural", "no plural", "a capital", "a short"],
+    "answerIndex": 1,
+    "explanation": "Mass nouns like 'water' or 'sugar' are uncountable and do not have plural forms (e.g., we don't say 'waters')."
+  },
+  {
+    "id": 10,
+    "question": "Direct: 'I live here.' Reported: He said that he lived _______.",
+    "options": ["here", "there", "this", "that"],
+    "answerIndex": 1,
+    "explanation": "The place expression 'here' changes to 'there' in reported speech."
+  },
+  {
+    "id": 11,
+    "question": "Identify the Common Noun in this list:",
+    "options": ["Sri Lanka", "Colombo", "Tree", "Kamal"],
+    "answerIndex": 2,
+    "explanation": "'Tree' is a general category (common noun), while the others are specific names (proper nouns)."
+  },
+  {
+    "id": 12,
+    "question": "Direct: 'We have finished.' Reported: They said they _______ finished.",
+    "options": ["have", "had", "has", "were"],
+    "answerIndex": 1,
+    "explanation": "Present Perfect ('have finished') backshifts to Past Perfect ('had finished')."
+  },
+  {
+    "id": 13,
+    "question": "Which of these is a Concrete Noun?",
+    "options": ["Kindness", "Love", "Stone", "Success"],
+    "answerIndex": 2,
+    "explanation": "A 'stone' is a physical object you can touch."
+  },
+  {
+    "id": 14,
+    "question": "In reported speech, 'this' usually changes to _______.",
+    "options": ["that", "these", "those", "then"],
+    "answerIndex": 0,
+    "explanation": "'This' becomes 'that' when reporting what someone said."
+  },
+  {
+    "id": 15,
+    "question": "Which noun refers to an event or occasion?",
+    "options": ["Dog", "Exhibition", "Pencil", "Milk"],
+    "answerIndex": 1,
+    "explanation": "'Exhibition' is an abstract noun referring to an event."
+  },
+  {
+    "id": 16,
+    "question": "Direct: 'I will come tomorrow.' Reported: She said she would come _______.",
+    "options": ["tomorrow", "the next day", "yesterday", "now"],
+    "answerIndex": 1,
+    "explanation": "'Tomorrow' changes to 'the next day' or 'the following day'."
+  },
+  {
+    "id": 17,
+    "question": "Count nouns like 'table' can have a _______ form.",
+    "options": ["singular", "plural", "both singular and plural", "no"],
+    "answerIndex": 2,
+    "explanation": "Count nouns can be singular (table) or plural (tables)."
+  },
+  {
+    "id": 18,
+    "question": "Direct: 'It is cold today.' Reported: He said it was cold _______.",
+    "options": ["today", "that day", "then", "there"],
+    "answerIndex": 1,
+    "explanation": "'Today' changes to 'that day' in reported speech."
+  },
+  {
+    "id": 19,
+    "question": "Proper nouns normally begin with a _______.",
+    "options": ["Small letter", "Full stop", "Capital letter", "Comma"],
+    "answerIndex": 2,
+    "explanation": "Names of people and places (Proper nouns) must start with a capital letter."
+  },
+  {
+    "id": 20,
+    "question": "The noun 'Water' is a _______ noun.",
+    "options": ["Count", "Mass", "Proper", "Abstract"],
+    "answerIndex": 1,
+    "explanation": "'Water' is a mass noun because you cannot count it (one water, two waters)."
+  }
+]

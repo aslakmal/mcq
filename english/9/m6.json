@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "question": "Which word has the 'sh' sound 'sh' in it?",
+    "options": ["School", "Special", "Smile", "Silly"],
+    "answerIndex": 1,
+    "explanation": "In 'special', the letters 'ci' make the 'sh' sound."
+  },
+  {
+    "id": 2,
+    "question": "By this time tomorrow, I _______ (complete) my report.",
+    "options": ["will complete", "will be completing", "will have completed", "am completing"],
+    "answerIndex": 2,
+    "explanation": "We use 'will have' + V3 (Future Perfect) for actions finished by a specific time."
+  },
+  {
+    "id": 3,
+    "question": "I go to my study to read. What is 'study' here?",
+    "options": ["A verb", "A noun", "An adjective", "A pronoun"],
+    "answerIndex": 1,
+    "explanation": "'Study' is a noun here because it refers to a room."
+  },
+  {
+    "id": 4,
+    "question": "It is 6:00. He _______ (not/finish) the work by 6:30.",
+    "options": ["will not have finished", "will not finish", "is not finishing", "won't be finishing"],
+    "answerIndex": 0,
+    "explanation": "This shows the work will not be completed by a future deadline."
+  },
+  {
+    "id": 5,
+    "question": "Which letters make the 'sh' sound in 'national'?",
+    "options": ["na", "ti", "on", "al"],
+    "answerIndex": 1,
+    "explanation": "In words like 'national', 'ti' makes the 'sh' sound."
+  },
+  {
+    "id": 6,
+    "question": "By 7 o’clock, the kids _______ (fall) asleep.",
+    "options": ["will fall", "will be falling", "will have fallen", "have fallen"],
+    "answerIndex": 2,
+    "explanation": "The children will be in a state of sleep 'by' that time (Future Perfect)."
+  },
+  {
+    "id": 7,
+    "question": "I water the plants every day. What is 'water' here?",
+    "options": ["A noun", "A verb", "A name", "A place"],
+    "answerIndex": 1,
+    "explanation": "'Water' is a verb here because it is an action."
+  },
+  {
+    "id": 8,
+    "question": "By next year, my father _______ (get) his promotion.",
+    "options": ["will get", "will have gotten", "gets", "is getting"],
+    "answerIndex": 1,
+    "explanation": "'By next year' is a deadline, so we use Future Perfect."
+  },
+  {
+    "id": 9,
+    "question": "In the word 'crucial', which letters make the 'sh' sound?",
+    "options": ["cr", "u", "ci", "al"],
+    "answerIndex": 2,
+    "explanation": "The 'ci' in 'crucial' is pronounced as 'sh'."
+  },
+  {
+    "id": 10,
+    "question": "My mother _______ (clean) the kitchen soon after lunch.",
+    "options": ["will have cleaned", "will clean", "cleans", "was cleaning"],
+    "answerIndex": 0,
+    "explanation": "This shows the cleaning will be done by the time 'after lunch' arrives."
+  },
+  {
+    "id": 11,
+    "question": "He needs to study for the exam. What is 'study' here?",
+    "options": ["A noun", "A verb", "A thing", "A person"],
+    "answerIndex": 1,
+    "explanation": "'Study' is a verb here because it is an action he needs to do."
+  },
+  {
+    "id": 12,
+    "question": "Which word has the 'sh' sound like 'washing'?",
+    "options": ["City", "Discussion", "Cat", "Case"],
+    "answerIndex": 1,
+    "explanation": "'Discussion' has the 'sh' sound made by 'ssi'."
+  },
+  {
+    "id": 13,
+    "question": "I drink a glass of water. What is 'water' here?",
+    "options": ["A verb", "A noun", "An action", "An adverb"],
+    "answerIndex": 1,
+    "explanation": "'Water' is a noun here because it is the name of a thing."
+  },
+  {
+    "id": 14,
+    "question": "What is the correct structure for Future Perfect?",
+    "options": ["will + verb", "will be + verb-ing", "will have + V3", "have + V3"],
+    "answerIndex": 2,
+    "explanation": "Future Perfect is always 'will have' + the past participle (V3)."
+  },
+  {
+    "id": 15,
+    "question": "Which word does NOT have the 'sh' sound?",
+    "options": ["Finish", "Special", "Sun", "Essential"],
+    "answerIndex": 2,
+    "explanation": "'Sun' starts with a simple 's' sound."
+  },
+  {
+    "id": 16,
+    "question": "Please brush your hair. What is 'brush' here?",
+    "options": ["A verb", "A noun", "An adjective", "A pronoun"],
+    "answerIndex": 0,
+    "explanation": "'Brush' is a verb because it is an action."
+  },
+  {
+    "id": 17,
+    "question": "I use a brush for my hair. What is 'brush' here?",
+    "options": ["A verb", "A noun", "An action", "A feeling"],
+    "answerIndex": 1,
+    "explanation": "It is a noun because it is the name of the tool."
+  },
+  {
+    "id": 18,
+    "question": "I _________ (cook) dinner by 8 PM. Please come then.",
+    "options": [
+      "will have cooked",
+      "will cook",
+      "am cooking",
+      "cook"
+    ],
+    "answerIndex": 0,
+    "explanation": "The cooking will be finished by the time 8 PM arrives."
+  },
+  {
+    "id": 19,
+    "question": "By tomorrow morning, the rain _________ (stop).",
+    "options": [
+      "will stop",
+      "will have stopped",
+      "stops",
+      "stopped"
+    ],
+    "answerIndex": 1,
+    "explanation": "We are predicting that the rain will be over by tomorrow morning."
+  },
+  {
+    "id": 20,
+    "question": "By the end of the day, I _______ (finish) this book.",
+    "options": ["will finish", "will have finished", "finish", "finished"],
+    "answerIndex": 1,
+    "explanation": "Future Perfect shows the action will be completed by the end of the day."
+  }
+]

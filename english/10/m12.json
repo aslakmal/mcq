@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Direct: 'I like reading,' said Amal. Indirect: Amal said that he ______ reading.",
+    "options": ["like", "liked", "will like", "likes"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, the present simple 'like' shifts to the past simple 'liked'."
+  },
+  {
+    "id": 2,
+    "question": "Direct: 'I will help you,' she said. Indirect: She said that she ______ help me.",
+    "options": ["will", "would", "shall", "can"],
+    "answerIndex": 1,
+    "explanation": "When reporting a future intention, 'will' changes to 'would'."
+  },
+  {
+    "id": 3,
+    "question": "Exercise is good for health. ______, it helps to keep our mind calm.",
+    "options": ["Recently", "Moreover", "However", "As a result"],
+    "answerIndex": 1,
+    "explanation": "'Moreover' is used to add extra information that supports the first point."
+  },
+  {
+    "id": 4,
+    "question": "The team practiced very hard. ______, they won the final match.",
+    "options": ["First", "However", "As a result", "Recently"],
+    "answerIndex": 2,
+    "explanation": "'As a result' is used to show the consequence of the hard practice."
+  },
+  {
+    "id": 5,
+    "question": "Direct: 'I am a teacher,' he said. Indirect: He said that ______ was a teacher.",
+    "options": ["I", "he", "you", "they"],
+    "answerIndex": 1,
+    "explanation": "The pronoun 'I' changes to 'he' to match the person who spoke."
+  },
+  {
+    "id": 6,
+    "question": "She wanted to go for a walk. ______, it started to rain heavily.",
+    "options": ["Moreover", "However", "Hence", "First"],
+    "answerIndex": 1,
+    "explanation": "'However' is used to show a contrast or a sudden problem."
+  },
+  {
+    "id": 7,
+    "question": "______ many people have started using online educational tools.",
+    "options": ["Recently", "Hence", "Moreover", "As a result"],
+    "answerIndex": 0,
+    "explanation": "'Recently' is used to describe an action that started in the near past."
+  },
+  {
+    "id": 8,
+    "question": "He failed the test. ______, he decided to study much harder.",
+    "options": ["Moreover", "Recently", "Hence", "First"],
+    "answerIndex": 2,
+    "explanation": "'Hence' is used to show a logical conclusion or result of the failure."
+  },
+  {
+    "id": 9,
+    "question": "Direct: 'We will visit Kandy,' they said. Indirect: They said they ______ visit Kandy.",
+    "options": ["will", "would", "shall", "must"],
+    "answerIndex": 1,
+    "explanation": "'Will' shifts to 'would' in reported speech."
+  },
+  {
+    "id": 10,
+    "question": "To start a garden, ______ you need to find a sunny spot.",
+    "options": ["Moreover", "First", "Hence", "Recently"],
+    "answerIndex": 1,
+    "explanation": "'First' is used to indicate the initial step in a process."
+  },
+  {
+    "id": 11,
+    "question": "Direct: 'I live in Colombo,' said Nimal. Indirect: Nimal said that he ______ in Colombo.",
+    "options": ["lives", "lived", "will live", "living"],
+    "answerIndex": 1,
+    "explanation": "The present tense 'live' changes to the past tense 'lived' in indirect speech."
+  },
+  {
+    "id": 12,
+    "question": "Yoga is a great physical exercise. ______, it is good for mental health.",
+    "options": ["However", "Moreover", "As a result", "Recently"],
+    "answerIndex": 1,
+    "explanation": "'Moreover' adds another benefit to the first statement."
+  },
+  {
+    "id": 13,
+    "question": "The car broke down. ______, we arrived late for the meeting.",
+    "options": ["First", "As a result", "Moreover", "Recently"],
+    "answerIndex": 1,
+    "explanation": "Arriving late was the 'result' of the car breaking down."
+  },
+  {
+    "id": 14,
+    "question": "Direct: 'I will call you tomorrow,' he said. Indirect: He said that he ______ call me.",
+    "options": ["will", "would", "has", "did"],
+    "answerIndex": 1,
+    "explanation": "'Will' always changes to 'would' when converting to indirect speech."
+  },
+  {
+    "id": 15,
+    "question": "He is very wealthy. ______, he lives a very simple life.",
+    "options": ["Moreover", "Hence", "However", "As a result"],
+    "answerIndex": 2,
+    "explanation": "'However' is the best word to show the contrast between wealth and a simple life."
+  },
+  {
+    "id": 16,
+    "question": "Direct: 'We like the new school,' said the girls. Indirect: The girls said they ______ the new school.",
+    "options": ["like", "likes", "liked", "will like"],
+    "answerIndex": 2,
+    "explanation": "The reporting verb 'said' is in the past, so 'like' must become 'liked'."
+  },
+  {
+    "id": 17,
+    "question": "The weather was very bad. ______, the flight was cancelled.",
+    "options": ["Hence", "Moreover", "Recently", "First"],
+    "answerIndex": 0,
+    "explanation": "'Hence' indicates a logical consequence of the bad weather."
+  },
+  {
+    "id": 18,
+    "question": "Direct: 'I will buy a new laptop,' she said. Indirect: She said she ______ buy a new laptop.",
+    "options": ["will", "would", "can", "is"],
+    "answerIndex": 1,
+    "explanation": "Tense shift for 'will' in indirect speech is 'would'."
+  },
+  {
+    "id": 19,
+    "question": "To write an essay, ______ you must choose a topic.",
+    "options": ["Moreover", "First", "Hence", "Recently"],
+    "answerIndex": 1,
+    "explanation": "We use 'First' to show the beginning of a sequence of actions."
+  },
+  {
+    "id": 20,
+    "question": "Direct: 'I like apples,' said the boy. Indirect: The boy said that ______ liked apples.",
+    "options": ["I", "he", "it", "she"],
+    "answerIndex": 1,
+    "explanation": "The pronoun 'I' refers to 'the boy', so it must be changed to 'he'."
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "The children will go to the park. What kind of future is this?",
+    "options": ["Simple prediction", "Action in progress", "A time-table", "Past event"],
+    "answerIndex": 0,
+    "explanation": "We use 'will' for a simple prediction about the future."
+  },
+  {
+    "id": 2,
+    "question": "The bus leaves at 8:00 AM. Why is 'leaves' used here?",
+    "options": ["It is a hobby.", "It is a time-tabled event.", "It happened yesterday.", "It is a guess."],
+    "answerIndex": 1,
+    "explanation": "Simple present tense is used for fixed schedules like bus times."
+  },
+  {
+    "id": 3,
+    "question": "Next week, Chenitha will be studying. What does this mean?",
+    "options": ["He finished studying.", "The action is in progress.", "He might not study.", "He is studying now."],
+    "answerIndex": 1,
+    "explanation": "'Will be studying' shows an action happening over time in the future."
+  },
+  {
+    "id": 4,
+    "question": "Look at the dark clouds. It is going to rain. Why use 'going to'?",
+    "options": ["There is no reason.", "It is a past habit.", "There is present evidence.", "It is a secret."],
+    "answerIndex": 2,
+    "explanation": "We use 'going to' when we see proof (dark clouds) in the present."
+  },
+  {
+    "id": 5,
+    "question": "They are moving house next week. This is a _______.",
+    "options": ["Fixed arrangement", "Simple guess", "Past action", "Daily routine"],
+    "answerIndex": 0,
+    "explanation": "Present continuous (are moving) is used for planned future events."
+  },
+  {
+    "id": 6,
+    "question": "Active: My mother made this cake. What is the Passive form?",
+    "options": ["This cake made mother.", "This cake was made by mother.", "Mother is making cake.", "Cake was make by mother."],
+    "answerIndex": 1,
+    "explanation": "In past passive, we use 'was' + 'made'."
+  },
+  {
+    "id": 7,
+    "question": "This road was repaired last month. Who repaired it?",
+    "options": ["The road", "The month", "The doer is not mentioned.", "Nobody"],
+    "answerIndex": 2,
+    "explanation": "In passive voice, we can hide the doer if they are not important."
+  },
+  {
+    "id": 8,
+    "question": "The windows _______ cleaned yesterday. Fill in the blank.",
+    "options": ["was", "is", "were", "are"],
+    "answerIndex": 2,
+    "explanation": "We use 'were' because 'windows' is a plural word."
+  },
+  {
+    "id": 9,
+    "question": "The train _______ at 10 o’clock. Choose the best verb.",
+    "options": ["leave", "leaves", "leaving", "left"],
+    "answerIndex": 1,
+    "explanation": "Use simple present for time-tabled events."
+  },
+  {
+    "id": 10,
+    "question": "The plants were watered. This sentence is in the _______.",
+    "options": ["Active Voice", "Passive Voice", "Future Tense", "Present Tense"],
+    "answerIndex": 1,
+    "explanation": "It is Passive because the action is done TO the plants."
+  },
+  {
+    "id": 11,
+    "question": "I _______ my friends tomorrow. I have a plan.",
+    "options": ["meeting", "am meeting", "meets", "was meeting"],
+    "answerIndex": 1,
+    "explanation": "'Am meeting' shows a future arrangement."
+  },
+  {
+    "id": 12,
+    "question": "A letter _______ written by him. Fill in the blank.",
+    "options": ["were", "is", "was", "be"],
+    "answerIndex": 2,
+    "explanation": "'Letter' is singular, so we use 'was' in the past passive."
+  },
+  {
+    "id": 13,
+    "question": "I think it _______ rain tomorrow. Choose the best word.",
+    "options": ["will", "is", "was", "does"],
+    "answerIndex": 0,
+    "explanation": "'Will' is used for simple future predictions."
+  },
+  {
+    "id": 14,
+    "question": "The work was finished. What is the main verb?",
+    "options": ["The", "Work", "Was", "Finished"],
+    "answerIndex": 3,
+    "explanation": "'Finished' is the past participle of the main verb."
+  },
+  {
+    "id": 15,
+    "question": "Next month, she will be traveling. Is the action finished?",
+    "options": ["Yes", "No, it will be in progress.", "It happened last year.", "She is at home."],
+    "answerIndex": 1,
+    "explanation": "Future continuous shows an ongoing action in the future."
+  },
+  {
+    "id": 16,
+    "question": "Active: Ravi broke the glass. Passive: The glass _______.",
+    "options": ["broke by Ravi", "was broken by Ravi", "is broken by Ravi", "break by Ravi"],
+    "answerIndex": 1,
+    "explanation": "The past passive needs 'was' + 'broken'."
+  },
+  {
+    "id": 17,
+    "question": "The sky is clear. It _______ be a sunny day.",
+    "options": ["is going to", "was", "leaves", "were"],
+    "answerIndex": 0,
+    "explanation": "We use 'is going to' because we can see the clear sky now."
+  },
+  {
+    "id": 18,
+    "question": "The exam _______ at 9:00 AM tomorrow. It is a schedule.",
+    "options": ["start", "starts", "starting", "started"],
+    "answerIndex": 1,
+    "explanation": "Simple present 'starts' is used for fixed schedules."
+  },
+  {
+    "id": 19,
+    "question": "Who is the doer? 'The ball was kicked by Kamal.'",
+    "options": ["The ball", "Kicked", "Kamal", "Was"],
+    "answerIndex": 2,
+    "explanation": "The doer is the person who did the action (Kamal)."
+  },
+  {
+    "id": 20,
+    "question": "Passive: The songs were sung. What is the object?",
+    "options": ["The songs", "Were", "Sung", "By"],
+    "answerIndex": 0,
+    "explanation": "'The songs' is the object that received the action."
+  }
+]

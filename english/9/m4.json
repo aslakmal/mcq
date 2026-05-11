@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "In the sentence 'The dinosaurs could run fast', what does the word 'fast' describe?",
+    "options": ["The dinosaurs", "The ability to run", "The forest", "The past"],
+    "answerIndex": 1,
+    "explanation": "Here, 'fast' is an adverb describing the verb 'run'."
+  },
+  {
+    "id": 2,
+    "question": "Choose the correct adverb to complete the sentence: The Mariana Trench is _______ deep.",
+    "options": ["incredible", "incredibly", "incredibility", "incredulous"],
+    "answerIndex": 1,
+    "explanation": "Adverbs ending in '-ly' like 'incredibly' are used to add more information to an adjective (deep)."
+  },
+  {
+    "id": 3,
+    "question": "In the phrase 'amazingly well', the word 'amazingly' is used to describe:",
+    "options": ["A noun", "A verb", "Another adverb", "An object"],
+    "answerIndex": 2,
+    "explanation": "Adverbs can be used to modify other adverbs, such as 'amazingly' modifying 'well'."
+  },
+  {
+    "id": 4,
+    "question": "Which of the following is an example of an adverb describing a verb?",
+    "options": ["The giant bird", "The bird flew swiftly", "A very large bird", "The bird is extinct"],
+    "answerIndex": 1,
+    "explanation": "'Swiftly' describes the action 'flew'."
+  },
+  {
+    "id": 5,
+    "question": "If a species is 'completely extinct', the adverb 'completely' modifies which word?",
+    "options": ["Species", "Extinct", "Is", "The"],
+    "answerIndex": 1,
+    "explanation": "'Extinct' is an adjective, and 'completely' is an adverb adding information to it."
+  },
+  {
+    "id": 6,
+    "question": "Adverbs can be used to describe all of the following EXCEPT:",
+    "options": ["Verbs", "Adjectives", "Nouns", "Other adverbs"],
+    "answerIndex": 2,
+    "explanation": "Adjectives describe nouns; adverbs describe verbs, adjectives, and other adverbs."
+  },
+  {
+    "id": 7,
+    "question": "Select the sentence where an adverb describes an adjective:",
+    "options": ["He talks slowly.", "The weather is extremely hot.", "She ran very quickly.", "They arrived early."],
+    "answerIndex": 1,
+    "explanation": "'Extremely' is an adverb describing the adjective 'hot'."
+  },
+  {
+    "id": 8,
+    "question": "What is the primary theme of the topic 'Extinct Friends'?",
+    "options": ["Making new friends", "Animals that no longer exist", "How to care for pets", "Famous people in history"],
+    "answerIndex": 1,
+    "explanation": "'Extinct' refers to species that have died out completely."
+  },
+  {
+    "id": 9,
+    "question": "Complete the sentence: The students listened _______ to the documentary about Dodos.",
+    "options": ["careful", "carefully", "care", "caring"],
+    "answerIndex": 1,
+    "explanation": "'Carefully' is the adverb form describing how the students listened (verb)."
+  },
+  {
+    "id": 10,
+    "question": "In the sentence 'The scientist spoke very clearly', what is 'very'?",
+    "options": ["An adjective", "A noun", "An adverb describing another adverb", "A verb"],
+    "answerIndex": 2,
+    "explanation": "'Very' is an adverb that adds information to the adverb 'clearly'."
+  },
+  {
+    "id": 11,
+    "question": "Which word is an adverb in this sentence: 'The dinosaur moved quite slowly'?",
+    "options": ["Dinosaur", "Moved", "Quite", "Slowly"],
+    "answerIndex": 3,
+    "explanation": "'Slowly' describes the verb 'moved'. (Note: 'quite' is also an adverb here)."
+  },
+  {
+    "id": 12,
+    "question": "The Dodo was a _______ flightless bird.",
+    "options": ["total", "totally", "totality", "totaled"],
+    "answerIndex": 1,
+    "explanation": "'Totally' is the adverb modifying the adjective 'flightless'."
+  },
+  {
+    "id": 13,
+    "question": "Identify the adverb describing a verb: 'Rainforests are disappearing rapidly.'",
+    "options": ["Rainforests", "Are", "Disappearing", "Rapidly"],
+    "answerIndex": 3,
+    "explanation": "'Rapidly' describes the manner in which they are 'disappearing'."
+  },
+  {
+    "id": 14,
+    "question": "Which of these is a 'degree' adverb used with an adjective?",
+    "options": ["Run", "Deep", "Incredibly", "Trench"],
+    "answerIndex": 2,
+    "explanation": "'Incredibly' shows the degree of the adjective 'deep'."
+  },
+  {
+    "id": 15,
+    "question": "When we say 'The lion roared loudly', 'loudly' is:",
+    "options": ["An adjective", "An adverb", "A pronoun", "A preposition"],
+    "answerIndex": 1,
+    "explanation": "It describes how the lion roared."
+  },
+  {
+    "id": 16,
+    "question": "Choose the best adverb: The mammoth was _______ heavy.",
+    "options": ["unusual", "unusually", "unusuals", "unusualness"],
+    "answerIndex": 1,
+    "explanation": "'Unusually' modifies the adjective 'heavy'."
+  },
+  {
+    "id": 17,
+    "question": "In 'amazingly well', if 'well' is the adverb, what is 'amazingly'?",
+    "options": ["A verb", "A noun", "An adverb", "A conjunction"],
+    "answerIndex": 2,
+    "explanation": "Adverbs can modify other adverbs to emphasize the meaning."
+  },
+  {
+    "id": 18,
+    "question": "Many species became extinct because they could not adapt _______.",
+    "options": ["quick", "quickly", "quicker", "quickest"],
+    "answerIndex": 1,
+    "explanation": "We need the adverb 'quickly' to describe the verb 'adapt'."
+  },
+  {
+    "id": 19,
+    "question": "Which sentence contains an adverb describing a verb?",
+    "options": ["She is a fast runner.", "He speaks fast.", "The car is fast.", "It was a fast race."],
+    "answerIndex": 1,
+    "explanation": "In 'He speaks fast', 'fast' describes the verb 'speaks'. In the other options, it is an adjective."
+  },
+  {
+    "id": 20,
+    "question": "The adverb 'deeply' would most likely describe which word?",
+    "options": ["Ocean", "Blue", "Regretted", "Fish"],
+    "answerIndex": 2,
+    "explanation": "'Deeply' can describe a verb like 'regretted' (e.g., He deeply regretted the loss)."
+  }
+]

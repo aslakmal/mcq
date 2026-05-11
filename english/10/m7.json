@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "You want to improve your pronunciation. Which activity is the best?",
+    "options": ["Writing a diary.", "Listening to English songs.", "Solving a math puzzle.", "Reading a silent book."],
+    "answerIndex": 1,
+    "explanation": "Songs help you hear how words are said correctly."
+  },
+  {
+    "id": 2,
+    "question": "A fable is a short story. It uses animals to teach a _______.",
+    "options": ["Science lesson.", "History fact.", "Moral lesson.", "New game."],
+    "answerIndex": 2,
+    "explanation": "Fables teach us how to behave using animal characters."
+  },
+  {
+    "id": 3,
+    "question": "She started studying three hours ago. She is still studying now.",
+    "options": ["She has studied.", "She is studying.", "She has been studying.", "She was studying."],
+    "answerIndex": 2,
+    "explanation": "We use 'has been + -ing' for actions that continue from the past."
+  },
+  {
+    "id": 4,
+    "question": "The mountain path was very perilous. What does 'perilous' mean?",
+    "options": ["Very safe.", "Very dangerous.", "Very easy.", "Very quiet."],
+    "answerIndex": 1,
+    "explanation": "Perilous is another word for dangerous."
+  },
+  {
+    "id": 5,
+    "question": "Myths are ancient stories. They often talk about _______.",
+    "options": ["Modern cars.", "Gods and magic.", "Daily news.", "Office work."],
+    "answerIndex": 1,
+    "explanation": "Myths explain the world using gods and supernatural events."
+  },
+  {
+    "id": 6,
+    "question": "Reading many books is good. It helps to grow your _______.",
+    "options": ["Physical height.", "Vocabulary.", "Running speed.", "Hearing."],
+    "answerIndex": 1,
+    "explanation": "Reading introduces you to many new words."
+  },
+  {
+    "id": 7,
+    "question": "The boys started playing at 9:00 AM. It is now 11:00 AM.",
+    "options": ["They have been playing.", "They are playing.", "They played.", "They has been playing."],
+    "answerIndex": 0,
+    "explanation": "Use 'have been' because 'boys' is plural."
+  },
+  {
+    "id": 8,
+    "question": "The sons could not break the bundle of sticks. What is the lesson?",
+    "options": ["Patience is good.", "Unity is strength.", "Be quiet.", "Work alone."],
+    "answerIndex": 1,
+    "explanation": "It shows that people are stronger when they stay together."
+  },
+  {
+    "id": 9,
+    "question": "The student was amazed by the science experiment.",
+    "options": ["He was bored.", "He was angry.", "He was astonished.", "He was sad."],
+    "answerIndex": 2,
+    "explanation": "Amazed and astonished both mean very surprised."
+  },
+  {
+    "id": 10,
+    "question": "A folk tale is a story. It belongs to a specific _______.",
+    "options": ["Science lab.", "Culture or group.", "Dictionary.", "Newspaper."],
+    "answerIndex": 1,
+    "explanation": "Folk tales are passed down through a specific culture."
+  },
+  {
+    "id": 11,
+    "question": "I am at the bus stop. I arrived twenty minutes ago.",
+    "options": ["I am waiting.", "I have been waiting.", "I wait.", "I has been waiting."],
+    "answerIndex": 1,
+    "explanation": "For 'I', we use 'have been' for continuous actions."
+  },
+  {
+    "id": 12,
+    "question": "He persuaded his friend to join the club. What does 'persuaded' mean?",
+    "options": ["He forced him.", "He convinced him.", "He ignored him.", "He stopped him."],
+    "answerIndex": 1,
+    "explanation": "To persuade is to make someone agree with you."
+  },
+  {
+    "id": 13,
+    "question": "A detective story is exciting. It is about _______.",
+    "options": ["Baking a cake.", "Solving a crime.", "Planting a tree.", "Singing a song."],
+    "answerIndex": 1,
+    "explanation": "Detectives try to find out who committed a crime."
+  },
+  {
+    "id": 14,
+    "question": "Orpheus went to the underworld. Why did he fail to save his wife?",
+    "options": ["He got lost.", "He looked back.", "He was tired.", "He was late."],
+    "answerIndex": 1,
+    "explanation": "The myth says he looked back when he was told not to."
+  },
+  {
+    "id": 15,
+    "question": "Change this to negative: 'He has been working.'",
+    "options": ["He not has been working.", "He hasn't been working.", "He has been not working.", "He doesn't been working."],
+    "answerIndex": 1,
+    "explanation": "Put 'not' after 'has' to make it negative."
+  },
+  {
+    "id": 16,
+    "question": "You write about your life every day. You are writing a _______.",
+    "options": ["Textbook.", "Diary.", "Map.", "Notice."],
+    "answerIndex": 1,
+    "explanation": "A diary is for writing personal daily thoughts."
+  },
+  {
+    "id": 17,
+    "question": "The rain finally relented. What does 'relented' mean here?",
+    "options": ["It became stronger.", "It became less severe.", "It started again.", "It turned to snow."],
+    "answerIndex": 1,
+    "explanation": "To relent means to become less harsh or give in."
+  },
+  {
+    "id": 18,
+    "question": "A story is set in space in the future. What is the genre?",
+    "options": ["Folk tale.", "Science fiction.", "Biography.", "Fable."],
+    "answerIndex": 1,
+    "explanation": "Science fiction uses future technology and space settings."
+  },
+  {
+    "id": 19,
+    "question": "Identify the question form for 'you'.",
+    "options": ["Has you been crying?", "Have you been crying?", "Do you been crying?", "Are you been crying?"],
+    "answerIndex": 1,
+    "explanation": "We use 'Have' at the start for a 'you' question."
+  },
+  {
+    "id": 20,
+    "question": "Movies are helpful for English. They show _______ situations.",
+    "options": ["Impossible.", "Real-life.", "Silent.", "Only old."],
+    "answerIndex": 1,
+    "explanation": "Movies show how people talk in daily life."
+  }
+]

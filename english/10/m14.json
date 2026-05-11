@@ -1,0 +1,147 @@
+[
+  {
+    "id": 1,
+    "question": "The players ______ for two hours when the rain finally stopped.",
+    "options": ["have been waiting", "had been waiting", "are waiting", "wait"],
+    "answerIndex": 1,
+    "explanation": "We use 'had been waiting' to show an action that was ongoing up until a specific point in the past (the rain stopping)."
+  },
+  {
+    "id": 2,
+    "question": "I don't like losing a game, and ______.",
+    "options": ["so do my friends", "neither do my friends", "my friends do too", "neither my friends do"],
+    "answerIndex": 1,
+    "explanation": "'Neither do [Subject]' is used for negative agreement with a present simple statement."
+  },
+  {
+    "id": 3,
+    "question": "How long ______ for the school team before you moved to this city?",
+    "options": ["had you been playing", "have you been playing", "were you playing", "you had been playing"],
+    "answerIndex": 0,
+    "explanation": "This is the interrogative form of the Past Perfect Continuous (Had + subject + been + V-ing)."
+  },
+  {
+    "id": 4,
+    "question": "My father enjoys watching sports on TV, and ______.",
+    "options": ["neither does my brother", "so does my brother", "so my brother does", "my brother doesn't too"],
+    "answerIndex": 1,
+    "explanation": "We use 'So does [Subject]' to agree with a positive statement in the simple present tense."
+  },
+  {
+    "id": 5,
+    "question": "The athlete ______ for the race for months before he felt a pain in his leg.",
+    "options": ["has been practicing", "had been practicing", "is practicing", "was practicing"],
+    "answerIndex": 1,
+    "explanation": "This shows a continuous action leading up to a specific past moment (feeling the pain)."
+  },
+  {
+    "id": 6,
+    "question": "Someone says, 'Colombo is very hot today' and another responds, 'So is Jaffna.' This means ______.",
+    "options": ["Jaffna is hot, too", "Jaffna is far", "Jaffna is a big city", "Jaffna is very cold"],
+    "answerIndex": 0,
+    "explanation": "'So is [Subject]' confirms that the subject shares the same quality mentioned in the previous sentence."
+  },
+  {
+    "id": 7,
+    "question": "They ______ the match ______ the entire afternoon.",
+    "options": ["watched / during", "watch / since", "had watched / until", "watching / before"],
+    "answerIndex": 0,
+    "explanation": "'During' is the correct preposition to show that something happened within a specific period of time."
+  },
+  {
+    "id": 8,
+    "question": "I hadn't ______ attention to the score until the crowd started cheering.",
+    "options": ["been pay", "been paying", "be paying", "paying"],
+    "answerIndex": 1,
+    "explanation": "The negative form of Past Perfect Continuous is: had + not + been + V-ing."
+  },
+  {
+    "id": 9,
+    "question": "The students didn't want to stop the game, and ______.",
+    "options": ["neither did the teacher", "so did the teacher", "the teacher did neither", "neither the teacher did"],
+    "answerIndex": 0,
+    "explanation": "'Neither did [Subject]' shows agreement with a negative statement in the past tense."
+  },
+  {
+    "id": 10,
+    "question": "We had been ______ for the bus ______ thirty minutes before it arrived.",
+    "options": ["waiting / for", "wait / since", "waited / during", "waiting / until"],
+    "answerIndex": 0,
+    "explanation": "'For' is used to describe a duration of time (thirty minutes)."
+  },
+  {
+    "id": 11,
+    "question": "The coach was very happy because the team ______ very well all week.",
+    "options": ["has been performing", "had been performing", "is performing", "was performing"],
+    "answerIndex": 1,
+    "explanation": "Past Perfect Continuous describes an action that happened over a period leading up to a past result."
+  },
+  {
+    "id": 12,
+    "question": "My friend can swim very fast, and ______.",
+    "options": ["so can I", "neither can I", "I can neither", "so I can"],
+    "answerIndex": 0,
+    "explanation": "For positive agreement with 'can', we use 'So can [Subject]'."
+  },
+  {
+    "id": 13,
+    "question": "Which sentence is written correctly in the Past Perfect Continuous?",
+    "options": [
+      "I had been play cricket since morning.",
+      "I have been playing cricket since morning.",
+      "I had been playing cricket since morning.",
+      "I was been playing cricket since morning."
+    ],
+    "answerIndex": 2,
+    "explanation": "The correct structure is Subject + had + been + V-ing."
+  },
+  {
+    "id": 14,
+    "question": "The children stayed at the playground ______ the sun went down.",
+    "options": ["since", "until", "during", "before"],
+    "answerIndex": 1,
+    "explanation": "'Until' indicates the point in time when an action or situation stops."
+  },
+  {
+    "id": 15,
+    "question": "I wasn't tired after the match, and ______.",
+    "options": ["neither was my brother", "so was my brother", "my brother was too", "neither my brother was"],
+    "answerIndex": 0,
+    "explanation": "'Neither was [Subject]' is the correct agreement for a negative 'wasn't' statement."
+  },
+  {
+    "id": 16,
+    "question": "They ______ hard since 8:00 AM before the sun became too hot.",
+    "options": ["have been working", "had been working", "are working", "were working"],
+    "answerIndex": 1,
+    "explanation": "We use 'had been working' because the action stopped due to a past event (the sun becoming hot)."
+  },
+  {
+    "id": 17,
+    "question": "I have finished my homework, and ______.",
+    "options": ["neither has my sister", "so has my sister", "so my sister has", "my sister has neither"],
+    "answerIndex": 1,
+    "explanation": "'So has [Subject]' is the agreement for the present perfect 'have finished'."
+  },
+  {
+    "id": 18,
+    "question": "The match had ______ for an hour when the power went out.",
+    "options": ["been continuing", "be continuing", "being continue", "been continue"],
+    "answerIndex": 0,
+    "explanation": "Past Perfect Continuous requires 'been' + the '-ing' form of the verb."
+  },
+  {
+    "id": 19,
+    "question": "We haven't seen a live match before, and ______.",
+    "options": ["neither have our parents", "so have our parents", "our parents have too", "neither our parents have"],
+    "answerIndex": 0,
+    "explanation": "'Neither have [Subject]' matches the negative present perfect 'haven't'."
+  },
+  {
+    "id": 20,
+    "question": "She ______ the book for an hour ______ her mother called her for lunch.",
+    "options": ["had been reading / before", "has been reading / since", "was reading / until", "had read / during"],
+    "answerIndex": 0,
+    "explanation": "This combined structure correctly uses the tense and the time connector 'before'."
+  }
+]

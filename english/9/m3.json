@@ -1,0 +1,147 @@
+[
+  {
+    "id": 1,
+    "question": "In a conversation, if someone says 'Are you coming to the meeting?' and you reply 'Yes, I am', what does 'I am' mean?",
+    "options": ["I am a student", "I am coming to the meeting", "I am here", "I am happy"],
+    "answerIndex": 1,
+    "explanation": "Short responses like 'I am' refer back to the action mentioned in the previous question."
+  },
+  {
+    "id": 2,
+    "question": "Which of these is an uncountable noun?",
+    "options": ["Bag", "Cup", "Water", "Piece"],
+    "answerIndex": 2,
+    "explanation": "Water cannot be counted as individual units; it is an uncountable noun."
+  },
+  {
+    "id": 3,
+    "question": "How do we correctly write the plural form for 'bag of rice'?",
+    "options": ["Three bag of rices", "Three bags of rice", "Three bags of rices", "Three bag of rice"],
+    "answerIndex": 1,
+    "explanation": "We pluralize the container (bags), but the uncountable noun (rice) remains singular."
+  },
+  {
+    "id": 4,
+    "question": "If Pavith says, 'It sounds like you have a plan,' and Nipuna says, 'Actually, I have,' what is Nipuna confirming?",
+    "options": ["He has a secret", "He has a plan", "He has a friend", "He has a meeting"],
+    "answerIndex": 1,
+    "explanation": "'I have' is a short form meaning 'I have got a plan' based on the context."
+  },
+  {
+    "id": 5,
+    "question": "What is the correct way to read '1 ½ cups of water'?",
+    "options": ["One and second cups", "One and half cups", "Half and one cups", "One and a half cups"],
+    "answerIndex": 3,
+    "explanation": "The fraction 1 ½ is read as 'one and a half'."
+  },
+  {
+    "id": 6,
+    "question": "Furniture is an uncountable noun. How do we count it?",
+    "options": ["Three furnitures", "Three piece of furniture", "Three pieces of furniture", "Three pieces of furnitures"],
+    "answerIndex": 2,
+    "explanation": "We use 'pieces of' to count uncountable nouns like furniture."
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct short response: 'Is the teacher in the meeting?' 'No, she _______.'",
+    "options": ["isn't", "not", "is", "don't"],
+    "answerIndex": 0,
+    "explanation": "'Isn't' is the short form of 'is not', meaning 'she is not in the meeting'."
+  },
+  {
+    "id": 8,
+    "question": "How do you pluralize 'a cup of semolina'?",
+    "options": ["Two cup of semolinas", "Two cups of semolina", "Two cups of semolinas", "Two cup of semolina"],
+    "answerIndex": 1,
+    "explanation": "The container 'cup' becomes 'cups', while 'semolina' stays the same because it is uncountable."
+  },
+  {
+    "id": 9,
+    "question": "Which of these is the correct way to express a quantity of rice?",
+    "options": ["Many rices", "Two rices", "A few rices", "Five bags of rice"],
+    "answerIndex": 3,
+    "explanation": "Uncountable nouns need a counter like 'bags' to show quantity."
+  },
+  {
+    "id": 10,
+    "question": "If someone asks 'Have you finished the work?' and you say 'Yes, I have', what does 'I have' mean?",
+    "options": ["I have a pen", "I have finished the work", "I have time", "I have to go"],
+    "answerIndex": 1,
+    "explanation": "'I have' completes the meaning based on the question asked."
+  },
+  {
+    "id": 11,
+    "question": "Which word in 'two pieces of furniture' is the countable part?",
+    "options": ["Two", "Pieces", "Of", "Furniture"],
+    "answerIndex": 1,
+    "explanation": "'Pieces' is the countable unit used to measure the uncountable 'furniture'."
+  },
+  {
+    "id": 12,
+    "question": "What is the correct plural of 'a piece of information'?",
+    "options": ["Two informations", "Two piece of informations", "Two pieces of information", "Two pieces of informations"],
+    "answerIndex": 2,
+    "explanation": "Like furniture, information is uncountable; we pluralize 'pieces'."
+  },
+  {
+    "id": 13,
+    "question": "Complete the short answer: 'Do you know the way?' 'Yes, I _______.'",
+    "options": ["am", "do", "know", "have"],
+    "answerIndex": 1,
+    "explanation": "For questions starting with 'Do', the short answer uses 'do'."
+  },
+  {
+    "id": 14,
+    "question": "Which of these is NOT a correct way to count water?",
+    "options": ["A bottle of water", "A glass of water", "Two waters", "A liter of water"],
+    "answerIndex": 2,
+    "explanation": "You cannot say 'two waters' because water is an uncountable noun."
+  },
+  {
+    "id": 15,
+    "question": "How do you read '½' in the phrase '½ cup of sugar'?",
+    "options": ["Full", "One-two", "Half", "Quarter"],
+    "answerIndex": 2,
+    "explanation": "The symbol ½ represents the word 'half'."
+  },
+  {
+    "id": 16,
+    "question": "Which sentence is grammatically correct?",
+    "options": [
+      "I have three furnitures in my room.",
+      "I have three piece of furniture in my room.",
+      "I have three pieces of furniture in my room.",
+      "I have three pieces of furnitures in my room."
+    ],
+    "answerIndex": 2,
+    "explanation": "'Pieces' is plural and 'furniture' is uncountable."
+  },
+  {
+    "id": 17,
+    "question": "In the sentence 'I hope I'm on time', what does 'I'm' stand for?",
+    "options": ["I will", "I am", "I have", "I was"],
+    "answerIndex": 1,
+    "explanation": "'I'm' is the contraction of 'I am'."
+  },
+  {
+    "id": 18,
+    "question": "Choose the correct form: 'We need five _______ of salt.'",
+    "options": ["packet", "packets", "salty", "piece"],
+    "answerIndex": 1,
+    "explanation": "When the number is more than one, the container (packets) must be plural."
+  },
+  {
+    "id": 19,
+    "question": "If a student says 'I've got the book,' the 've' stands for:",
+    "options": ["am", "was", "have", "are"],
+    "answerIndex": 2,
+    "explanation": "'I've' is the short form of 'I have'."
+  },
+  {
+    "id": 20,
+    "question": "Which of these pairs shows an uncountable noun and its counter?",
+    "options": ["Pen - Box", "Rice - Bag", "Apple - Tree", "Boy - Team"],
+    "answerIndex": 1,
+    "explanation": "Rice is uncountable and 'bag' is the counter used to measure it."
+  }
+]

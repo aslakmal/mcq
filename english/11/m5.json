@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "If you want to finish your syllabus on time, you must study ______ every day.",
+    "options": ["method", "methodical", "methodically", "methodism"],
+    "answerIndex": 2,
+    "explanation": "The suffix '-ly' is added to the adjective 'methodical' to form an adverb describing how one should study."
+  },
+  {
+    "id": 2,
+    "question": "Amal finished his assignment just before the deadline. He really managed to ______.",
+    "options": ["kill the clock", "beat the clock", "stop the clock", "watch the clock"],
+    "answerIndex": 1,
+    "explanation": "'Beat the clock' is an idiom that means to finish something before a specific time or deadline."
+  },
+  {
+    "id": 3,
+    "question": "Studying at night is ______ for some students because the environment is very quiet.",
+    "options": ["effect", "effective", "effectively", "effectiveness"],
+    "answerIndex": 1,
+    "explanation": "'Effective' is an adjective used here to describe the quality of studying at night."
+  },
+  {
+    "id": 4,
+    "question": "Using a flow chart helps you to visualize complex lessons ______.",
+    "options": ["clear", "clearness", "clearly", "clarify"],
+    "answerIndex": 2,
+    "explanation": "The adverb 'clearly' describes how the flow chart helps you visualize the lessons."
+  },
+  {
+    "id": 5,
+    "question": "My grandfather doesn't use the internet for studying; he is a bit ______.",
+    "options": ["ahead of time", "behind the times", "making time", "in good time"],
+    "answerIndex": 1,
+    "explanation": "The idiom 'behind the times' means being old-fashioned or not keeping up with modern technology/trends."
+  },
+  {
+    "id": 6,
+    "question": "To be a successful student, you must set your daily ______ and work hard to achieve them.",
+    "options": ["targets", "targeting", "targeted", "targetly"],
+    "answerIndex": 0,
+    "explanation": "'Targets' is a noun referring to the goals or objectives a student sets."
+  },
+  {
+    "id": 7,
+    "question": "Even if you missed the morning study session, you should start now because ______.",
+    "options": ["time is money", "better late than never", "beat the clock", "behind the times"],
+    "answerIndex": 1,
+    "explanation": "'Better late than never' means it is better to do something late than not to do it at all."
+  },
+  {
+    "id": 8,
+    "question": "The ______ of daytime study is that you have access to natural light.",
+    "options": ["advantage", "advantageous", "advantageously", "advantaging"],
+    "answerIndex": 0,
+    "explanation": "'Advantage' is the noun form required to subject of the sentence."
+  },
+  {
+    "id": 9,
+    "question": "The teacher explained the difficult theory ______ so that everyone understood.",
+    "options": ["simple", "simplify", "simply", "simplicity"],
+    "answerIndex": 2,
+    "explanation": "The adverb 'simply' describes the manner in which the teacher explained the theory."
+  },
+  {
+    "id": 10,
+    "question": "If you don't have a plan, you will ______ waste your time on unimportant tasks.",
+    "options": ["careless", "carelessly", "carelessness", "care"],
+    "answerIndex": 1,
+    "explanation": "The adverb 'carelessly' describes the manner of wasting time."
+  },
+  {
+    "id": 11,
+    "question": "A ______ student always prepares a timetable before the exams start.",
+    "options": ["system", "systematic", "systematically", "systematize"],
+    "answerIndex": 1,
+    "explanation": "'Systematic' is an adjective describing the noun 'student'."
+  },
+  {
+    "id": 12,
+    "question": "Nimal finally submitted his project two days late. His teacher said, '______!'",
+    "options": ["Beat the clock", "Behind the times", "Better late than never", "Kill time"],
+    "answerIndex": 2,
+    "explanation": "This idiom is used to acknowledge that while something is late, it is good that it was finally done."
+  },
+  {
+    "id": 13,
+    "question": "One ______ of night study is that you might feel very tired the next morning.",
+    "options": ["disadvantage", "disadvantageous", "disadvantageously", "disadvantaging"],
+    "answerIndex": 0,
+    "explanation": "'Disadvantage' is the noun form needed here."
+  },
+  {
+    "id": 14,
+    "question": "You should check your notes ______ before the examination begins.",
+    "options": ["thorough", "thoroughly", "thoroughness", "through"],
+    "answerIndex": 1,
+    "explanation": "The adverb 'thoroughly' describes how you should check your notes."
+  },
+  {
+    "id": 15,
+    "question": "Creating a ______ helps you follow the logical steps of a scientific process.",
+    "options": ["flow chart", "flowing", "flowed", "flyer"],
+    "answerIndex": 0,
+    "explanation": "A flow chart is a methodical tool used to show the steps of a process."
+  },
+  {
+    "id": 16,
+    "question": "Students who use old, outdated textbooks are considered to be ______.",
+    "options": ["beating the clock", "behind the times", "saving time", "ahead of the curve"],
+    "answerIndex": 1,
+    "explanation": "Using outdated materials is a classic example of being 'behind the times'."
+  },
+  {
+    "id": 17,
+    "question": "You need to organize your desk ______ to find your pens and books easily.",
+    "options": ["proper", "properly", "property", "proprietor"],
+    "answerIndex": 1,
+    "explanation": "The adverb 'properly' describes how the desk should be organized."
+  },
+  {
+    "id": 18,
+    "question": "When the exam started, he wrote ______ to ensure he answered all the questions.",
+    "options": ["quick", "quickly", "quickness", "quicken"],
+    "answerIndex": 1,
+    "explanation": "The adverb 'quickly' describes the action of writing."
+  },
+  {
+    "id": 19,
+    "question": "Setting a timer can help you ______ and improve your speed.",
+    "options": ["beat the clock", "behind the times", "waste time", "pass the time"],
+    "answerIndex": 0,
+    "explanation": "Beating the clock refers to completing a task within a set time limit."
+  },
+  {
+    "id": 20,
+    "question": "It is ______ to study in a well-lit room to protect your eyesight.",
+    "options": ["importance", "important", "importantly", "importing"],
+    "answerIndex": 1,
+    "explanation": "'Important' is an adjective describing the necessity of studying in a lit room."
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Robinson Crusoe built a strong fence ______ he wanted to protect himself from wild animals.",
+    "options": ["but", "or", "because", "while"],
+    "answerIndex": 2,
+    "explanation": "'Because' is a conjunction used to show the reason for an action."
+  },
+  {
+    "id": 2,
+    "question": "Anne Frank had to stay extremely quiet ______ the workers were in the office below.",
+    "options": ["while", "and", "but", "or"],
+    "answerIndex": 0,
+    "explanation": "'While' is a conjunction used to indicate that two actions are happening at the same time."
+  },
+  {
+    "id": 3,
+    "question": "Sentence: '**I** think we should read books.' What does the stress on '**I**' imply?",
+    "options": ["Someone else thinks we should read.", "I am certain about reading.", "It is my personal opinion, regardless of others.", "We should read books specifically, not magazines."],
+    "answerIndex": 2,
+    "explanation": "Stressing the subject 'I' emphasizes the speaker's specific opinion as opposed to someone else's."
+  },
+  {
+    "id": 4,
+    "question": "Sherlock Holmes looked for clues, ______ the police had already given up on the case.",
+    "options": ["and", "or", "but", "because"],
+    "answerIndex": 2,
+    "explanation": "'But' is used to connect two contrasting ideas."
+  },
+  {
+    "id": 5,
+    "question": "The Secret Annex was very ______ during the day, which was difficult for Anne.",
+    "options": ["noisy", "silent", "expensive", "inexpensive"],
+    "answerIndex": 1,
+    "explanation": "'Silent' is the correct adjective to describe the required atmosphere in the Annex to avoid detection."
+  },
+  {
+    "id": 6,
+    "question": "Crusoe could choose to eat dried grapes ______ he could hunt for goats on the island.",
+    "options": ["or", "but", "because", "while"],
+    "answerIndex": 0,
+    "explanation": "'Or' is used to connect two different choices or possibilities."
+  },
+  {
+    "id": 7,
+    "question": "What is the opposite of the adjective 'expensive'?",
+    "options": ["Inexpensive", "Valuable", "Costly", "Pricey"],
+    "answerIndex": 0,
+    "explanation": "The prefix 'in-' is added to 'expensive' to form its antonym."
+  },
+  {
+    "id": 8,
+    "question": "Sentence: 'I think we should read **books**.' What does the stress on '**books**' imply?",
+    "options": ["We should read books, not something else like magazines.", "We should read them, not just look at them.", "I am the one who thinks so.", "We must read them now."],
+    "answerIndex": 0,
+    "explanation": "Stressing the object 'books' highlights the specific material being recommended."
+  },
+  {
+    "id": 9,
+    "question": "Sherlock Holmes is famous for his ______ observations and logical thinking.",
+    "options": ["careless", "sharp", "noisy", "inexpensive"],
+    "answerIndex": 1,
+    "explanation": "'Sharp' is an adjective used here to describe the keen and precise nature of Holmes' observations."
+  },
+  {
+    "id": 10,
+    "question": "Robinson Crusoe worked hard ______ he managed to make a rough table and a chair.",
+    "options": ["but", "or", "and", "while"],
+    "answerIndex": 2,
+    "explanation": "'And' is used to connect two related ideas or actions in a sequence."
+  },
+  {
+    "id": 11,
+    "question": "Anne Frank wrote in her diary ______ she felt lonely in the Annex.",
+    "options": ["because", "but", "or", "while"],
+    "answerIndex": 0,
+    "explanation": "'Because' explains the emotional reason why Anne turned to her diary 'Kitty'."
+  },
+  {
+    "id": 12,
+    "question": "The opposite of 'noisy' is ______.",
+    "options": ["loud", "silent", "crowded", "active"],
+    "answerIndex": 1,
+    "explanation": "'Silent' describes a complete lack of noise."
+  },
+  {
+    "id": 13,
+    "question": "Crusoe found some tools, ______ most of them were rusted from the seawater.",
+    "options": ["and", "or", "but", "because"],
+    "answerIndex": 2,
+    "explanation": "'But' introduces a contrast between finding the tools and their poor condition."
+  },
+  {
+    "id": 14,
+    "question": "Sentence: 'I think we **should** read books.' What does the stress on '**should**' imply?",
+    "options": ["It is a strong suggestion or a duty.", "I am not sure if we will read.", "Someone else told us to read.", "We should read only one book."],
+    "answerIndex": 0,
+    "explanation": "Stressing the modal 'should' emphasizes the necessity or importance of the action."
+  },
+  {
+    "id": 15,
+    "question": "Watson followed Holmes ______ they walked through the foggy streets of London.",
+    "options": ["while", "or", "but", "because"],
+    "answerIndex": 0,
+    "explanation": "'While' shows that the two actions (following and walking) happened simultaneously."
+  },
+  {
+    "id": 16,
+    "question": "Crusoe's life on the island was very ______ compared to his life in England.",
+    "options": ["comfortable", "uncomfortable", "inexpensive", "noisy"],
+    "answerIndex": 1,
+    "explanation": "'Uncomfortable' is the adjective that best describes the hardships of being shipwrecked."
+  },
+  {
+    "id": 17,
+    "question": "Anne Frank's diary was ______ at first, but later it became world-famous.",
+    "options": ["public", "private", "expensive", "noisy"],
+    "answerIndex": 1,
+    "explanation": "A diary is typically a 'private' record of one's thoughts."
+  },
+  {
+    "id": 18,
+    "question": "Should we visit the museum ______ should we go back to the settlement?",
+    "options": ["and", "but", "or", "while"],
+    "answerIndex": 2,
+    "explanation": "'Or' is used to present a choice between two different locations."
+  },
+  {
+    "id": 19,
+    "question": "The mystery was ______ complex, but Sherlock Holmes solved it easily.",
+    "options": ["simple", "highly", "noisy", "silent"],
+    "answerIndex": 1,
+    "explanation": "'Highly' is an adverb used to modify the adjective 'complex', indicating the degree of difficulty."
+  },
+  {
+    "id": 20,
+    "question": "Crusoe kept a record of time ______ he did not want to lose track of the days.",
+    "options": ["but", "or", "because", "while"],
+    "answerIndex": 2,
+    "explanation": "'Because' provides the logical reason for keeping a calendar on the island."
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Which source is a daily publication for local and world news?",
+    "options": ["Magazine", "Newspaper", "Encyclopedia", "Dictionary"],
+    "answerIndex": 1,
+    "explanation": "Newspapers provide daily or weekly updates on current events."
+  },
+  {
+    "id": 2,
+    "question": "An _______ is a collection of short, factual entries on many topics.",
+    "options": ["Online Catalogue", "Encyclopedia", "Newspaper", "Website"],
+    "answerIndex": 1,
+    "explanation": "Encyclopedias are used to find quick facts about a subject."
+  },
+  {
+    "id": 3,
+    "question": "What information can you find in a dictionary entry?",
+    "options": ["World news", "Spelling and word class", "Library records", "Multimedia videos"],
+    "answerIndex": 1,
+    "explanation": "Dictionaries tell us how to spell words and if they are nouns, verbs, etc."
+  },
+  {
+    "id": 4,
+    "question": "Active: 'He has sent the email.' Passive: 'The email _______ by him.'",
+    "options": ["has sent", "has been sent", "was sent", "is sent"],
+    "answerIndex": 1,
+    "explanation": "The Present Perfect Passive uses 'has/have + been + V3'."
+  },
+  {
+    "id": 5,
+    "question": "We must protect ourselves _______ dengue.",
+    "options": ["upon", "against", "beyond", "during"],
+    "answerIndex": 1,
+    "explanation": "'Against' is used when we talk about protection or fighting something."
+  },
+  {
+    "id": 6,
+    "question": "The sun disappeared _______ the horizon.",
+    "options": ["upon", "during", "beyond", "after"],
+    "answerIndex": 2,
+    "explanation": "'Beyond' refers to something that is further away or outside a limit."
+  },
+  {
+    "id": 7,
+    "question": "A website is an internet source that can include _______.",
+    "options": ["Only text", "Only paper", "Sounds, images, and video", "No information"],
+    "answerIndex": 2,
+    "explanation": "Websites are known for their multimedia content like videos and sounds."
+  },
+  {
+    "id": 8,
+    "question": "Which of these is a negative effect (bane) of the Internet?",
+    "options": ["Quick access to info", "Online business", "Addiction to social media", "Easy communication"],
+    "answerIndex": 2,
+    "explanation": "Spending too much time on social media is a negative habit."
+  },
+  {
+    "id": 9,
+    "question": "The responsibility for a clean school is _______ all of us.",
+    "options": ["upon", "beyond", "during", "against"],
+    "answerIndex": 0,
+    "explanation": "We use 'upon' to show that a duty or responsibility belongs to someone."
+  },
+  {
+    "id": 10,
+    "question": "What can you use to search for a specific book in a library?",
+    "options": ["A Magazine", "Online Library Catalogue", "A Dictionary", "A Newspaper"],
+    "answerIndex": 1,
+    "explanation": "Library catalogues are used to find where books are kept in the library."
+  },
+  {
+    "id": 11,
+    "question": "Active: 'Farmers have grown rice.' Passive: 'Rice _______ by farmers.'",
+    "options": ["has grown", "have been grown", "has been grown", "was grown"],
+    "answerIndex": 2,
+    "explanation": "Since 'Rice' is singular, we use 'has been' + V3."
+  },
+  {
+    "id": 12,
+    "question": "I felt very hungry _______ the interval.",
+    "options": ["beyond", "during", "against", "upon"],
+    "answerIndex": 1,
+    "explanation": "'During' is used to talk about something happening within a period of time."
+  },
+  {
+    "id": 13,
+    "question": "A 'cyberbully' is a person who _______.",
+    "options": ["Helps people online", "Hurt others using the internet", "Fixes computers", "Sells things online"],
+    "answerIndex": 1,
+    "explanation": "Cyberbullying is a security risk and a negative part of the internet."
+  },
+  {
+    "id": 14,
+    "question": "Which source provides definitions and example sentences?",
+    "options": ["Newspaper", "Encyclopedia", "Dictionary", "Website"],
+    "answerIndex": 2,
+    "explanation": "A dictionary explains what a word means and how to use it."
+  },
+  {
+    "id": 15,
+    "question": "The internet allows us to do 'online business'. This is _______.",
+    "options": ["A disadvantage", "An advantage", "A security risk", "A dictionary skill"],
+    "answerIndex": 1,
+    "explanation": "Being able to buy or sell things quickly is a positive effect (boon)."
+  },
+  {
+    "id": 16,
+    "question": "Wash your hands _______ you eat your lunch.",
+    "options": ["after", "before", "beyond", "against"],
+    "answerIndex": 1,
+    "explanation": "'Before' is the correct time preposition for hygiene before a meal."
+  },
+  {
+    "id": 17,
+    "question": "Which source is a collection of articles on popular interests?",
+    "options": ["Newspaper", "Dictionary", "Magazine", "Catalogue"],
+    "answerIndex": 2,
+    "explanation": "Magazines focus on specific interests like fashion, sports, or science."
+  },
+  {
+    "id": 18,
+    "question": "Active: 'Hackers have stolen data.' Passive: 'Data _______ by hackers.'",
+    "options": ["have been stolen", "has stolen", "has been stolen", "was stolen"],
+    "answerIndex": 2,
+    "explanation": "The passive form of the present perfect is 'has/have been' + V3."
+  },
+  {
+    "id": 19,
+    "question": "Identity theft is a _______ risk of the internet.",
+    "options": ["Grammar", "Safety/Security", "Vocabulary", "Dictionary"],
+    "answerIndex": 1,
+    "explanation": "Identity theft happens when someone steals your private information online."
+  },
+  {
+    "id": 20,
+    "question": "Words in a dictionary are always in _______ order.",
+    "options": ["Random", "Alphabetical", "Number", "Size"],
+    "answerIndex": 1,
+    "explanation": "Words are listed from A to Z so they are easy to find."
+  }
+]

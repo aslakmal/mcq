@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "By the time the nutritionist arrived, the students ______ their healthy breakfast.",
+    "options": ["finished", "have finished", "had finished", "finish"],
+    "answerIndex": 2,
+    "explanation": "Past Perfect (had + V3) is used for an action completed before another past action (the nutritionist arriving)."
+  },
+  {
+    "id": 2,
+    "question": "Direct: 'I grew these organic vegetables myself,' said the farmer. Indirect: The farmer said that he ______ those organic vegetables himself.",
+    "options": ["grows", "has grown", "had grown", "was growing"],
+    "answerIndex": 2,
+    "explanation": "In reported speech, the Simple Past ('grew') shifts to the Past Perfect ('had grown')."
+  },
+  {
+    "id": 3,
+    "question": "Instruction: 'Sift the flour into a large bowl.' Passive: The flour ______ into a large bowl.",
+    "options": ["is sifted", "is sifting", "sifts", "was sifted"],
+    "answerIndex": 0,
+    "explanation": "Imperative instructions are converted to the passive voice using 'is/are + past participle'."
+  },
+  {
+    "id": 4,
+    "question": "A ______ of bees was found near the organic garden, helping with pollination.",
+    "options": ["herd", "swarm", "fleet", "board"],
+    "answerIndex": 1,
+    "explanation": "'Swarm' is the specific collective noun used for a group of bees."
+  },
+  {
+    "id": 5,
+    "question": "To make the dough for healthy bread, you must ______ it firmly with your hands.",
+    "options": ["simmer", "knead", "sift", "dice"],
+    "answerIndex": 1,
+    "explanation": "'Knead' is the specific cooking verb for massage or working dough with hands."
+  },
+  {
+    "id": 6,
+    "question": "Which of these words is the opposite of 'affluent'?",
+    "options": ["Wealthy", "Minimalist", "Pauper", "Healthy"],
+    "answerIndex": 2,
+    "explanation": "'Affluent' means wealthy, while 'pauper' refers to a very poor person."
+  },
+  {
+    "id": 7,
+    "question": "When the sun rose, the farmer ______ already ______ the crops.",
+    "options": ["has / watered", "had / watered", "was / watering", "did / water"],
+    "answerIndex": 1,
+    "explanation": "The action of watering happened before the sun rose, requiring the Past Perfect."
+  },
+  {
+    "id": 8,
+    "question": "The ______ of directors met to discuss the new self-sufficiency project.",
+    "options": ["herd", "fleet", "board", "stack"],
+    "answerIndex": 2,
+    "explanation": "'Board' is the collective noun used for a group of directors."
+  },
+  {
+    "id": 9,
+    "question": "Direct: 'Have you finished the herbal tea?' she asked. Indirect: She asked if I ______ the herbal tea.",
+    "options": ["finished", "have finished", "had finished", "was finishing"],
+    "answerIndex": 2,
+    "explanation": "Present Perfect ('have finished') shifts to Past Perfect ('had finished') in reported speech."
+  },
+  {
+    "id": 10,
+    "question": "Instruction: 'Pound the ginger and garlic.' Passive: The ginger and garlic ______.",
+    "options": ["are pounded", "is pounded", "pounded", "are pounding"],
+    "answerIndex": 0,
+    "explanation": "Since there are two items (ginger and garlic), we use the plural passive form 'are pounded'."
+  },
+  {
+    "id": 11,
+    "question": "A ______ of elephants was seen crossing the field near the village.",
+    "options": ["swarm", "herd", "fleet", "stack"],
+    "answerIndex": 1,
+    "explanation": "'Herd' is the collective noun used for large herbivorous animals like elephants."
+  },
+  {
+    "id": 12,
+    "question": "You should let the vegetable soup ______ on a low flame for twenty minutes.",
+    "options": ["knead", "simmer", "sift", "pound"],
+    "answerIndex": 1,
+    "explanation": "'Simmer' means to stay just below the boiling point while bubbling gently."
+  },
+  {
+    "id": 13,
+    "question": "A ______ person prefers to live with very few possessions and stay focused on essentials.",
+    "options": ["minimalist", "affluent", "pauper", "swarm"],
+    "answerIndex": 0,
+    "explanation": "A minimalist is someone who advocates for simplicity and minimal consumption."
+  },
+  {
+    "id": 14,
+    "question": "The navy sent a ______ of ships to protect the coastal trade routes.",
+    "options": ["herd", "swarm", "fleet", "stack"],
+    "answerIndex": 2,
+    "explanation": "'Fleet' is the collective noun for a group of ships."
+  },
+  {
+    "id": 15,
+    "question": "Before we started the exercise, we ______ a light healthy snack.",
+    "options": ["ate", "have eaten", "had eaten", "eat"],
+    "answerIndex": 2,
+    "explanation": "The snack was eaten before the exercise started, so Past Perfect is used."
+  },
+  {
+    "id": 16,
+    "question": "Instruction: 'Dice the carrots into small cubes.' Passive: The carrots ______ into small cubes.",
+    "options": ["is diced", "are diced", "were diced", "dicing"],
+    "answerIndex": 1,
+    "explanation": "'Are diced' is the correct present passive form for a plural instruction."
+  },
+  {
+    "id": 17,
+    "question": "There is a large ______ of wood in the backyard for the winter.",
+    "options": ["fleet", "stack", "herd", "swarm"],
+    "answerIndex": 1,
+    "explanation": "'Stack' is the collective noun used for items piled on top of each other, like wood."
+  },
+  {
+    "id": 18,
+    "question": "Direct: 'I spent all my savings on junk food,' he admitted. Indirect: He admitted that he ______ all his savings on junk food.",
+    "options": ["spends", "spent", "had spent", "has spent"],
+    "answerIndex": 2,
+    "explanation": "The Simple Past 'spent' shifts to Past Perfect 'had spent' in indirect speech."
+  },
+  {
+    "id": 19,
+    "question": "To remove lumps from the cocoa powder, you must ______ it first.",
+    "options": ["sift", "knead", "simmer", "pound"],
+    "answerIndex": 0,
+    "explanation": "'Sift' means to put a fine substance through a sieve to remove lumps."
+  },
+  {
+    "id": 20,
+    "question": "Which word is a synonym for 'wealthy'?",
+    "options": ["Pauper", "Minimalist", "Affluent", "Poverty"],
+    "answerIndex": 2,
+    "explanation": "'Affluent' and 'wealthy' are synonyms meaning having a great deal of money."
+  }
+]

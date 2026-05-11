@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Direct: 'Polythene is destroying our soil,' said the activist. Indirect: The activist said that polythene ______ their soil.",
+    "options": ["is destroying", "was destroying", "will destroy", "destroys"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, the present continuous 'is destroying' shifts to the past continuous 'was destroying'."
+  },
+  {
+    "id": 2,
+    "question": "People ______ throw plastic bottles into the river, causing massive blockages.",
+    "options": ["carelessly", "careless", "care", "cared"],
+    "answerIndex": 0,
+    "explanation": "'Carelessly' is an adverb of manner that describes how people throw the bottles."
+  },
+  {
+    "id": 3,
+    "question": "Which of the following sentences follows the correct capitalization rules for bodies of water?",
+    "options": ["The indian ocean is full of plastic.", "The Indian ocean is full of plastic.", "The Indian Ocean is full of plastic.", "the indian Ocean is full of plastic."],
+    "answerIndex": 2,
+    "explanation": "Proper names of bodies of water, like the 'Indian Ocean', must have both words capitalized."
+  },
+  {
+    "id": 4,
+    "question": "Direct: 'We will ban single-use plastics,' the official stated. Indirect: The official stated that they ______ single-use plastics.",
+    "options": ["will ban", "would ban", "are banning", "banned"],
+    "answerIndex": 1,
+    "explanation": "When converting to indirect speech, the modal 'will' changes to 'would'."
+  },
+  {
+    "id": 5,
+    "question": "Microplastics are ______ small to be seen with the naked eye.",
+    "options": ["extremely", "extreme", "extremity", "extremes"],
+    "answerIndex": 0,
+    "explanation": "'Extremely' is an adverb of degree used to modify the adjective 'small'."
+  },
+  {
+    "id": 6,
+    "question": "Identify the correct capitalization for a government body:",
+    "options": ["central environmental authority", "Central Environmental Authority", "Central environmental Authority", "central Environmental authority"],
+    "answerIndex": 1,
+    "explanation": "Official names of government departments or bodies are proper nouns and require capitalization."
+  },
+  {
+    "id": 7,
+    "question": "We should ______ reuse our bags when we go to the market.",
+    "options": ["always", "yesterday", "everywhere", "bravely"],
+    "answerIndex": 0,
+    "explanation": "'Always' is an adverb of frequency, indicating how often the action should occur."
+  },
+  {
+    "id": 8,
+    "question": "Direct: 'The factory dumped waste here yesterday,' he said. Indirect: He said that the factory had dumped waste ______ the day before.",
+    "options": ["here", "there", "now", "everywhere"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, the word 'here' shifts to 'there' to indicate a change in place."
+  },
+  {
+    "id": 9,
+    "question": "The pollution problem is getting worse ______, so we must act now.",
+    "options": ["today", "here", "slowly", "rarely"],
+    "answerIndex": 0,
+    "explanation": "'Today' is an adverb of time, indicating when the situation is occurring."
+  },
+  {
+    "id": 10,
+    "question": "Which planet is capitalized correctly in this sentence?",
+    "options": ["Plastic waste has not reached planet mars yet.", "Plastic waste has not reached Planet Mars yet.", "Plastic waste has not reached planet Mars yet.", "Both B and C are acceptable."],
+    "answerIndex": 3,
+    "explanation": "Names of planets (Mars) are proper nouns. 'Planet' can be capitalized if used as part of the title."
+  },
+  {
+    "id": 11,
+    "question": "The chemical fumes from burning polythene spread ______ through the air.",
+    "options": ["rapidly", "rapid", "rapidity", "more rapid"],
+    "answerIndex": 0,
+    "explanation": "'Rapidly' is an adverb of manner describing how the fumes spread."
+  },
+  {
+    "id": 12,
+    "question": "Direct: 'I have never used a plastic straw,' she claimed. Indirect: She claimed that she ______ a plastic straw.",
+    "options": ["never used", "has never used", "had never used", "will never use"],
+    "answerIndex": 2,
+    "explanation": "The present perfect 'have never used' shifts to the past perfect 'had never used' in reported speech."
+  },
+  {
+    "id": 13,
+    "question": "Volunteers searched ______ for plastic waste along the coastline.",
+    "options": ["everywhere", "tomorrow", "often", "completely"],
+    "answerIndex": 0,
+    "explanation": "'Everywhere' is an adverb of place, indicating the location of the search."
+  },
+  {
+    "id": 14,
+    "question": "Which of the following is a correct example of starting a sentence with a capital letter?",
+    "options": ["polythene is a non-biodegradable material.", "Polythene is a non-biodegradable material.", "pOlYtHeNe is a non-biodegradable material.", "none of the above"],
+    "answerIndex": 1,
+    "explanation": "Every sentence must begin with a capital letter regardless of the word type."
+  },
+  {
+    "id": 15,
+    "question": "The impact of polythene on marine life is ______ devastating.",
+    "options": ["quite", "quiet", "quitting", "quietly"],
+    "answerIndex": 0,
+    "explanation": "'Quite' is an adverb of degree used to emphasize the adjective 'devastating'."
+  },
+  {
+    "id": 16,
+    "question": "Direct: 'Don't burn plastic!' the teacher warned. Indirect: The teacher warned us ______ plastic.",
+    "options": ["to not burn", "not to burn", "don't burn", "to burn not"],
+    "answerIndex": 1,
+    "explanation": "Negative imperatives in reported speech use the structure 'not + to + infinitive'."
+  },
+  {
+    "id": 17,
+    "question": "We ______ see turtles choking on plastic bags in the ocean.",
+    "options": ["frequently", "frequent", "frequency", "frequented"],
+    "answerIndex": 0,
+    "explanation": "'Frequently' is an adverb of frequency describing how often the event is seen."
+  },
+  {
+    "id": 18,
+    "question": "Which sentence uses capitalization correctly for a specific person and place?",
+    "options": ["mr. Perera visited the Kelani River.", "Mr. perera visited the kelani river.", "Mr. Perera visited the Kelani River.", "mr perera visited the kelani river."],
+    "answerIndex": 2,
+    "explanation": "Titles (Mr.), names (Perera), and specific geographical features (Kelani River) must all be capitalized."
+  },
+  {
+    "id": 19,
+    "question": "The wind blew the light polythene bags ______ into the trees.",
+    "options": ["upwards", "loudly", "yesterday", "seldom"],
+    "answerIndex": 0,
+    "explanation": "'Upwards' is an adverb of place/direction."
+  },
+  {
+    "id": 20,
+    "question": "Direct: 'Is polythene banned in Sri Lanka?' the tourist asked. Indirect: The tourist asked ______ polythene was banned in Sri Lanka.",
+    "options": ["that", "if", "weather", "when"],
+    "answerIndex": 1,
+    "explanation": "For 'Yes/No' questions in reported speech, we use 'if' or 'whether' as a connector."
+  }
+]

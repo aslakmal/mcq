@@ -1,0 +1,147 @@
+[
+  {
+    "id": 1,
+    "question": "The girl _______ won the prize is my friend. Choose the relative pronoun.",
+    "options": ["which", "who", "where", "when"],
+    "answerIndex": 1,
+    "explanation": "We use 'who' for people when they are the subject of the clause."
+  },
+  {
+    "id": 2,
+    "question": "The book _______ I bought yesterday is very interesting.",
+    "options": ["who", "whose", "which", "where"],
+    "answerIndex": 2,
+    "explanation": "We use 'which' or 'that' for things (non-personal nouns)."
+  },
+  {
+    "id": 3,
+    "question": "This is the house _______ my grandfather was born.",
+    "options": ["when", "who", "which", "where"],
+    "answerIndex": 3,
+    "explanation": "We use 'where' for nouns that refer to a place."
+  },
+  {
+    "id": 4,
+    "question": "I remember the day _______ we first met.",
+    "options": ["when", "where", "which", "who"],
+    "answerIndex": 0,
+    "explanation": "We use 'when' for nouns that refer to a time."
+  },
+  {
+    "id": 5,
+    "question": "The man _______ car was stolen went to the police.",
+    "options": ["who", "whom", "whose", "which"],
+    "answerIndex": 2,
+    "explanation": "'Whose' is used to show possession for both people and things."
+  },
+  {
+    "id": 6,
+    "question": "Which type of clause gives 'non-essential' extra information?",
+    "options": ["Defining relative clause", "Non-defining relative clause", "Main clause", "Active clause"],
+    "answerIndex": 1,
+    "explanation": "Non-defining relative clauses add extra info that is not needed for the sentence to be meaningful."
+  },
+  {
+    "id": 7,
+    "question": "Choose the correct sentence with commas:",
+    "options": [
+      "My brother who lives in Kandy is a doctor.",
+      "My brother, who lives in Kandy is a doctor.",
+      "My brother, who lives in Kandy, is a doctor.",
+      "My brother who lives in Kandy, is a doctor."
+    ],
+    "answerIndex": 2,
+    "explanation": "Non-defining clauses in the middle of a sentence need commas before and after them."
+  },
+  {
+    "id": 8,
+    "question": "We _______ use the relative pronoun 'that' in non-defining clauses.",
+    "options": ["always", "must", "do not", "can"],
+    "answerIndex": 2,
+    "explanation": "The word 'that' cannot be used in non-defining relative clauses."
+  },
+  {
+    "id": 9,
+    "question": "The boy _______ I met at the library is very clever.",
+    "options": ["which", "whom", "where", "when"],
+    "answerIndex": 1,
+    "explanation": "We use 'whom' for people when they are the object of the clause."
+  },
+  {
+    "id": 10,
+    "question": "A _______ relative clause tells us exactly which person or thing we mean.",
+    "options": ["defining", "non-defining", "past", "future"],
+    "answerIndex": 0,
+    "explanation": "A defining relative clause identifies the specific noun coming before it."
+  },
+  {
+    "id": 11,
+    "question": "Mr. Silva, _______ is our principal, is very kind.",
+    "options": ["that", "who", "which", "where"],
+    "answerIndex": 1,
+    "explanation": "Since there are commas (non-defining), we must use 'who' and not 'that' for the person."
+  },
+  {
+    "id": 12,
+    "question": "The laptop _______ is on the table belongs to Ravi.",
+    "options": ["who", "whom", "that", "where"],
+    "answerIndex": 2,
+    "explanation": "'That' or 'which' is used for things in a defining clause."
+  },
+  {
+    "id": 13,
+    "question": "That is the school _______ my mother teaches English.",
+    "options": ["where", "when", "who", "which"],
+    "answerIndex": 0,
+    "explanation": "'Where' refers to the location (the school)."
+  },
+  {
+    "id": 14,
+    "question": "Sunday is the day _______ I play football with friends.",
+    "options": ["where", "which", "who", "when"],
+    "answerIndex": 3,
+    "explanation": "'When' refers to the time (Sunday)."
+  },
+  {
+    "id": 15,
+    "question": "The cake, _______ my sister made, was delicious.",
+    "options": ["that", "which", "who", "whom"],
+    "answerIndex": 1,
+    "explanation": "For a thing in a non-defining clause (with commas), we use 'which'."
+  },
+  {
+    "id": 16,
+    "question": "The students _______ study hard will pass the exam.",
+    "options": ["who", "which", "where", "when"],
+    "answerIndex": 0,
+    "explanation": "'Who' identifies the specific group of students."
+  },
+  {
+    "id": 17,
+    "question": "I saw a dog _______ tail was very short.",
+    "options": ["who", "which", "whose", "that"],
+    "answerIndex": 2,
+    "explanation": "'Whose' is used to show the dog's possession of the tail."
+  },
+  {
+    "id": 18,
+    "question": "Kamal, _______ lives next door, is a famous artist.",
+    "options": ["which", "that", "who", "whom"],
+    "answerIndex": 2,
+    "explanation": "Use 'who' for people in a non-defining clause."
+  },
+  {
+    "id": 19,
+    "question": "The pen _______ is in your pocket is mine.",
+    "options": ["who", "whom", "which", "where"],
+    "answerIndex": 2,
+    "explanation": "'Which' is used for the object (the pen)."
+  },
+  {
+    "id": 20,
+    "question": "The town _______ I live is very quiet.",
+    "options": ["which", "who", "when", "where"],
+    "answerIndex": 3,
+    "explanation": "'Where' is used to refer to the place (the town)."
+  }
+]

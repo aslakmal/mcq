@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "question": "Direct: 'It looks very nice.' Reported: Uncle Angelo said that it _______ very nice.",
+    "options": ["looks", "looked", "is looking", "will look"],
+    "answerIndex": 1,
+    "explanation": "In reported speech, the simple present verb 'looks' changes to the simple past 'looked'."
+  },
+  {
+    "id": 2,
+    "question": "Direct: 'I decided to shave it off.' Reported: He said that he _______ to shave it off.",
+    "options": ["decided", "has decided", "had decided", "decides"],
+    "answerIndex": 2,
+    "explanation": "The simple past tense ('decided') changes into the past perfect tense ('had decided') in reported speech."
+  },
+  {
+    "id": 3,
+    "question": "Which of these is a POSITIVE adjective to describe a person?",
+    "options": ["Stingy", "Helpful", "Lazy", "Careless"],
+    "answerIndex": 1,
+    "explanation": "'Helpful' is a positive trait, while the others are negative qualities."
+  },
+  {
+    "id": 4,
+    "question": "Which adjective is the opposite of 'Hardworking'?",
+    "options": ["Honest", "Loyal", "Lazy", "Friendly"],
+    "answerIndex": 2,
+    "explanation": "'Lazy' is a negative adjective used for someone who does not like to work."
+  },
+  {
+    "id": 5,
+    "question": "Direct: 'He is my new boss.' Reported: Uncle Angelo said that he _______ the new boss.",
+    "options": ["is", "was", "been", "being"],
+    "answerIndex": 1,
+    "explanation": "The present tense 'is' changes to the past tense 'was' when reporting the statement."
+  },
+  {
+    "id": 6,
+    "question": "Someone who tells the truth is _______.",
+    "options": ["Untidy", "Truthful", "Noisy", "Wasteful"],
+    "answerIndex": 1,
+    "explanation": "'Truthful' is a positive adjective for a person who does not tell lies."
+  },
+  {
+    "id": 7,
+    "question": "A person who does not like to spend money or share is called _______.",
+    "options": ["Stingy", "Kind", "Obedient", "Loyal"],
+    "answerIndex": 0,
+    "explanation": "'Stingy' is a negative adjective for someone who is not generous."
+  },
+  {
+    "id": 8,
+    "question": "Which of these is a NEGATIVE adjective?",
+    "options": ["Honest", "Kind", "Hot-tempered", "Loyal"],
+    "answerIndex": 2,
+    "explanation": "'Hot-tempered' describes someone who gets angry very easily, which is a negative trait."
+  },
+  {
+    "id": 9,
+    "question": "A person who follows rules and does what they are told is _______.",
+    "options": ["Careless", "Noisy", "Obedient", "Wasteful"],
+    "answerIndex": 2,
+    "explanation": "'Obedient' is a positive adjective often used for students or children who follow instructions."
+  },
+  {
+    "id": 10,
+    "question": "Someone who is always messy and does not clean up is _______.",
+    "options": ["Untidy", "Friendly", "Honest", "Helpful"],
+    "answerIndex": 0,
+    "explanation": "'Untidy' is a negative adjective for someone who is not neat."
+  },
+  {
+    "id": 11,
+    "question": "Direct: 'I lost my keys.' Reported: He said that he _______ his keys.",
+    "options": ["loses", "lost", "had lost", "will lose"],
+    "answerIndex": 2,
+    "explanation": "The simple past 'lost' backshifts to the past perfect 'had lost'."
+  },
+  {
+    "id": 12,
+    "question": "Which adjective describes someone you can always trust to be on your side?",
+    "options": ["Loyal", "Stingy", "Noisy", "Careless"],
+    "answerIndex": 0,
+    "explanation": "'Loyal' is a positive adjective for a faithful friend or supporter."
+  },
+  {
+    "id": 13,
+    "question": "If a person throws away things that are still useful, they are _______.",
+    "options": ["Wasteful", "Truthful", "Kind", "Honest"],
+    "answerIndex": 0,
+    "explanation": "'Wasteful' is a negative adjective for someone who uses resources badly."
+  },
+  {
+    "id": 14,
+    "question": "Reported: She said that she _______ tired. (Direct: 'I am tired.')",
+    "options": ["is", "was", "were", "be"],
+    "answerIndex": 1,
+    "explanation": "The present state 'am' changes to 'was' in the past."
+  },
+  {
+    "id": 15,
+    "question": "A person who does things without thinking or without focus is _______.",
+    "options": ["Careless", "Helpful", "Truthful", "Obedient"],
+    "answerIndex": 0,
+    "explanation": "'Careless' is a negative adjective for someone who doesn't pay attention."
+  },
+  {
+    "id": 16,
+    "question": "Which adjective describes someone who makes a lot of sound?",
+    "options": ["Noisy", "Kind", "Honest", "Untidy"],
+    "answerIndex": 0,
+    "explanation": "'Noisy' is generally a negative adjective for someone who is loud."
+  },
+  {
+    "id": 17,
+    "question": "Direct: 'We liked the food.' Reported: They said that they _______ the food.",
+    "options": ["like", "liked", "had liked", "likes"],
+    "answerIndex": 2,
+    "explanation": "The simple past 'liked' changes to the past perfect 'had liked'."
+  },
+  {
+    "id": 18,
+    "question": "Which of these is a positive quality in a friend?",
+    "options": ["Hot-tempered", "Wasteful", "Friendly", "Stingy"],
+    "answerIndex": 2,
+    "explanation": "Being 'friendly' is a positive social adjective."
+  },
+  {
+    "id": 19,
+    "question": "A person who never tells lies is an _______ person.",
+    "options": ["Honest", "Untidy", "Lazy", "Careless"],
+    "answerIndex": 0,
+    "explanation": "'Honest' is a positive adjective for someone who is truthful."
+  },
+  {
+    "id": 20,
+    "question": "In reported speech, what does the simple past tense change into?",
+    "options": ["Simple Present", "Future Tense", "Past Perfect", "Present Continuous"],
+    "answerIndex": 2,
+    "explanation": "According to the learning point, simple past shifts to past perfect."
+  }
+]
