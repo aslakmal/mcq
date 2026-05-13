@@ -514,8 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   topicList.addEventListener('click', event => {
     const li = event.target.closest('li');
-
-    if (!li || li.parentElement !== topicList) return;
+  //  if (!li || li.parentElement !== topicList) return;
 
     topicList.querySelectorAll('li').forEach(item => {
       item.classList.remove('active');
@@ -524,6 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
     li.classList.add('active');
 
     const file = li.dataset.file.split('.')[0];
+   
     loadQuestions(file);
   });
 
@@ -955,12 +955,12 @@ async function initiateLiveExam(btn, file) {
   }
 
 
-  const categoryNumber = file.replace('.json', '');
+  const categoryNumber = 'english/'+file.replace('.json', '');
 
   try {
     const examRef = ref(db, 'liveExams/' + uniqueID);
     await set(examRef, {
-      category: categoryNumber,
+      file: categoryNumber,
       status: "active",
       timestamp: Date.now()
     });
@@ -1159,14 +1159,14 @@ window.startExam = async () => {
 
       if (examData.status === "active") {
         closePopup();
-        examCat = examData.category;
+        examCat = examData.file;
 
         const liitem = document.querySelector(`li[data-file="${examCat}.json"]`);
         if (liitem) {
           const section = liitem.closest("section");
           examClass = [...section.classList].find(c => c !== "grade");
         }
-        loadliveQuestions(examData.category);
+        loadliveQuestions(examData.file);
         return;
       } else if (examData.status === "paused") {
         alertbox("This exam is currently paused.");
