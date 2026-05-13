@@ -1,0 +1,372 @@
+:root {
+    --primary: #2c3e50;
+    --gold: #f1c40f;
+    --accent: #e67e22;
+    --blue: #3498db;
+    --purple: #9b59b6;
+    --success: #27ae60;
+}
+
+.body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    padding: 10px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+#beam {
+    width: 100%;
+    height: 10px;
+    background: var(--primary);
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    border-radius: 10px;
+}
+
+.pan-container {
+    position: absolute;
+    top: 10px;
+    transition: transform 0.8s;
+    width: 30%;
+    /* Narrower pans for mobile */
+}
+
+#left-container {
+    left: -5%;
+}
+
+#right-container {
+    right: -5%;
+}
+
+.pan {
+    width: 100%;
+    min-height: 80px;
+    background: var(--gold);
+    border: 3px solid #d4ac0d;
+    border-radius: 0 0 50px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+/* Control Panel */
+.controls {
+    width: 95%;
+    max-width: 600px;
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 2 rows on mobile */
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tab-btn {
+    padding: 5px;
+    font-size: 2rem;
+    border: none;
+    border-radius: 12px;
+    background: #f8f9fa;
+}
+
+.tab-btn.active {
+    background: #40d340;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+input {
+    width: 70px;
+    padding: 12px;
+    font-size: 1.2rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+}
+
+/* Action Buttons Stacking */
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.side-btn {
+    padding: 18px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #00BCD4, #2196F3);
+    box-shadow: 0 0 5px 4px #00000024;
+}
+
+
+
+#stage {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Pillar & Pivot */
+.pillar {
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    height: 300px;
+    background: #7f8c8d;
+    border-radius: 10px 10px 0 0;
+}
+
+.pivot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #2c3e50;
+    border-radius: 50%;
+    z-index: 10;
+    display: flex;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+/* The Beam */
+#beam {
+    position: absolute;
+    top: 90px;
+    /* Aligned with pivot */
+    width: 500px;
+    height: 12px;
+    background: #34495e;
+    border-radius: 10px;
+    transform-origin: center center;
+    transition: transform 0.8s ease-out;
+    max-width: 90%;
+}
+
+/* Pan Assembly */
+.pan-assembly {
+    position: absolute;
+    top: 6px;
+    /* Hangs from the middle of the beam */
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.8s ease-out;
+}
+
+.left-pan-pos {
+    left: -60px;
+    transform-origin: top center;
+}
+
+.right-pan-pos {
+    right: -60px;
+    transform-origin: top center;
+}
+
+/* V-Shaped Cables */
+.cable-container {
+    position: relative;
+    width: 160px;
+    height: 120px;
+}
+
+.cable {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 150px;
+    background: #34495e;
+    transform-origin: top center;
+}
+
+.cable-l {
+    left: 50%;
+    transform: rotate(30deg);
+}
+
+.cable-r {
+    left: 50%;
+    transform: rotate(-30deg);
+}
+
+/* The Bowl (Customizable Pan) */
+.bowl {
+    min-width: 250px;
+    height: 120px;
+    background: linear-gradient(to bottom, #fffdf6, #ffffff);
+    border: 3px solid #b8860b;
+    border-radius: 0 0 40px 40px;
+    box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.pan-text {
+    color: #1a252f;
+    font-weight: bold;
+    font-size: 50px;
+    text-align: center;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .pan {
+        font-size: 0.85rem;
+        min-height: 60px;
+    }
+
+    .left-pan-pos {
+        left: -30px;
+    }
+
+    .right-pan-pos {
+        right: -30px;
+    }
+
+    .bowl {
+        width: 140px;
+        height: 70px;
+        min-width: 140px;
+    }
+
+    .cable {
+        height: 140px;
+    }
+
+    .pan-text {
+        font-size: 30px;
+    }
+
+    .pivot {
+        top: 47%;
+        font-size: 18px;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+#undo-btn:disabled {
+    background-color: #95a5a6 !important;
+    /* Grey color when disabled */
+    box-shadow: none;
+    transform: none;
+}
+
+.side-btn span {
+    transform: rotate(180deg);
+    display: block;
+    font-size: 40px;
+    line-height: 20px;
+    font-weight: 100;
+}
+body,button{font-size: 25px;}
+.accordion {
+display: grid;
+/* This creates a responsive grid: boxes will be at least 300px wide */
+grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+gap: 20px;
+padding: 0;
+list-style: none;
+font-family: 'Segoe UI', sans-serif;
+align-items: start;
+}
+
+/* The Feature Card */
+.accordion>li {
+background: #ffffff;
+border: 1px solid #e1e8ed;
+border-radius: 12px;
+padding: 24px;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+display: flex;
+flex-direction: column;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Hover effect to make it feel interactive */
+.accordion>li:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+border-color: #007bff;
+}
+
+/* Heading style inside the card */
+.accordion>li h4 {
+margin: 0 0 12px 0;
+color: #007bff;
+font-size: 1.25rem;
+padding-bottom: 8px;
+}
+.accordion {
+list-style: none;
+padding: 0;
+}
+
+.accordion li {
+border-bottom: 1px solid #ddd;
+cursor: pointer;
+}
+
+.accordion h4 {
+margin: 0;
+padding: 15px;
+display: flex;
+justify-content: space-between;
+}
+
+.accordion h4::after {
+content: '+'; /* Visual indicator */
+}
+
+.accordion li.active h4::after {
+content: '-';
+}
+.lcontent {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease-out; /* The sliding effect */
+background: white;
+}

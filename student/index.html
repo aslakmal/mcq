@@ -1,1 +1,884 @@
-xds
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>O/L English</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@100..900&display=swap" rel="stylesheet">
+  <!--<link rel="manifest" href="manifest.json">-->
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <meta name="theme-color" content="#162367">
+  <style>
+    #app-content {
+      display: none;
+    }
+
+    #gatekeeper {
+      padding: 20px;
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+
+    body {
+      font-family: "Noto Sans Sinhala", sans-serif;
+      line-height: 1.6;
+      margin: 5px;
+      font-weight: 100;
+      color: #ffffff;
+      background: linear-gradient(0deg, #162367, #094741);
+      background-repeat: no-repeat;
+      background-size: cover;
+      min-height: 100vh;
+      font-size: 15px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    a {
+      color: #FF9800;
+      text-decoration: none;
+    }
+
+    #menu-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1001;
+      background: #004d40;
+      ;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #fff
+    }
+
+    .question-container {
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+
+    .question {
+      margin-bottom: 10px;
+    }
+
+    .options ul,.disabledoptions ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .options li {
+      min-width: 100px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      padding: 6px;
+      box-shadow: 0 2px 3px #00000036;
+      background-size: 200% 200%;
+      transition: background-position 0.3s ease;
+    }
+
+    .options li.selected {
+      background: #23777d !important;
+    }
+
+    /* .options li:hover{background-position: 200% 0;}*/
+    #explanation-popup {
+      color: #ffffff;
+      background: linear-gradient(0deg, #162367, #094741);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .5s ease;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      margin: 0;
+      padding-top: 10px;
+      height: 100vh;
+    }
+
+    #explanation-popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+
+
+    #explanation-text {
+      margin: 0 10px 30px;
+      overflow-y: scroll;
+      max-height: 70vh;
+    }
+
+    .divider {
+      padding: 10px;
+    }
+
+    #explanation-quiz {
+      margin: 40px 10px;
+    }
+
+    .explanation h4 {
+      margin-top: 0;
+    }
+
+    #questions-container {
+      max-width: 600px;
+      margin: auto;
+      padding-top: 100px;
+    }
+
+    .closebtn {
+      position: fixed;
+      right: 20px;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 25px;
+      cursor: pointer
+    }
+
+    #prvnxt {
+      margin: 20px auto;
+      width: max-content;
+      display: flex;
+      gap: 30px;
+    }
+
+    #prev-btn,
+    #next-btn {
+      padding: 20px;
+      border: none;
+      box-shadow: 0 6px 11px #00000036;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    #prev-btn {
+      background: transparent;
+    }
+
+    #next-btn {
+      background: transparent;
+    }
+
+    mjx-container[jax="CHTML"][display="true"] {
+      display: unset !important;
+    }
+
+    mjx-container {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+    }
+
+    #topic-list {
+      opacity: 0;
+      position: fixed;
+      top: 50px;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      background: #ffffff00;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      /* transform: translateX(-100%);*/
+      /* Hide by moving left */
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 10px;
+      pointer-events: none;
+    }
+
+    #topic-list.open {
+      /* transform: translateX(0);
+      /* Slide into view */
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .topic-list li,
+    .mcq-list li {
+      padding: 10px 15px;
+      background: linear-gradient(239deg, #009688, #009688, #43A047);
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .topic-list li ul li {
+      background: linear-gradient(328deg, #009688, #009688, #4CAF50);
+    }
+
+    .mcq-list li:hover,
+    .mcq-list li.active {
+      background: #195953;
+    }
+
+    #topic-list li>ul {
+      margin-top: 0px;
+      padding: 0;
+    }
+
+    #topic-list ul,
+    .submenu {
+      max-height: 0;
+      overflow: scroll;
+      transition: max-height 0.6s ease;
+    }
+
+    #topic-list li.open>ul {
+      max-height: 500px;
+    }
+
+    #topic-list li.open .submenu {
+      max-height: 50px;
+    }
+
+    #topic-list li {
+      cursor: pointer;
+      user-select: none;
+      font-weight: 400;
+      font-size: 16px;
+    }
+
+    #topic-list span {
+      padding: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    #topic-list li div {
+      display: flex;
+    }
+
+    #topic-list li div img {
+      width: 80px;
+    }
+
+    #topic-list>li {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    #topic-list.open>li {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #topic-list.open>li:nth-child(1) {
+      transition-delay: 0.05s;
+    }
+
+    #topic-list.open>li:nth-child(2) {
+      transition-delay: 0.2s;
+    }
+
+    #topic-list.open>li:nth-child(3) {
+      transition-delay: 0.3s;
+    }
+
+    #topic-list.open>li:nth-child(4) {
+      transition-delay: 0.4s;
+    }
+
+    #topic-list.open>li:nth-child(5) {
+      transition-delay: 0.5s;
+    }
+
+    /* Add more if needed */
+
+    /* Add more if needed */
+
+
+
+    #explanation-text::-webkit-scrollbar {
+      width: 4px;
+    }
+
+
+
+    #explanation-text::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    .longdivex {
+      float: right;
+      width: 80%;
+      line-height: 13px;
+      font-size: 10px;
+    }
+
+    .sadk {
+      position: relative;
+      margin-top: 25px;
+      width: 140px;
+      height: 50px;
+    }
+
+    .sadk .MathJax {
+      position: absolute !important;
+      right: 0;
+      top: 15px;
+    }
+
+    .longdivex p {
+      background: #1c5e7c;
+      width: fit-content;
+      padding: 5px;
+      border-radius: 0 5px 5px;
+      margin-bottom: 2px;
+    }
+
+    .graph-container {
+      background: #fff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .prime_divide>div {
+      display: flex;
+      line-height: 26px;
+      align-items: center;
+    }
+
+    .prime_divide>div:not(:last-child)>span:nth-child(2) {
+      padding: 2px 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .prime_divide>div>span:nth-child(2) {
+      min-width: 30px;
+    }
+
+    .prime_divide>div>span:nth-child(3) {
+      font-size: 10px;
+      line-height: 13px;
+    }
+
+    #explain-btn {
+      padding: 20px;
+      border: none;
+      box-shadow: 0 6px 11px #00000036;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(112deg, #009688, #009688, #43A047);
+      margin: auto;
+      display: block;
+    }
+
+    #scores-panel {
+      padding-top: 100px;
+    }
+
+    #topicChart {
+      margin-top: 0 !important
+    }
+
+    .chart-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #examChartWrapper,
+    #topicChartWrapper {
+      position: relative;
+    }
+
+    #tute-list a {
+      color: #fff
+    }
+
+    /* If the app is running as a standalone PWA, hide the button */
+    @media (display-mode: standalone) {
+      .open-btn {
+        display: none;
+      }
+    }
+
+    .open-btn {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      padding: 7px;
+      left: 0;
+      z-index: 99999;
+    }
+
+    .open-btn a {
+      color: #000
+    }
+
+    .alert-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    backdrop-filter: blur(4px);
+}
+
+.alert-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.alert-close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+#alert-message {
+    font-size: 16px;
+    margin: 15px 0;
+    color: #333;
+}
+
+.alert-ok-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Color Types */
+.alert-success { border-top: 8px solid #4CAF50; }
+.alert-error { border-top: 8px solid #f44336; }
+.alert-warning { border-top: 8px solid #ff9800; }
+#studentData{display: flex;
+    flex-direction: column;}
+#studentData input{padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 2px;}
+    .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}    
+
+/* container */
+#score-list {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+}
+
+/* list */
+#score-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* each row */
+#score-list li {
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+
+/* center loading */
+.loading {
+  text-align: center;
+  padding: 10px;
+}
+
+/* base button style */
+.control-btn {
+  padding: 8px 14px;
+  margin: 5px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  transition: all 0.2s ease;
+  box-shadow: 0px 1px 4px 3px #00000033;
+}
+
+/* hover effect */
+.control-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* active click */
+.control-btn:active {
+  transform: scale(0.96);
+}
+
+/* PLAY */
+.play {
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+}
+
+/* PAUSE */
+.pause {
+  background: linear-gradient(135deg, #ff9800, #ef6c00);
+}
+
+/* STOP */
+.stop {
+  background: linear-gradient(135deg, #f44336, #c62828);
+}
+
+/* REFRESH */
+.refresh {
+  background: linear-gradient(135deg, #2196F3, #1565c0);
+}
+
+
+.control-btn:disabled {
+  background: gray !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.share-btn{border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 10px 15px;
+    background: #162577;
+  display: flex;
+    align-items: center;
+    gap: 8px;}
+ 
+
+
+.share-btn.active::after{
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    background: #00ff88;
+
+    box-shadow: 0 0 8px #00ff88;
+
+    animation: liveBlink 2s infinite;
+}
+.share-btn.paused::after{
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #c8800e;
+}
+
+@keyframes liveBlink{
+    0%{
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50%{
+        opacity: 0.3;
+        transform: scale(0.7);
+    }
+
+    100%{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+  </style>
+
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        packages: { '[+]': ['ams'] }
+      },
+      options: {
+        enableMenu: false
+      },
+      chtml: {
+        mtextInheritFont: true,
+        fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2'
+      },
+      loader: {
+        load: ['[tex]/ams']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"
+    crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+ //import{initializeApp as i}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";import{getDatabase as t,ref as e,get as n,set as r}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";const a={apiKey:"AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",authDomain:"stable-synapse-241016.firebaseapp.com",databaseURL:"https://stable-synapse-241016-default-rtdb.firebaseio.com",projectId:"stable-synapse-241016",storageBucket:"stable-synapse-241016.firebasestorage.app",messagingSenderId:"311188310788",appId:"1:311188310788:web:888512a24236ba39c45e51"},s=t(i(a)),o=document.getElementById("msg"),c=()=>{document.getElementById("gatekeeper").style.display="none",document.getElementById("app-content").style.display="block","serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js")},l=i=>o.innerHTML=`<span class="error">${i}</span>`;(async function(){if(window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone||"true"===localStorage.getItem("maths_verified"))return c();const i=new URLSearchParams(window.location.search).get("key");if(!i)return l("Invalid Access. Use your unique installation link.");let a=localStorage.getItem("pwa_device_id")||`DEV-${crypto.randomUUID().slice(0,8).toUpperCase()}`;localStorage.setItem("pwa_device_id",a);try{const t=await n(e(s,`licenses/${i}`));if(!t.exists())return l("License Key Not Found!");const o=t.val().devices||{};if(o[a]||Object.keys(o).length<5)o[a]||await r(e(s,`licenses/${i}/devices/${a}`),{added:Date.now()}),localStorage.setItem("maths_verified","true"),c();else l("Limit Reached! This key is already used on 5 devices.")}catch(i){o.innerText="Connection Error: "+i.message}})();
+  </script>
+
+
+
+</head>
+
+<body>
+  <div id="custom-alert" class="alert-overlay">
+    <div class="alert-content">
+        <span class="alert-close" onclick="closeAlert()">&times;</span>
+        <div id="alert-icon"></div>
+        <p id="alert-message"></p>
+        <button class="alert-ok-btn" onclick="closeAlert()">OK</button>
+    </div>
+</div>
+  <div id="gatekeeper">
+    <p id="msg">Loading..</p>
+  </div>
+  <div id="app-contents">
+    <button id="menu-toggle">
+      ☰
+    </button>
+
+
+
+    <ul class="topic-list" id="topic-list">
+
+  <!--<li>
+        <div><img src="img/on_your_mark.png" alt="On Your Mark" class="menu-icon">
+          <span>සිද්ධාන්ත</span>
+        </div>
+        <ul id="tute-list">
+          <a href="triangle.html">
+            <li data-file="triangle.html" class="active"> ත්‍රිකෝණ ප්‍රමේයයන්</li>
+          </a>
+          <a href="circle.html">
+            <li data-file="circle.html"> වෘත්ත ප්‍රමේයයන්</li>
+          </a>
+          <a href="log.html">
+            <li data-file="log.html"> ලඝුගණක</li>
+          </a>
+          <a href="trigonometry.html">
+            <li data-file="trigonometry.html"> ත්‍රිකෝණමිතිය</li>
+          </a>
+          <a href="graph.html">
+            <li data-file="triangle.html"> ශ්‍රිත/ප්‍රස්ථාර</li>
+          </a>
+          <a href="graph.html">
+            <li data-file="triangle.html"> ශ්‍රේඪි</li>
+          </a>
+          <a href="3.html">
+            <li data-file="3.html"> සමීකරණ</li>
+          </a>
+        </ul>
+      </li>-->
+      <li class="open">
+        <div> <img src="img/get_set.png" alt="Get Set" class="menu-icon">
+          <span>Subjects</span>
+        </div>
+        <ul class="mcq-list" id="mcq-list">
+          <section class="grade english_9">
+          <h3>grade 9</h3>
+          <li data-file="9/m1.json">1. Everybody is good at something</li>
+          <li data-file="9/m2.json">2. May I help you?</li>
+          <li data-file="9/m3.json">3. Meeting</li>
+          <li data-file="9/m4.json">4. Extinct friends</li>
+          <li data-file="9/m5.json">5. A second chance called tomorrow</li>
+          <li data-file="9/m6.json">6. Art</li>
+          <li data-file="9/m7.json">7. Where we are.</li>
+          <li data-file="9/m8.json">8. Success through creativity</li>
+          <li data-file="9/m9.json">9. The greatest wealth</li>
+          <li data-file="9/m10.json">10. Be happy, be bright, be you!</li>
+        </section>
+        <section class="grade english_10">
+          <h3>grade 10</h3>
+          <li data-file="10/m1.json">1. People</li>
+          <li data-file="10/m2.json">2. On Your Way</li>
+          <li data-file="10/m3.json">3. Travel</li>
+          <li data-file="10/m4.json">4. Let’s Talk</li>
+          <li data-file="10/m5.json">5. Best Practices</li>
+          <li data-file="10/m6.json">6. Information</li>
+          <li data-file="10/m7.json">7. Learning is Fun</li>
+          <li data-file="10/m8.json">8. Healthy Food</li>
+          <li data-file="10/m9.json">9. Nature</li>
+          <li data-file="10/m10.json">10. Personality</li>
+          <li data-file="10/m11.json">11. The Right Career</li>
+          <li data-file="10/m12.json">12. Success</li>
+          <li data-file="10/m13.json">13. Future</li>
+          <li data-file="10/m14.json">14. Sports</li>
+        </section>
+          <section class="grade english_11">
+          <h3>grade 11</h3>
+          <li data-file="11/m1.json">1. Our Responsibilities</li>
+          <li data-file="11/m2.json">2. Facing Challenges</li>
+          <li data-file="11/m3.json">3. Great Lanka</li>
+          <li data-file="11/m4.json">4. For A Better Tomorrow</li>
+          <li data-file="11/m5.json">5. Best Use Of Time</li>
+          <li data-file="11/m6.json">6. A Moment Of Fun</li>
+          <li data-file="11/m7.json">7. A Simple Living</li>
+          <li data-file="11/m8.json">8. Reading Is Fun</li>
+          <li data-file="11/m9.json">9. Enigma</li>
+          <li data-file="11/m10.json">10. Choices In Life</li>
+        </section>
+        </ul>
+
+      </li>
+      <li class="live_test">
+        <div> <img src="img/go.png" alt="Go" class="menu-icon">
+          <span>Exam</span>
+        </div>
+      </li>
+
+      <li id="scores">
+        <div><img src="img/victory.png" alt="Victory" class="menu-icon">
+          <span>Progress report</span>
+        </div>
+        <ul>
+          <li data-id="english_9">English 9</li>
+          <li data-id="english_10">English 10</li>
+          <li data-id="english_11">English 11</li>
+        </ul>
+      </li>
+
+    </ul>
+    <h1></h1>
+    <p></p>
+
+
+    <div id="tutes-panel">
+
+    </div>
+    <div id="scores-panel" style="display:none;">
+  
+
+
+      <br><br>
+    
+      <div id="topicChartWrapper" style="overflow-y:auto;">
+        <canvas id="topicChart" style="margin-top:40px;"></canvas>
+        <div class="chart-empty" style="display:none;">
+          <p>No data available yet</p>
+          <button class="live_test btn">Start an Exam</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Explanation popup -->
+    <div id="explanation-popup">
+      <button onclick="closePopup()" class="closebtn">&times;</button>
+      <p id="explanation-quiz"></p>
+      <div id="explanation-text"></div>
+
+    </div>
+    <div class="number-line-target">
+    </div>
+
+  </div>
+  <script src="js/home.js" type="module"></script>
+  <script src="js/translator.js"></script>
+
+  <button id="installBtn" class="open-btn">Open in App</button>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+    /* ---- PWA Logic ---- */
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    // Check if already in standalone mode
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+    // Initial Label Setup
+    if (isStandalone) {
+      installBtn.textContent = 'Open in App';
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.textContent = 'Install App'; // Change text to Install
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        // --- CASE 1: INSTALLING ---
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.textContent = 'Open in App';
+        }
+        deferredPrompt = null;
+      } else {
+        // --- CASE 2: OPENING (The behavior you liked) ---
+        // window.open mimics target="_blank" and triggers the OS 'Open in App' intent
+        window.open('/maths.html', '_blank');
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBtn.textContent = 'Open in App';
+      deferredPrompt = null;
+    });
+  </script>
+
+</body>
+
+</html>
