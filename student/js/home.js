@@ -1162,6 +1162,7 @@ window.startExam = async () => {
         const clparts = examData.file.split('/');
 
         examClass = `${clparts[0]}_${clparts[1]}`;
+        examCat=clparts[2]
         loadliveQuestions(examData.file);
         return;
       } else if (examData.status === "paused") {
