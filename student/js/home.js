@@ -1159,7 +1159,7 @@ window.startExam = async () => {
 
       if (examData.status === "active") {
         closePopup();
-        const clparts = file.split('/');
+        const clparts = examData.file.split('/');
 
         examClass = `${clparts[0]}_${clparts[1]}`;
         loadliveQuestions(examData.file);
