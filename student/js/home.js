@@ -1159,13 +1159,9 @@ window.startExam = async () => {
 
       if (examData.status === "active") {
         closePopup();
-        examCat = examData.file.split('/').slice(1).join('/');;
+        const clparts = file.split('/');
 
-        const liitem = document.querySelector(`li[data-file="${examCat}.json"]`);
-        if (liitem) {
-          const section = liitem.closest("section");
-          examClass = [...section.classList].find(c => c !== "grade");
-        }
+        examClass = `${clparts[0]}_${clparts[1]}`;
         loadliveQuestions(examData.file);
         return;
       } else if (examData.status === "paused") {
