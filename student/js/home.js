@@ -483,7 +483,7 @@ topicList.addEventListener('click', (e) => {
   }
 });
 
-document.getElementById('mcq-list').addEventListener('click', (e) => {
+document.getElementById('mcq-list')?.addEventListener('click', (e) => {
   if (e.target.tagName === 'LI') {
     document.getElementById('mcq-list').classList.remove('open');
     popup.classList.remove('show');
@@ -512,7 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
  */
   var topicList = document.getElementById('mcq-list');
 
-  topicList.addEventListener('click', event => {
+  topicList?.addEventListener('click', event => {
     const li = event.target.closest('li');
 
     if (!li || li.parentElement !== topicList) return;
@@ -1166,7 +1166,7 @@ window.startExam = async () => {
           const section = liitem.closest("section");
           examClass = [...section.classList].find(c => c !== "grade");
         }
-        loadliveQuestions(examData.category);
+        loadliveQuestions(examData.file);
         return;
       } else if (examData.status === "paused") {
         alertbox("This exam is currently paused.");
@@ -1223,7 +1223,8 @@ window.closeAlert = function () {
 };
 
 async function loadliveQuestions(jsonFilePath) {
-  catid = jsonFilePath.split('/').slice(1).join('/');;
+  console.log(jsonFilePath)
+  catid = jsonFilePath.split('/').slice(1).join('/');
   isExam = true;
 
   try {
