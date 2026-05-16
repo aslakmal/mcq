@@ -1,21 +1,40 @@
 
-function getTopicList() {
-  var topic_list = {};
-  var listItems = document.querySelectorAll('#mcq-list li');
-
-  listItems.forEach(function (li) {
-    // Extract the number from "1.json", "2.json", etc.
-    var fileName = li.getAttribute('data-file');
-    var fileNumber = fileName.replace('.json', '');
-
-    // Map the number to the Sinhala text
-    topic_list[fileNumber] = li.textContent.trim();
-  });
-
-  return topic_list;
-}
-
-var topic_list = getTopicList();
+var topic_list = {
+  "9/m1": "1. Everybody is good at something",
+  "9/m2": "2. May I help you?",
+  "9/m3": "3. Meeting",
+  "9/m4": "4. Extinct friends",
+  "9/m5": "5. A second chance called tomorrow",
+  "9/m6": "6. Art",
+  "9/m7": "7. Where we are.",
+  "9/m8": "8. Success through creativity",
+  "9/m9": "9. The greatest wealth",
+  "9/m10": "10. Be happy, be bright, be you!",
+  "10/m1": "1. People",
+  "10/m2": "2. On Your Way",
+  "10/m3": "3. Travel",
+  "10/m4": "4. Let's Talk",
+  "10/m5": "5. Best Practices",
+  "10/m6": "6. Information",
+  "10/m7": "7. Learning is Fun",
+  "10/m8": "8. Healthy Food",
+  "10/m9": "9. Nature",
+  "10/m10": "10. Personality",
+  "10/m11": "11. The Right Career",
+  "10/m12": "12. Success",
+  "10/m13": "13. Future",
+  "10/m14": "14. Sports",
+  "11/m1": "1. Our Responsibilities",
+  "11/m2": "2. Facing Challenges",
+  "11/m3": "3. Great Lanka",
+  "11/m4": "4. For A Better Tomorrow",
+  "11/m5": "5. Best Use Of Time",
+  "11/m6": "6. A Moment Of Fun",
+  "11/m7": "7. A Simple Living",
+  "11/m8": "8. Reading Is Fun",
+  "11/m9": "9. Enigma",
+  "11/m10": "10. Choices In Life"
+};
 
 /* =========================
 GLOBALS
@@ -1162,7 +1181,7 @@ window.startExam = async () => {
         const clparts = examData.file.split('/');
 
         examClass = `${clparts[0]}_${clparts[1]}`;
-        examCat=clparts[2]
+        examCat=`${clparts[1]}/${clparts[2]}`
         loadliveQuestions(examData.file);
         return;
       } else if (examData.status === "paused") {
