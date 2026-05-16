@@ -220,7 +220,7 @@ function showQuestion(question) {
 NAVIGATION
 ========================= */
 function showNextQuestion() {
-  if (currentQuestionIndex < allQuestions.length - 18) {
+  if (currentQuestionIndex < allQuestions.length - 1) {
     currentQuestionIndex++;
     showQuestion(allQuestions[currentQuestionIndex]);
   } else {
