@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algebra Balance</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="stylesheet" href="css/scale.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+   <button 
+    onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+    onmouseover="this.style.backgroundColor='#e0e0e0'" 
+    onmouseout="this.style.backgroundColor='#f8f9fa'"
+    style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;margin:5px;
+    ">
+    <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+  </button>
+    <div class="body">
+    <h2 style="margin:0">සමීකරණ තරාදිය</h2>
+    <ul class="ldesc accordion">
+        <li>
+            <h4>මොකක්ද මේ?</h4>
+            <div class="lcontent">
+               අපේ අලුත්ම සමීකරණ තරාදිය. මේකෙන් ඔයාට පුළුවන් සමීකරණයක දෙපැත්ත හරියටම සමාන වෙන්නේ කොහොමද කියලා ඇස් දෙකෙන්ම දැකගන්න.
+            </div>
+        </li>
+        <li>
+            <h4>මේකෙන් වෙන්නේ මොකක්ද?</h4>
+            <div class="lcontent">
+                තරාදියක් වගේම තමයි! සමීකරණයේ එක පැත්තක අගයක් වෙනස් කරද්දී අනිත් පැත්තට වෙන දේ බලාගන්න පුළුවන්. එකතු කිරීම්, අඩු කිරීම් කරද්දී තියෙන්න ඕනැ නීති ටික ලේසියෙන්ම ඔලුවට යනවා.
+            </div>
+        </li>
+        <li>
+            <h4>කාටද මේක වැදගත් වෙන්නේ?</h4>
+            <div class="lcontent">
+                ඔයා ගනන් වැඩ්ඩෙක් වුණත්, නැතත් මේ සමීකරණ තරාදියෙන් වැරදීම් අඩු කරගෙන ගණන් හදන එක සෙල්ලමක් වගේ ලේසියෙන් කරගන්න පුළුවන්. වැඩේ ගොඩදාගන්න දැන් හරිම ලේසී!
+            </div>
+        </li>
+    </ul>
+    <div id="stage">
+        <div class="pillar">
+            <div class="pivot">=</div>
+        </div>
+
+        <div id="beam">
+            <div class="pan-assembly left-pan-pos">
+                <div class="cable-container">
+                    <div class="cable cable-l"></div>
+                    <div class="cable cable-r"></div>
+                </div>
+                <div class="bowl">
+                    <div id="left-pan" class="pan-text"></div>
+                </div>
+            </div>
+
+            <div class="pan-assembly right-pan-pos">
+                <div class="cable-container">
+                    <div class="cable cable-l"></div>
+                    <div class="cable cable-r"></div>
+                </div>
+                <div class="bowl">
+                    <div id="right-pan" class="pan-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setTab('+', this)">+</button>
+            <button class="tab-btn" onclick="setTab('-', this)">-</button>
+            <button class="tab-btn" onclick="setTab('*', this)">×</button>
+            <button class="tab-btn" onclick="setTab('/', this)">÷</button>
+            <button class="tab-btn" onclick="setTab('^', this)">x²</button>
+            <button class="tab-btn" onclick="setTab('sqrt', this)">√</button>
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="op-value" inputmode="numeric" value="1">
+            <span id="prompt-text">ක් එකතු කරන්න</span>
+        </div>
+
+        <div class="action-grid">
+            <button class="side-btn btn-left" onclick="applyOp('left')">වමට</button>
+            <button class="side-btn btn-right" onclick="applyOp('right')">දකුණට</button>
+            <div>
+                <button id="undo-btn" class="side-btn" style="background:#e74c3c" onclick="undo()"
+                    disabled><span>&#8634;</span></button>
+                <button id="redo-btn" class="side-btn" style="background:#3498db" onclick="redo()"
+                    disabled><span>&#8635;</span></button>
+            </div> <button class="side-btn" style="background:#27ae60" onclick="initGame()">වෙනත් ගැටලුවක්</button>
+        </div>
+    </div>
+  </div>
+
+
+
+    <script src="js/scale.js"> </script>
+</body>
+
+</html>
