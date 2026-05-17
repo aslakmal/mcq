@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiBook: Triangle Congruence Mobile</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+            margin: 0;
+            padding: 5px;
+            max-width: 1250px;
+            margin: auto;
+            font-size: 30px;
+        }
+
+        .body {
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-card {
+            background: var(--card);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* Tab Bar - Scrollable on very small phones */
+        .tabs {
+            display: flex;
+            background: #e2e8f0;
+            padding: 4px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 65px;
+            padding: 12px 2px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #64748b;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--card);
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Grid for SVGs */
+        .viz-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .viz-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .canvas-wrapper {
+            text-align: center;
+            width: 100%;
+        }
+
+        .canvas-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive SVG logic */
+        svg {
+            width: 100%;
+            height: auto;
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        path {
+            transition: d 0.3s ease-in-out;
+        }
+
+        text {
+            transition: x 0.3s ease-in-out, y 0.3s ease-in-out;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            background: #f8fafc;
+            border-top: 1px solid #eee;
+        }
+
+        .slider-box label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #475569;
+        }
+
+        .slider-box span {
+            color: var(--primary);
+            float: right;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            accent-color: var(--primary);
+        }
+
+        .action-bar {
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        button.action-btn {
+            background: linear-gradient(45deg, #00BCD4, #2196F3);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        #errorMsg {
+            color: #ef4444;
+            background: #fee2e2;
+            padding: 10px;
+            margin: 10px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: none;
+            text-align: center;
+            border: 1px solid #fecaca;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+        onmouseover="this.style.backgroundColor='#e0e0e0'" onmouseout="this.style.backgroundColor='#f8f9fa'" style="
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-family: sans-serif;
+        color: #333;
+        background-color: #f8f9fa;
+        border: 1px solid #dcdcdc;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        outline: none;
+        height:auto;width:auto;
+        margin:5px
+      ">
+        <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+    </button>
+    <h3>ත්‍රිකෝණ අංගසාම්‍ය</h3>
+    <div id="errorMsg">
+        ⚠️ දත්ත දෝෂයකි: මෙම මිනුම් වලින් ත්‍රිකෝණයක් නිර්මාණය කළ නොහැක.
+    </div>
+    <div class="body">
+        <div class="app-card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="setMode('SSS', this)">පා.පා.පා</button>
+                <button class="tab-btn" onclick="setMode('SAS', this)">පා.කෝ.පා</button>
+                <button class="tab-btn" onclick="setMode('ASA', this)">කෝ.කෝ.පා</button>
+                <button class="tab-btn" onclick="setMode('RHS', this)">කර්ණ.පා</button>
+            </div>
+
+            <div class="viz-row">
+                <div class="canvas-wrapper">
+                    <div class="canvas-label">Triangle A</div>
+                    <svg id="svgA" viewBox="0 0 400 300">
+                        <path id="triA" fill="rgba(37, 99, 235, 0.1)" stroke="#2563eb" stroke-width="3" />
+                        <path id="arcA" fill="none" stroke="#ef4444" stroke-width="2" />
+                        <text id="txtA1" font-weight="bold"></text>
+                        <text id="txtA2" font-weight="bold"></text>
+                        <text id="txtA3" font-weight="bold"></text>
+                    </svg>
+                </div>
+                <div class="canvas-wrapper">
+                    <div class="canvas-label">Triangle B</div>
+                    <svg id="svgB" viewBox="0 0 400 300">
+                        <path id="triB" fill="rgba(22, 163, 74, 0.1)" stroke="#16a34a" stroke-width="3" />
+                        <path id="arcB" fill="none" stroke="#ef4444" stroke-width="2" />
+                        <text id="txtB1" font-weight="bold"></text>
+                        <text id="txtB2" font-weight="bold"></text>
+                        <text id="txtB3" font-weight="bold"></text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="controls-grid" id="controls"></div>
+
+            <div class="action-bar">
+                <button class="action-btn" onclick="testOverlap()">අංගසාම්‍ය බව පරීක්ෂා කරන්න</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentMode = 'SSS';
+        let isOverlaid = false;
+        const state = {
+            SSS: { a: 150, b: 160, c: 130 },
+            SAS: { a: 160, b: 140, angle: 60 },
+            ASA: { a: 180, angB: 45, angC: 60 },
+            RHS: { hyp: 220, base: 140 }
+        };
+
+        const orders = {
+            SSS: ['a', 'c', 'b'], SAS: ['a', 'angle', 'b'],
+            ASA: ['angB', 'angC', 'a'], RHS: ['hyp', 'base']
+        };
+
+        const labelNames = {
+            a: "පාදය AB", b: "පාදය AC", c: "පාදය BC",
+            angle: "කෝණය A (°)", angB: "කෝණය B (°)", angC: "කෝණය C (°)",
+            base: "පාදය", hyp: "කර්ණය"
+        };
+
+        function setMode(mode, btn) {
+            currentMode = mode;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            resetOverlay();
+            renderControls();
+            updateAll();
+        }
+
+        function renderControls() {
+            const container = document.getElementById('controls');
+            let html = '';
+            const data = state[currentMode];
+            orders[currentMode].forEach(key => {
+                let min = (key.includes('ang') || key === 'angle') ? 20 : 80;
+                let max = (key.includes('ang') || key === 'angle') ? 140 : 250;
+                html += `<div class="slider-box">
+                <label>${labelNames[key]} <span>${data[key]}${min === 20 ? '°' : ''}</span></label>
+                <input type="range" min="${min}" max="${max}" value="${data[key]}" oninput="updateVal('${key}', this.value)">
+            </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateVal(key, val) {
+            let v = parseFloat(val);
+            let hasError = false;
+            const errEl = document.getElementById('errorMsg');
+
+            if (currentMode === 'ASA') {
+                if (key === 'angB' && (v + state.ASA.angC >= 170)) {
+                    v = 170 - state.ASA.angC;
+                    hasError = true;
+                }
+                if (key === 'angC' && (v + state.ASA.angB >= 170)) {
+                    v = 170 - state.ASA.angB;
+                    hasError = true;
+                }
+                errEl.innerText = "⚠️ දෝෂයකි: කෝණ දෙකේ එකතුව 180° ට වඩා අඩු විය යුතුය.";
+            }
+
+            if (currentMode === 'RHS') {
+                if (key === 'hyp' && v <= state.RHS.base) {
+                    v = state.RHS.base + 5;
+                    hasError = true;
+                }
+                if (key === 'base' && v >= state.RHS.hyp) {
+                    v = state.RHS.hyp - 5;
+                    hasError = true;
+                }
+                errEl.innerText = "⚠️ දෝෂයකි: කර්ණය සෑමවිටම අනෙක් පැත්තට වඩා දිගින් වැඩි විය යුතුය.";
+            }
+
+            if (currentMode === 'SSS') {
+                // Triangle Inequality: a + b > c
+                let { a, b, c } = state.SSS;
+                if (key === 'a') a = v; if (key === 'b') b = v; if (key === 'c') c = v;
+
+                if (a + b <= c || a + c <= b || b + c <= a) {
+                    hasError = true;
+                    // Don't update the state if it breaks the triangle
+                    errEl.innerText = "⚠️ දෝෂයකි: ඕනෑම පැති දෙකක එකතුව තුන්වන පැත්තට වඩා වැඩි විය යුතුය.";
+                    // We still update the visual but keep the old valid value for the "broken" side
+                }
+            }
+
+            // Show or Hide the error box
+            errEl.style.display = hasError ? "block" : "none";
+
+            state[currentMode][key] = v;
+            renderControls();
+            updateAll();
+        }
+
+        function updateAll() {
+            const data = calculatePoints();
+            drawTri('triA', 'txtA', 'arcA', data);
+            drawTri('triB', 'txtB', 'arcB', data);
+        }
+
+        function calculatePoints() {
+            const x1 = 80, y1 = 220; let x2, y2, x3, y3, lbls = [], arcVal = 0;
+
+            if (currentMode === 'SSS') {
+                let { a, b, c } = state.SSS;
+                if (a + b <= c) c = a + b - 5;
+                x2 = x1 + a; y2 = y1;
+                arcVal = Math.acos((a * a + b * b - c * c) / (2 * a * b)) * 180 / Math.PI;
+                x3 = x1 + Math.cos(arcVal * Math.PI / 180) * b;
+                y3 = y1 - Math.sin(arcVal * Math.PI / 180) * b;
+                lbls = [a, b, c];
+            } else if (currentMode === 'SAS') {
+                let { a, b, angle } = state.SAS;
+                x2 = x1 + a; y2 = y1;
+                x3 = x1 + Math.cos(angle * Math.PI / 180) * b;
+                y3 = y1 - Math.sin(angle * Math.PI / 180) * b;
+                arcVal = angle; lbls = [a, b, angle + "°"];
+            } else if (currentMode === 'ASA') {
+                let { a, angB, angC } = state.ASA;
+                x2 = x1; y2 = y1; x3 = x1 + a; y3 = y1;
+                let rB = angB * Math.PI / 180, rC = angC * Math.PI / 180;
+                let h = (a * Math.sin(rB) * Math.sin(rC)) / Math.sin(rB + rC);
+                let ptX = x2 + h / Math.tan(rB); let ptY = y1 - h;
+                return { pts: [ptX, ptY, x2, y2, x3, y3], lbls: [a, angB + "°", angC + "°"], isASA: true, angB, angC };
+            } else if (currentMode === 'RHS') {
+                let { base, hyp } = state.RHS;
+                x2 = x1 + base; y2 = y1;
+                x3 = x1; y3 = y1 - Math.sqrt(hyp * hyp - base * base);
+                return { pts: [x1, y1, x2, y2, x3, y3], lbls: [base, "", hyp], isRHS: true };
+            }
+            return { pts: [x1, y1, x2, y2, x3, y3], lbls: lbls, arc: arcVal, origin: [x1, y1] };
+        }
+
+        function drawTri(triId, txt, arcId, data) {
+            const [x1, y1, x2, y2, x3, y3] = data.pts;
+            const arc = document.getElementById(arcId);
+            document.getElementById(triId).setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2} L ${x3} ${y3} Z`);
+
+            if (data.isRHS) {
+                arc.setAttribute('d', `M ${x1 + 15} ${y1} L ${x1 + 15} ${y1 - 15} L ${x1} ${y1 - 15}`);
+                setLabel(txt + '1', (x1 + x2) / 2, y1 + 20, data.lbls[0] + 'cm');
+                setLabel(txt + '2', x1 - 30, (y1 + y3) / 2, data.lbls[1]);
+                setLabel(txt + '3', (x2 + x3) / 2 + 10, (y2 + y3) / 2 - 10, data.lbls[2] + 'cm');
+            } else if (data.isASA) {
+                const r = 25;
+                const bS = polar(x2, y2, r, 0), bE = polar(x2, y2, r, data.angB);
+                const cS = polar(x3, y3, r, 180 - data.angC), cE = polar(x3, y3, r, 180);
+                arc.setAttribute('d', `M ${bS.x} ${bS.y} A ${r} ${r} 0 0 0 ${bE.x} ${bE.y} M ${cS.x} ${cS.y} A ${r} ${r} 0 0 0 ${cE.x} ${cE.y}`);
+                setLabel(txt + '1', (x2 + x3) / 2, y2 + 20, data.lbls[0] + 'cm');
+                const lpB = polar(x2, y2, 40, data.angB / 2); setLabel(txt + '2', lpB.x - 10, lpB.y + 5, data.lbls[1]);
+                const lpC = polar(x3, y3, 40, 180 - data.angC / 2); setLabel(txt + '3', lpC.x - 15, lpC.y + 12, data.lbls[2]);
+            } else {
+                const r = 25, [ox, oy] = data.origin;
+
+                // 1. Only show the arc if it's NOT SSS (because SSS doesn't give an angle)
+                if (currentMode !== 'SSS') {
+                    const s = polar(ox, oy, r, 0), e = polar(ox, oy, r, data.arc);
+                    arc.setAttribute('d', `M ${s.x} ${s.y} A ${r} ${r} 0 0 0 ${e.x} ${e.y}`);
+                } else {
+                    arc.setAttribute('d', ''); // Hide arc in SSS mode
+                }
+
+                setLabel(txt + '1', (x1 + x2) / 2, y1 + 20, data.lbls[0] + 'cm');
+                setLabel(txt + '2', (x1 + x3) / 2 - 35, (y1 + y3) / 2, data.lbls[1] + 'cm');
+
+                // 2. Position label 3: Near the BC line for SSS, or inside the arc for SAS
+                if (currentMode === 'SSS') {
+                    setLabel(txt + '3', (x2 + x3) / 2 + 10, (y2 + y3) / 2 - 10, data.lbls[2] + 'cm'); // BC Line
+                } else {
+                    const lp = polar(ox, oy, 40, data.arc / 2);
+                    setLabel(txt + '3', lp.x - 10, lp.y + 10, data.lbls[2]); // Angle A
+                }
+            }
+        }
+
+        function polar(cx, cy, r, a) {
+            let rad = a * Math.PI / 180;
+            return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
+        }
+
+        function setLabel(id, x, y, t) {
+            const el = document.getElementById(id);
+            el.setAttribute('x', x); el.setAttribute('y', y); el.textContent = t;
+        }
+
+        function testOverlap() {
+            const svgB = document.getElementById('svgB');
+            if (!isOverlaid) {
+                const isMobile = window.innerWidth <= 600;
+                svgB.style.transform = isMobile ? "translateY(-119%)" : "translateX(-102%)";
+                svgB.style.opacity = .5
+                isOverlaid = true;
+            } else resetOverlay();
+        }
+
+        function resetOverlay() {
+            const svgB = document.getElementById('svgB');
+            svgB.style.transform = 'translate(0,0)';
+            svgB.style.opacity = '1';
+            isOverlaid = false;
+        }
+
+        renderControls(); updateAll();
+    </script>
+</body>
+
+</html>
