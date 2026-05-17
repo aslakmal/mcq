@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ප්‍රථමක සාධක සෙවීම</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #22c55e;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 4px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section h3 {
+            margin-top: 20px;
+            color: var(--primary);
+        }
+
+        .info-box {
+            background: #eef2ff;
+            border-left: 5px solid var(--primary);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .footer-note {
+            background: #fff7ed;
+            border-left: 5px solid var(--accent);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        @media(max-width:600px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 5px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .number {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: clamp(10px, 3.5vw, 16px);
+            transition: all 0.2s ease;
+        }
+
+        /* සංයුත සංඛ්‍යා (ගුණාකාර) සඳහා වර්ණය */
+        .is-composite {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        /* අන්තිමට ක්ලික් කළ අංකයට අදාළ වෙනස */
+        .highlight-border {
+            border: 1px solid #e74c3c !important;
+            transform: scale(1.08);
+            z-index: 2;
+        }
+
+        /* තෝරාගත් ප්‍රථමක අංකය (පැහැදිලිව පෙන්වීමට කුඩා සෙවනැල්ලක් පමණක්) */
+        .active-prime {
+            box-shadow: inset 0 0 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .num-1 {
+            background-color: #eee;
+            cursor: not-allowed;
+            color: #aaa;
+        }
+
+        .controls {
+            margin: 15px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+
+
+        .no-border {
+            border-bottom: none !important;
+        }
+
+        .result-section {
+            margin-top: 25px;
+            text-align: left;
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
+        .math-font {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            color: #2c3e50;
+        }
+
+        #numInput {
+            display: none;
+            border: none;
+            font-size: 25px;
+            outline: none;
+            width: 75px;
+        }
+
+        .explanation-col {
+            font-size: 12px;
+        }
+
+        .btn-random {
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+
+        input[readonly] {
+            background-color: #fff;
+            /* Readonly වුණත් සුදු පාටට තබා ගැනීමට */
+            cursor: default;
+        }
+
+        /* පේළි ලිස්සා ඒමේ animation එක */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(0px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* අලුතින් එකතු වන පේළියට මෙම class එක ලබා දෙන්න */
+        .slide-row,
+        #resultSection {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .factor-table {
+            margin: 25px auto;
+            border-collapse: collapse;
+            font-size: 22px;
+            width: 100%;
+            max-width: 600px;
+            table-layout: fixed;
+        }
+
+        .factor-table td {
+            padding: 5px 8px;
+        }
+
+        .prime-col {
+            width: 20%;
+            color: #e74c3c;
+            text-align: right;
+            padding-right: 15px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Animation සඳහා අලුත් Styles */
+        .num-col {
+            width: 20%;
+            text-align: left;
+            padding-left: 20px;
+            font-weight: bold;
+            /* මුලින් ඉරි නොපෙනේ */
+            border-left: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+            transition: border-color 0.4s ease;
+        }
+
+        /* මේ class එක දැමූ විට ඉරි ඇඳේ */
+        .show-border {
+            border-left-color: #2c3e50 !important;
+            border-bottom-color: #2c3e50 !important;
+        }
+
+        .prime-col,
+        .explanation-col {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .show-content {
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+        onmouseover="this.style.backgroundColor='#e0e0e0'" onmouseout="this.style.backgroundColor='#f8f9fa'" style="
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      outline: none;
+      height:auto;width:auto;margin:5px;
+    ">
+        <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+    </button>
+    <div class="container">
+
+        <div class="header">
+            <h1>ප්‍රථමක සාධක සෙවීම</h1>
+        </div>
+      <div class="section">
+            <h2>💡 දන්නවද?</h2>
+        <div>
+            අපි ඉගෙනගන්න සංඛ්‍යා ප්‍රථමක/සංයුත කියලා කොටස් දෙකකට බෙදන්න පුලුවන්.
+            මේක හරියට බිත්තයයි ගඩොලුයි වගේ.
+            ප්‍රථමක සංඛ්‍යා කියන්නෙ ගඩොල්. බිත්ති කියන්නෙ සංයුත සංඛ්‍යා.
+            බිත්තියක් කඩලා ගඩොල් වලට වෙන් කරන්ඩ පුලුවන්.ඒත් ගඩොල් ආයි බෙදන්න බෑ.ගඩොල් වලින් තමා බිත්තිය හැදිලා තියෙන්නේ.බලමුකො ඒ කොහොමද කියලා
+        </div>
+    </div>
+        <div class="section">
+            <h2>🤔 1. සාධක කියන්නේ මොනවද?</h2>
+
+           <div class="info-box">
+                ඉලක්කමක්, තවත් ඉලක්කමකින් ඉතිරියක් නැතුව බෙදෙනවා නම්,
+                ඒ බෙදපු ඉලක්කම මුල් සංඛ්‍යාවේ සාධකයක්.
+                <p>උදාහරණය:12 ඉලක්කම 2න් ඉතිරි නැතුව බෙදෙනවා.ඒ නිසා 2 කියන්නෙ 12හේ සාධකයක්</p>
+                <div><strong>ඒ අනුව 12හි සාධක:</strong> 1, 2, 3, 4, 6, 12</div>
+            </div>
+
+        </div>
+
+        <div class="section">
+            <h2>🧐 2. ප්‍රථමක සංඛ්‍යා</h2>
+
+
+            <div class="info-box">
+                ප්‍රථමක සංඛ්‍යාවක් කියන්නේ
+                <strong>1 සහ එම ඉලක්කමෙන් විතරක්</strong>
+                හරියටම බෙදෙන්න පුළුවන්, 1 ට වඩා ලොකු සංඛ්‍යාවල්.
+
+            </div>
+
+            <h3>උදාහරණ:</h3>
+            <ul>
+                <li>2, 3, 5, 7, 11, 13, 17 ...</li>
+            </ul>
+            <p>(2 තමා තියන එකම ඉරට්ටේ ප්‍රථමක සංඛ්‍යාව)</p>
+
+            <h3>ප්‍රථමක නොවන ඒවට කියන්නේ සංයුත සංඛ්‍යා</h3>
+            <p>4,6,8,9,10,12 ... මේවා සංයුත සංඛ්‍යා.මේවා බෙදන්න පුලුවන් ක්‍රම කීපයක් තියනවා</p>
+            <ul>
+                <li>4 - 1,2,4න් බෙදන්න පුලුවන්</li>
+                <li>6 - 1,2,3,6න් බෙදන්න පුලුවන්</li>
+                <li>9 - 1,3,9න් බෙදන්න පුලුවන්</li>
+            </ul>
+            <p> 💡 1 - ප්‍රථමකත් නෙවෙයි, සංයුතත් නෙවෙයි</p>
+
+        
+        </div>
+
+
+        <div class="section">
+            <h2>🌟 3. ප්‍රථමක සංඛ්‍යා මොකටද?</h2>
+            <div class="info-box">ප්‍රථමක සංඛ්‍යා වැදගත් වෙන ගොඩක් තැන් තියනවා </div>
+            <h4>උදාහරණ:</h4>
+            <p>
+                අන්තර්ජාලයේ අපේ තොරතුරු ආරක්ෂා කරන්න(encryption) ප්‍රථමක සංඛ්‍යා පාවිච්චි කරනවා.
+                මේක ටිකක් සංකීරණ කතාවක් උනත් සරල අදහසක් දෙන්නම්.
+                අපි ලොකු සංයුත ඉලක්කම් දෙකක් ගුණ කරලා ලොකු ඉලක්කමක් හැදුවොත් මේ හැදෙන ඉලක්කම හැදෙන තව ක්‍රම තියනවා.
+            </p>
+            <p>උදාහරණ: 48</p>
+            <div class="math-box">
+                \begin{align*}
+                48 &= 2 \times 24 \\
+                48 &= 3 \times 16 \\
+                48 &= 4 \times 12 \\
+                48 &= 6 \times 8
+                \end{align*}
+            </div>
+            <p>ඒත් ප්‍රථමක සංඛ්‍යා දෙකක් ගුණ කරලා හදන ඉලක්කම හැදෙන ක්‍රම එකයි තියෙන්නේ.</p>
+            <p>උදාහරණ: 91</p>
+            <div class="math-box">
+                \begin{align*}
+                91 = 7 \times 13
+                \end{align*}
+            </div>
+            <p> ඉතින් මේ ඉලක්කම හැදුන ක්‍රමය අනුමාන කරන්න අමාරුයි.91 නම් ටිකක් ලේසි උනාට ගොඩාක් දිග ඉලක්කම් දෙකක් ගුණ
+                කරලා හැදෙන්නේ මොන ඉලක්කම දෙක ගුණකරාමද හොයන්නනම් සෑහෙන්න කාලයක් යනවා.
+                ඉතින් මේ සිද්ධාන්තය encryption වලදී පාවිච්චි කරනවා
+            </p>
+
+
+            <div class="footer-note">
+                අපි සාමාන්‍ය පෙල ඉගෙනගද්දි කුඩාම පොදු ගුණාකාරය(කු.පො.ගු.) සහ මහා පොදු සාධකය(ම.පො.සා.) වගේ පාඩම් වලට
+                අත්‍යවශ්‍යයි.
+            </div>
+
+        </div>
+        <div class="section">
+            <h2>එරටොස්තීනස් ගේ ප්‍රථමක සංඛ්‍යා පෙනේරය (Sieve of Eratosthenes)</h2>
+            <p>ඉලක්කම් එකින් එක click කරන්න.එතකොට ඒවායේ ගුණාකාර පාට වී ඉවත් වේ. අවසානයේ සුදු පාටින් ඉතිරි වන්නේ වෙන
+                ඉලක්කමක ගුණාකාරයක් නොවෙන 100ට අඩු ප්‍රථමක සංඛ්‍යා ටිකයි!</p>
+
+          
+
+            <div class="grid" id="grid"></div>
+            <div class="controls">
+                <button onclick="resetGrid()">නැවත මුල සිට</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>ඉලක්කම් වල ප්‍රථමක සාධක සෙවීම</h2>
+            <div class="info-box">
+                අපි කලින් කීවනෙ ප්‍රථමක නොවන හැම සංයුත සංඛ්‍යාවක්ම ප්‍රථමක සංඛ්‍යා වලින් හදන්න පුලුවන් කියලා.
+                පහල තියෙන්නේ මේක හරියටම එහෙමද බලන්න පුලුවන් ක්‍රමයක්.
+
+            </div>
+            <p> මේකෙදි කරන්නේ සංයුත සංඛ්‍යාව පොඩිම ප්‍රථමක සංඛ්‍යාවෙන් නැවත නැවත බෙදන එක.බෙදන්න බැරි උනාම ඊලඟට බෙදන්න පුලුවන් පොඩිම ප්‍රථමක සංඛ්‍යාවෙන් බෙදන්න ඕනැ.මේ ක්‍රමයට බෙදුවම වම් පැත්තේ තියන ප්‍රථමක සංඛ්‍යා තමයි ඒ ඉලක්කමේ ප්‍රථමක සාධක වෙන්නේ.
+            </p>
+            <div style="
+    display: flex;
+    justify-content: center;
+">
+                <input type="number" id="numInput" placeholder="සංඛ්‍යාව..." min="2" readonly="">
+                <button class="btn-random" onclick="generateRandom()" title="අලුත් අංකයක් ගන්න">
+                    වෙනත් ඉලක්කමක්
+                </button>
+            </div>
+
+
+            <div id="tableArea"></div>
+
+            <div id="resultSection" class="info-box">
+                <h3>වම් පැත්තේ තියන ප්‍රථමක සංඛ්‍යා අනුව</h3>
+                <div class="result-item">
+
+                    <span id="productForm" class="math-font"></span>
+                </div>
+                <div class="result-item">
+
+                    <span id="uniqueFactors" class="math-font"></span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <script>
+  const gridElement=document.getElementById("grid"),maxNum=100;let selectedNumbers=new Set,lastClicked=null;function createGrid(){gridElement.innerHTML="";for(let e=1;e<=maxNum;e++){var t=document.createElement("div");t.innerText=e,t.id="n-"+e,t.className="number",1===e?t.classList.add("num-1"):t.onclick=()=>toggleSieve(e),gridElement.appendChild(t)}}function toggleSieve(e){selectedNumbers.has(e)?(selectedNumbers.delete(e),lastClicked===e&&(lastClicked=null)):(selectedNumbers.add(e),lastClicked=e),updateGrid()}function updateGrid(){for(let e=2;e<=maxNum;e++)document.getElementById("n-"+e).className="number";if(selectedNumbers.forEach(t=>{let l=!1;selectedNumbers.forEach(e=>{e!==t&&t%e==0&&(l=!0)}),l?document.getElementById("n-"+t).classList.add("is-composite"):document.getElementById("n-"+t).classList.add("active-prime");for(let e=2*t;e<=maxNum;e+=t)document.getElementById("n-"+e).classList.add("is-composite")}),lastClicked)for(let e=2*lastClicked;e<=maxNum;e+=lastClicked)document.getElementById("n-"+e).classList.add("highlight-border")}function resetGrid(){selectedNumbers.clear(),lastClicked=null,createGrid()}createGrid();const delay=t=>new Promise(e=>setTimeout(e,t));function isPrime(l){for(let e=2,t=Math.sqrt(l);e<=t;e++)if(l%e==0)return!1;return 1<l}function generateRandom(){let e;for(;isPrime(e=Math.floor(91*Math.random())+10););document.getElementById("numInput").value=e,calculateFactors()}async function calculateFactors(){var l=parseInt(document.getElementById("numInput").value);if(!(isNaN(l)||l<2)){document.getElementById("tableArea").innerHTML='<table class="factor-table" id="dynamicTable"></table>',document.getElementById("resultSection").style.display="none";var n=document.getElementById("dynamicTable");let e=l;var a,i,s,d=[];let t=2;for(;1<e;)e%t==0?(a=(s=n.insertRow()).insertCell(0),i=s.insertCell(1),s=s.insertCell(2),a.className="prime-col",i.className="num-col",s.className="explanation-col",i.innerText=e,await delay(150),s.innerHTML=""+getDivisibilityReason(e,t),s.style.opacity="1",await delay(400),i.classList.add("show-border"),await delay(200),a.innerText=t,a.style.opacity="1",d.push(t),e/=t,await delay(400)):t++;var c=n.insertRow(),r=c.insertCell(0),o=c.insertCell(1),c=c.insertCell(2);r.className="prime-col",o.className="num-col",c.className="explanation-col",o.style.border="none",c.innerHTML="✅ බෙදා අවසන්!",c.style.opacity="1",await delay(250),o.innerText="1",showFinalResults(l,d)}}function showFinalResults(e,t){var l=[...new Set(t)],l=(document.getElementById("uniqueFactors").innerHTML=`<b>${e} හි ප්‍රථමක සාධක:</b>`+l.join(", "),t.join(" × "));let n={};t.forEach(e=>n[e]=(n[e]||0)+1);t=Object.keys(n).map(e=>1<n[e]?`${e}<sup>${n[e]}</sup>`:""+e);document.getElementById("productForm").innerHTML=`<b>${e} ප්‍රථමක සාධකවල ගුණිතයක් ලෙස:</b>
+        <div style="margin-bottom: 8px;">${l}</div>
+        <div>දර්ශක ආකාරය: ${t.join(" × ")}</div>
+    `,setTimeout(()=>{document.getElementById("resultSection").style.display="block"},150)}function getDivisibilityReason(e,t){return 2===t?`අග ඉලක්කම(${e%10}) ඉරට්ටේ නිසා 2න් බෙදිය හැකියි.`:3===t?`ඉලක්කම්වල එකතුව(${[...String(e)].reduce((e,t)=>+e+ +t,0)}) 3න් බෙදෙන නිසා 3න් බෙදිය හැකියි.`:5===t?`අග ඉලක්කම ${e%10} නිසා 5න් බෙදිය හැකියි.`:t+` බෙදිය හැකි කුඩාම ප්‍රථමක සංඛ්‍යාව ${t} වේ.`}generateRandom();
+ 
+        </script>
+
+    </div>
+
+</body>
+
+</html>
