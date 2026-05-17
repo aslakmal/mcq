@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O/L statistics</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                packages: { '[+]': ['ams'] }
+            },
+            options: {
+                enableMenu: false
+            },
+            chtml: {
+                mtextInheritFont: true,
+                fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2'
+            },
+            loader: {
+                load: ['[tex]/ams']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"
+        crossorigin="anonymous">
+        </script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --bg: #f3f4f6;
+            --modal: #eef2ff;
+            --median: #f0fdf4;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+            max-width: 1250px;
+            margin: auto;
+            padding: 5px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-gen {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: block;
+            margin: 10px auto 0;
+        }
+
+        .btn-gen:hover {
+            transform: scale(1.02);
+            background: #4338ca;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: #fff;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 2px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        td {
+            padding: 5px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        /* Help Icon */
+        .help-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 5px;
+            vertical-align: middle;
+            transition: 0.2s;
+        }
+
+        .help-icon:hover {
+            background: #312e81;
+        }
+
+        /* Pop-up Modal */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .popup {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary);
+            border: none;
+            background: none;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .formula-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px;
+            font-size: 13px;
+        }
+
+        .modal-row {
+            background: var(--modal);
+            font-weight: bold;
+        }
+
+        .median-row {
+            background: var(--median);
+        }
+
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .slide .section {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        /* Navigation buttons */
+        .nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        #pieCharft {
+            margin: auto;
+        }
+        @media only screen and (max-width: 760px) {
+            .formula-box{margin: 0;}
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="window.history.length > 1 ? history.back() : window.location.href='/maths.html';"
+        onmouseover="this.style.backgroundColor='#e0e0e0'" onmouseout="this.style.backgroundColor='#f8f9fa'" style="
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-family: sans-serif;
+        color: #333;
+        background-color: #f8f9fa;
+        border: 1px solid #dcdcdc;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        outline: none;
+        height:auto;width:auto;
+        margin:5px
+      ">
+        <span style="margin-right: 8px; font-weight: bold;">←</span> Back
+    </button>
+     <h1>සංඛ්‍යානය</h1>
+    <div id="overlay" class="overlay">
+        <div class="popup">
+            <button class="close-btn" onclick="closePopup()">&times;</button>
+            <h3 id="popupTitle" style="color:var(--primary); margin-top:0;"></h3>
+            <p id="popupContent" style="line-height:1.8; color:#475569;"></p>
+        </div>
+    </div>
+
+    <div class="container">
+      
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>පන්ති ප්‍රාන්තරය <span class="help-icon"
+                                onclick="showPopup('පන්ති ප්‍රාන්තරය', 'දත්ත බෙදා ඇති කාණ්ඩ මෙයින් අදහස් වේ.0-10 යනු බින්දුවේ සිට දහය දක්වා අගයන්ය. <br>(උදා:විභාගයක ලකුණු 0-10 අතර ගත් සිසුන්)')">?</span>
+                        </th>
+                        <th>මධ්‍ය අගය (x) <span class="help-icon"
+                                onclick="showPopup('මධ්‍ය අගය (x)', 'පන්ති ප්‍රාන්තරයක මැද අගයයි. මෙය සෙවීමට පහළ සීමාව සහ ඉහළ සීමාව එකතු කර දෙකෙන් බෙදන්න.<b>උදා:</b><p>පන්ති ප්‍රාන්තරය 10-20 නම් මධ්‍ය අගය 15</p>')">?</span>
+                        </th>
+                        <th>සංඛ්‍යාතය (f) <span class="help-icon"
+                                onclick="showPopup('සංඛ්‍යාතය (f)', 'එම පන්ති ප්‍රාන්තරයට අදාළව ඇති දත්ත ප්‍රමාණය.<br>(උදා:පන්ති ප්‍රාන්තරය 0-10 හා සංඛ්‍යාතය 20 නම් මින් අදහස් වෙන්නේ විභාගයේ ලකුණු 0-10 අතර ගත් සිසුන් ප්‍රමාණය 20 බවයි)')">?</span>
+                        </th>
+                        <th>අපගමනය (d) <span class="help-icon"
+                                onclick="showPopup('අපගමනය (d)', 'මධ්‍ය අගය සහ උපකල්පිත මධ්‍යන්‍යය (a) අතර වෙනසයි. <br><b>d = x - a</b>')">?</span>
+                        </th>
+                        <th>fd <span class="help-icon"
+                                onclick="showPopup('fd', 'සංඛ්‍යාතය සහ අපගමනය අතර ගුණිතයයි. මධ්‍යන්‍යය සෙවීමට මෙහි එකතුව (Σfd) අවශ්‍ය වේ.')">?</span>
+                        </th>
+                        <th>සමුච්චිත සංඛ්‍යාතය
+                            <span class="help-icon"
+                                onclick="showPopup('සමුච්චිත සංඛ්‍යාතය', `මේක හරියට ක්‍රිකට් මැච් එකක ඕවරෙන් ඔවරේ ගන්න ලකුණු ගාන මුලු ලකුණු ගානට එකතු වෙනවා වගේ.<br>එක් එක් පන්තියේ සංඛ්‍යාත එකින් එක එකතු වෙලා සමුච්චිත සංඛ්‍යාතය හැදෙනවා.<br>සංඛ්‍යාතය කියන්නෙ ඒ ඒ ඔවරේ ගන්න ලනුණු නම් සමුච්චිත සංඛ්‍යාතය කියන්නෙ මුලු ලකුණු ගාන`)">?</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+
+
+        <div class="chart-grid">
+
+
+        </div>
+        <div class="chart-grid">
+
+
+
+        </div>
+
+        <div class="carousel">
+            <button class="nav prev">&#10094;</button>
+
+            <div class="carousel-track">
+                <div class="slide">
+                    <div class="section">
+                        <div
+                            style="position: relative;height: 500px;width: 100%;display: flex;justify-content: center;">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="section">
+                        <div style="position: relative; height: 500px; width: 100%;">
+                            <canvas id="ogiveChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="section">
+                        <div style="position: relative; height: 500px; width: 100%;"><canvas
+                                id="histogramChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="section">
+                        <h4 style="text-align: center;">මධ්‍යන්‍යය ගණනය කිරීම</h4>
+                        <div class="formula-box" id="mathDisplay">$$\text{Loading MathJax...}$$</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <button class="nav next">&#10095;</button>
+        </div>
+        <button class="btn-gen" onclick="generateAll()">Generate New data</button>
+    </div>
+
+    <script>
+        //    let pieChart, ogiveChart;
+        let pieChart, ogiveChart, histogramChart;
+        window.onload = () => setTimeout(generateAll, 500);
+
+        function showPopup(title, content) {
+            document.getElementById('popupTitle').innerHTML = title;
+            document.getElementById('popupContent').innerHTML = content;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Close popup on outside click
+        window.onclick = (event) => {
+            if (event.target == document.getElementById('overlay')) closePopup();
+        };
+
+        function generateAll() {
+            // 1. පන්ති ප්‍රාන්තර වල ආරම්භක අගය (0 සිට 20 දක්වා) සහ පරතරය (5 හෝ 10) අහඹු ලෙස තෝරන්න
+            const startValue = 0;// Math.floor(Math.random() * 21);
+            const step = Math.random() > 0.5 ? 10 : 5; // පරතරය 5 හෝ 10 ලෙස මාරුවෙන් මාරුවට ලැබේ
+
+            // 2. අහඹු ලෙස උපකල්පිත මධ්‍යන්‍යය (a) ලෙස මැද පන්තියේ (3 වන පන්තියේ) මධ්‍ය අගය තෝරන්න
+            const a = (startValue + (step * 2)) + (step / 2);
+
+            const bins = [];
+            for (let i = 0; i < 5; i++) {
+
+                let low = startValue + (i * step);
+                let high = low + step;
+                bins.push({
+                    l: `${low}-${high}`,
+                    lowBound: low,
+                    highBound: high,
+                    f: Math.floor(Math.random() * 25) + 5,
+                    c: `hsl(${i * 65 + 200}, 70%, 55%)` // සෑම ප්‍රස්ථාරයකටම වෙනස් වර්ණ ලබා දේ
+                });
+            }
+
+            let totalF = bins.reduce((s, b) => s + b.f, 0);
+            let maxF = Math.max(...bins.map(b => b.f));
+            let medianPos = totalF / 2;
+            let cf = 0;
+            let sumFd = 0;
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            bins.forEach((bin, i) => {
+                const x = (bin.lowBound + bin.highBound) / 2;
+                const d = x - a;
+                const fd = bin.f * d;
+                sumFd += fd;
+
+                let lastCF = cf;
+                cf += bin.f;
+                bin.cf = cf;
+
+                let rowClass = "";
+                if (bin.f === maxF) rowClass += " modal-row";
+                if (lastCF < medianPos && cf >= medianPos) rowClass += " median-row";
+
+                tbody.innerHTML += `
+            <tr class="${rowClass}">
+                <td>${bin.l}</td>
+                <td>${x}</td>
+                <td>${bin.f}</td>
+                <td>${d}</td>
+                <td>${fd}</td>
+                <td>${cf}</td>
+            </tr>
+        `;
+            });
+
+            // වගුවේ පාදම (Σfd සහ Σf) යාවත්කාලීන කිරීම
+            document.getElementById('mathDisplay').innerHTML = `
+        <tr class="total-row">
+            <td colspan="2">එකතුව (Total)</td>
+            <td>&Sigma;f = ${totalF}</td>
+            <td>-</td>
+            <td>&Sigma;fd = ${sumFd}</td>
+            <td>-</td>
+        </tr>
+    `;
+
+            // MathJax හරහා සූත්‍ර සහ ගණනය කිරීම් පෙන්වීම
+            if (typeof MathJax !== 'undefined') {
+                const mean = a + (sumFd / totalF);
+                document.getElementById('mathDisplay').innerHTML = `
+            $$\\text{මධ්‍යන්‍යය } (\\bar{x}) = A + \\frac{\\sum fd}{\\sum f}$$
+            $$\\bar{x} = ${a} + \\frac{${sumFd}}{${totalF}} $$
+            $$= ${mean.toFixed(2)}$$
+            $$\\text{මධ්‍යස්ථය පවතින ස්ථානය } $$
+            $$= \\frac{N}{2} = \\frac{${totalF}}{2} $$
+            $$= ${medianPos.toFixed(1)} \\text{ වන අගය}$$
+            $$\\text{පරාසය} = ${startValue + (5 * step)} - ${startValue} = ${5 * step}$$
+        `;
+                MathJax.typeset();
+            }
+
+            // ප්‍රස්තාර යාවත්කාලීන කිරීම
+            renderCharts(bins, totalF);
+        }
+
+        function r(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+
+        function renderChartss(bins, total) {
+            const pCtx = document.getElementById('pieChart').getContext('2d'), oCtx = document.getElementById('ogiveChart').getContext('2d');
+            if (pieChart) pieChart.destroy(); if (ogiveChart) ogiveChart.destroy();
+
+            pieChart = new Chart(pCtx, {
+                type: 'pie', plugins: [ChartDataLabels],
+                data: { labels: bins.map(b => b.l), datasets: [{ data: bins.map(b => b.f), backgroundColor: bins.map(b => b.c) }] },
+                options: { plugins: { datalabels: { color: '#fff', formatter: (v) => `${(v / total * 360).toFixed(0)}°\n(${(v / total * 100).toFixed(1)}%)` } } }
+            });
+
+            ogiveChart = new Chart(oCtx, {
+                type: 'line',
+                data: { labels: ['0', '10', '20', '30', '40', '50'], datasets: [{ label: 'සමුච්චිත සංඛ්‍යාතය', data: [0, ...bins.map(b => b.cf)], borderColor: '#4f46e5', fill: true, backgroundColor: 'rgba(79, 70, 229, 0.05)', tension: 0.4 }] }
+            });
+        }
+
+
+
+
+        function renderCharts(bins, total) {
+            const labels = bins.map(b => b.l);
+            const frequencies = bins.map(b => b.f);
+            const colors = bins.map(b => b.c);
+            const cumulativeFrequencies = [0, ...bins.map(b => b.cf)];
+            const ogiveLabels = [bins[0].lowBound, ...bins.map(b => b.highBound)];
+
+            // --- 1. Pie Chart Update Logic ---
+            if (pieChart) {
+                pieChart.data.labels = labels;
+                pieChart.data.datasets[0].data = frequencies;
+                pieChart.data.datasets[0].backgroundColor = colors;
+                pieChart.update();
+            } else {
+                const pCtx = document.getElementById('pieChart').getContext('2d');
+                pieChart = new Chart(pCtx, {
+                    type: 'pie',
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: labels,
+                        datasets: [{ data: frequencies, backgroundColor: colors }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top', align: 'center' },
+                            datalabels: {
+                                color: '#fff',
+                                formatter: (v) => `${(v / total * 360).toFixed(0)}°\n(${(v / total * 100).toFixed(1)}%)`
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- 2. Ogive Chart (Line) Update Logic ---
+            if (ogiveChart) {
+                ogiveChart.data.labels = ogiveLabels;
+                ogiveChart.data.datasets[0].data = cumulativeFrequencies;
+                ogiveChart.update();
+            } else {
+                const oCtx = document.getElementById('ogiveChart').getContext('2d');
+                ogiveChart = new Chart(oCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ogiveLabels,
+                        datasets: [{
+                            label: 'සමුච්චිත සංඛ්‍යාතය',
+                            data: cumulativeFrequencies,
+                            borderColor: '#4f46e5',
+                            fill: true,
+                            backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            // --- 3. Histogram (Bar) Update Logic ---
+            if (histogramChart) {
+                histogramChart.data.labels = labels;
+                histogramChart.data.datasets[0].data = frequencies;
+                histogramChart.data.datasets[0].backgroundColor = colors;
+                histogramChart.update();
+            } else {
+                const hCtx = document.getElementById('histogramChart').getContext('2d');
+                histogramChart = new Chart(hCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'සංඛ්‍යාතය',
+                            data: frequencies,
+                            backgroundColor: colors,
+                            borderColor: '#34495e',
+                            borderWidth: 0,
+                            barPercentage: 1,
+                            categoryPercentage: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                offset: true,
+                                //  title: { display: true, text: 'පන්ති මධ්‍ය අගය (Mid Value)', font: { weight: 'bold' } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'සංඛ්‍යාතය (Frequency)', font: { weight: 'bold' } }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: '#2c3e50',
+                                formatter: (value) => value
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+
+        const track = document.querySelector('.carousel-track');
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+
+        let index = 0;
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            index = (index + 1) % slides.length;
+            updateCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            index = (index - 1 + slides.length) % slides.length;
+            updateCarousel();
+        });
+    </script>
+</body>
+
+</html>
