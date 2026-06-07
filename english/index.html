@@ -871,7 +871,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./english/sw.js');
+     navigator.serviceWorker.register('sw.js');
     }
     /* ---- PWA Logic ---- */
     let deferredPrompt;
@@ -903,7 +903,7 @@
       } else {
         // --- CASE 2: OPENING (The behavior you liked) ---
         // window.open mimics target="_blank" and triggers the OS 'Open in App' intent
-        window.open('/maths.html', '_blank');
+        window.open('/index.html', '_blank');
       }
     });
 
