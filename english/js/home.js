@@ -110,7 +110,7 @@ async function loadQuestions(jsonFilePath) {
       throw new Error("JSON data is not an array");
     }
 
-    shuffleArray(allQuestions);
+    //shuffleArray(allQuestions);
     currentQuestionIndex = 0;
     showQuestion(allQuestions[currentQuestionIndex]);
     updateStatsDisplay();
@@ -226,7 +226,7 @@ function showNextQuestion() {
   } else {
     if (isExam) finishExam();
     else {
-      shuffleArray(allQuestions);
+    //  shuffleArray(allQuestions);
       currentQuestionIndex = 0;
       showQuestion(allQuestions[currentQuestionIndex]);
     }
@@ -512,19 +512,28 @@ document.addEventListener("DOMContentLoaded", () => {
  */
   var topicList = document.getElementById('mcq-list');
 
+  var topicList = document.getElementById('mcq-list');
+
   topicList.addEventListener('click', event => {
     const li = event.target.closest('li');
-  //  if (!li || li.parentElement !== topicList) return;
-
+    if (!li) return; // Safety check in case they click outside an li
+  
+    // 🌟 FIX: If the user clicked the "Buy Licence" button, or if the row is locked, STOP HERE.
+    if (event.target.classList.contains('buy-licence-btn') || li.classList.contains('locked-container')) {
+      return; 
+    }
+  
     topicList.querySelectorAll('li').forEach(item => {
       item.classList.remove('active');
     });
-
+  
     li.classList.add('active');
-
-    const file = li.dataset.file.split('.')[0];
-   
-    loadQuestions(file);
+  
+    // Safety check to ensure dataset.file actually exists before splitting
+    if (li.dataset && li.dataset.file) {
+      const file = li.dataset.file.split('.')[0];
+      loadQuestions(file);
+    }
   });
 
   document.addEventListener("click", (e) => {
@@ -1303,3 +1312,333 @@ async function loadLiveExamQuestions() {
 
   showQuestion(allQuestions[0]);
 }*/
+
+const premiumClasses = ['english_10', 'english_11', 'science_10'];
+
+async function applyPremiumLocks() {
+  const userMode = await checkUserModeFromIndexedDB(); 
+
+  if (userMode === 'pro') {
+    return; // User is Pro, leave everything unlocked!
+  }
+
+  premiumClasses.forEach(className => {
+    const parentElements = document.getElementsByClassName(className);
+    
+    Array.from(parentElements).forEach(parentEl => {
+      // 1. Find all share buttons inside this premium class container
+      const shareButtons = parentEl.querySelectorAll('.share-btn');
+      
+      shareButtons.forEach(btn => {
+        btn.classList.add('disabled-btn');
+        btn.disabled = true; // Hard browser disable (cannot be clicked)
+        
+        // Inline safety bypass override just in case they remove the "disabled" attribute via DevTools
+        btn.onclick = function(e) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          showLicencePopup(); // Remind them to buy a license if they try to click it
+          return false;
+        };
+      });
+
+      // 2. Wrap the parent element content with the visual blur layout
+      if (parentEl.classList.contains('locked-container')) return;
+
+      const originalHTML = parentEl.innerHTML;
+      parentEl.classList.add('locked-container');
+      parentEl.innerHTML = `
+        <section class="blur-content">${originalHTML}</section>
+        <div class="lock-overlay">
+          <button class="buy-licence-btn" onclick="showLicencePopup()">Buy Licence</button>
+        </div>
+      `;
+    });
+  });
+}
+// Open or create our database
+function openAppDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("AppSettingsDB", 1);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      // Create an object store named "settings" if it doesn't exist
+      if (!db.objectStoreNames.contains("settings")) {
+        db.createObjectStore("settings");
+      }
+    };
+
+    request.onsuccess = (event) => resolve(event.target.result);
+    request.onerror = (event) => reject(event.target.error);
+  });
+}
+
+async function checkUserModeFromIndexedDB() {
+  try {
+    const db = await openAppDatabase();
+    return new Promise((resolve) => {
+      const transaction = db.transaction("settings", "readonly");
+      const store = transaction.objectStore("settings");
+      const request = store.get("userMode");
+
+      request.onsuccess = () => {
+        // If "pro" is found, return it. Otherwise, default to "free"
+        resolve(request.result === "pro" ? "pro" : "free");
+      };
+
+      request.onerror = () => {
+        resolve("free"); // Fallback to free if error occurs
+      };
+    });
+  } catch (error) {
+    console.error("IndexedDB missing or broken:", error);
+    return "free";
+  }
+}
+window.addEventListener('DOMContentLoaded', applyPremiumLocks);
+
+window.showLicencePopup = async () => {
+  // Clear any old quiz content as you did before
+  document.getElementById('explanation-quiz').innerHTML = "";
+  
+  // Custom WhatsApp configuration parameters
+  const whatsappNumber = "94764042528"; // Replace with your actual number with country code
+  const message = encodeURIComponent("Hello, I would like to purchase a license key for the App.");
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+  // Injecting the custom Licence UI layout inside your existing layout scheme
+  document.getElementById('explanation-text').innerHTML = `
+    <div style="margin: auto;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 2px solid #4A90E2; border-radius: 10px; padding: 20px; max-width: 400px;">
+      <h3 style="margin-top: 0;">🔒 Premium Content Locked</h3>
+      <p style="font-size: 14px; line-height: 1.5;">
+        This topic requires an active activation key. Click below to contact us directly via WhatsApp to get yours instantly.
+      </p>
+      
+      <!-- WhatsApp Link styled cleanly -->
+      <a href="${whatsappUrl}" target="_blank" style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background-color: #25D366;
+        color: white;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      ">
+        💬 Purchase via WhatsApp
+      </a>
+
+      <div style="border-top: 1px solid #eee; padding-top: 15px;">
+      <label style="display:block; font-size: 11px; font-weight: bold; color: #555; margin-bottom: 5px;">
+        ALREADY HAVE A KEY?
+      </label>
+      <div id="studentData" style="display: flex; flex-direction: column; gap: 10px;">
+        
+        <input id="studentPhoneInput" type="tel" onblur="autoFillLicenseKey()" placeholder="Enter Phone Number (e.g., 0771234567)" style="
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 14px;
+        ">
+    
+        <input id="licenceKeyInput" placeholder="Enter Licence Key" style="
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 14px;
+        ">
+        
+        <button class="start-exam-btn" id="activateBtn" onclick="verifyInsertedKey()" style="
+          background: linear-gradient(112deg, #009688, #009688, #43A047);
+          padding: 12px;
+          border: none;
+          border-radius: 5px;
+          color: #fff;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 15px;
+        ">Activate App</button>
+      </div>
+      <p id="licence-error-msg" style="color: red; font-size: 13px; margin: 8px 0 0 0; text-align: center;"></p>
+    </div>
+    </div>
+  `;
+
+  // Your existing popup display engine logic
+  popup.classList.add('show');
+}
+
+async function verifyInsertedKey() {
+  const enteredKey = document.getElementById('licenceKeyInput').value.trim();
+  const enteredPhone = document.getElementById('studentPhoneInput').value.trim();
+  const errorMsg = document.getElementById('licence-error-msg');
+  const activateBtn = document.getElementById('activateBtn');
+
+  // Input Validation Checks
+  if (!enteredKey || !enteredPhone) {
+    errorMsg.style.color = "red";
+    errorMsg.textContent = "Please enter both License Key and Phone Number.";
+    return;
+  }
+
+  errorMsg.style.color = "orange";
+  errorMsg.textContent = "Verifying registration details...";
+  activateBtn.disabled = true;
+
+  // Manage Device ID (Will generate a new one if cache was wiped)
+  let deviceId = localStorage.getItem("pwa_device_id");
+  if (!deviceId) {
+    deviceId = "DEV-" + crypto.randomUUID().substring(0, 8).toUpperCase();
+    localStorage.setItem("pwa_device_id", deviceId);
+  }
+
+  try {
+    // 1. Fetch license snapshot record from Firebase
+    const licenseRef = ref(db, `licenses/${enteredKey}`);
+    const snapshot = await get(licenseRef);
+
+    if (!snapshot.exists()) {
+      errorMsg.style.color = "red";
+      errorMsg.textContent = "License Key Not Found!";
+      activateBtn.disabled = false;
+      return;
+    }
+
+    const data = snapshot.val();
+    const devices = data.devices || {};
+    
+    let accessGranted = false;
+    let existingDeviceKeyInDb = null;
+
+    // 2. SMART RECOVERY CHECK: Check if this phone number already registered under this key
+    for (const keyId in devices) {
+      if (devices[keyId].phoneNumber === enteredPhone) {
+        existingDeviceKeyInDb = keyId;
+        break;
+      }
+    }
+
+    if (devices[deviceId]) {
+      // Scenario A: Device configuration still matches perfectly
+      accessGranted = true;
+    } else if (existingDeviceKeyInDb) {
+      // Scenario B: Cache was cleared, but phone number matches! 
+      // Overwrite the old, dead device entry with their newly generated deviceId
+      
+      // Remove old registration reference
+      await set(ref(db, `licenses/${enteredKey}/devices/${existingDeviceKeyInDb}`), null);
+      
+      // Save new device identification block with the same phone number
+      await set(ref(db, `licenses/${enteredKey}/devices/${deviceId}`), {
+        added: Date.now(),
+        phoneNumber: enteredPhone
+      });
+      accessGranted = true;
+    } else if (Object.keys(devices).length < 5) {
+      // Scenario C: Brand-new device registration setup (Slots available)
+      await set(ref(db, `licenses/${enteredKey}/devices/${deviceId}`), {
+        added: Date.now(),
+        phoneNumber: enteredPhone
+      });
+      accessGranted = true;
+    } else {
+      // Scenario D: Key is full and phone number does not match any registered user
+      errorMsg.style.color = "red";
+      errorMsg.textContent = "Limit Reached! This key is registered to 5 different numbers.";
+      activateBtn.disabled = false;
+      return;
+    }
+
+    // 3. Save "pro" verification states locally if access was approved
+    if (accessGranted) {
+      const appDb = await openAppDatabase();
+      await new Promise((resolve, reject) => {
+        const transaction = appDb.transaction("settings", "readwrite");
+        const store = transaction.objectStore("settings");
+        
+        store.put("pro", "userMode");
+        store.put(enteredKey, "savedKey");
+        store.put(enteredPhone, "userPhone"); // Store phone offline
+
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = (event) => reject(event.target.error);
+      });
+
+      localStorage.setItem("maths_verified", "true");
+
+      alert("Success! Premium access activated.");
+      if (typeof popup !== 'undefined') popup.classList.remove('show');
+      window.location.reload();
+    }
+
+  } catch (err) {
+    console.error(err);
+    errorMsg.style.color = "red";
+    errorMsg.textContent = "Connection Error: " + err.message;
+    activateBtn.disabled = false;
+  }
+}
+window.verifyInsertedKey = verifyInsertedKey;
+
+async function autoFillLicenseKey() {
+  const phoneInput = document.getElementById('studentPhoneInput');
+  const keyInput = document.getElementById('licenceKeyInput');
+  const errorMsg = document.getElementById('licence-error-msg');
+  
+  const enteredPhone = phoneInput.value.trim();
+
+  // If the phone field is empty, don't do anything
+  if (!enteredPhone) return;
+
+  errorMsg.style.color = "gray";
+  errorMsg.textContent = "Checking for registered keys...";
+
+  try {
+    // 1. Fetch the entire licenses node to find a phone match
+    const licensesRef = ref(db, 'licenses');
+    const snapshot = await get(licensesRef);
+
+    if (snapshot.exists()) {
+      const allLicenses = snapshot.val();
+      let foundKey = null;
+
+      // 2. Loop through all license keys
+      for (const licenseKey in allLicenses) {
+        const devices = allLicenses[licenseKey].devices || {};
+        
+        // Loop through all devices under this license key
+        for (const deviceId in devices) {
+          if (devices[deviceId].phoneNumber === enteredPhone) {
+            foundKey = licenseKey; // Match found!
+            break;
+          }
+        }
+        if (foundKey) break; // Stop searching once we find a match
+      }
+      errorMsg.textContent = "";
+      
+      // 3. UI Update Logic
+      if (foundKey) {
+        keyInput.value = foundKey; // Automatically fill the input field!
+      //  errorMsg.style.color = "green";
+      //  errorMsg.textContent = "License key recovered automatically! Click Activate.";
+      } else {
+    //    errorMsg.style.color = "orange";
+     //   errorMsg.textContent = "No license found for this number. Please type your key manually.";
+      }
+    } else {
+      errorMsg.textContent = "";
+    }
+  } catch (err) {
+    console.error("Auto-fill search failed:", err);
+    errorMsg.style.color = "red";
+    errorMsg.textContent = "Could not check for saved keys automatically.";
+  }
+}
+
+// Remember to expose it to the global window scope so HTML can see it!
+window.autoFillLicenseKey = autoFillLicenseKey;
