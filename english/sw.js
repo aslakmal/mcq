@@ -15,8 +15,8 @@ const APP_ASSETS = [
 
 const grades = {
   9: 10,
-  10: 10,
-  11: 14
+  10: 14,
+  11: 10
 };
 
 const QUIZ_FILES = Object.entries(grades).flatMap(
