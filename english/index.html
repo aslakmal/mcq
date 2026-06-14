@@ -728,7 +728,63 @@
  //import{initializeApp as i}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";import{getDatabase as t,ref as e,get as n,set as r}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";const a={apiKey:"AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",authDomain:"stable-synapse-241016.firebaseapp.com",databaseURL:"https://stable-synapse-241016-default-rtdb.firebaseio.com",projectId:"stable-synapse-241016",storageBucket:"stable-synapse-241016.firebasestorage.app",messagingSenderId:"311188310788",appId:"1:311188310788:web:888512a24236ba39c45e51"},s=t(i(a)),o=document.getElementById("msg"),c=()=>{document.getElementById("gatekeeper").style.display="none",document.getElementById("app-content").style.display="block","serviceWorker"in navigator&&navigator.serviceWorker.register("/sw.js")},l=i=>o.innerHTML=`<span class="error">${i}</span>`;(async function(){if(window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone||"true"===localStorage.getItem("maths_verified"))return c();const i=new URLSearchParams(window.location.search).get("key");if(!i)return l("Invalid Access. Use your unique installation link.");let a=localStorage.getItem("pwa_device_id")||`DEV-${crypto.randomUUID().slice(0,8).toUpperCase()}`;localStorage.setItem("pwa_device_id",a);try{const t=await n(e(s,`licenses/${i}`));if(!t.exists())return l("License Key Not Found!");const o=t.val().devices||{};if(o[a]||Object.keys(o).length<5)o[a]||await r(e(s,`licenses/${i}/devices/${a}`),{added:Date.now()}),localStorage.setItem("maths_verified","true"),c();else l("Limit Reached! This key is already used on 5 devices.")}catch(i){o.innerText="Connection Error: "+i.message}})();
   </script>
 
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SY83EZT9J1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
 
+  function gtag(){
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'G-SY83EZT9J1', {
+    send_page_view: true
+  });
+  function trackEvent(name, params = {}) {
+  if (navigator.onLine) {
+    gtag('event', name, params);
+  } else {
+    saveEventOffline({ name, params, time: Date.now() });
+  }
+}
+function saveEventOffline(event) {
+  let request = indexedDB.open("ga-offline-db", 1);
+
+  request.onupgradeneeded = e => {
+    e.target.result.createObjectStore("events", { autoIncrement: true });
+  };
+
+  request.onsuccess = e => {
+    let db = e.target.result;
+    let tx = db.transaction("events", "readwrite");
+    tx.objectStore("events").add(event);
+  };
+}
+window.addEventListener("online", sendOfflineEvents);
+
+function sendOfflineEvents() {
+  let request = indexedDB.open("ga-offline-db", 1);
+
+  request.onsuccess = e => {
+    let db = e.target.result;
+    let tx = db.transaction("events", "readwrite");
+    let store = tx.objectStore("events");
+
+    store.getAll().onsuccess = ev => {
+      ev.target.result.forEach(event => {
+        gtag('event', event.name, event.params);
+      });
+      store.clear();
+    };
+  };
+}
+trackEvent("lesson_completed", {
+  lesson: "maths_chapter_1"
+});
+
+</script>
 
 </head>
 
