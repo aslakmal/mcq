@@ -395,7 +395,22 @@
   to { transform: rotate(360deg); }
 }
   </style>
-
+    <style>
+.goog-te-banner-frame {
+    display: none !important;
+}
+body {
+    top: 0px !important;
+}
+.goog-te-gadget img {
+    display: none !important;
+}
+.goog-te-gadget-simple{
+      border: 1px solid #eee !important;
+    border-radius: 5px !important;
+    padding: 3px !important;
+}
+    </style>
 
 <script>
   window.MathJax = {
@@ -584,6 +599,7 @@ trackEvent("lesson_completed", {
     <p id="msg">Loading..</p>
 </div>
   <div id="app-content">
+<div id="google_translate_element"></div>    
   <button id="menu-toggle">
     ☰
   </button>
@@ -792,6 +808,19 @@ function hideLoader() {
 window.addEventListener('load', hideLoader);
 window.addEventListener('pageshow', hideLoader);
   </script>
+     <script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'auto', // your source language (e.g. 'si', 'ta', or 'auto')
+      includedLanguages: 'en,si,ta', // restrict to target languages you want
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" 
+  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script> 
 </body>
 
 </html>
