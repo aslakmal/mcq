@@ -29,17 +29,20 @@ const QUIZ_FILES = Array.from({ length: 41 }, (_, i) => `./${i + 1}.json`);
 
 /* =========================
    INSTALL
-   Pre-caches everything immediately
+   Pre-caches everything fresh from the network
 ========================= */
 self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(
     Promise.all([
-      caches.open(APP_CACHE).then(cache => cache.addAll(APP_ASSETS)),
+      // Force reload to bypass browser HTTP cache for app assets
+      caches.open(APP_CACHE).then(cache => {
+        const requests = APP_ASSETS.map(url => new Request(url, { cache: "reload" }));
+        return cache.addAll(requests);
+      }),
       caches.open(QUIZ_CACHE).then(async (cache) => {
-        // We use map + fetch to prevent one 404 from breaking the whole install
         const promises = QUIZ_FILES.map(url => 
-          fetch(url)
+          fetch(url, { cache: "reload" }) // Added { cache: "reload" } here too
             .then(response => {
               if (response.ok) return cache.put(url, response);
               throw new Error(`Failed to fetch ${url}`);
