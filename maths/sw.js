@@ -13,7 +13,6 @@ const APP_ASSETS = [
   "./index.html",
   "./1.html",
   "./3.html",
-  "./maths.html",
   "./circle.html",
   "./graph.html",
   "./triangle.html",
