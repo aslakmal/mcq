@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Portal - Realtime Database</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            padding: 1rem;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .tab-group {
+            display: flex;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: #ffffff;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading Spinner Styling */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            display: none;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Class added when loading */
+        .submit-btn.loading .spinner {
+            display: inline-block;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .feedback-msg {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+            text-align: center;
+        }
+
+        .feedback-msg.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .feedback-msg.success {
+            display: block;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .user-dashboard {
+            display: none;
+            text-align: center;
+        }
+
+        .user-dashboard.active {
+            display: block;
+        }
+
+        .user-info {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin: 0.5rem 0 0.25rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--accent-color);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <!-- Active User View -->
+        <div id="dashboard-view" class="user-dashboard">
+            <h2>Welcome Back</h2>
+            <p class="user-info" id="user-display-name"></p>
+            <div class="role-badge" id="user-display-role">Role: Loading...</div>
+            <button class="submit-btn" id="logout-btn">
+                <span>Sign Out</span>
+            </button>
+        </div>
+
+        <!-- Forms View -->
+        <div id="auth-views">
+            <div class="tab-group">
+                <button class="tab-btn active" id="tab-login">Login</button>
+                <button class="tab-btn" id="tab-signup">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="name@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="submit-btn" id="login-btn">
+                    <div class="spinner"></div>
+                    <span class="btn-text">Sign In</span>
+                </button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="name@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="•••••••• (Min 6 chars)">
+                </div>
+                <button type="submit" class="submit-btn" id="signup-btn">
+                    <div class="spinner"></div>
+                    <span class="btn-text">Create Account</span>
+                </button>
+            </form>
+
+            <div id="feedback" class="feedback-msg"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            updateProfile,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getDatabase,
+            ref,
+            get,
+            set,
+            onValue,
+            off
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBahMVZgpit86JZp4e1wVtryLqxWvnbuV0",
+            authDomain: "chat-6aa0c.firebaseapp.com",
+            databaseURL: "https://chat-6aa0c-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "chat-6aa0c",
+            storageBucket: "chat-6aa0c.firebasestorage.app",
+            messagingSenderId: "984631391953",
+            appId: "1:984631391953:web:861c9bce31d1bc64d2f7f0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // Get 'ref' query parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrerID = urlParams.get('ref') || null;
+
+        // DOM Elements
+        const tabLogin = document.getElementById('tab-login');
+        const tabSignup = document.getElementById('tab-signup');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const feedback = document.getElementById('feedback');
+        const authViews = document.getElementById('auth-views');
+        const dashboardView = document.getElementById('dashboard-view');
+        const userDisplayName = document.getElementById('user-display-name');
+        const userDisplayRole = document.getElementById('user-display-role');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+
+        let currentRoleRef = null;
+
+        // UI Tab Switching
+        tabLogin.addEventListener('click', () => {
+            tabLogin.classList.add('active');
+            tabSignup.classList.remove('active');
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            clearFeedback();
+        });
+
+        tabSignup.addEventListener('click', () => {
+            tabSignup.classList.add('active');
+            tabLogin.classList.remove('active');
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            clearFeedback();
+        });
+
+        function showFeedback(message, isError = true) {
+            feedback.textContent = message;
+            feedback.className = `feedback-msg ${isError ? 'error' : 'success'}`;
+        }
+
+        function clearFeedback() {
+            feedback.textContent = '';
+            feedback.className = 'feedback-msg';
+        }
+
+        // Toggle Loading State on Buttons
+        function setLoading(button, isLoading, loadingText = "Please wait...") {
+            const btnText = button.querySelector('.btn-text');
+            if (isLoading) {
+                button.disabled = true;
+                button.classList.add('loading');
+                btnText.dataset.originalText = btnText.textContent;
+                btnText.textContent = loadingText;
+            } else {
+                button.disabled = false;
+                button.classList.remove('loading');
+                btnText.textContent = btnText.dataset.originalText || btnText.textContent;
+            }
+        }
+
+        function sanitizeEmailKey(email) {
+            return email.toLowerCase().replace(/\./g, '_dot_');
+        }
+
+        // Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (currentRoleRef) {
+                off(currentRoleRef);
+                currentRoleRef = null;
+            }
+
+            if (user) {
+                authViews.style.display = 'none';
+                dashboardView.classList.add('active');
+                userDisplayName.textContent = user.displayName || user.email;
+
+                currentRoleRef = ref(db, `users/${user.uid}/role`);
+                onValue(currentRoleRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        userDisplayRole.textContent = `Role: ${snapshot.val()}`;
+                    } else {
+                        userDisplayRole.textContent = "Role: Creating profile...";
+                    }
+                }, (error) => {
+                    console.error("RTDB read error:", error);
+                    userDisplayRole.textContent = "Role: Unknown";
+                });
+
+            } else {
+                authViews.style.display = 'block';
+                dashboardView.classList.remove('active');
+            }
+        });
+
+        // Sign Up Handler
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearFeedback();
+            setLoading(signupBtn, true, "Creating Account...");
+
+            const name = document.getElementById('signup-name').value.trim();
+            const rawEmail = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const sanitizedEmail = sanitizeEmailKey(rawEmail);
+
+            try {
+                // 1. Create User in Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, rawEmail, password);
+                const user = userCredential.user;
+
+                // 2. Set Auth Display Name
+                await updateProfile(user, { displayName: name });
+
+                // 3. Check buyers node
+                let assignedRole = "user";
+                try {
+                    const buyerSnapshot = await get(ref(db, `buyers/${sanitizedEmail}`));
+                    if (buyerSnapshot.exists()) {
+                        assignedRole = "owner";
+                    }
+                } catch (buyerErr) {
+                    console.warn("Could not check buyers node:", buyerErr);
+                }
+
+                // 4. Build user data object
+                const userData = {
+                    uid: user.uid,
+                    name: name,
+                    email: rawEmail,
+                    role: assignedRole,
+                    createdAt: Date.now()
+                };
+
+                // Add referredBy key ONLY if referrerID exists
+                if (referrerID) {
+                    userData.ref = {
+                        [referrerID]:''
+                    };
+                }
+
+                // 5. Save to Realtime Database
+                await set(ref(db, `users/${user.uid}`), userData);
+
+                signupForm.reset();
+            } catch (error) {
+                showFeedback(error.message.replace("Firebase: ", ""));
+            } finally {
+                setLoading(signupBtn, false);
+            }
+        });
+
+        // Login Handler
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearFeedback();
+            setLoading(loginBtn, true, "Signing In...");
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                loginForm.reset();
+            } catch (error) {
+                showFeedback(error.message.replace("Firebase: ", ""));
+            } finally {
+                setLoading(loginBtn, false);
+            }
+        });
+
+        // Sign Out Handler
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                showFeedback(error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>
