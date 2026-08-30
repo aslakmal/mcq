@@ -562,7 +562,12 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     showLiveExamPopup();
   });
-
+  document.addEventListener('click', e => {
+    const el = e.target.closest('.load_exams');
+    if (!el) return;
+    e.preventDefault();
+    loadExamsFromAllReferrers();
+  });
 });
 document.addEventListener("DOMContentLoaded", () => {
   const parentItems = document.querySelectorAll("#topic-list > li");
@@ -855,22 +860,19 @@ mcqItems.forEach(item => {
 });
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-// Your existing config
-const firebaseConfig = {
-  apiKey: "AIzaSyAbnUDbULQE5NW5uRiu9VU5QqP3reOOQH0",
-  authDomain: "stable-synapse-241016.firebaseapp.com",
-  databaseURL: "https://stable-synapse-241016-default-rtdb.firebaseio.com",
-  projectId: "stable-synapse-241016",
-  storageBucket: "stable-synapse-241016.firebasestorage.app",
-  messagingSenderId: "311188310788",
-  appId: "1:311188310788:web:888512a24236ba39c45e51",
-  measurementId: "G-SY83EZT9J1"
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getDatabase, ref, set,get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    const firebaseConfig = {
+  apiKey: "AIzaSyBahMVZgpit86JZp4e1wVtryLqxWvnbuV0",
+  authDomain: "chat-6aa0c.firebaseapp.com",
+  databaseURL: "https://chat-6aa0c-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "chat-6aa0c",
+  storageBucket: "chat-6aa0c.firebasestorage.app",
+  messagingSenderId: "984631391953",
+  appId: "1:984631391953:web:861c9bce31d1bc64d2f7f0"
 };
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
 
 
@@ -1143,64 +1145,64 @@ document.addEventListener('visibilitychange', async () => {
   }
 });
 
-window.startExam = async () => {
-  const btn = document.getElementById("startBtn");
-
-
+window.startExam = async (selectedExamID, examFile, examStatus, clickedBtn) => {
   try {
-    const inputField = document.getElementById("examID");
-    examID = inputField.value.trim();
-    studentName = document.getElementById("studentName").value;
+    // 1. Get logged-in student details from Firebase Auth
+    const currentUser = auth.currentUser;
 
-    if (examID == '') {
-      alertbox("Please enter an Exam ID.");
+    if (!currentUser) {
+      alertbox("Please log in to start the exam.");
       return;
     }
 
-    if (studentName == '') {
-      alertbox("Please enter your Name.");
+    // Fallback order: Display Name -> Email -> User ID
+    studentName = currentUser.displayName || currentUser.email || currentUser.uid;
+    examID = selectedExamID;
+
+    // 2. Validate Exam Status from attributes
+    if (examStatus === "paused") {
+      alertbox("This exam is currently paused.");
+      return;
+    } else if (examStatus !== "active") {
+      alertbox("This exam has ended.");
       return;
     }
-  // 🔄 show loading
-  btn.disabled = true;
-  btn.innerHTML = `<span class="spinner"></span> Starting...`;
 
+    // 🔄 3. Show loading UI on the clicked button
+    if (clickedBtn) {
+      clickedBtn.disabled = true;
+      clickedBtn.innerHTML = `<span class="spinner"></span> Starting...`;
+    }
+
+    // 4. Save student name locally in IndexedDB
     const idb = await openDB();
     const tx = idb.transaction(STORE_NAME, "readwrite");
     const store = tx.objectStore(STORE_NAME);
     store.put(studentName, "studentName");
 
-    const examRef = ref(db, 'liveExams/' + examID);
-    const snapshot = await get(examRef);
-
-    if (snapshot.exists()) {
-      const examData = snapshot.val();
-
-      if (examData.status === "active") {
-        closePopup();
-        const clparts = examData.file.split('/');
-
-        examClass = `${clparts[0]}_${clparts[1]}`;
-        examCat=`${clparts[1]}/${clparts[2]}`
-        loadliveQuestions(examData.file);
-        return;
-      } else if (examData.status === "paused") {
-        alertbox("This exam is currently paused.");
-      } else {
-        alertbox("Exam ended.");
-      }
-    } else {
-      alertbox("Invalid Exam ID.");
+    // Close any open popups or modals
+    if (typeof closePopup === "function") {
+      closePopup();
     }
 
-  } catch (error) {
-    console.error(error);
-    alertbox("Connection error.");
-  }
+    // 5. Parse file path for class and category
+    const clparts = examFile.split('/');
+    examClass = `${clparts[0]}_${clparts[1]}`;
+    examCat = `${clparts[1]}/${clparts[2]}`;
 
-  // 🔁 restore button (only if not redirected)
-  btn.disabled = false;
-  btn.innerHTML = "Start";
+    // 6. Load questions directly
+    loadliveQuestions(examFile);
+
+  } catch (error) {
+    console.error("Error starting exam:", error);
+    alertbox("Error starting exam. Please try again.");
+    
+    // Restore button state if an error occurred
+    if (clickedBtn) {
+      clickedBtn.disabled = false;
+      clickedBtn.innerHTML = "Start Exam";
+    }
+  }
 };
 
 window.alertbox = function (message, type = 'success') {
@@ -1320,7 +1322,6 @@ async function loadLiveExamQuestions() {
 
   showQuestion(allQuestions[0]);
 }*/
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 async function loadExamsFromAllReferrers() {
   const currentUser = auth.currentUser;
@@ -1385,3 +1386,42 @@ async function loadExamsFromAllReferrers() {
     console.error("Error fetching referrers' exams:", error);
   }
 }
+// Example render function to show exams on the page
+function renderExamsList(exams) {
+  const container = document.getElementById('tutes-panel');
+  container.innerHTML = '';
+
+  if (exams.length === 0) {
+    container.innerHTML = '<p>No exams available from your referrers.</p>';
+    return;
+  }
+
+  exams.forEach((exam) => {
+    const card = document.createElement('div');
+    card.className = 'exam-card';
+    card.innerHTML = `
+  <div>
+    <h3>${exam.topic}</h3>
+    <p>Status: <span class="status-badge status-${exam.status}">${exam.status}</span></p>
+  </div>
+  <button 
+    class="start_now" 
+    data-id="${exam.examID}" 
+    data-file="${exam.file}" 
+    data-status="${exam.status}">
+    Start Exam
+  </button>
+`;
+    container.appendChild(card);
+  });
+}
+document.getElementById("tutes-panel").addEventListener("click", (e) => {
+  const startBtn = e.target.closest(".start_now");
+  
+  if (startBtn) {
+    const { id, file, status } = startBtn.dataset;
+    
+    // Pass ID, File, Status, and the Button element itself
+    window.startExam(id, file, status, startBtn);
+  }
+});
