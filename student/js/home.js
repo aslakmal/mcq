@@ -1320,3 +1320,68 @@ async function loadLiveExamQuestions() {
 
   showQuestion(allQuestions[0]);
 }*/
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+async function loadExamsFromAllReferrers() {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    alert("Please log in to view referrers' exams.");
+    return;
+  }
+
+  try {
+    // 1. Fetch current user's profile to get the 'ref' map
+    const userSnapshot = await get(ref(db, `users/${currentUser.uid}`));
+    
+    if (!userSnapshot.exists()) {
+      console.log("User profile not found.");
+      return;
+    }
+
+    const userData = userSnapshot.val();
+
+    // 2. Check if the user has any referrer IDs saved
+    if (!userData.ref || Object.keys(userData.ref).length === 0) {
+      console.log("No referrer IDs found for this user.");
+      renderExamsList([]); // Render empty state
+      return;
+    }
+
+    // Extract all referrer IDs from keys: ['REFERRER_1', 'REFERRER_2']
+    const referrerIDs = Object.keys(userData.ref);
+
+    // 3. Fetch all live exams from Realtime Database
+    const examsSnapshot = await get(ref(db, 'liveExams'));
+    
+    if (!examsSnapshot.exists()) {
+      console.log("No live exams exist in the database.");
+      renderExamsList([]);
+      return;
+    }
+
+    const allExams = examsSnapshot.val();
+    const matchedExams = [];
+
+    // 4. Filter exams where 'createdBy' matches any ID in referrerIDs
+    Object.keys(allExams).forEach((examID) => {
+      const examData = allExams[examID];
+
+      // Check if this exam was created by one of the user's referrers
+      if (examData.createdBy && referrerIDs.includes(examData.createdBy)) {
+        matchedExams.push({
+          examID: examID,
+          ...examData
+        });
+      }
+    });
+
+    console.log("Found exams from referrers:", matchedExams);
+
+    // 5. Render exams in your UI
+    renderExamsList(matchedExams);
+
+  } catch (error) {
+    console.error("Error fetching referrers' exams:", error);
+  }
+}
