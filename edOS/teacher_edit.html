@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Teacher Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f4f6f9; margin: 0; padding: 20px; display: flex; justify-content: center; }
+    .card { background: #fff; width: 100%; max-width: 600px; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h2 { margin-top: 0; color: #1a202c; font-size: 1.5rem; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568; font-size: 0.9rem; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 1rem; color: #2d3748; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #3182ce; box-shadow: 0 0 0 3px rgba(49,130,206,0.15); }
+    .current-photo-container { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .current-photo-container img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; }
+    .img-container { display: none; margin-top: 10px; max-height: 300px; background: #000; overflow: hidden; border-radius: 6px; }
+    .img-container img { max-width: 100%; }
+    .btn-submit { width: 100%; background: #3182ce; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 12px; }
+    .btn-submit:hover { background: #2b6cb0; }
+    .btn-submit:disabled { background: #a0aec0; cursor: not-allowed; }
+    .alert { padding: 12px; background: #fed7d7; color: #9b2c2c; border-radius: 6px; margin-bottom: 16px; display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Edit Teacher Profile</h2>
+    <div id="missingSchoolAlert" class="alert">Error: Missing valid school ID in URL.</div>
+
+    <form id="editTeacherForm">
+      <div class="current-photo-container">
+        <img id="currentPhotoPreview" src="img/user.svg" alt="Current Photo">
+        <div>
+          <label style="margin:0;">Current Photo</label>
+          <small style="color: #718096;">Upload a new image below only if you wish to change it.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Primary Subject</label>
+        <input type="text" id="subject" required>
+      </div>
+
+      <div class="form-group">
+        <label for="qualification">Qualification</label>
+        <input type="text" id="qualification" required>
+      </div>
+
+      <div class="form-group">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" required>
+      </div>
+
+      <div class="form-group">
+        <label for="contact">Contact Number</label>
+        <input type="tel" id="contact" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" rows="2" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="address">Classes In Charge</label>
+        <textarea id="classes" rows="2" placeholder="2A,4B.."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="imageInput">Change Photo (Optional)</label>
+        <input type="file" id="imageInput" accept="image/*">
+        <div class="img-container">
+          <img id="imageToCrop" src="" alt="Crop image">
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-submit">Save Changes</button>
+    </form>
+  </div>
+
+  <!-- Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="sync.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
+      authDomain: "school-62c45.firebaseapp.com",
+      databaseURL: "https://school-62c45-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "school-62c45",
+      storageBucket: "school-62c45.firebasestorage.app",
+      messagingSenderId: "213099404706",
+      appId: "1:213099404706:web:d65d7ec257c1119f3966fb",
+      measurementId: "G-8QG01WT32P"
+    };
+
+    const CLOUDINARY_UPLOAD_PRESET = "school";
+    const CLOUDINARY_CLOUD_NAME = "vmorkfqp";
+
+    // 1. INITIALIZE FIREBASE
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    // 2. PARSE URL PARAMETERS (?school=school_id&id=teacher_firebase_key)
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawSchoolId = urlParams.get('school');
+    const teacherKey = urlParams.get('id');
+
+    if (!rawSchoolId || !teacherKey) {
+      document.getElementById('missingSchoolAlert').style.display = 'block';
+      document.getElementById('editTeacherForm').style.display = 'none';
+      throw new Error("Initialization halted: Missing 'school' or 'id' URL parameter.");
+    }
+
+    const schoolId = rawSchoolId.trim().toLowerCase();
+
+    // 3. INITIALIZE SYNC ENGINE & LOAD TEACHER FROM INDEXEDDB
+    const syncEngine = new SchoolSyncEngine(db, schoolId);
+    let existingPhotoUrl = "";
+
+    async function initApp() {
+  try {
+    // 1. Connect to IndexedDB & start real-time sync listeners
+    await syncEngine.initIndexedDB();
+
+    // 2. Fetch using Cache-First strategy with automatic Firebase fallback
+   
+    loadFromIndexedDBDirect();
+
+ 
+
+  } catch (err) {
+    console.error("Error loading teacher profile:", err);
+  }
+}
+
+    initApp();
+function populateForm(teacherData){
+     // 3. Handle missing record (doesn't exist in IndexedDB or Firebase)
+     if (!teacherData) {
+      alertbox("Teacher record not found.","error");
+      window.location.href = `teachers.html?school=${schoolId}`;
+      return;
+    }
+
+    // 4. Auto-populate form fields
+    document.getElementById('fullName').value = teacherData.fullName || '';
+    document.getElementById('subject').value = teacherData.subject || '';
+    document.getElementById('qualification').value = teacherData.qualification || '';
+    document.getElementById('dob').value = teacherData.dob || '';
+    document.getElementById('contact').value = teacherData.contact || '';
+    document.getElementById('address').value = teacherData.address || '';
+    document.getElementById('classes').value = teacherData.classes || '';
+    
+    if (teacherData.photoUrl) {
+      existingPhotoUrl = teacherData.photoUrl;
+      document.getElementById('currentPhotoPreview').src = teacherData.photoUrl;
+    }
+}
+    // 4. AUTHENTICATION & ROLE VERIFICATION
+    let currentUser = null;
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        alertbox("Session expired. Redirecting to login...","error");
+        window.location.href = `admin.html?school=${schoolId}`;
+        return;
+      }
+
+      try {
+        const userRoleRef = db.ref(`schools/${schoolId}/users/${user.uid}/role`);
+        const snapshot = await userRoleRef.once('value');
+        if (snapshot.val() !== 'principal') {
+          alertbox("Unauthorized access! Only the Principal can edit teacher profiles.","error");
+          return;
+        }
+        currentUser = user;
+      } catch (err) {
+        console.error("Auth verification failed:", err);
+      }
+    });
+
+    // 5. CROPPER ENGINE FOR OPTIONAL NEW PHOTO
+    let cropper;
+    const imageInput = document.getElementById('imageInput');
+    const imageToCrop = document.getElementById('imageToCrop');
+    const imgContainer = document.querySelector('.img-container');
+
+    imageInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          imageToCrop.src = event.target.result;
+          imgContainer.style.display = 'block';
+
+          if (cropper) cropper.destroy();
+          cropper = new Cropper(imageToCrop, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1
+          });
+        };
+        reader.readAsDataURL(files[0]);
+      }
+    });
+
+    function getCroppedBlob() {
+      return new Promise((resolve) => {
+        if (!cropper) {
+          resolve(null);
+          return;
+        }
+        const canvas = cropper.getCroppedCanvas({ width: 200, height: 200 });
+        canvas.toBlob((blob) => resolve(blob), 'image/jpeg');
+      });
+    }
+
+    async function uploadToCloudinary(blob) {
+      const formData = new FormData();
+      formData.append('file', blob);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) throw new Error('Cloudinary Upload Failed');
+      const data = await response.json();
+      return data.secure_url;
+    }
+
+    // 6. FORM SUBMISSION & FIREBASE UPDATE
+    document.getElementById('editTeacherForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!currentUser) {
+        alertbox("Authenticating... Please try again in a moment.","error");
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Saving Changes...";
+
+      try {
+        let finalPhotoUrl = existingPhotoUrl;
+
+        // Process image upload only if a new photo was chosen
+        const croppedBlob = await getCroppedBlob();
+        if (croppedBlob) {
+          finalPhotoUrl = await uploadToCloudinary(croppedBlob);
+        }
+
+        const updatedData = {
+  fullName: document.getElementById('fullName').value,
+  subject: document.getElementById('subject').value,
+  qualification: document.getElementById('qualification').value,
+  dob: document.getElementById('dob').value,
+  contact: document.getElementById('contact').value,
+  address: document.getElementById('address').value,
+  classes: document.getElementById('classes').value,
+  photoUrl: finalPhotoUrl,
+  updatedAt: firebase.database.ServerValue.TIMESTAMP,
+  updatedBy: currentUser.uid
+};
+
+// Map human-readable long keys to Firebase short keys (e.g., fullName -> a, updatedAt -> A)
+const shortPayload = mapUserToFirebase(updatedData);
+// Update Firebase with short keys
+await db.ref(`schools/${schoolId}/users/${teacherKey}`).update(shortPayload);
+
+alertbox("Teacher profile updated successfully!", "success");
+window.location.href = `teachers.html?school=${schoolId}`;
+      } catch (err) {
+        console.error(err);
+        alertbox("An error occurred during update: " + err.message,"error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Save Changes";
+      }
+    });
+
+
+    function loadFromIndexedDBDirect() {
+      return new Promise((resolve) => {
+        const dbName = `SIS_${schoolId}`;
+        const request = indexedDB.open(dbName);
+
+        request.onsuccess = (e) => {
+          const idb = e.target.result;
+          if (!idb.objectStoreNames.contains('users')) {
+            resolve();
+            return;
+          }
+
+          const tx = idb.transaction('users', 'readonly');
+          const store = tx.objectStore('users');
+          const getReq = store.get(teacherKey);
+
+          getReq.onsuccess = () => {
+            if (getReq.result) {
+              
+              populateForm(getReq.result);
+            }
+            resolve();
+          };
+          getReq.onerror = () => resolve();
+        };
+        request.onerror = () => resolve();
+      });
+    }
+  </script>
+</body>
+</html>

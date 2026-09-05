@@ -1,0 +1,81 @@
+
+  #detailsPopup.active {
+    display: flex;
+    align-items: center;
+  }
+  
+  .modal-card {
+    background: #ffffff;
+    width: 90%;
+    max-width: 850px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1a202c;
+  }
+  
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #a0aec0;
+    cursor: pointer;
+  }
+  
+  #popupAvatar{width:150px;width:150px}
+  .btn-close:hover {
+    color: #2d3748;
+  }
+  
+  /* Metadata Grid Layout */
+  .popup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .info-card {
+    background: #edf2f7;
+    padding: 10px 14px;
+    border-radius: 6px;
+  }
+  
+  .info-card label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: #718096;
+    font-weight: bold;
+  }
+  
+  .info-card span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2d3748;
+  }
+  
+  /* Modal Canvas Container */
+  .popup-chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 380px;
+    margin-top: 16px;
+  }

@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="css/students.css">
+  <link rel="stylesheet" href="css/id_templates.css">
+  <link rel="stylesheet" href="css/studentData.css">
+ 
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div id="missingSchoolAlert" class="alert">Error: Missing valid school ID in URL parameter (?school=your_school_id).
+    </div>
+
+    <div class="header">
+      <h2>Student Directory</h2>
+      <a id="addStudentBtn" href="#" class="btn-add">+ Register New Student</a>
+    </div>
+
+    <div class="controls-row">
+      <input type="text" id="searchInput" class="search-box" placeholder="Search by name or ID...">
+
+      <!-- CLASS FILTER INPUT WITH AUTOCOMPLETE -->
+      <input type="text" id="classInput" class="class-box" placeholder="Class (e.g. 1A)" list="classList">
+      <datalist id="classList"></datalist>
+
+      <select id="pageSizeSelect" class="page-size-selector">
+        <option value="10">10 per page</option>
+        <option value="25">25 per page</option>
+        <option value="50" selected>50 per page</option>
+        <option value="100">100 per page</option>
+      </select>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <label class="select-all-label">
+                <input type="checkbox" id="selectAllCheckbox" class="custom-checkbox" checked
+                  onclick="toggleSelectAll(this)">
+                <span>Select All</span>
+              </label>
+            </th>
+            <th>Student</th>
+            <th>ID</th>
+            <th>Class</th>
+            <th>Contact</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <tr>
+            <td colspan="6" class="empty-state">Loading student records...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BULK ACTIONS PANEL -->
+    <div class="bulk-bar">
+      <div class="bulk-info" id="selectedCountText">0 students selected</div>
+      <div class="bulk-buttons">
+        <button type="button" class="btn-bulk btn-bulk-score" onclick="openBulkScoreModal()">+ Add Exam Score</button>
+        <button type="button" class="btn-bulk btn-bulk-class" onclick="openBulkClassModal()">Change Class</button>
+      </div>
+    </div>
+
+    <!-- PAGINATION FOOTER -->
+    <div class="pagination-container">
+      <div id="paginationInfo" class="pagination-info">Showing 0 of 0 students</div>
+      <div id="paginationControls" class="pagination-controls"></div>
+    </div>
+  </div>
+
+  <!-- UPDATED BULK EXAM SCORE MODAL -->
+  <div id="bulkScoreModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add / Update Exam Scores</h3>
+        <button type="button" class="close-modal" onclick="closeModal('bulkScoreModal')">×</button>
+      </div>
+
+      <!-- Controls trigger dynamic reloading of current scores -->
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div style="flex: 1;">
+          <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Semester</label>
+          <select id="scoreSemesterSelect" class="form-control" onchange="fetchAndUpdateModalScores()">
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+          </select>
+        </div>
+        <div style="flex: 1;">
+          <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Subject</label>
+          <select id="scoreSubjectSelect" class="form-control" onchange="fetchAndUpdateModalScores()">
+            <!-- Primary Education (Grades 1–5) -->
+            <optgroup label="Primary Education">
+              <option value="1">First Language (Sinhala)</option>
+              <option value="2">First Language (Tamil)</option>
+              <option value="3">English Language</option>
+              <option value="4">Mathematics</option>
+              <option value="5">Environmental Related Activities (ERA)</option>
+              <option value="6">Religion (Buddhism)</option>
+              <option value="7">Religion (Hinduism)</option>
+              <option value="8">Religion (Islam)</option>
+              <option value="9">Religion (Catholicism / Christianity)</option>
+              <option value="10">Primary Aesthetic Studies</option>
+            </optgroup>
+
+            <!-- Junior Secondary (Grades 6–9) -->
+            <optgroup label="Junior Secondary">
+              <option value="11">Civic Education</option>
+              <option value="12">Practical & Technical Skills</option>
+              <option value="13">Health & Physical Education</option>
+              <option value="14">Second Language (Sinhala)</option>
+              <option value="15">Second Language (Tamil)</option>
+            </optgroup>
+
+            <!-- G.C.E. O/L Core Subjects (Grades 10–11) -->
+            <optgroup label="G.C.E. O/L - Core Subjects">
+              <option value="16">Mathematics</option>
+              <option value="17">Science</option>
+              <option value="18">English Language</option>
+              <option value="19">History</option>
+              <option value="20">Sinhala Language & Literature</option>
+              <option value="21">Tamil Language & Literature</option>
+              <option value="22">Buddhism</option>
+              <option value="23">Saivanery (Hinduism)</option>
+              <option value="24">Islam</option>
+              <option value="25">Catholicism / Christianity</option>
+            </optgroup>
+
+            <!-- G.C.E. O/L Group I (Social Sciences & Languages) -->
+            <optgroup label="G.C.E. O/L - Category I Electives">
+              <option value="26">Business & Accounting Studies</option>
+              <option value="27">Geography</option>
+              <option value="28">Entrepreneurship Studies</option>
+              <option value="29">Second Language (Sinhala)</option>
+              <option value="30">Second Language (Tamil)</option>
+              <option value="31">Pali</option>
+              <option value="32">Sanskrit</option>
+              <option value="33">French</option>
+              <option value="34">German</option>
+              <option value="35">Hindi</option>
+              <option value="36">Japanese</option>
+              <option value="37">Arabic</option>
+              <option value="38">Korean</option>
+              <option value="39">Chinese</option>
+              <option value="40">Russian</option>
+            </optgroup>
+
+            <!-- G.C.E. O/L Group II (Aesthetic Subjects) -->
+            <optgroup label="G.C.E. O/L - Category II Electives">
+              <option value="41">Art</option>
+              <option value="42">Music (Oriental)</option>
+              <option value="43">Music (Western)</option>
+              <option value="44">Music (Carnatic)</option>
+              <option value="45">Dancing (Oriental)</option>
+              <option value="46">Dancing (Bharata)</option>
+              <option value="47">Drama & Theatre (Sinhala)</option>
+              <option value="48">Drama & Theatre (Tamil)</option>
+              <option value="49">Drama & Theatre (English)</option>
+              <option value="50">Appreciation of English Literary Texts</option>
+              <option value="51">Appreciation of Sinhala Literary Texts</option>
+              <option value="52">Appreciation of Tamil Literary Texts</option>
+              <option value="53">Appreciation of Arabic Literary Texts</option>
+            </optgroup>
+
+            <!-- G.C.E. O/L Group III (Technical & Practical Subjects) -->
+            <optgroup label="G.C.E. O/L - Category III Electives">
+              <option value="54">Information & Communication Technology (ICT)</option>
+              <option value="55">Agriculture & Food Technology</option>
+              <option value="56">Aquatic Bio-resources Technology</option>
+              <option value="57">Arts & Crafts</option>
+              <option value="58">Home Economics</option>
+              <option value="59">Health & Physical Education</option>
+              <option value="60">Communication & Media Studies</option>
+              <option value="61">Design & Construction Technology</option>
+              <option value="62">Design & Mechanical Technology</option>
+              <option value="63">Design, Electrical & Electronic Technology</option>
+              <option value="64">Electronic Writing & Shorthand</option>
+            </optgroup>
+
+            <!-- G.C.E. A/L Physical Science & Biological Science Streams -->
+            <optgroup label="G.C.E. A/L - Science & Math Streams">
+              <option value="65">Combined Mathematics</option>
+              <option value="66">Physics</option>
+              <option value="67">Chemistry</option>
+              <option value="68">Biology</option>
+              <option value="69">Agricultural Science</option>
+              <option value="70">Higher Mathematics</option>
+            </optgroup>
+
+            <!-- G.C.E. A/L Commerce Stream -->
+            <optgroup label="G.C.E. A/L - Commerce Stream">
+              <option value="71">Accounting</option>
+              <option value="72">Business Studies</option>
+              <option value="73">Economics</option>
+              <option value="74">Business Statistics</option>
+            </optgroup>
+
+            <!-- G.C.E. A/L Technology Stream -->
+            <optgroup label="G.C.E. A/L - Technology Stream">
+              <option value="75">Engineering Technology</option>
+              <option value="76">Bio-Systems Technology</option>
+              <option value="77">Science for Technology</option>
+            </optgroup>
+
+            <!-- G.C.E. A/L Arts & Humanities Stream -->
+            <optgroup label="G.C.E. A/L - Arts & Humanities Stream">
+              <option value="78">Political Science</option>
+              <option value="79">Logic & Scientific Method</option>
+              <option value="80">Sociology</option>
+              <option value="81">Psychology</option>
+              <option value="82">Buddhist Civilization</option>
+              <option value="83">Hindu Civilization</option>
+              <option value="84">Islam Civilization</option>
+              <option value="85">Christian Culture</option>
+              <option value="86">Greek & Roman Civilization</option>
+              <option value="87">Home Economics (A/L)</option>
+            </optgroup>
+
+            <!-- G.C.E. A/L Common Compulsory Subjects -->
+            <optgroup label="G.C.E. A/L - Compulsory Subjects">
+              <option value="88">General English</option>
+              <option value="89">General Information Technology (GIT)</option>
+              <option value="90">Common General Test</option>
+            </optgroup>
+          </select>
+
+        </div>
+      </div>
+
+      <div class="modal-body" id="bulkScoreStudentList">
+        <!-- Dynamic input rows -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-action btn-edit" onclick="closeModal('bulkScoreModal')">Cancel</button>
+        <button type="button" class="btn-bulk btn-bulk-score" onclick="submitBulkScores()">Save Scores</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BULK CLASS CHANGE MODAL -->
+  <div id="bulkClassModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3>Change Class</h3>
+        <button type="button" class="close-modal" onclick="closeModal('bulkClassModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: #718096; margin-top: 0;">Update target class for all selected students.</p>
+        <div class="form-group">
+          <label for="newClassInput">New Class Name</label>
+          <input type="text" id="newClassInput" class="form-control" placeholder="e.g. 4B" list="classList">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-action btn-edit" onclick="closeModal('bulkClassModal')">Cancel</button>
+        <button type="button" class="btn-bulk btn-bulk-class" onclick="submitBulkClassChange()">Update Class</button>
+      </div>
+    </div>
+  </div>
+
+ <!-- ID CARD MODAL -->
+<div id="idCardModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content id-card-modal-content">
+    <div class="modal-header">
+      <h3>Student ID Card</h3>
+      <button type="button" class="close-modal" onclick="closeModal('idCardModal')">×</button>
+    </div>
+
+    <div id="idCardWrapper">
+      <div class="id-cards-container">
+
+        <!-- FRONT SIDE -->
+        <div id="frontCard" class="id-card front-card tpl-modern-blue">
+          <div class="card-header">
+            <h3 id="cardSchoolFront">SCHOOL SIS</h3>
+          </div>
+          
+          <div class="photo-container">
+            <img id="cardPhoto" alt="Student Photo">
+          </div>
+          
+          <h4 id="cardName">JOHN DOE</h4>
+          <div class="card-badge">STUDENT ID CARD</div>
+
+          <!-- Front Details Grid -->
+          <div class="front-card-body">
+            <div class="info-row">
+              <span class="label">ID No:</span>
+              <span class="value" id="cardStudentId"></span>
+            </div>
+            <div class="info-row">
+              <span class="label">Adm No:</span>
+              <span class="value" id="cardAdmNo"></span>
+            </div>
+            <div class="info-row">
+              <span class="label">Birthday:</span>
+              <span class="value" id="cardDob"></span>
+            </div>
+          </div>
+
+          <!-- QR Code Section on Front -->
+          <div class="qr-wrapper">
+            <div id="qrcode"></div>
+            <div class="qr-subtext">Scan to View Profile</div>
+          </div>
+        </div>
+
+        <!-- BACK SIDE -->
+        <div id="backCard" class="id-card back-card tpl-modern-blue">
+          <div class="card-header">
+            <h3>ADDITIONAL DETAILS</h3>
+          </div>
+          <div class="back-card-body">
+            <p><strong>Father:</strong> <span id="cardFather"></span></p>
+            <p><strong>Mother:</strong> <span id="cardMother"></span></p>
+            <p><strong>Contact:</strong> <span id="cardContact"></span></p>
+           <p><strong>Address:</strong> <span id="cardAddress"></span></p>
+          </div>
+          <div class="back-footer">
+            <p>If found, please return to school administration.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button type="button" class="print-btn" onclick="window.print()">Print ID Card</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  
+<div id="detailsPopup" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="student-profile-header">
+        <!-- Profile Image -->
+        <img id="popupAvatar" class="profile-avatar" src="img/user.svg" alt="Student Photo" />
+      </div>
+      <button class="btn-close" onclick="closeDetails()">&times;</button>
+    </div>
+
+    <!-- Dynamic Personal Data Grid -->
+    <div class="popup-grid" id="popupGridContainer">
+      <!-- Info cards generated dynamically by JS -->
+    </div>
+
+    <h3 style="color: #2d3748; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+      Exam Performance Overview
+    </h3>
+
+    <!-- Chart Canvas Container -->
+    <div class="popup-chart-container">
+      <canvas id="popupScoresChart"></canvas>
+    </div>
+  </div>
+</div>
+  
+ 
+
+
+  <!-- Dependencies -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="sync.js"></script>
+  <script src="js/id_manager.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="js/studentData.js"></script>
+  <script>
+
+    if (!rawSchoolId || rawSchoolId.trim() === '') {
+      document.getElementById('missingSchoolAlert').style.display = 'block';
+      throw new Error("Missing 'school' parameter.");
+    }
+
+    const schoolId = rawSchoolId.trim().toLowerCase();
+    document.getElementById('addStudentBtn').href = `student_register.html?school=${schoolId}`;
+
+    const syncEngine = new SchoolSyncEngine(db, schoolId);
+    let cachedStudents = [];
+
+    // SELECTION STATE MAP (Tracks checked students by ID)
+    let selectedStudentIds = new Set();
+
+    // PAGINATION STATE
+    let currentPage = 1;
+    let pageSize = 50;
+    let searchDebounceTimer = null;
+
+    // GENERATE CLASS OPTIONS (1A to 11E)
+    function generateClassOptions() {
+      const classList = document.getElementById('classList');
+      const sections = ['A', 'B', 'C', 'D', 'E'];
+      let optionsHtml = '';
+
+      for (let grade = 1; grade <= 11; grade++) {
+        for (const sec of sections) {
+          optionsHtml += `<option value="${grade}${sec}"></option>`;
+        }
+      }
+      classList.innerHTML = optionsHtml;
+    }
+
+    function restoreSearchState() {
+      const savedSearch = sessionStorage.getItem(`search_${schoolId}`) || '';
+      const savedClass = sessionStorage.getItem(`class_${schoolId}`) || '';
+
+      document.getElementById('searchInput').value = savedSearch;
+      document.getElementById('classInput').value = savedClass;
+    }
+
+    async function initApp() {
+      generateClassOptions();
+      restoreSearchState();
+
+      try {
+        // 1. Initialize IndexedDB database connection
+        await syncEngine.initIndexedDB();
+
+        // 2. Render immediately from IndexedDB for instant UI load (0ms latency, 0 bytes)
+        await loadFromIndexedDBDirect();
+
+        if (navigator.onLine) {
+          await syncEngine.syncStudents();
+
+          await loadFromIndexedDBDirect();
+
+        }
+      } catch (err) {
+        console.warn("Network / Sync init skipped (Offline Mode):", err);
+      }
+    }
+
+    function loadFromIndexedDBDirect() {
+      return new Promise((resolve) => {
+        // Rely on syncEngine's local reader to avoid direct raw IndexedDB boilerplate
+        syncEngine.getLocalData('students').then((students) => {
+          if (students && students.length > 0) {
+            cachedStudents = students;
+            cachedStudents.forEach(s => selectedStudentIds.add(s.id || s.key));
+            renderStudentTable(cachedStudents);
+          }
+          resolve();
+        }).catch(() => resolve());
+      });
+    }
+
+    function renderStudentTable(students) {
+      const tbody = document.getElementById('studentTableBody');
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      const classTerm = document.getElementById('classInput').value.toLowerCase().trim();
+
+      // 1. Filter students
+      const filtered = students.filter(s => {
+        const matchesNameOrId = !searchTerm ||
+          (s.fullName && s.fullName.toLowerCase().includes(searchTerm)) ||
+          (s.id && s.id.toLowerCase().includes(searchTerm));
+
+        const matchesClass = !classTerm ||
+          (s.class && s.class.toLowerCase().includes(classTerm));
+
+        return matchesNameOrId && matchesClass;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">${(searchTerm || classTerm) ? 'No matching students found.' : 'No students registered yet.'}</td></tr>`;
+        renderPagination(0, 0);
+        updateSelectionCounter();
+        return;
+      }
+
+      // 2. Paginate filtered data
+      const totalItems = filtered.length;
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = Math.min(startIndex + pageSize, totalItems);
+      const paginatedItems = filtered.slice(startIndex, endIndex);
+
+      // 3. Render Table Rows with ID attribute & Selection Checkbox
+      tbody.innerHTML = paginatedItems.map(s => {
+        const photoUrl = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
+        const key = s.id || s.key;
+        const isChecked = selectedStudentIds.has(key) ? 'checked' : '';
+
+        return `
+          <tr id="${key}">
+            <td class="checkbox-col" data-label="Select">
+              <input type="checkbox" class="custom-checkbox student-checkbox" value="${key}" ${isChecked} onchange="toggleStudentSelection('${key}', this.checked)">
+            </td>
+            <td data-label="Student">
+              <div class="student-info">
+                <img src="${photoUrl}" class="avatar" alt="${escapeHtml(s.fullName)}">
+                <div>
+                  <strong>${escapeHtml(s.fullName)}</strong>
+                </div>
+              </div>
+            </td>
+            <td data-label="ID"><span class="badge-id">${escapeHtml(s.id || 'N/A')}</span></td>
+            <td data-label="Class">${escapeHtml(s.class || 'N/A')}</td>
+            <td data-label="Contact">${escapeHtml(s.studentContact || 'N/A')}</td>
+            <td data-label="Actions">
+              <div class="actions">
+                <button onclick="openIdCardModalByKey('${key}')" class="btn-action btn-view-id">View ID</button>
+                <button onclick="openDetails('${key}')" class="btn-action btn-details">Details</button>
+                <a href="student_edit.html?school=${schoolId}&id=${key}" class="btn-action btn-edit">Edit</a>
+                <button onclick="confirmDelete('${key}', '${escapeHtml(s.fullName)}')" class="btn-action btn-delete">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      renderPagination(totalItems, totalPages, startIndex + 1, endIndex);
+      updateSelectionCounter(paginatedItems);
+      syncSelectAllCheckboxState(paginatedItems);
+    }
+
+    // SELECTION MANAGEMENT FUNCTIONS
+    function toggleStudentSelection(id, isChecked) {
+      if (isChecked) {
+        selectedStudentIds.add(id);
+      } else {
+        selectedStudentIds.delete(id);
+      }
+
+      // Re-sync "Select All" header state for current page
+      const visibleCheckboxes = Array.from(document.querySelectorAll('.student-checkbox'));
+      const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+      document.getElementById('selectAllCheckbox').checked = allChecked;
+
+      // Update text counter for visible rows
+      const visibleSelectedCount = visibleCheckboxes.filter(cb => cb.checked).length;
+      document.getElementById('selectedCountText').innerText = `${visibleSelectedCount} student(s) selected`;
+    }
+
+    function toggleSelectAll(masterCheckbox) {
+      const isChecked = masterCheckbox.checked;
+
+      // Get all visible checkboxes on the active page DOM
+      const visibleCheckboxes = document.querySelectorAll('.student-checkbox');
+
+      visibleCheckboxes.forEach(cb => {
+        cb.checked = isChecked;
+        const id = cb.value;
+
+        if (isChecked) {
+          selectedStudentIds.add(id);
+        } else {
+          selectedStudentIds.delete(id);
+        }
+      });
+
+      // Re-calculate selection text based on DOM inputs currently shown
+      const visibleCount = isChecked ? visibleCheckboxes.length : 0;
+      document.getElementById('selectedCountText').innerText = `${visibleCount} student(s) selected`;
+    }
+
+    function syncSelectAllCheckboxState(visibleStudents = []) {
+      const selectAllCb = document.getElementById('selectAllCheckbox');
+
+      if (visibleStudents.length === 0) {
+        selectAllCb.checked = false;
+        return;
+      }
+
+      // Header box is checked ONLY if every item on the current page is checked
+      const allVisibleSelected = visibleStudents.every(s =>
+        selectedStudentIds.has(s.id || s.key)
+      );
+
+      selectAllCb.checked = allVisibleSelected;
+    }
+
+    function updateSelectionCounter(visibleStudents = []) {
+      const selectedVisibleCount = visibleStudents.filter(s =>
+        selectedStudentIds.has(s.id || s.key)
+      ).length;
+
+      document.getElementById('selectedCountText').innerText =
+        `${selectedVisibleCount} student(s) selected`;
+    }
+
+    function renderPagination(totalItems, totalPages, start, end) {
+      const infoText = document.getElementById('paginationInfo');
+      const controlsContainer = document.getElementById('paginationControls');
+
+      if (totalItems === 0) {
+        infoText.innerText = 'Showing 0 of 0 students';
+        controlsContainer.innerHTML = '';
+        return;
+      }
+
+      infoText.innerText = `Showing ${start}-${end} of ${totalItems} students`;
+
+      let paginationHtml = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">Prev</button>`;
+
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+          paginationHtml += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+          paginationHtml += `<span style="padding: 0 4px; color: #a0aec0;">...</span>`;
+        }
+      }
+
+      paginationHtml += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next</button>`;
+
+      controlsContainer.innerHTML = paginationHtml;
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      renderStudentTable(cachedStudents);
+    }
+
+    function handleSearchInput() {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        const searchValue = document.getElementById('searchInput').value;
+        const classValue = document.getElementById('classInput').value;
+
+        sessionStorage.setItem(`search_${schoolId}`, searchValue);
+        sessionStorage.setItem(`class_${schoolId}`, classValue);
+
+        currentPage = 1;
+        renderStudentTable(cachedStudents);
+      }, 200);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', handleSearchInput);
+    document.getElementById('classInput').addEventListener('input', handleSearchInput);
+
+    document.getElementById('pageSizeSelect').addEventListener('change', (e) => {
+      pageSize = parseInt(e.target.value, 10);
+      currentPage = 1;
+      renderStudentTable(cachedStudents);
+    });
+
+    /* ==========================================================================
+       BULK ACTIONS LOGIC (EXAM SCORES & CLASS CHANGE)
+       ========================================================================== */
+
+    function getSelectedStudents() {
+      return cachedStudents.filter(s => selectedStudentIds.has(s.id || s.key));
+    }
+
+    // 1. BULK SCORE MODAL
+    /* ==========================================================================
+       UPDATED BULK EXAM SCORE LOGIC (WITH INDEXEDDB / FIREBASE FALLBACK FETCH)
+       ========================================================================== */
+
+    // Helper to fetch single student record from IndexedDB directly
+    function getStudentFromIDB(studentId) {
+      return new Promise((resolve) => {
+        const dbName = `SIS_${schoolId}`;
+        const request = indexedDB.open(dbName);
+
+        request.onsuccess = (e) => {
+          const idb = e.target.result;
+          if (!idb.objectStoreNames.contains('students')) {
+            resolve(null);
+            return;
+          }
+
+          const tx = idb.transaction('students', 'readonly');
+          const store = tx.objectStore('students');
+          const getReq = store.get(studentId);
+
+          getReq.onsuccess = () => resolve(getReq.result || null);
+          getReq.onerror = () => resolve(null);
+        };
+
+        request.onerror = () => resolve(null);
+      });
+    }
+
+    // Opens modal & populates initial student list
+    async function openBulkScoreModal() {
+      const selectedList = getSelectedStudents();
+      if (selectedList.length === 0) {
+        alertbox("Please select at least one student to add or edit exam scores.", "error");
+        return;
+      }
+
+      const container = document.getElementById('bulkScoreStudentList');
+      container.innerHTML = selectedList.map(s => {
+        const key = s.id || s.key;
+        const photoUrl = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
+
+        return `
+      <div class="score-list-item" data-id="${key}">
+        <div class="score-student-detail">
+          <img src="${photoUrl}" class="avatar" alt="${escapeHtml(s.fullName)}">
+          <div>
+            <strong>${escapeHtml(s.fullName)}</strong>
+            <div style="font-size: 0.78rem; color: #718096;">ID: ${escapeHtml(s.id || 'N/A')}</div>
+          </div>
+        </div>
+        <div>
+          <input type="number" min="0" max="100" class="score-input student-score-field" placeholder="Score" data-id="${key}">
+        </div>
+      </div>
+    `;
+      }).join('');
+
+      document.getElementById('bulkScoreModal').style.display = 'flex';
+
+      // Auto fetch initial scores for selected semester & subject
+      await fetchAndUpdateModalScores();
+    }
+
+    // Fetches scores (IndexedDB -> Firebase -> Memory Fallback) when Semester/Subject dropdown changes
+    async function fetchAndUpdateModalScores() {
+      const sem = document.getElementById('scoreSemesterSelect').value;
+      const subject = document.getElementById('scoreSubjectSelect').value;
+      const scoreInputs = document.querySelectorAll('.student-score-field');
+
+      for (const input of scoreInputs) {
+        const studentId = input.getAttribute('data-id');
+        let existingScore = null;
+
+        // 1. Check IndexedDB first
+        const idbStudent = await getStudentFromIDB(studentId);
+        if (idbStudent && idbStudent.exam && idbStudent.exam[`s${sem}`] && idbStudent.exam[`s${sem}`][subject] !== undefined) {
+          existingScore = idbStudent.exam[`s${sem}`][subject];
+
+        }
+
+        // 2. Check Firebase if IDB yields no result & online
+      /*  if (existingScore === null && navigator.onLine) {
+          try {
+            const snap = await db.ref(`schools/${schoolId}/students/${studentId}/exam/s${sem}/${subject}`).once('value');
+            if (snap.exists()) {
+              existingScore = snap.val();
+            }
+          } catch (err) {
+            console.warn(`Failed to fetch online score for ${studentId}:`, err);
+          }
+        }*/
+
+        // 3. Fallback to cached memory array
+        if (existingScore === null) {
+          const memoryStudent = cachedStudents.find(s => (s.id || s.key) === studentId);
+          if (memoryStudent && memoryStudent.exam && memoryStudent.exam[`s${sem}`] && memoryStudent.exam[`s${sem}`][subject] !== undefined) {
+            existingScore = memoryStudent.exam[`s${sem}`][subject];
+          }
+        }
+
+        // Populate score or leave clear for new entry
+        input.value = existingScore !== null ? existingScore : '';
+      }
+    }
+
+    // Writes updated scores to Firebase & updates local memory/cache
+    async function submitBulkScores() {
+      const sem = document.getElementById('scoreSemesterSelect').value;
+      const subject = document.getElementById('scoreSubjectSelect').value;
+      const scoreInputs = document.querySelectorAll('.student-score-field');
+
+      const updates = {};
+      let validCount = 0;
+
+      const now = Date.now();
+      const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
+
+      scoreInputs.forEach(input => {
+        const studentId = input.getAttribute('data-id');
+        const scoreVal = input.value.trim();
+
+        if (scoreVal !== '') {
+          const numericScore = Number(scoreVal);
+          const basePath = `schools/${schoolId}/students/${studentId}`;
+
+          // 1. Build multi-path update payload (z: exam, A: updatedAt, B: updatedBy)
+          updates[`${basePath}/z/s${sem}/${subject}`] = numericScore;
+          updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
+          updates[`${basePath}/B`] = userId;
+
+          // 2. Local memory state synchronization (readable keys)
+          const studentObj = cachedStudents.find(s => (s.id || s.key) === studentId);
+          if (studentObj) {
+            if (!studentObj.exam) studentObj.exam = {};
+            if (!studentObj.exam[`s${sem}`]) studentObj.exam[`s${sem}`] = {};
+
+            studentObj.exam[`s${sem}`][subject] = numericScore;
+            studentObj.updatedAt = now;
+            studentObj.updatedBy = userId;
+
+            // 3. Save to local IndexedDB directly for instant offline persistence
+            syncEngine.saveToIDB('students', studentObj);
+
+          }
+          validCount++;
+        }
+      });
+
+      if (validCount === 0) {
+        alertbox("Please enter a score for at least one student.", "error");
+        return;
+      }
+
+      try {
+        // 4. Send bulk update to Firebase
+        if (navigator.onLine) {
+          await db.ref().update(updates);
+        }
+
+        alertbox(`Successfully saved/updated scores for ${validCount} student(s).`, "success");
+        closeModal('bulkScoreModal');
+      } catch (err) {
+        alertbox("Failed to save scores: " + err.message, "error");
+      }
+    }
+
+    // 2. BULK CLASS CHANGE MODAL
+    function openBulkClassModal() {
+      const selectedList = getSelectedStudents();
+      if (selectedList.length === 0) {
+        alertbox("Please select at least one student to change class.", "error");
+        return;
+      }
+      document.getElementById('newClassInput').value = '';
+      document.getElementById('bulkClassModal').style.display = 'flex';
+    }
+
+    async function submitBulkClassChange() {
+      const newClass = document.getElementById('newClassInput').value.trim().toUpperCase();
+      if (!newClass) {
+        alertbox("Please enter a valid class name.", "error");
+        return;
+      }
+
+      const selectedList = getSelectedStudents();
+      if (selectedList.length === 0) {
+        alertbox("No students selected.", "error");
+        return;
+      }
+
+      const updates = {};
+      const now = Date.now();
+      const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
+
+      // 1. Build multi-path update payload using short keys (h: class, A: updatedAt, B: updatedBy)
+      selectedList.forEach(s => {
+        const key = s.id || s.key;
+        const basePath = `schools/${schoolId}/students/${key}`;
+
+        updates[`${basePath}/h`] = newClass;
+        updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
+        updates[`${basePath}/B`] = userId;
+
+        // 2. Update local in-memory student objects (readable keys)
+        s.class = newClass;
+        s.updatedAt = now;
+        s.updatedBy = userId;
+        console.log(s)
+        // 3. Save to local IndexedDB directly for instant UI persistence
+
+
+        syncEngine.saveToIDB('students', s);
+
+      });
+
+      try {
+        // 4. Send bulk update to Firebase
+        if (navigator.onLine) {
+          await db.ref().update(updates);
+        }
+
+        // 5. Re-render UI
+        renderStudentTable(cachedStudents);
+        alertbox(`Updated ${selectedList.length} student(s) to Class ${newClass}.`, "success");
+        closeModal('bulkClassModal');
+
+      } catch (err) {
+        alertbox("Failed to update classes: " + err.message, "error");
+      }
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    function openIdCardModalByKey(key) {
+      const student = cachedStudents.find(s => (s.id || s.key) === key);
+      if (!student) return;
+
+      document.getElementById('cardSchoolFront').innerText = schoolId.toUpperCase();
+      document.getElementById('cardPhoto').src = student.photoUrl ? getFullCloudinaryUrl(student.photoUrl) : 'img/user.svg';
+      document.getElementById('cardName').innerText = student.fullName || '';
+      document.getElementById('cardStudentId').innerText = student.id || '';
+      document.getElementById('cardStudentId').innerText = student.id || '';
+      document.getElementById('cardAdmNo').innerText = student.admissionNo || '';
+      document.getElementById('cardDob').innerText = student.dob || '-';
+      
+      
+      document.getElementById('cardFather').innerText = student.fatherName || '-';
+      document.getElementById('cardMother').innerText = student.motherName || '-';
+      document.getElementById('cardContact').innerText = student.studentContact || '-';
+      document.getElementById('cardAddress').innerText = student.address || '-';
+
+      const viewUrl = `${window.location.origin}/sis/${schoolId}/student.html?id=${key}`;
+      document.getElementById('qrcode').innerHTML = "";
+      new QRCode(document.getElementById('qrcode'), { text: viewUrl, width: 75, height: 75 });
+
+      document.getElementById('idCardModal').style.display = 'flex';
+    }
+
+    async function confirmDelete(key, name) {
+      if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+
+      // Get the up-to-date user instance directly from auth
+      const user = firebase.auth().currentUser;
+
+      if (!user) {
+        alertbox("Session expired. Please log in again.", "error");
+        return;
+      }
+
+      try {
+        const studentRef = db.ref(`schools/${schoolId}/students/${key}`);
+
+        // Update metadata
+        await studentRef.set({
+          D: true, // isDeleted
+          A: firebase.database.ServerValue.TIMESTAMP, // updatedAt
+          B: user.uid // updatedBy
+        });
+
+        // Remove node
+        //  await studentRef.remove();
+
+        // Update local state and UI
+        cachedStudents = cachedStudents.filter(s => (s.id || s.key) !== key);
+        selectedStudentIds.delete(key);
+        renderStudentTable(cachedStudents);
+      } catch (err) {
+        alertbox("Delete failed: " + err.message, "error");
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[match]));
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (!user && navigator.onLine) {
+        window.location.href = `admin.html?school=${schoolId}`;
+      }
+    });
+
+    initApp();
+  </script>
+</body>
+
+</html>

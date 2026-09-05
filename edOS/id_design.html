@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID Card Template Manager</title>
+
+  <!-- Google Fonts & FontAwesome Icons (Optional for icons) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Custom ID Card Template CSS -->
+  <link rel="stylesheet" href="css/id_templates.css">
+
+  <!-- QRCode.js Library for rendering QR code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Firebase JS SDK (v8 Compatibility Library) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    * {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+    .admin-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .admin-header h2 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 20px;
+    }
+
+    .btn-save {
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-save:hover {
+      background-color: #1d4ed8;
+    }
+
+    select.template-select {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      outline: none;
+      background: #ffffff;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .preview-heading {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #64748b;
+      margin-top: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-wrapper">
+    <div class="admin-header">
+      <h2>ID Card Settings</h2>
+      <!-- Button to triggers saveSetting() in Firebase -->
+      <button class="btn-save" id="btnSaveFirebase" onclick="saveSetting()">
+        Save
+      </button>
+    </div>
+
+    <!-- CONTROL BAR: TEMPLATE & COLOR SELECTOR -->
+    <div class="template-selector-bar">
+      <div class="selector-group">
+        <label for="templateSelect">Template Style:</label>
+        <select id="templateSelect" class="template-select" onchange="onTemplateChange(this.value)">
+          <option value="tpl-modern">Modern Curve</option>
+          <option value="tpl-classic">Classic Navy</option>
+          <option value="tpl-minimal">Minimal Clean</option>
+          <option value="tpl-cyber-dark">Cyber Dark</option>
+          <option value="tpl-neo-glass">Neo Glass</option>
+          <option value="tpl-wave-css">Wave</option>
+        </select>
+      </div>
+
+      <div class="selector-group">
+        <span>Color Preset:</span>
+        <div class="color-palette">
+          <div class="color-box color-blue active" onclick="onColorChange('blue')" title="Blue"></div>
+          <div class="color-box color-red" onclick="onColorChange('red')" title="Red"></div>
+          <div class="color-box color-emerald" onclick="onColorChange('emerald')" title="Emerald"></div>
+          <div class="color-box color-purple" onclick="onColorChange('purple')" title="Purple"></div>
+          <div class="color-box color-amber" onclick="onColorChange('amber')" title="Amber"></div>
+        </div>
+      </div>
+    </div>
+
+  
+    <div class="id-cards-container">
+    <!-- ID CARDS PREVIEW CONTAINER -->
+    <div id="frontCard" class="id-card front-card tpl-modern-blue">
+        <div class="card-header">
+          <h3 id="cardSchoolFront">SCHOOL SIS</h3>
+        </div>
+        
+        <div class="photo-container">
+          <img id="cardPhoto" alt="Student Photo" src="img/user.svg">
+        </div>
+        
+        <h4 id="cardName">JOHN DOE</h4>
+        <div class="card-badge">STUDENT ID CARD</div>
+
+        <!-- Front Details Grid -->
+        <div class="front-card-body">
+          <div class="info-row">
+            <span class="label">ID No:</span>
+            <span class="value" id="cardStudentId">STD-1001</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Adm No:</span>
+            <span class="value" id="cardAdmNo">ADM-4502</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Birthday:</span>
+            <span class="value" id="cardDobFront">12/05/2026</span>
+          </div>
+        </div>
+
+        <!-- QR Code Section on Front -->
+        <div class="qr-wrapper">
+          <div id="qrcode"></div>
+          <div class="qr-subtext">Scan to View Profile</div>
+        </div>
+      </div>
+
+      <!-- BACK CARD -->
+      <div id="backCard" class="id-card back-card tpl-modern-blue">
+        <div class="card-header">
+          <h3>ADDITIONAL DETAILS</h3>
+        </div>
+        <div class="back-card-body">
+          <p><strong>Father:</strong> <span id="cardFather">Robert Doe</span></p>
+          <p><strong>Mother:</strong> <span id="cardMother">Jane Doe</span></p>
+          <p><strong>Contact:</strong> <span id="cardContact">0123456789</span></p>
+          <p><strong>Address:</strong> <span id="cardAddress">123 School Lane, City</span></p>
+        </div>
+        <div class="back-footer">
+          <p>If found, please return to school administration.</p>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+ <!-- Dependencies -->
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <!-- Custom Firebase Logic JavaScript -->
+  <script src="sync.js"></script>
+  <script src="js/id_manager.js"></script>
+
+  <!-- Script initialization helper -->
+  <script>
+    // Render initial QR Code preview
+    window.addEventListener("DOMContentLoaded", () => {
+      new QRCode(document.getElementById("qrcode"), {
+        text: "STU-2026-089",
+        width: 55,
+        height: 55,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+
+      // Automatically fetch saved Firebase settings on page load
+      if (typeof getSetting === 'function') {
+        getSetting();
+      }
+    });
+
+    // Handle template changes live in DOM
+    function onTemplateChange(templateClass) {
+      document.querySelectorAll('.id-card').forEach(card => {
+        card.className = card.className.replace(/\btpl-\S+/g, '');
+        card.classList.add(templateClass);
+      });
+    }
+
+    // Handle color preset changes live in DOM
+    function onColorChange(colorName) {
+      document.querySelectorAll('.id-card').forEach(card => {
+        card.setAttribute('data-color', colorName);
+      });
+      document.querySelectorAll('.color-box').forEach(box => {
+        box.classList.toggle('active', box.classList.contains(`color-${colorName}`));
+      });
+    }
+  </script>
+</body>
+</html>
