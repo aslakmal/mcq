@@ -239,6 +239,7 @@ class SchoolSyncEngine {
   }
 
   async _fullFetchModule(moduleName) {
+    const lastSyncKey = `lastSync_${this.schoolId}_${moduleName}`;
     const snapshot = await this.db.ref(`schools/${this.schoolId}/${moduleName}`).once('value');
     const data = snapshot.val() || {};
 
