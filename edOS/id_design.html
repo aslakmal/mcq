@@ -112,6 +112,13 @@
           <option value="tpl-cyber-dark">Cyber Dark</option>
           <option value="tpl-neo-glass">Neo Glass</option>
           <option value="tpl-wave-css">Wave</option>
+          <option value="tpl-two-wave">Two-Wave Frame</option>
+          <option value="tpl-multi-wave">Multi-Wave Frame</option>
+          <option value="tpl-top-polygons">Top Geometric Polygons</option>
+          <option value="tpl-apex-modern">Apex Modern Glass</option>
+          <option value="tpl-wave-modern">tpl-wave-modern</option>
+          <option value="tpl-prism-luxe">tpl-prism-luxe</option>
+          <option value="tpl-prism-crystal">tpl-prism-crystal</option>          
         </select>
       </div>
 
@@ -132,13 +139,13 @@
     <!-- ID CARDS PREVIEW CONTAINER -->
     <div id="frontCard" class="id-card front-card tpl-modern-blue">
         <div class="card-header">
-          <h3 id="cardSchoolFront">SCHOOL SIS</h3>
+         <img id="idLogo"> <h3 id="cardSchoolFront">SCHOOL</h3>
         </div>
         
         <div class="photo-container">
           <img id="cardPhoto" alt="Student Photo" src="img/user.svg">
         </div>
-        
+      <div class="body_">
         <h4 id="cardName">JOHN DOE</h4>
         <div class="card-badge">STUDENT ID CARD</div>
 
@@ -157,12 +164,13 @@
             <span class="value" id="cardDobFront">12/05/2026</span>
           </div>
         </div>
-
+    </div>
         <!-- QR Code Section on Front -->
         <div class="qr-wrapper">
-          <div id="qrcode"></div>
-          <div class="qr-subtext">Scan to View Profile</div>
+        
         </div>
+   
+        
       </div>
 
       <!-- BACK CARD -->
@@ -175,6 +183,9 @@
           <p><strong>Mother:</strong> <span id="cardMother">Jane Doe</span></p>
           <p><strong>Contact:</strong> <span id="cardContact">0123456789</span></p>
           <p><strong>Address:</strong> <span id="cardAddress">123 School Lane, City</span></p>
+        </div>
+        <div class="qr-container">
+        <div id="qrcode"></div>
         </div>
         <div class="back-footer">
           <p>If found, please return to school administration.</p>
@@ -197,8 +208,8 @@
     window.addEventListener("DOMContentLoaded", () => {
       new QRCode(document.getElementById("qrcode"), {
         text: "STU-2026-089",
-        width: 55,
-        height: 55,
+        width: 90,
+        height: 90,
         colorDark : "#000000",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
