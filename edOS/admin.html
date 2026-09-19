@@ -7,6 +7,8 @@
   <title>Principal Portal & Admin Area</title>
 
 <link rel="stylesheet" href="css/admin.css">
+<!-- Cropper.js CSS & JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 </head>
 
 <body>
@@ -155,22 +157,55 @@
           <label for="modalSchoolName">School Name</label>
           <input type="text" id="modalSchoolName" required placeholder="Enter school name" />
         </div>
-  
+      
         <div class="form-group">
           <label for="modalSchoolAddress">School Address</label>
           <textarea id="modalSchoolAddress" rows="3" required placeholder="Enter school address"></textarea>
         </div>
-  
+      
         <div class="form-group">
           <label for="modalPrincipalName">Principal Name</label>
           <input type="text" id="modalPrincipalName" required placeholder="Enter principal name" />
         </div>
-  
+      
+        <!-- School Logo Input & Preview -->
+        <div class="form-group">
+          <label for="modalSchoolLogo">School Logo (50x50 px)</label>
+          <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;">
+            <img id="logoPreview" src="placeholder.png" alt="Logo Preview" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;" />
+            <input type="file" id="modalSchoolLogo" accept="image/*" />
+          </div>
+        </div>
+      
+        <!-- Cover Image Input & Preview -->
+        <div class="form-group">
+          <label for="modalSchoolCover">Cover Image (250x250 px)</label>
+          <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;">
+            <img id="coverPreview" src="placeholder.png" alt="Cover Preview" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ccc;" />
+            <input type="file" id="modalSchoolCover" accept="image/*" />
+          </div>
+        </div>
+      
         <div class="modal-actions">
           <button type="button" id="cancelModalBtn" class="btn-secondary">Cancel</button>
           <button type="submit" id="saveSchoolBtn" class="btn-primary">Save Changes</button>
         </div>
       </form>
+      
+      <!-- Cropper Modal -->
+      <div id="cropperModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: #fff; padding: 20px; border-radius: 8px; max-width: 90vw; max-height: 90vh; display: flex; flex-direction: column; gap: 15px;">
+          <div style="max-width: 500px; max-height: 400px; overflow: hidden;">
+            <img id="cropperImage" src="" style="max-width: 100%; display: block;" />
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" id="cancelCropBtn" class="btn-secondary">Cancel</button>
+            <button type="button" id="applyCropBtn" class="btn-primary">Crop & Apply</button>
+          </div>
+        </div>
+      </div>
+
+      
     </div>
   </div>
   <!-- Firebase & Realtime DB SDKs -->
@@ -179,6 +214,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="sync.js"></script>
   <script src="js/admin.js"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 
 </body>
 
