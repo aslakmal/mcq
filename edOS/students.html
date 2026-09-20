@@ -9,9 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 
-  <link rel="stylesheet" href="css/students.css?v">
-  <link rel="stylesheet" href="css/id_templates.css?v">
-  <link rel="stylesheet" href="css/studentData.css?v">
+  <link rel="stylesheet" href="css/students.css">
+  <link rel="stylesheet" href="css/id_templates.css">
+  <link rel="stylesheet" href="css/studentData.css">
  
 
 </head>
@@ -153,54 +153,44 @@
     <div id="idCardWrapper">
       <div class="id-cards-container">
 
-        <!-- FRONT SIDE -->
         <div id="frontCard" class="id-card front-card tpl-modern-blue">
           <div class="card-header">
-            <img id="idLogo"><h3 id="cardSchoolFront">SCHOOL</h3>
+            <img id="idLogo"> 
+            <h3 id="cardSchoolFront">SCHOOL</h3>
           </div>
           
           <div class="photo-container">
-            <img id="cardPhoto" alt="Student Photo">
+            <img id="cardPhoto" alt="Student Photo" src="img/user.svg">
           </div>
-          
-          <h4 id="cardName">JOHN DOE</h4>
-          <div class="card-badge">STUDENT ID CARD</div>
-
-          <!-- Front Details Grid -->
-          <div class="front-card-body">
-            <div class="info-row">
-              <span class="label">ID No:</span>
-              <span class="value" id="cardStudentId"></span>
-            </div>
-            <div class="info-row">
-              <span class="label">Adm No:</span>
-              <span class="value" id="cardAdmNo"></span>
-            </div>
-            <div class="info-row">
-              <span class="label">Birthday:</span>
-              <span class="value" id="cardDob"></span>
+        
+          <div class="body_">
+            <h4 id="cardName">JOHN DOE</h4>
+            <div class="card-badge">STUDENT ID CARD</div>
+        
+            <!-- Dynamic Front Details Grid -->
+            <div class="front-card-body" id="frontCardBody">
+              <!-- Generated dynamically -->
             </div>
           </div>
-
+        
           <!-- QR Code Section on Front -->
-          <div class="qr-wrapper">
-           </div>
+          <div class="qr-wrapper"></div>
         </div>
-
-        <!-- BACK SIDE -->
+        
+        <!-- BACK CARD -->
         <div id="backCard" class="id-card back-card tpl-modern-blue">
           <div class="card-header">
             <h3>ADDITIONAL DETAILS</h3>
           </div>
-          <div class="back-card-body">
-            <p><strong>Father:</strong> <span id="cardFather"></span></p>
-            <p><strong>Mother:</strong> <span id="cardMother"></span></p>
-            <p><strong>Contact:</strong> <span id="cardContact"></span></p>
-           <p><strong>Address:</strong> <span id="cardAddress"></span></p>
+        
+          <!-- Dynamic Back Details Grid -->
+          <div class="back-card-body" id="backCardBody">
+            <!-- Generated dynamically -->
           </div>
+        
           <div class="qr-container">
             <div id="qrcode"></div>
-            </div>
+          </div>
           <div class="back-footer">
             <p>If found, please return to school administration.</p>
           </div>
@@ -247,11 +237,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?v"></script>
-  <script src="js/id_manager.js?v"></script>
+  <script src="sync.js?v1"></script>
+  <script src="js/id_manager.js?v1"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/students.js?v"></script>
-  <script src="js/studentData.js"></script>
+  <script src="js/students.js?v1"></script>
+  <script src="js/studentData.js?v1"></script>
  </body>
 
 </html>
