@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Custom ID Card Template CSS -->
-  <link rel="stylesheet" href="css/id_templates.css?v">
+  <link rel="stylesheet" href="css/id_templates.css?v1">
 
   <!-- QRCode.js Library for rendering QR code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -88,6 +88,48 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
+    .card-fields-selector {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.selector-column {
+  flex: 1;
+}
+
+.selector-column h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #333;
+  text-transform: uppercase;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-item input {
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
@@ -137,70 +179,76 @@
   
     <div class="id-cards-container">
     <!-- ID CARDS PREVIEW CONTAINER -->
-    <div id="frontCard" class="id-card front-card tpl-modern-blue">
-        <div class="card-header">
-         <img id="idLogo"> <h3 id="cardSchoolFront">SCHOOL</h3>
-        </div>
-        
-        <div class="photo-container">
-          <img id="cardPhoto" alt="Student Photo" src="img/user.svg">
-        </div>
-      <div class="body_">
-        <h4 id="cardName">JOHN DOE</h4>
-        <div class="card-badge">STUDENT ID CARD</div>
 
-        <!-- Front Details Grid -->
-        <div class="front-card-body">
-          <div class="info-row">
-            <span class="label">ID No:</span>
-            <span class="value" id="cardStudentId">STD-1001</span>
-          </div>
-          <div class="info-row">
-            <span class="label">Adm No:</span>
-            <span class="value" id="cardAdmNo">ADM-4502</span>
-          </div>
-          <div class="info-row">
-            <span class="label">Birthday:</span>
-            <span class="value" id="cardDobFront">12/05/2026</span>
-          </div>
-        </div>
-    </div>
-        <!-- QR Code Section on Front -->
-        <div class="qr-wrapper">
-        
-        </div>
-   
-        
-      </div>
 
-      <!-- BACK CARD -->
-      <div id="backCard" class="id-card back-card tpl-modern-blue">
-        <div class="card-header">
-          <h3>ADDITIONAL DETAILS</h3>
-        </div>
-        <div class="back-card-body">
-          <p><strong>Father:</strong> <span id="cardFather">Robert Doe</span></p>
-          <p><strong>Mother:</strong> <span id="cardMother">Jane Doe</span></p>
-          <p><strong>Contact:</strong> <span id="cardContact">0123456789</span></p>
-          <p><strong>Address:</strong> <span id="cardAddress">123 School Lane, City</span></p>
-        </div>
-        <div class="qr-container">
-        <div id="qrcode"></div>
-        </div>
-        <div class="back-footer">
-          <p>If found, please return to school administration.</p>
-        </div>
-      </div>
+<!-- UPDATED ID CARD PREVIEW TEMPLATE -->
+<div id="frontCard" class="id-card front-card tpl-modern-blue">
+  <div class="card-header">
+    <img id="idLogo"> 
+    <h3 id="cardSchoolFront">SCHOOL</h3>
+  </div>
+  
+  <div class="photo-container">
+    <img id="cardPhoto" alt="Student Photo" src="img/user.svg">
+  </div>
+
+  <div class="body_">
+    <h4 id="cardName">JOHN DOE</h4>
+    <div class="card-badge">STUDENT ID CARD</div>
+
+    <!-- Dynamic Front Details Grid -->
+    <div class="front-card-body" id="frontCardBody">
+      <!-- Generated dynamically -->
     </div>
+  </div>
+
+  <!-- QR Code Section on Front -->
+  <div class="qr-wrapper"></div>
 </div>
+
+<!-- BACK CARD -->
+<div id="backCard" class="id-card back-card tpl-modern-blue">
+  <div class="card-header">
+    <h3>ADDITIONAL DETAILS</h3>
+  </div>
+
+  <!-- Dynamic Back Details Grid -->
+  <div class="back-card-body" id="backCardBody">
+    <!-- Generated dynamically -->
+  </div>
+
+  <div class="qr-container">
+    <div id="qrcode"></div>
+  </div>
+  <div class="back-footer">
+    <p>If found, please return to school administration.</p>
+  </div>
 </div>
+    </div>
+
+
+    <!-- FIELD SELECTION PANEL -->
+<div class="card-fields-selector">
+  <div class="selector-column">
+    <h3>Front Card Display Fields</h3>
+    <div id="frontFieldsContainer" class="checkbox-grid"></div>
+  </div>
+  
+  <div class="selector-column">
+    <h3>Back Card Display Fields</h3>
+    <div id="backFieldsContainer" class="checkbox-grid"></div>
+  </div>
+</div>
+
+</div>
+
  <!-- Dependencies -->
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <!-- Custom Firebase Logic JavaScript -->
-  <script src="sync.js?v"></script>
-  <script src="js/id_manager.js?v"></script>
+  <script src="sync.js?v1"></script>
+  <script src="js/id_manager.js?v1"></script>
 
   <!-- Script initialization helper -->
   <script>
