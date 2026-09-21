@@ -9,9 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 
-  <link rel="stylesheet" href="css/students.css?v1">
-  <link rel="stylesheet" href="css/id_templates.css?v1">
-  <link rel="stylesheet" href="css/studentData.css?v1">
+  <link rel="stylesheet" href="css/students.css?v2">
+  <link rel="stylesheet" href="css/id_templates.css?v2">
+  <link rel="stylesheet" href="css/studentData.css?v2">
  
 
 </head>
@@ -198,9 +198,10 @@
 
       </div>
 
-      <div style="margin-top: 20px; text-align: right;">
-        <button type="button" class="print-btn" onclick="window.print()">Print ID Card</button>
-      </div>
+   
+    </div>
+    <div style="margin-top: 20px; text-align: right;">
+      <button type="button" class="print-btn" onclick="exportTo300DpiPNG('idCardWrapper')">Print ID Card</button>
     </div>
   </div>
 </div>
@@ -237,11 +238,33 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?v1"></script>
-  <script src="js/id_manager.js?v1"></script>
+  <script src="sync.js"></script>
+  <script src="js/id_manager.js?v2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/students.js?v1"></script>
-  <script src="js/studentData.js?v1"></script>
+  <script src="js/students.js?v2"></script>
+  <script src="js/studentData.js?v2"></script>
  </body>
+<!-- Include library via CDN (or install via npm: npm install html-to-image) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+async function exportTo300DpiPNG(elementId) {
+  const node = document.getElementById(elementId);
+  const scale = 300 / 96; // 3.125 for 300 DPI
 
+  try {
+    const dataUrl = await htmlToImage.toPng(node, {
+      pixelRatio: scale, // <--- Native html-to-image scaling
+      cacheBust: true    // Prevents cached SVG/image glitches
+    });
+
+    const link = document.createElement('a');
+    link.download = 'design-300dpi.png';
+    link.href = dataUrl;
+    link.click();
+  } catch (error) {
+    console.error('Export failed:', error);
+  }
+}
+</script>
 </html>
