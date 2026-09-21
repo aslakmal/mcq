@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QR Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eef4ff, #f8faff);
+}
+
+.scanner-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 25px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(30, 64, 175, 0.12);
+}
+
+.scanner-header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.scanner-icon {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.scanner-icon svg {
+    width: 34px;
+    height: 34px;
+}
+
+.scanner-header h2 {
+    color: #172033;
+    font-size: 24px;
+    margin-bottom: 7px;
+}
+
+.scanner-header p {
+    color: #718096;
+    font-size: 14px;
+}
+
+
+/* CAMERA */
+
+#reader {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-height: 380px;
+    overflow: hidden;
+    position: relative;
+    background: #0f172a;
+    border-radius: 18px;
+}
+
+/* Camera video */
+
+#reader__scan_region {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#reader__scan_region video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 18px !important;
+}
+
+/* QR image if library displays one */
+
+#reader__scan_region img {
+    max-width: 100%;
+}
+
+
+/* DASHBOARD */
+
+#reader__dashboard {
+    padding: 10px !important;
+    background: #0f172a;
+}
+
+#reader__dashboard_section {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+#reader__dashboard_section_csr {
+    text-align: center;
+}
+
+#reader__dashboard_section_csr button {
+    border: none !important;
+    outline: none;
+    padding: 10px 18px !important;
+    border-radius: 10px !important;
+    background: #2563eb !important;
+    color: #fff !important;
+    font-size: 14px !important;
+    cursor: pointer;
+}
+
+#reader__dashboard_section_swaplink {
+    color: #93c5fd !important;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+
+/* STATUS */
+
+.scan-status {
+    margin-top: 18px;
+    padding: 13px 15px;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 14px;
+    text-align: center;
+}
+
+.scan-status.success {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.scan-status.error {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* SCAN AGAIN */
+
+.scan-again {
+    display: none;
+    width: 100%;
+    border: none;
+    outline: none;
+    margin-top: 12px;
+    padding: 13px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.scan-again:hover {
+    background: #1d4ed8;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+
+    body {
+        padding: 12px;
+        align-items: center;
+    }
+
+    .scanner-card {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .scanner-header {
+        margin-bottom: 18px;
+    }
+
+    .scanner-header h2 {
+        font-size: 22px;
+    }
+
+    #reader {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        max-height: none;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="scanner-card">
+
+    <div class="scanner-header">
+
+        <div class="scanner-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+
+                <rect x="7" y="7" width="4" height="4"/>
+                <rect x="13" y="13" width="4" height="4"/>
+
+                <path d="M13 7h4"/>
+                <path d="M7 13h4"/>
+
+            </svg>
+
+        </div>
+
+        <h2>Scan QR Code</h2>
+
+        <p>
+            Position the QR code inside the scanner
+        </p>
+
+    </div>
+
+
+    <div id="reader"></div>
+
+
+    <div id="scanStatus" class="scan-status">
+        Starting camera...
+    </div>
+
+
+    <button id="scanAgain" class="scan-again">
+        Scan Again
+    </button>
+
+</div>
+
+
+<script>
+
+let scanner = null;
+let scanFinished = false;
+
+
+/* START SCANNER */
+
+function startScanner() {
+
+    scanFinished = false;
+
+    document.getElementById("scanStatus").className =
+        "scan-status";
+
+    document.getElementById("scanStatus").textContent =
+        "Starting camera...";
+
+    document.getElementById("scanAgain").style.display =
+        "none";
+
+
+    document.getElementById("reader").innerHTML = "";
+
+
+    scanner = new Html5Qrcode("reader");
+
+
+    const isMobile = window.innerWidth <= 480;
+
+
+    scanner.start(
+
+        {
+            facingMode: "environment"
+        },
+
+        {
+            fps: 10,
+
+            qrbox: {
+                width: isMobile ? 210 : 240,
+                height: isMobile ? 210 : 240
+            },
+
+            aspectRatio: 1.0
+        },
+
+        function(decodedText) {
+
+            if (scanFinished) {
+                return;
+            }
+
+            scanFinished = true;
+
+
+            scanner.stop()
+                .then(function() {
+
+                    processQRCode(decodedText);
+
+                })
+                .catch(function() {
+
+                    processQRCode(decodedText);
+
+                });
+
+        },
+
+        function(errorMessage) {
+
+            // QR code not detected yet
+
+        }
+
+    )
+
+    .then(function() {
+
+        document.getElementById("scanStatus").className =
+            "scan-status";
+
+        document.getElementById("scanStatus").textContent =
+            "Camera ready — scan a QR code";
+
+    })
+
+    .catch(function(error) {
+
+        console.error(error);
+
+        document.getElementById("scanStatus").className =
+            "scan-status error";
+
+        document.getElementById("scanStatus").textContent =
+            "Unable to access camera. Please allow camera permission.";
+
+    });
+
+}
+
+
+/* PROCESS QR */
+
+function processQRCode(data) {
+
+    console.log("QR Data:", data);
+
+
+    /*
+        Expected QR format:
+
+        schoolId:key
+
+        Example:
+
+        SCH001:ABC123XYZ
+    */
+
+
+    const parts = data.split(":");
+
+
+    if (parts.length !== 2) {
+
+        document.getElementById("scanStatus").className =
+            "scan-status error";
+
+        document.getElementById("scanStatus").textContent =
+            "Invalid QR code";
+
+        document.getElementById("scanAgain").style.display =
+            "block";
+
+        return;
+    }
+
+
+    const schoolId = parts[0];
+    const key = parts[1];
+
+
+    if (!schoolId || !key) {
+
+        document.getElementById("scanStatus").className =
+            "scan-status error";
+
+        document.getElementById("scanStatus").textContent =
+            "Invalid QR code";
+
+        document.getElementById("scanAgain").style.display =
+            "block";
+
+        return;
+    }
+
+
+    document.getElementById("scanStatus").className =
+        "scan-status success";
+
+    document.getElementById("scanStatus").textContent =
+        "QR code scanned successfully";
+
+
+    document.getElementById("scanAgain").style.display =
+        "block";
+
+
+    /* CALL YOUR FUNCTION */
+
+    qrScanned(schoolId, key);
+
+}
+
+
+/* YOUR FUNCTION */
+
+function qrScanned(schoolId, key) {
+
+    console.log("School ID:", schoolId);
+    console.log("Key:", key);
+
+
+    /*
+        Your code here.
+
+        Example:
+
+        fetch("verify.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                schoolId: schoolId,
+                key: key
+            })
+        });
+    */
+
+}
+
+
+/* SCAN AGAIN */
+
+document.getElementById("scanAgain").addEventListener(
+    "click",
+    function() {
+
+        if (scanner) {
+            try {
+                scanner.clear();
+            } catch (e) {
+                console.log(e);
+            }
+
+            scanner = null;
+        }
+
+        document.getElementById("reader").innerHTML = "";
+
+        startScanner();
+    }
+);
+
+
+/* START */
+
+startScanner();
+
+</script>
+
+</body>
+</html>
+
