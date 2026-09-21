@@ -9,9 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 
-  <link rel="stylesheet" href="css/students.css?v2">
-  <link rel="stylesheet" href="css/id_templates.css?v2">
-  <link rel="stylesheet" href="css/studentData.css?v2">
+  <link rel="stylesheet" href="css/students.css">
+  <link rel="stylesheet" href="css/id_templates.css">
+  <link rel="stylesheet" href="css/studentData.css">
  
 
 </head>
@@ -239,19 +239,18 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="sync.js"></script>
-  <script src="js/id_manager.js?v2"></script>
+  <script src="js/id_manager.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/students.js?v2"></script>
-  <script src="js/studentData.js?v2"></script>
+  <script src="js/students.js"></script>
+  <script src="js/studentData.js"></script>
  </body>
 <!-- Include library via CDN (or install via npm: npm install html-to-image) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 async function exportTo300DpiPNG(elementId) {
   const node = document.getElementById(elementId);
   const scale = 300 / 96; // 3.125 for 300 DPI
-
+  const studentKey = document.querySelector('.print-btn').dataset.student;
   try {
     const dataUrl = await htmlToImage.toPng(node, {
       pixelRatio: scale, // <--- Native html-to-image scaling
@@ -259,7 +258,7 @@ async function exportTo300DpiPNG(elementId) {
     });
 
     const link = document.createElement('a');
-    link.download = 'design-300dpi.png';
+    link.download = `student-${studentKey}.png`;
     link.href = dataUrl;
     link.click();
   } catch (error) {
