@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Custom ID Card Template CSS -->
-  <link rel="stylesheet" href="css/id_templates.css?v1">
+  <link rel="stylesheet" href="css/id_templates.css?v2">
 
   <!-- QRCode.js Library for rendering QR code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -247,15 +247,15 @@
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <!-- Custom Firebase Logic JavaScript -->
-  <script src="sync.js?v1"></script>
-  <script src="js/id_manager.js?v1"></script>
+  <script src="sync.js?v2"></script>
+  <script src="js/id_manager.js?v2"></script>
 
   <!-- Script initialization helper -->
   <script>
     // Render initial QR Code preview
     window.addEventListener("DOMContentLoaded", () => {
       new QRCode(document.getElementById("qrcode"), {
-        text: "STU-2026-089",
+        text: "ID Sample",
         width: 90,
         height: 90,
         colorDark : "#000000",
