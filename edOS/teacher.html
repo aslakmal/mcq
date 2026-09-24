@@ -474,7 +474,7 @@
         </div>
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" id="signupName" required placeholder="Checking teacher record..." readonly>
+          <input type="text" id="signupName" required placeholder="Name" readonly>
         </div>
         <div class="form-group">
           <label>Email Address</label>
@@ -529,55 +529,33 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js"></script>
+  <script src="sync.js?v6"></script>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
-      authDomain: "school-62c45.firebaseapp.com",
-      databaseURL: "https://school-62c45-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "school-62c45",
-      storageBucket: "school-62c45.firebasestorage.app",
-      messagingSenderId: "213099404706",
-      appId: "1:213099404706:web:d65d7ec257c1119f3966fb",
-      measurementId: "G-8QG01WT32P"
-    };
+// ==========================================
+    // 1. URL PARAMETER VALIDATION
+    // ==========================================
 
-   firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-
-    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-
-    // 1. URL PARAMETER VALIDATION (school is required, id is optional)
-    const urlParams = new URLSearchParams(window.location.search);
-    const rawSchoolId = urlParams.get('school');
     const rawTeacherId = urlParams.get('id');
-
-    if (!rawSchoolId || rawSchoolId.trim() === '') {
-      const alertBox = document.getElementById('missingParamAlert');
-      if (alertBox) {
-        alertBox.style.display = 'block';
-      } else {
-        alertbox("No school specified in the URL. Please use a valid link (e.g., ?school=your_school_id).","error");
-      }
-      document.getElementById('authLoading').style.display = 'none';
-      throw new Error("Initialization halted: Missing 'school' URL parameter.");
-    }
-
-    const schoolId = rawSchoolId.trim().toLowerCase();
     const teacherId = rawTeacherId && rawTeacherId.trim() !== '' ? rawTeacherId.trim() : null;
 
-    document.getElementById('schoolHeaderTitle').innerText = schoolId.toUpperCase() + " PORTAL";
-    document.getElementById('dashSchoolTitle').innerText = schoolId.toUpperCase() + " TEACHER PANEL";
+    if (schoolId) {
+      const headerTitle = document.getElementById('schoolHeaderTitle');
+      const dashTitle = document.getElementById('dashSchoolTitle');
+      if (headerTitle) headerTitle.innerText = schoolId.toUpperCase() + " PORTAL";
+      if (dashTitle) dashTitle.innerText = schoolId.toUpperCase() + " TEACHER PANEL";
+    }
 
+    // ==========================================
     // 2. DYNAMIC TAB VISIBILITY BASED ON TEACHER ID
+    // ==========================================
     const tabHeader = document.querySelector('.tab-header');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const signupTabBtn = tabButtons[1];
 
     if (teacherId) {
-      document.getElementById('signupTeacherId').value = teacherId;
+      const teacherIdInput = document.getElementById('signupTeacherId');
+      if (teacherIdInput) teacherIdInput.value = teacherId;
     } else if (signupTabBtn) {
       signupTabBtn.style.display = 'none';
       if (tabHeader) {
@@ -585,10 +563,11 @@
       }
     }
 
-    let syncEngine = null;
     let pendingTeacherData = null;
 
+    // ==========================================
     // 3. TAB SWITCHING LOGIC
+    // ==========================================
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -605,12 +584,12 @@
 
     // Pre-fetch teacher record when clicking Sign Up tab
     async function verifyAndFetchTeacherRecord() {
-      if (!teacherId) return;
+      if (!teacherId || !schoolId) return;
 
       const nameInput = document.getElementById('signupName');
       const emailInput = document.getElementById('signupEmail');
       const errorDiv = document.getElementById('signupError');
-      errorDiv.innerText = '';
+      if (errorDiv) errorDiv.innerText = '';
 
       try {
         const teacherRef = db.ref(`schools/${schoolId}/users/${teacherId}`);
@@ -620,7 +599,7 @@
           throw new Error("Invalid Teacher ID. No record found for this school.");
         }
 
-        pendingTeacherData = snapshot.val();
+        pendingTeacherData = unmapUserFromFirebase(snapshot.val());
 
         if (pendingTeacherData.role !== 'teacher') {
           throw new Error("This ID is not registered as a teacher account.");
@@ -630,16 +609,18 @@
           throw new Error("This teacher account has already been activated. Please log in.");
         }
 
-        nameInput.value = pendingTeacherData.fullName || "Teacher";
-        if (pendingTeacherData.email) {
+        if (nameInput) nameInput.value = pendingTeacherData.fullName || "Teacher";
+        if (emailInput && pendingTeacherData.email) {
           emailInput.value = pendingTeacherData.email;
         }
       } catch (err) {
-        errorDiv.innerText = err.message;
+        if (errorDiv) errorDiv.innerText = err.message;
       }
     }
 
-    // 4. AUTH STATE LISTENER
+    // ==========================================
+    // 4. AUTH STATE LISTENER (SPA Router Core)
+    // ==========================================
     auth.onAuthStateChanged(async (user) => {
       const authView = document.getElementById('authView');
       const teacherDashboard = document.getElementById('teacherDashboard');
@@ -649,16 +630,35 @@
       teacherDashboard.style.display = 'none';
       authLoading.style.display = 'flex';
 
-      try {
-        if (user) {
-          // Verify user authorization against the target school
+      if (user) {
+        try {
+          db.goOnline(); 
+
+          let activeSchoolId = user.displayName ? user.displayName.trim().toLowerCase() : schoolId;
+
+          if (!user.displayName && activeSchoolId) {
+            await user.updateProfile({ displayName: activeSchoolId });
+          }
+
+          schoolId = activeSchoolId;
+
+          if (!schoolId) {
+            throw new Error("No school ID attached to this user profile or URL.");
+          }
+
+          const headerTitle = document.getElementById('schoolHeaderTitle');
+          const dashTitle = document.getElementById('dashSchoolTitle');
+          if (headerTitle) headerTitle.innerText = "PORTAL";
+          if (dashTitle) dashTitle.innerText = schoolId.toUpperCase() + " TEACHER PANEL";
+
+          // Query user by authUid index instead of direct path lookup
           const userRef = db.ref(`schools/${schoolId}/users/${user.uid}`);
           const snapshot = await userRef.once('value');
-          const userData = snapshot.val();
+
+          const userData = unmapUserFromFirebase(snapshot.val());
 
           if (userData && userData.role === 'teacher') {
             if (typeof SchoolSyncEngine !== 'undefined') {
-              syncEngine = new SchoolSyncEngine(db, schoolId);
               await syncEngine.initIndexedDB();
             }
 
@@ -668,42 +668,47 @@
             authLoading.style.display = 'none';
             teacherDashboard.style.display = 'block';
           } else {
-            alertbox("Unauthorized access. This account is not registered as a Teacher for " + schoolId,"error");
+            alertbox("Unauthorized access. This account is not registered as a Teacher for " + schoolId, "error");
             await auth.signOut();
+
             authLoading.style.display = 'none';
             authView.style.display = 'block';
           }
-        } else {
+        } catch (err) {
+          console.error("Authentication check failed:", err);
+
           authLoading.style.display = 'none';
           authView.style.display = 'block';
           teacherDashboard.style.display = 'none';
+
+          const loginError = document.getElementById('loginError');
+          if (loginError) {
+            loginError.innerText = "Unable to verify your account. Please try again.";
+          }
         }
-      } catch (err) {
-        console.error("Authentication check failed:", err);
+      } else {
         authLoading.style.display = 'none';
         authView.style.display = 'block';
         teacherDashboard.style.display = 'none';
-
-        const loginError = document.getElementById('loginError');
-        if (loginError) {
-          loginError.innerText = "Unable to verify your account. Please try again.";
-        }
       }
     });
 
+ // ==========================================
     // 5. SIGN UP LOGIC (ACCOUNT CLAIMING)
+    // ==========================================
     const signupForm = document.getElementById('signupForm');
+
     if (signupForm) {
       signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (!teacherId) return;
+        if (!teacherId || !schoolId) return;
 
         const email = document.getElementById('signupEmail').value.trim().toLowerCase();
         const password = document.getElementById('signupPassword').value;
         const errorDiv = document.getElementById('signupError');
         const btn = document.getElementById('signupBtn');
 
-        errorDiv.innerText = '';
+        if (errorDiv) errorDiv.innerText = '';
         btn.disabled = true;
 
         try {
@@ -714,63 +719,85 @@
             throw new Error("Invalid Teacher ID. Record does not exist.");
           }
 
-          const teacherRecord = snapshot.val();
-
+          const teacherRecord = unmapUserFromFirebase(snapshot.val());
           if (teacherRecord.role !== 'teacher') {
             throw new Error("Selected account is not a teacher account.");
           }
-
           if (teacherRecord.claimed === true) {
             throw new Error("This account has already been claimed. Please use the Login tab.");
           }
 
+          // 1. Create Firebase Auth User (automatically logs them in and generates user.uid)
           const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-          const uid = userCredential.user.uid;
+          const user = userCredential.user;
 
-          const updates = {
+          await user.updateProfile({
+            displayName: schoolId
+          });
+
+          const readableUpdates = {
             email: email,
-            claimed: true
+            claimed: true,
+            updatedAt: Date.now()
           };
 
-          if (teacherId === uid) {
-            await teacherRef.update(updates);
-          } else {
-            const fullData = { ...teacherRecord, ...updates };
-            await db.ref(`schools/${schoolId}/users/${uid}`).set(fullData);
-            await teacherRef.remove();
-          }
+          // 2. Merge old teacher record with updates
+          const fullReadableData = { ...teacherRecord, ...readableUpdates };
+          const fullShortData = mapUserToFirebase(fullReadableData);
+          
+          // 3. Save data under the new Auth UID node (Allowed because auth.uid === $uid)
+          await db.ref(`schools/${schoolId}/users/${user.uid}`).set(fullShortData);
+          
+          // 4. Remove the old numeric placeholder record (e.g., "15")
+          await teacherRef.remove();
 
-          alertbox("Teacher Account Activated Successfully!","error");
+          alertbox("Teacher Account Activated Successfully!", "success");
 
         } catch (err) {
-          errorDiv.innerText = err.message;
-        } finally {
+          if (errorDiv) errorDiv.innerText = err.message;
           btn.disabled = false;
         }
       });
     }
 
+    // ==========================================
     // 6. LOGIN LOGIC
+    // ==========================================
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
+      const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
       const errorDiv = document.getElementById('loginError');
       const btn = document.getElementById('loginBtn');
 
-      errorDiv.innerText = '';
+      if (errorDiv) errorDiv.innerText = '';
       btn.disabled = true;
 
       try {
         await auth.signInWithEmailAndPassword(email, password);
       } catch (err) {
-        errorDiv.innerText = err.message;
+        if (errorDiv) errorDiv.innerText = err.message;
       } finally {
         btn.disabled = false;
       }
     });
 
-    // 7. LOGOUT LOGIC
+    // ==========================================
+    // 7. BFCACHE RECOVERY & LOGOUT
+    // ==========================================
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        if (db && typeof db.goOnline === 'function') {
+          db.goOnline();
+        }
+        if (auth.currentUser) {
+          auth.currentUser.getIdToken(true).catch(() => {
+            auth.signOut();
+          });
+        }
+      }
+    });
+
     function logout() {
       auth.signOut();
     }
