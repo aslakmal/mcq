@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="css/students.css?v6">
+  <link rel="stylesheet" href="css/id_templates.css?v6">
+  <link rel="stylesheet" href="css/studentData.css?v6">
+ 
+
+</head>
+
+<body>
+
+  <div class="container">
+<div id="detailsPopup" class="modal-overlays">
+  <div class="modal-cards">
+    <div class="modal-header">
+      <div class="student-profile-header">
+        <!-- Profile Image -->
+        <img id="popupAvatar" class="profile-avatar" src="img/user.svg" alt="Student Photo" />
+      </div>
+       </div>
+
+    <!-- Dynamic Personal Data Grid -->
+    <div class="popup-grid" id="popupGridContainer">
+      <!-- Info cards generated dynamically by JS -->
+    </div>
+
+    <h3 style="color: #2d3748; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+      Exam Performance Overview
+    </h3>
+
+    <!-- Chart Canvas Container -->
+    <div class="popup-chart-container">
+      <canvas id="popupScoresChart"></canvas>
+    </div>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="sync.js?v6"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/studentData.js?v6"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+  const urlData = new URLSearchParams(window.location.search);
+  
+  const school = urlData.get('school');
+  const student = urlData.get('id');
+  if (student) {
+    openDetails(student, school, false);
+  }
+});
+</script>
