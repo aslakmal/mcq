@@ -15,12 +15,48 @@ schoolId||alertbox("Missing school ID in URL","error"),document.getElementById("
           <td data-label="Class">${escapeHtml(e.class||"N/A")}</td>
           <td data-label="Contact">${escapeHtml(e.studentContact||"N/A")}</td>
           <td data-label="Actions">
-            <div class="actions">
-            <button onclick="openIdCardModalByKey('${n}', this)" class="btn-action btn-view-id">View ID</button>
-              <button onclick="openDetails('${n}')" class="btn-action btn-details">Details</button>
-              <a href="student_edit.html?school=${schoolId}&id=${n}" class="btn-action btn-edit">Edit</a>
-              <button onclick="confirmDelete('${n}', '${escapeHtml(e.fullName)}')" class="btn-action btn-delete">Delete</button>
-            </div>
+          <div class="actions">
+
+    <button onclick="openIdCardModalByKey('${n}', this)"
+            class="action-btn view"
+            title="View ID">
+        <svg viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <circle cx="8" cy="11" r="2"/>
+            <path d="M12 10h6M12 14h4"/>
+        </svg>
+    </button>
+
+    <button onclick="openDetails('${n}','${schoolId}')"
+            class="action-btn details"
+            title="Details">
+        <svg viewBox="0 0 24 24">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+    </button>
+
+    <a href="student_edit.html?school=${schoolId}&id=${n}"
+       class="action-btn edit"
+       title="Edit">
+        <svg viewBox="0 0 24 24">
+            <path d="M4 20h4L19 9l-4-4L4 16v4z"/>
+            <path d="M13.5 6.5l4 4"/>
+        </svg>
+    </a>
+
+    <button onclick="confirmDelete('${n}', '${escapeHtml(e.fullName)}')"
+            class="action-btn delete"
+            title="Delete">
+        <svg viewBox="0 0 24 24">
+            <path d="M4 7h16"/>
+            <path d="M9 7V4h6v3"/>
+            <path d="M7 7l1 13h8l1-13"/>
+            <path d="M10 11v5M14 11v5"/>
+        </svg>
+    </button>
+
+</div>
           </td>
         </tr>
       `}).join(""),renderPagination(s,d,1+o,l),updateSelectionCounter(e),syncSelectAllCheckboxState(e))}function toggleStudentSelection(e,t){t?selectedStudentIds.add(e):selectedStudentIds.delete(e);t=Array.from(document.querySelectorAll(".student-checkbox")),e=0<t.length&&t.every(e=>e.checked),document.getElementById("selectAllCheckbox").checked=e,e=t.filter(e=>e.checked).length;document.getElementById("selectedCountText").innerText=e+" student(s) selected"}function toggleSelectAll(e){const t=e.checked;e=document.querySelectorAll(".student-checkbox"),e.forEach(e=>{e.checked=t;e=e.value;t?selectedStudentIds.add(e):selectedStudentIds.delete(e)}),e=t?e.length:0;document.getElementById("selectedCountText").innerText=e+" student(s) selected"}function syncSelectAllCheckboxState(e=[]){var t=document.getElementById("selectAllCheckbox");0===e.length?t.checked=!1:(e=e.every(e=>selectedStudentIds.has(e.id||e.key)),t.checked=e)}function updateSelectionCounter(e=[]){e=e.filter(e=>selectedStudentIds.has(e.id||e.key)).length;document.getElementById("selectedCountText").innerText=e+" student(s) selected"}function renderPagination(e,n,a,s){var d=document.getElementById("paginationInfo"),o=document.getElementById("paginationControls");if(0===e)d.innerText="Showing 0 of 0 students",o.innerHTML="";else{d.innerText=`Showing ${a}-${s} of ${e} students`;let t=`<button class="page-btn" ${1===currentPage?"disabled":""} onclick="goToPage(${currentPage-1})">Prev</button>`;for(let e=1;e<=n;e++)1===e||e===n||e>=currentPage-1&&e<=currentPage+1?t+=`<button class="page-btn ${e===currentPage?"active":""}" onclick="goToPage(${e})">${e}</button>`:e!==currentPage-2&&e!==currentPage+2||(t+='<span style="padding: 0 4px; color: #a0aec0;">...</span>');t+=`<button class="page-btn" ${currentPage===n?"disabled":""} onclick="goToPage(${currentPage+1})">Next</button>`,o.innerHTML=t}}function goToPage(e){currentPage=e,renderStudentTable(cachedStudents)}function handleSearchInput(){clearTimeout(searchDebounceTimer),searchDebounceTimer=setTimeout(()=>{var e=document.getElementById("searchInput").value,t=document.getElementById("classInput").value;sessionStorage.setItem("search_"+schoolId,e),sessionStorage.setItem("class_"+schoolId,t),currentPage=1,renderStudentTable(cachedStudents)},200)}function getSelectedStudents(){var e=Array.from(document.querySelectorAll(".student-checkbox:checked"));const t=new Set(e.map(e=>e.value));return cachedStudents.filter(e=>t.has(e.id||e.key))}function getStudentFromIDB(a){return new Promise(n=>{var e="SIS_"+schoolId,e=indexedDB.open(e);e.onsuccess=e=>{e=e.target.result;if(e.objectStoreNames.contains("students")){const t=e.transaction("students","readonly").objectStore("students").get(a);t.onsuccess=()=>n(t.result||null),t.onerror=()=>n(null)}else n(null)},e.onerror=()=>n(null)})}async function openBulkScoreModal(){var e=getSelectedStudents();console.log(e),0===e.length?alertbox("Please select at least one student to add or edit exam scores.","error"):(document.getElementById("bulkScoreStudentList").innerHTML=e.map(e=>{var t=e.id||e.key;return`
@@ -43,4 +79,4 @@ schoolId||alertbox("Missing school ID in URL","error"),document.getElementById("
         </div>
       `:""}).join("")),document.getElementById("backCardBody"));c&&(c.innerHTML=o.map(e=>{var t=i[e];return t?`
         <p><strong>${formatLabel(t)}:</strong> <span>${n[t]??n[e]??"-"}</span></p>
-      `:""}).join(""));let e="https://digibook.edu.lk/edOS/";var r=`${e=(e="custom"===s.qrType&&s.qrCustomUrl?s.qrCustomUrl.trim():e).endsWith("/")?e.slice(0,-1):e}/student.html?school=${encodeURIComponent(schoolId)}&id=`+encodeURIComponent(t),u=document.getElementById("qrcode");u&&(u.innerHTML="",new QRCode(u,{text:r,width:90,height:90})),document.getElementById("idCardModal").style.display="flex"}catch(e){console.error("Error fetching school details for modal:",e)}finally{e&&(e.disabled=!1,e.innerHTML=a)}document.querySelector(".print-btn").dataset.student=t}}async function confirmDelete(t,e){if(confirm(`Are you sure you want to delete ${e}?`)){e=firebase.auth().currentUser;if(e)try{await db.ref(`schools/${schoolId}/students/`+t).set({D:!0,A:firebase.database.ServerValue.TIMESTAMP,B:e.uid}),cachedStudents=cachedStudents.filter(e=>(e.id||e.key)!==t),selectedStudentIds.delete(t),renderStudentTable(cachedStudents)}catch(e){alertbox("Delete failed: "+e.message,"error")}else alertbox("Session expired. Please log in again.","error")}}function escapeHtml(e){return String(e||"").replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}document.getElementById("searchInput").addEventListener("input",handleSearchInput),document.getElementById("classInput").addEventListener("input",handleSearchInput),document.getElementById("pageSizeSelect").addEventListener("change",e=>{pageSize=parseInt(e.target.value,10),currentPage=1,renderStudentTable(cachedStudents)}),initApp(),generateSelectOptions(subjectData,"scoreSubjectSelect");
+      `:""}).join(""));let e="https://digibook.edu.lk/edOS/";var r=`${e=(e="custom"===s.qrType&&s.qrCustomUrl?s.qrCustomUrl.trim():e).endsWith("/")?e.slice(0,-1):e}/student.html?school=${encodeURIComponent(schoolId)}&id=`+encodeURIComponent(t),u=document.getElementById("qrcode");u&&(u.innerHTML="",new QRCode(u,{text:r,width:90,height:90})),document.getElementById("idCardModal").style.display="flex"}catch(e){console.error("Error fetching school details for modal:",e)}finally{e&&(e.disabled=!1,e.innerHTML=a)}document.querySelector(".print-btn").dataset.student=t}}async function confirmDelete(t,e){if(confirm(`Are you sure you want to delete ${e}?`)){e=firebase.auth().currentUser;if(e)try{await db.ref(`schools/${schoolId}/students/`+t).set({D:!0,A:firebase.database.ServerValue.TIMESTAMP,B:e.uid}),cachedStudents=cachedStudents.filter(e=>(e.id||e.key)!==t),selectedStudentIds.delete(t),renderStudentTable(cachedStudents)}catch(e){alertbox("Delete failed: "+e.message,"error")}else alertbox("Session expired. Please log in again.","error")}}function escapeHtml(e){return String(e||"").replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}document.getElementById("searchInput").addEventListener("input",handleSearchInput),document.getElementById("classInput").addEventListener("input",handleSearchInput),document.getElementById("pageSizeSelect").addEventListener("change",e=>{pageSize=parseInt(e.target.value,10),currentPage=1,renderStudentTable(cachedStudents)}),initApp(),generateSelectOptions(subjectData,"scoreSubjectSelect"),auth.onAuthStateChanged(e=>{var t=window.location.pathname.endsWith("admin.html");e||!navigator.onLine||t||(window.location.href="admin.html")});
