@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,34 +8,148 @@
   <!-- Cropper.js CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: #f4f6f9; margin: 0; padding: 20px; display: flex; justify-content: center; }
-    .container { background: #fff; width: 100%; max-width: 650px; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    h2 { margin: 0; color: #1a202c; font-size: 1.4rem; }
-    .btn-back { color: #4a5568; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
-    
-    .form-group { margin-bottom: 16px; }
-    label { display: block; margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 0.9rem; }
-    input:not([type="radio"]), textarea,select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.95rem; }
-    input:focus, textarea:focus { outline: none; border-color: #3182ce; box-shadow: 0 0 0 3px rgba(49,130,206,0.15); }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-    .image-preview-container { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
-    .current-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e0; }
-    
-    .crop-wrapper { margin-top: 10px; max-width: 100%; max-height: 300px; display: none; }
-    .crop-wrapper img { max-width: 100%; }
+    body {
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-    .btn-submit { width: 100%; background: #3182ce; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 12px; }
-    .btn-submit:hover { background: #2b6cb0; }
-    .btn-submit:disabled { background: #a0aec0; cursor: not-allowed; }
+    .container {
+      background: #fff;
+      width: 100%;
+      max-width: 650px;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
 
-    .alert { padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9rem; display: none; }
-    .alert-danger { background: #fed7d7; color: #9b2c2c; }
-    .alert-warning { background: #feebc8; color: #744210; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      color: #1a202c;
+      font-size: 1.4rem;
+    }
+
+    .btn-back {
+      color: #4a5568;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+
+    input:not([type="radio"]),
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    }
+
+    .image-preview-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .current-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #cbd5e0;
+    }
+
+    .crop-wrapper {
+      margin-top: 10px;
+      max-width: 100%;
+      max-height: 300px;
+      display: none;
+    }
+
+    .crop-wrapper img {
+      max-width: 100%;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: #3182ce;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .btn-submit:hover {
+      background: #2b6cb0;
+    }
+
+    .btn-submit:disabled {
+      background: #a0aec0;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .alert-danger {
+      background: #fed7d7;
+      color: #9b2c2c;
+    }
+
+    .alert-warning {
+      background: #feebc8;
+      color: #744210;
+    }
+    @media only screen and (max-width: 768px) {
+    body,.container{padding: 4px;}
+    }
   </style>
 </head>
+
 <body>
 
   <div class="container">
@@ -46,31 +161,31 @@
     </div>
 
     <form id="editStudentForm">
-    
+
       <!-- Basic Details -->
       <fieldset class="form-section">
         <legend>Student Information</legend>
-    
+
         <div class="form-group">
           <label for="admissionNo">Admission Number *</label>
           <input type="text" id="admissionNo">
         </div>
-    
+
         <div class="form-group">
           <label for="fullName">Full Name *</label>
           <input type="text" id="fullName" required>
         </div>
-    
+
         <div class="form-group">
           <label for="birthCertificateNo">Birth Certificate Number *</label>
           <input type="text" id="birthCertificateNo">
         </div>
-    
+
         <div class="form-group">
           <label for="dob">Date of Birth</label>
           <input type="date" id="dob" required>
         </div>
-    
+
         <div class="form-group">
           <label>Gender</label>
           <div class="radio-group" style="display:flex; gap:16px;">
@@ -78,22 +193,22 @@
             <label><input type="radio" name="gender" value="female"> Female</label>
           </div>
         </div>
-    
+
         <div class="form-group">
           <label for="address">Address</label>
           <textarea id="address" rows="3"></textarea>
         </div>
-    
+
         <div class="form-group">
           <label for="studentContact">Contact Number</label>
           <input type="tel" id="studentContact">
         </div>
       </fieldset>
-    
+
       <!-- School & Academic Details -->
       <fieldset class="form-section">
         <legend>School Details</legend>
-    
+
         <div class="form-group">
           <label for="yearOfAdmission">Year of Admission</label>
           <select id="yearOfAdmission" name="yearOfAdmission">
@@ -105,7 +220,7 @@
             <option value="2030">2030</option>
           </select>
         </div>
-    
+
         <div class="form-group">
           <label for="gradeOfAdmission">Grade of Admission</label>
           <select id="gradeOfAdmission" name="gradeOfAdmission">
@@ -125,77 +240,77 @@
             <option value="13">Grade 13</option>
           </select>
         </div>
-    
+
         <div class="form-group">
           <label for="class">Current Class</label>
           <input type="text" id="class" placeholder="1A">
         </div>
-    
+
         <div class="form-group">
           <label for="positionsHeld">Positions Held</label>
           <input type="text" id="positionsHeld" placeholder="e.g., Head Prefect, Monitor">
         </div>
-    
+
         <div class="form-group">
           <label for="disciplineBehavior">Discipline & Conduct</label>
           <textarea id="disciplineBehavior" rows="2"></textarea>
         </div>
-    
+
         <div class="form-group">
           <label for="medicalConditions">Medical Conditions / Illnesses</label>
           <textarea id="medicalConditions" rows="2" placeholder="List any chronic conditions or allergies"></textarea>
         </div>
       </fieldset>
-    
+
       <!-- Parents & Guardian Details -->
       <fieldset class="form-section">
         <legend>Parent & Guardian Information</legend>
-    
+
         <div class="form-group">
           <label for="fatherName">Father's Full Name</label>
           <input type="text" id="fatherName">
         </div>
-    
+
         <div class="form-group">
           <label for="fatherNic">Father's NIC Number</label>
           <input type="text" id="fatherNic">
         </div>
-    
+
         <div class="form-group">
           <label for="motherName">Mother's Full Name</label>
           <input type="text" id="motherName">
         </div>
-    
+
         <div class="form-group">
           <label for="motherNic">Mother's NIC Number</label>
           <input type="text" id="motherNic">
         </div>
-    
+
         <div class="form-group">
           <label for="guardianName">Guardian's Full Name</label>
           <input type="text" id="guardianName">
         </div>
-    
+
         <div class="form-group">
           <label for="guardianNic">Guardian's NIC Number</label>
           <input type="text" id="guardianNic">
         </div>
       </fieldset>
-    
+
       <!-- Socioeconomic & Administrative Details -->
       <fieldset class="form-section">
         <legend>Administrative & Socioeconomic Details</legend>
-    
+
         <div class="form-group">
           <label for="gnDivision">Grama Niladhari Division</label>
           <input type="text" id="gnDivision">
         </div>
-    
+
         <div class="form-group">
           <label for="dsDivision">Divisional Secretariat Division</label>
           <input type="text" id="dsDivision">
         </div>
-    
+
         <div class="form-group">
           <label for="lowIncomeStatus">Low-Income Family Status</label>
           <select id="lowIncomeStatus">
@@ -204,7 +319,7 @@
             <option value="no">No</option>
           </select>
         </div>
-    
+
         <div class="form-group">
           <label for="aswesumaBeneficiary">Aswesuma Beneficiary?</label>
           <div class="radio-group" style="display:flex; gap:16px;">
@@ -212,7 +327,7 @@
             <label><input type="radio" name="aswesumaBeneficiary" value="no"> No</label>
           </div>
         </div>
-    
+
         <div class="form-group">
           <label for="otherSiblingsInSchool">Number of Sibling(s) Attending This School</label>
           <select id="otherSiblingsInSchool" name="otherSiblingsInSchool">
@@ -225,17 +340,18 @@
           </select>
         </div>
       </fieldset>
-    
+
       <!-- Student Photo Management -->
       <fieldset class="form-section">
         <legend>Student Photo</legend>
-    
+
         <div class="form-group">
           <div class="image-preview-container">
             <img id="currentPhoto" src="img/user.svg" class="current-avatar" alt="Student Photo">
             <div>
               <input type="file" id="photoInput" accept="image/*">
-              <small style="color: #718096; display: block; margin-top: 4px;">Select a new image to replace current photo.</small>
+              <small style="color: #718096; display: block; margin-top: 4px;">Select a new image to replace current
+                photo.</small>
             </div>
           </div>
           <div class="crop-wrapper" id="cropWrapper">
@@ -243,7 +359,7 @@
           </div>
         </div>
       </fieldset>
-    
+
       <button type="submit" id="submitBtn" class="btn-submit">Save Changes</button>
     </form>
   </div>
@@ -253,7 +369,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?v6"></script>
+  <script src="sync.js?v7"></script>
   <script src="js/student_edit.js?v7"></script>
 </body>
+
 </html>
