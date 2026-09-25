@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="css/students.css?v9">
+  <link rel="stylesheet" href="css/id_templates.css?v9">
+  <link rel="stylesheet" href="css/studentData.css?v9">
+ 
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div id="missingSchoolAlert" class="alerts">Error: Missing valid school ID in URL parameter (?school=your_school_id).
+    </div>
+
+    <div class="header">
+      <h2>Student Directory</h2>
+      <a id="addStudentBtn" href="#" class="btn-add">+ Register New Student</a>
+    </div>
+
+    <div class="controls-row">
+      <input type="text" id="searchInput" class="search-box" placeholder="Search by name or ID...">
+
+      <!-- CLASS FILTER INPUT WITH AUTOCOMPLETE -->
+      <input type="text" id="classInput" class="class-box" placeholder="Class (e.g. 1A)" list="classList">
+      <datalist id="classList"></datalist>
+
+      <select id="pageSizeSelect" class="page-size-selector">
+        <option value="10">10 per page</option>
+        <option value="25">25 per page</option>
+        <option value="50" selected>50 per page</option>
+        <option value="100">100 per page</option>
+      </select>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <label class="select-all-label">
+                <input type="checkbox" id="selectAllCheckbox" class="custom-checkbox" checked
+                  onclick="toggleSelectAll(this)">
+                <span>Select All</span>
+              </label>
+            </th>
+            <th>Student</th>
+            <th>ID</th>
+            <th>Class</th>
+            <th>Contact</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <tr>
+            <td colspan="6" class="empty-state">Loading student records...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BULK ACTIONS PANEL -->
+    <div class="bulk-bar">
+      <div class="bulk-info" id="selectedCountText">0 students selected</div>
+      <div class="bulk-buttons">
+        <button type="button" class="btn-bulk btn-bulk-score" onclick="openBulkScoreModal()">+ Add Exam Score</button>
+        <button type="button" class="btn-bulk btn-bulk-class" onclick="openBulkClassModal()">Change Class</button>
+      </div>
+    </div>
+
+    <!-- PAGINATION FOOTER -->
+    <div class="pagination-container">
+      <div id="paginationInfo" class="pagination-info">Showing 0 of 0 students</div>
+      <div id="paginationControls" class="pagination-controls"></div>
+    </div>
+  </div>
+
+  <!-- UPDATED BULK EXAM SCORE MODAL -->
+  <div id="bulkScoreModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add / Update Exam Scores</h3>
+        <button type="button" class="close-modal" onclick="closeModal('bulkScoreModal')">×</button>
+      </div>
+
+      <!-- Controls trigger dynamic reloading of current scores -->
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div style="flex: 1;">
+          <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Semester</label>
+          <select id="scoreSemesterSelect" class="form-control" onchange="fetchAndUpdateModalScores()">
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+          </select>
+        </div>
+        <div style="flex: 1;">
+          <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Subject</label>
+          <select id="scoreSubjectSelect" class="form-control" onchange="fetchAndUpdateModalScores()">
+          </select>
+
+        </div>
+      </div>
+
+      <div class="modal-body" id="bulkScoreStudentList">
+        <!-- Dynamic input rows -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-action btn-edit" onclick="closeModal('bulkScoreModal')">Cancel</button>
+        <button type="button" class="btn-bulk btn-bulk-score" onclick="submitBulkScores()">Save Scores</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BULK CLASS CHANGE MODAL -->
+  <div id="bulkClassModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3>Change Class</h3>
+        <button type="button" class="close-modal" onclick="closeModal('bulkClassModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: #718096; margin-top: 0;">Update target class for all selected students.</p>
+        <div class="form-group">
+          <label for="newClassInput">New Class Name</label>
+          <input type="text" id="newClassInput" class="form-control" placeholder="e.g. 4B" list="classList">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-action btn-edit" onclick="closeModal('bulkClassModal')">Cancel</button>
+        <button type="button" class="btn-bulk btn-bulk-class" onclick="submitBulkClassChange()">Update Class</button>
+      </div>
+    </div>
+  </div>
+
+ <!-- ID CARD MODAL -->
+<div id="idCardModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content id-card-modal-content">
+    <div class="modal-header">
+      <h3>Student ID Card</h3>
+      <button type="button" class="close-modal" onclick="closeModal('idCardModal')">×</button>
+    </div>
+
+    <div id="idCardWrapper">
+      <div class="id-cards-container">
+
+        <div id="frontCard" class="id-card front-card tpl-modern-blue">
+          <div class="card-header">
+            <img id="idLogo" crossorigin="anonymous"> 
+            <h3 id="cardSchoolFront">SCHOOL</h3>
+          </div>
+          
+          <div class="photo-container">
+            <img id="cardPhoto" alt="Student Photo" src="img/user.svg" crossorigin="anonymous">
+          </div>
+        
+          <div class="body_">
+            <h4 id="cardName">JOHN DOE</h4>
+            <div class="card-badge">STUDENT ID CARD</div>
+        
+            <!-- Dynamic Front Details Grid -->
+            <div class="front-card-body" id="frontCardBody">
+              <!-- Generated dynamically -->
+            </div>
+          </div>
+        
+          <!-- QR Code Section on Front -->
+          <div class="qr-wrapper"></div>
+        </div>
+        
+        <!-- BACK CARD -->
+        <div id="backCard" class="id-card back-card tpl-modern-blue">
+          <div class="card-header">
+            <h3>ADDITIONAL DETAILS</h3>
+          </div>
+        
+          <!-- Dynamic Back Details Grid -->
+          <div class="back-card-body" id="backCardBody">
+            <!-- Generated dynamically -->
+          </div>
+        
+          <div class="qr-container">
+            <div id="qrcode"></div>
+          </div>
+          <div class="back-footer">
+            <p>If found, please return to school administration.</p>
+          </div>
+        </div>
+
+      </div>
+
+   
+    </div>
+    <div style="margin-top: 20px; text-align: right;">
+      <button type="button" class="print-btn" onclick="exportTo300DpiPNG('idCardWrapper')">Print ID Card</button>
+    </div>
+  </div>
+</div>
+
+
+
+  
+<div id="detailsPopup" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="student-profile-header">
+        <!-- Profile Image -->
+        <img id="popupAvatar" class="profile-avatar" src="img/user.svg" alt="Student Photo" />
+      </div>
+      <button class="btn-close" onclick="closeDetails()">&times;</button>
+    </div>
+
+    <!-- Dynamic Personal Data Grid -->
+    <div class="popup-grid" id="popupGridContainer">
+      <!-- Info cards generated dynamically by JS -->
+    </div>
+
+    <h3 style="color: #2d3748; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+      Exam Performance Overview
+    </h3>
+
+    <!-- Chart Canvas Container -->
+    <div class="popup-chart-container">
+      <canvas id="popupScoresChart"></canvas>
+    </div>
+  </div>
+</div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="sync.js?v9"></script>
+  <script src="js/id_manager.js?v9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/students.js?v9"></script>
+  <script src="js/studentData.js?v9"></script>
+ </body>
+<!-- Include library via CDN (or install via npm: npm install html-to-image) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+<script>
+async function exportTo300DpiPNG(elementId) {
+  const node = document.getElementById(elementId);
+  const scale = 300 / 96; // 3.125 for 300 DPI
+  const studentKey = document.querySelector('.print-btn').dataset.student;
+  try {
+    const dataUrl = await htmlToImage.toPng(node, {
+      pixelRatio: scale, // <--- Native html-to-image scaling
+      cacheBust: true    // Prevents cached SVG/image glitches
+    });
+    alertbox('Downloading', "success")
+    const link = document.createElement('a');
+    link.download = `student-${studentKey}.png`;
+    link.href = dataUrl;
+    link.click();
+  } catch (error) {
+    console.error('Export failed:', error);
+    alertbox('Download failed:', "error")
+  }
+}
+exportTo300DpiPNG('missingSchoolAlert')
+</script>
+</html>
