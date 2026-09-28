@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Custom ID Card Template CSS -->
-  <link rel="stylesheet" href="css/id_templates.css?v6">
+  <link rel="stylesheet" href="css/id_templates.css?x5">
 
   <!-- QRCode.js Library for rendering QR code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -322,46 +322,9 @@
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <!-- Custom Firebase Logic JavaScript -->
-  <script src="sync.js?v6"></script>
-  <script src="js/id_manager.js?v6"></script>
+  <script src="sync.js?x5"></script>
+  <script src="js/id_manager.js?x5"></script>
 
-  <!-- Script initialization helper -->
-  <script>
-    // Render initial QR Code preview
-    window.addEventListener("DOMContentLoaded", () => {
-      new QRCode(document.getElementById("qrcode"), {
-        text: "ID Sample",
-        width: 90,
-        height: 90,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-      });
 
-      // Automatically fetch saved Firebase settings on page load
-      if (typeof getSetting === 'function') {
-        getSetting();
-      }
-    });
-
-    // Handle template changes live in DOM
-    function onTemplateChange(templateClass) {
-      document.querySelectorAll('.id-card').forEach(card => {
-        card.className = card.className.replace(/\btpl-\S+/g, '');
-        card.classList.add(templateClass);
-      });
-    }
-
-    // Handle color preset changes live in DOM
-    function onColorChange(colorName) {
-      document.querySelectorAll('.id-card').forEach(card => {
-        card.setAttribute('data-color', colorName);
-      });
-      document.querySelectorAll('.color-box').forEach(box => {
-        box.classList.toggle('active', box.classList.contains(`color-${colorName}`));
-      });
-    }
-  </script>
 </body>
 </html>
