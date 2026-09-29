@@ -4,316 +4,129 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Registration</title>
+  <title>Teacher Registration</title>
 
+  <!-- Cropper.js CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
-  <link rel="stylesheet" href="css/student_register.css?x5" />
+  <link rel="stylesheet" href="css/teacher_register.css?x4" />
 
+ 
 </head>
 
 <body>
 
   <div class="container">
     <div class="page-header">
-      <div class="brand-icon">🎓</div>
+      <div class="brand-icon">👨‍🏫</div>
       <div>
-        <h2>Register New Student</h2>
-        <p>Add student details and generate an ID card</p>
+        <h2>Register New Teacher</h2>
+        <p>Add teacher details and generate an ID card</p>
       </div>
     </div>
-    <form id="studentForm">
-      <fieldset class="form-section">
-        <legend>Student Information</legend>
-
-        <div class="form-group">
-          <label for="admissionNo">Admission Number</label>
-          <input type="text" id="admissionNo" name="admissionNo">
+    <div id="missingSchoolAlert"
+      style="display: none; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; text-align: center;">
+      ⚠️ Missing School Identification in URL! Please access this page using your assigned school link (e.g.,
+      ?school=your_school_id).
+    </div>
+    <form id="teacherForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" required>
+      </div>
+    
+      <div class="form-group">
+        <label>Birthday</label>
+        <input type="date" id="dob" required>
+      </div>
+    
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+    
+      <div class="form-group">
+        <label>National Identity Card (NIC)</label>
+        <input type="text" id="nic" placeholder="e.g. 199012345678 or 901234567V" required>
+      </div>
+    
+      <div class="form-group">
+        <label>Subject / Department</label>
+        <input type="text" id="subject" placeholder="e.g. Mathematics, Science" >
+      </div>
+    
+      <div class="form-group">
+        <label>First Appointment Date</label>
+        <input type="date" id="firstAppointmentDate" >
+      </div>
+    
+      <div class="form-group">
+        <label>Date of Arrival at This School</label>
+        <input type="date" id="arrivalDate" >
+      </div>
+    
+      <div class="form-group">
+        <label>Salary Code / Number</label>
+        <input type="text" id="salaryCode" placeholder="e.g. SAL-12345" >
+      </div>
+    
+      <div class="form-group">
+        <label>Previous School</label>
+        <input type="text" id="previousSchool" placeholder="e.g. Central College">
+      </div>
+    
+      <div class="form-group">
+        <label>Qualification</label>
+        <input type="text" id="qualification" placeholder="e.g. B.Ed, M.Sc Physics" >
+      </div>
+    
+      <div class="form-group">
+        <label>Contact Number</label>
+        <input type="tel" id="contact" >
+      </div>
+    
+      <div class="form-group">
+        <label>Home Address</label>
+        <textarea id="address" ></textarea>
+      </div>
+      <div class="form-group">
+        <label>Assigned Classes</label>
+        <textarea id="classes" placeholder="1A,2B etc"></textarea>
+      </div>
+    
+      <div class="form-group">
+        <label>Profile Picture</label>
+        <input class="file-input" type="file" id="imageInput" accept="image/*">
+        <div class="img-container">
+          <img id="imageToCrop" src="" alt="Crop Source">
         </div>
-
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" name="fullName" required>
-        </div>
-
-        <div class="form-group">
-          <label for="birthCertificateNo">Birth Certificate Number</label>
-          <input type="text" id="birthCertificateNo" name="birthCertificateNo">
-        </div>
-
-        <div class="form-group">
-          <label for="dob">Date of Birth</label>
-          <div style="display: flex; gap: 10px;">
-            <!-- Year Dropdown -->
-            <select id="dobYear" required>
-              <option value="" disabled selected>Year</option>
-            </select>
-
-            <!-- Month Dropdown -->
-            <select id="dobMonth" required>
-              <option value="" disabled selected>Month</option>
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-            <!-- Day Dropdown -->
-            <select id="dobDay" required>
-              <option value="" disabled selected>Day</option>
-            </select>
-
-
-          </div>
-
-          <!-- Hidden input for standard YYYY-MM-DD submission -->
-          <input type="hidden" id="dob" name="dob">
-        </div>
-
-
-
-        <div class="form-group">
-          <label>Gender</label>
-          <div class="radio-group" style="display:flex; gap:16px;">
-            <label><input type="radio" name="gender" value="male" required checked> Male</label>
-            <label><input type="radio" name="gender" value="female"> Female</label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="address">Home Address</label>
-          <textarea id="address" name="address"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="studentContact">Contact Number</label>
-          <input type="tel" id="studentContact" name="studentContact">
-        </div>
-      </fieldset>
-
-      <fieldset class="form-section">
-        <legend>School Details</legend>
-
-        <div class="form-group">
-          <label for="yearOfAdmission">Year of Admission</label>
-          <select id="yearOfAdmission" name="yearOfAdmission">
-            <option value="" disabled selected>Select Year</option>
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-            <option value="2028">2028</option>
-            <option value="2029">2029</option>
-            <option value="2030">2030</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="gradeOfAdmission">Grade of Admission</label>
-          <select id="gradeOfAdmission" name="gradeOfAdmission">
-            <option value="" disabled selected>Select Grade</option>
-            <option value="1">Grade 1</option>
-            <option value="2">Grade 2</option>
-            <option value="3">Grade 3</option>
-            <option value="4">Grade 4</option>
-            <option value="5">Grade 5</option>
-            <option value="6">Grade 6</option>
-            <option value="7">Grade 7</option>
-            <option value="8">Grade 8</option>
-            <option value="9">Grade 9</option>
-            <option value="10">Grade 10</option>
-            <option value="11">Grade 11</option>
-            <option value="12">Grade 12</option>
-            <option value="13">Grade 13</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="class">Current Class</label>
-          <input type="text" id="class" name="class" placeholder="1A">
-        </div>
-
-        <div class="form-group">
-          <label for="positionsHeld">Positions Held</label>
-          <input type="text" id="positionsHeld" name="positionsHeld" placeholder="e.g., Head Prefect, Monitor">
-        </div>
-
-        <div class="form-group">
-          <label for="disciplineBehavior">Discipline & Conduct</label>
-          <textarea id="disciplineBehavior" name="disciplineBehavior"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="medicalConditions">Medical Conditions / Illnesses</label>
-          <textarea id="medicalConditions" name="medicalConditions"
-            placeholder="List any chronic conditions or allergies"></textarea>
-        </div>
-      </fieldset>
-
-      <fieldset class="form-section">
-        <legend>Parent & Guardian Information</legend>
-
-        <div class="form-group">
-          <label for="fatherName">Father's Full Name</label>
-          <input type="text" id="fatherName" name="fatherName">
-        </div>
-
-        <div class="form-group">
-          <label for="fatherNic">Father's NIC Number</label>
-          <input type="text" id="fatherNic" name="fatherNic">
-        </div>
-
-        <div class="form-group">
-          <label for="motherName">Mother's Full Name</label>
-          <input type="text" id="motherName" name="motherName">
-        </div>
-
-        <div class="form-group">
-          <label for="motherNic">Mother's NIC Number</label>
-          <input type="text" id="motherNic" name="motherNic">
-        </div>
-
-        <div class="form-group">
-          <label for="guardianName">Guardian's Full Name</label>
-          <input type="text" id="guardianName" name="guardianName">
-        </div>
-
-        <div class="form-group">
-          <label for="guardianNic">Guardian's NIC Number</label>
-          <input type="text" id="guardianNic" name="guardianNic">
-        </div>
-      </fieldset>
-
-      <fieldset class="form-section">
-        <legend>Administrative & Socioeconomic Details</legend>
-
-        <div class="form-group">
-          <label for="gnDivision">Grama Niladhari Division</label>
-          <input type="text" id="gnDivision" name="gnDivision">
-        </div>
-
-        <div class="form-group">
-          <label for="dsDivision">Divisional Secretariat Division</label>
-          <input type="text" id="dsDivision" name="dsDivision">
-        </div>
-
-        <div class="form-group">
-          <label>Low-Income Family Status</label>
-          <div class="radio-group" style="display:flex; gap:16px;">
-            <label>
-              <input type="radio" name="lowIncomeStatus" value="yes">
-              Yes
-            </label>
-            <label>
-              <input type="radio" name="lowIncomeStatus" value="no">
-              No
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="aswesumaBeneficiary">Aswesuma Beneficiary?</label>
-          <div class="radio-group" style="display:flex; gap:16px;">
-            <label><input type="radio" name="aswesumaBeneficiary" value="yes"> Yes</label>
-            <label><input type="radio" name="aswesumaBeneficiary" value="no"> No</label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="otherSiblingsInSchool">Number of Sibling(s) Attending This School</label>
-          <select id="otherSiblingsInSchool" name="otherSiblingsInSchool">
-            <option value="0" selected>0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
-      </fieldset>
-
-      <fieldset class="form-section">
-        <legend>Profile Picture</legend>
-        <div class="form-group">
-          <input class="file-input" type="file" id="imageInput" accept="image/*">
-          <div class="img-container">
-            <img id="imageToCrop" src="" alt="Crop Source">
-          </div>
-        </div>
-      </fieldset>
-
-      <button type="submit" id="submitBtn">Register Student</button>
+      </div>
+    
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="signupEmail" required placeholder="teacher@school.com">
+      </div>
+    
+      <div class="form-group">
+        <label>Create Password</label>
+        <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters">
+      </div>
+    
+      <button type="submit" id="submitBtn">Register Teacher</button>
     </form>
 
-
   </div>
-  <!-- Generated ID Card Output -->
-  <div id="idCardModal" role="dialog" aria-modal="true" aria-labelledby="idCardModalTitle">
-    <div class="id-card-modal-content">
-      <div class="modal-header">
-        <div>
-          <h3 id="idCardModalTitle">Student ID Card Ready</h3>
-          <p>The student has been registered successfully.</p>
-        </div>
-        <button type="button" class="close-modal" onclick="closeIdCardModal()" aria-label="Close">×</button>
-      </div>
 
-      <div id="idCardWrapper">
-        <div class="id-cards-container">
-
-          <!-- FRONT SIDE -->
-          <div class="id-card front-card">
-            <div class="card-header">
-              <h3 id="cardSchoolFront">SCHOOL SIS</h3>
-            </div>
-            <div class="photo-container">
-              <img id="cardPhoto" alt="Student Photo">
-            </div>
-            <h4 id="cardName"></h4>
-            <div class="id-number">ID: <span id="cardStudentId"></span></div>
-            <div style="font-size: 11px; color: #777; margin-bottom: 5px;">STUDENT CARD</div>
-          </div>
-
-          <!-- BACK SIDE -->
-          <div class="id-card back-card">
-            <div>
-              <div class="card-header" style="text-align: center;">
-                <h3>STUDENT DETAILS</h3>
-              </div>
-              <p><strong>Father:</strong> <span id="cardFather"></span></p>
-              <p><strong>Mother:</strong> <span id="cardMother"></span></p>
-              <p><strong>Contact:</strong> <span id="cardContact"></span></p>
-              <p><strong>DOB:</strong> <span id="cardDob"></span></p>
-              <p><strong>Address:</strong> <span id="cardAddress"></span></p>
-            </div>
-            <div>
-              <div id="qrcode"></div>
-              <div style="text-align:center; font-size: 9px; color:#666; margin-top:4px;">Scan to view online profile
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" class="print-btn" onclick="window.print()">Print ID Card</button>
-          <button type="button" class="new-student-btn" onclick="startNewStudent()">Register Another</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Dependencies -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?x6"></script>
-  <script src="js/student_register.js?x4"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="sync.jsx5"></script>
+<script src="js/teacher_register.js?x5"></script>
 
 </body>
 
