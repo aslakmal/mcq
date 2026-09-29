@@ -1,87 +1,605 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Directory</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: #f4f6f9; margin: 0; padding: 20px; display: flex; justify-content: center; }
-    .container { background: #fff; width: 100%; max-width: 1000px; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-    h2 { margin: 0; color: #1a202c; font-size: 1.5rem; }
-    
-    .btn-add { background: #3182ce; color: #fff; text-decoration: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
-    .btn-add:hover { background: #2b6cb0; }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-    .search-box { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 1rem; margin-bottom: 20px; }
-    .search-box:focus { outline: none; border-color: #3182ce; box-shadow: 0 0 0 3px rgba(49,130,206,0.15); }
+    body {
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-    .table-responsive { width: 100%; }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th { background: #edf2f7; color: #4a5568; padding: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #2d3748; vertical-align: middle; }
-    tr:hover { background-color: #f7fafc; }
+    .container {
+      background: #fff;
+      width: 100%;
+      max-width: 1000px;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
 
-    .avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid #cbd5e0; }
-    .teacher-info { display: flex; align-items: center; gap: 12px; }
-    .badge-id { background: #e2e8f0; color: #4a5568; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-family: monospace; }
-    
-    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .btn-action { padding: 6px 10px; border-radius: 4px; border: 1px solid transparent; font-size: 0.82rem; cursor: pointer; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
-    .btn-view-id { background: #ebf8ff; color: #2b6cb0; border-color: #bee3f8; }
-    .btn-details { background: #e6fffa; color: #234e52; border-color: #b2f5ea; }
-    .btn-edit { background: #edf2f7; color: #2d3748; border-color: #cbd5e0; }
-    .btn-delete { background: #fed7d7; color: #9b2c2c; border-color: #feb2b2; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
 
-    .empty-state { text-align: center; padding: 40px 0; color: #718096; }
-    .alert { padding: 12px; background: #fed7d7; color: #9b2c2c; border-radius: 6px; margin-bottom: 16px; display: none; }
+    h2 {
+      margin: 0;
+      color: #1a202c;
+      font-size: 1.5rem;
+    }
+
+    .btn-add {
+      background: #3182ce;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover {
+      background: #2b6cb0;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    }
+
+    .table-responsive {
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #edf2f7;
+      color: #4a5568;
+      padding: 12px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #2d3748;
+      vertical-align: middle;
+    }
+
+    tr:hover {
+      background-color: #f7fafc;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #cbd5e0;
+    }
+
+    .teacher-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-id {
+      background: #e2e8f0;
+      color: #4a5568;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-family: monospace;
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-view-id {
+      background: #ebf8ff;
+      color: #2b6cb0;
+      border-color: #bee3f8;
+    }
+
+    .btn-details {
+      background: #e6fffa;
+      color: #234e52;
+      border-color: #b2f5ea;
+    }
+
+    .btn-edit {
+      background: #edf2f7;
+      color: #2d3748;
+      border-color: #cbd5e0;
+    }
+
+    .btn-delete {
+      background: #fed7d7;
+      color: #9b2c2c;
+      border-color: #feb2b2;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 0;
+      color: #718096;
+    }
+
+    .alert {
+      padding: 12px;
+      background: #fed7d7;
+      color: #9b2c2c;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+    }
 
     /* MOBILE-RESPONSIVE CARD TRANSFORMATION */
     @media screen and (max-width: 768px) {
-      table, thead, tbody, th, td, tr { display: block; }
-      thead { display: none; }
-      tr { margin-bottom: 16px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-      td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #edf2f7; text-align: right; }
-      td:last-child { border-bottom: none; padding-top: 12px; justify-content: flex-end; }
-      td::before { content: attr(data-label); font-weight: 700; color: #718096; font-size: 0.82rem; text-transform: uppercase; text-align: left; }
-      .actions { width: 100%; justify-content: flex-end; }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 16px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px dashed #edf2f7;
+        text-align: right;
+      }
+
+      td:last-child {
+        border-bottom: none;
+        padding-top: 12px;
+        justify-content: flex-end;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #718096;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        text-align: left;
+      }
+
+      .actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
     }
 
     /* ID CARD MODAL STYLES */
-    #idCardModal, #detailsModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
-    .id-card-modal-content { background: #fff; width: 100%; max-width: 580px; border-radius: 12px; overflow: hidden; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; }
-    .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 12px; }
-    .modal-header h3 { margin: 0; font-size: 1.25rem; color: #1a202c; }
-    .modal-header p { margin: 4px 0 0 0; color: #718096; font-size: 0.85rem; }
-    .close-modal { background: none; border: none; font-size: 1.5rem; color: #a0aec0; cursor: pointer; line-height: 1; }
-    
-    .id-cards-container { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .id-card { width: 220px; min-height: 330px; border: 1px solid #cbd5e0; border-radius: 10px; padding: 12px; background: #fff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
-    .card-header h3 { margin: 0; font-size: 0.9rem; color: #2b6cb0; text-transform: uppercase; letter-spacing: 0.5px; }
-    .photo-container { margin: 10px auto; width: 90px; height: 90px; border-radius: 50%; overflow: hidden; border: 3px solid #ebf8ff; }
-    .photo-container img { width: 100%; height: 100%; object-fit: cover; }
-    .id-card h4 { margin: 6px 0 2px 0; font-size: 1rem; color: #2d3748; }
-    .designation { font-size: 0.8rem; color: #4a5568; font-weight: 600; }
-    .id-number { margin: 8px 0; font-size: 0.85rem; font-weight: bold; background: #edf2f7; padding: 4px; border-radius: 4px; }
-    
-    .back-card p { text-align: left; margin: 6px 0; font-size: 0.78rem; color: #4a5568; word-break: break-word; }
-    #qrcode { display: flex; justify-content: center; margin-top: 8px; }
+    #idCardModal,
+    #detailsModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      opacity: 0;
+     transition: opacity 0.3s ease, display 0.3s ease;
+     transition-behavior: allow-discrete;
+    }
+    #idCardModal[style*="display: flex"], 
+#detailsModal[style*="display: flex"] {
+    opacity: 1;
+}
 
-    .modal-actions { margin-top: 20px; text-align: right; }
-    .print-btn { background: #2b6cb0; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+/* 4. Define the starting point when it appears from display: none */
+@starting-style {
+    #idCardModal[style*="display: flex"], 
+    #detailsModal[style*="display: flex"] {
+        opacity: 0;
+    }
+}
+    .id-card-modal-content {
+      background: #fff;
+      width: 100%;
+      max-width: 580px;
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 12px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #1a202c;
+    }
+
+    .modal-header p {
+      margin: 4px 0 0 0;
+      color: #718096;
+      font-size: 0.85rem;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #a0aec0;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .id-cards-container {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .id-card {
+      width: 220px;
+      min-height: 330px;
+      border: 1px solid #cbd5e0;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #2b6cb0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .photo-container {
+      margin: 10px auto;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #ebf8ff;
+    }
+
+    .photo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .id-card h4 {
+      margin: 6px 0 2px 0;
+      font-size: 1rem;
+      color: #2d3748;
+    }
+
+    .designation {
+      font-size: 0.8rem;
+      color: #4a5568;
+      font-weight: 600;
+    }
+
+    .id-number {
+      margin: 8px 0;
+      font-size: 0.85rem;
+      font-weight: bold;
+      background: #edf2f7;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .back-card p {
+      text-align: left;
+      margin: 6px 0;
+      font-size: 0.78rem;
+      color: #4a5568;
+      word-break: break-word;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .modal-actions {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .print-btn {
+      background: #2b6cb0;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 0;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: .2s ease;
+    }
+
+    .action-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: #363636;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .action-btn.view {
+      color: #2563eb;
+      background: #eee;
+    }
+
+    .action-btn.details {
+      color: #7c3aed;
+      background: #eee;
+    }
+
+    .action-btn.edit {
+      color: #059669;
+      background: #eee;
+    }
+
+    .action-btn.delete {
+      color: #dc2626;
+      background: #eee;
+    }
+
+    .action-btn.view:hover {
+      background: #d1d1d1;
+    }
+
+    .action-btn.details:hover {
+      background: #d1d1d1;
+    }
+
+    .action-btn.edit:hover {
+      background: #d1d1d1;
+    }
+
+    .action-btn.delete:hover {
+      background: #d1d1d1;
+    }
+
+      /* PAGINATION STYLES */
+  .pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 16px;
+  }
+
+  .pagination-info {
+    font-size: 0.88rem;
+    color: #718096;
+  }
+
+  .pagination-controls {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .page-btn {
+    padding: 6px 12px;
+    border: 1px solid #cbd5e0;
+    background: #fff;
+    color: #2d3748;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .page-btn:hover:not(:disabled) {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+  }
+
+  .page-btn.active {
+    background: #3182ce;
+    color: #fff;
+    border-color: #3182ce;
+  }
+
+  .page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .teacher-invite-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 10px;
+}
+
+.teacher-invite-content h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    color: #1e293b;
+}
+
+.teacher-invite-content p {
+    margin: 0 0 16px 0;
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+.invite-link-box {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 4px;
+    gap: 8px;
+}
+
+.invite-link-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #334155;
+    outline: none;
+    text-overflow: ellipsis;
+}
+
+.copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    background: #1d4ed8;
+}
+
+.copy-btn:active {
+    transform: scale(0.98);
+}
   </style>
+  <link rel="stylesheet" href="css/studentData.css?x5" />
 </head>
+
 <body>
 
   <div class="container">
-    <div id="missingSchoolAlert" class="alert">Error: Missing valid school ID in URL parameter (?school=your_school_id).</div>
+    <div id="missingSchoolAlert" class="alert">Error: Missing valid school ID in URL parameter (?school=your_school_id).
+    </div>
 
     <div class="header">
       <h2>Teacher Directory</h2>
-      <a id="addTeacherBtn" href="#" class="btn-add">+ Register New Teacher</a>
     </div>
 
     <input type="text" id="searchInput" class="search-box" placeholder="Search by name, subject, or Class...">
@@ -104,6 +622,32 @@
         </tbody>
       </table>
     </div>
+    <div class="pagination-container">
+      <div id="paginationInfo" class="pagination-info">Showing 0 of 0 teachers</div>
+      <div id="paginationControls" class="pagination-controls"></div>
+    </div>
+    <div class="teacher-invite-card">
+      <div class="teacher-invite-content">
+          <h3>Invite Teachers to Sign Up</h3>
+          <p>Share this link with teachers to join the system</p>
+          
+          <div class="invite-link-box">
+              <input type="text" id="inviteLinkInput" value="https://yourwebsite.com/teachers/teacher_register.html?school=${schoolId}" readonly>
+              <button class="copy-btn" onclick="copyInviteLink()" title="Copy link">
+                  <!-- Copy Icon SVG -->
+                  <svg id="copyIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <!-- Check Icon SVG (hidden by default) -->
+                  <svg id="checkIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span id="copyText">Copy</span>
+              </button>
+          </div>
+      </div>
+  </div>
   </div>
 
   <!-- ID CARD POPUP MODAL TEMPLATE -->
@@ -147,7 +691,8 @@
             </div>
             <div>
               <div id="qrcode"></div>
-              <div style="text-align:center; font-size: 9px; color:#666; margin-top:4px;">Scan to view teacher profile</div>
+              <div style="text-align:center; font-size: 9px; color:#666; margin-top:4px;">Scan to view teacher profile
+              </div>
             </div>
           </div>
 
@@ -162,14 +707,21 @@
 
   <!-- DETAILS POPUP MODAL -->
   <div id="detailsModal" role="dialog" aria-modal="true">
-    <div class="id-card-modal-content">
+
+    <div class="modal-card">
       <div class="modal-header">
-        <div>
-          <h3>Details</h3>
+        <div class="student-profile-header">
+          <!-- Profile Image -->
+          <img id="popupAvatar" class="profile-avatar" src="img/user.svg" alt="Student Photo" />
         </div>
-        <button type="button" class="close-modal" onclick="closeDetailsModal()">×</button>
+        <button class="btn-close" onclick="closeDetailsModal()">&times;</button>
       </div>
-      <div id="detailsContent" style="font-size:0.95rem; color:#2d3748; line-height:1.6;"></div>
+  
+      <!-- Dynamic Personal Data Grid -->
+      <div class="popup-grid" id="popupGridContainer">
+        <!-- Info cards generated dynamically by JS -->
+      </div>
+  
     </div>
   </div>
 
@@ -177,197 +729,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js"></script>
+  <script src="sync.js?x6"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
-      authDomain: "school-62c45.firebaseapp.com",
-      databaseURL: "https://school-62c45-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "school-62c45",
-      storageBucket: "school-62c45.firebasestorage.app",
-      messagingSenderId: "213099404706",
-      appId: "1:213099404706:web:d65d7ec257c1119f3966fb",
-      measurementId: "G-8QG01WT32P"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-    const urlParams = new URLSearchParams(window.location.search);
-    const rawSchoolId = urlParams.get('school');
-
-    if (!rawSchoolId || rawSchoolId.trim() === '') {
-      document.getElementById('missingSchoolAlert').style.display = 'block';
-      throw new Error("Missing 'school' parameter.");
-    }
-
-    const schoolId = rawSchoolId.trim().toLowerCase();
-    document.getElementById('addTeacherBtn').href = `teacher_register.html?school=${schoolId}`;
-
-    const syncEngine = new SchoolSyncEngine(db, schoolId);
-    let cachedTeachers = [];
-
-    async function initApp() {
-  try {
-    // 1. Initialize IndexedDB
-    await syncEngine.initIndexedDB();
-
-    // 2. Load and render immediately from IndexedDB for instant display
-    await refreshTeacherList();
-
-    // 3. If online, check for user delta logs and apply them to IndexedDB
-    if (navigator.onLine) {
-      await syncEngine.syncUsers();
-
-      // 4. Refresh UI table only if changes were pulled from Firebase
-      await refreshTeacherList();
-    }
-  } catch (err) {
-    console.error("Initialization error:", err);
-  }
-}
-
-async function refreshTeacherList() {
-  cachedTeachers = await syncEngine.getLocalUsersByRole('teacher');
-  renderTeacherTable(cachedTeachers);
-}
-
-    function renderTeacherTable(teachers) {
-      const tbody = document.getElementById('teacherTableBody');
-      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-      const filtered = teachers.filter(t => 
-        (t.fullName && t.fullName.toLowerCase().includes(searchTerm)) ||
-        (t.subject && t.subject.toLowerCase().includes(searchTerm)) ||
-        (t.classes && t.classes.toLowerCase().includes(searchTerm))
-      );
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">${searchTerm ? 'No matching teachers found.' : 'No teachers registered yet.'}</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(t => {
-        const photoUrl = t.photoUrl || 'img/user.svg';
-        const key = t.id || t.key;
-
-        return `
-          <tr>
-            <td data-label="Teacher">
-              <div class="teacher-info">
-                <img src="${photoUrl}" class="avatar" alt="${t.fullName}">
-                <div>
-                  <strong>${escapeHtml(t.fullName)}</strong><br>
-                  <small style="color: #718096;">${escapeHtml(t.qualification || '')}</small>
-                </div>
-              </div>
-            </td>
-            <td data-label="Classes"><span class="badge-id">${escapeHtml(t.classes || 'N/A')}</span></td>
-            <td data-label="Subject">${escapeHtml(t.subject || 'N/A')}</td>
-            <td data-label="Contact">${escapeHtml(t.contact || 'N/A')}</td>
-            <td data-label="Actions">
-              <div class="actions">
-                <button onclick="openIdCardModalByKey('${key}')" class="btn-action btn-view-id">View ID</button>
-                <button onclick="openDetailsModalByKey('${key}')" class="btn-action btn-details">Details</button>
-                <a href="teacher_edit.html?school=${schoolId}&id=${key}" class="btn-action btn-edit">Edit</a>
-                <button onclick="confirmDelete('${key}', '${escapeHtml(t.fullName)}')" class="btn-action btn-delete">Delete</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    window.addEventListener('idb_updated_users', async () => {
-      await refreshTeacherList();
-    });
-
-    document.getElementById('searchInput').addEventListener('input', () => {
-      renderTeacherTable(cachedTeachers);
-    });
-
-    // POPUP HANDLERS FOR ID CARD
-    function openIdCardModalByKey(key) {
-      const teacher = cachedTeachers.find(t => (t.id || t.key) === key);
-      if (!teacher) return;
-
-      document.getElementById('cardSchoolFront').innerText = schoolId.toUpperCase();
-      document.getElementById('cardPhoto').src = teacher.photoUrl || 'img/user.svg';
-      document.getElementById('cardName').innerText = teacher.fullName || '';
-      document.getElementById('cardSubject').innerText = teacher.subject || '';
-      document.getElementById('cardTeacherId').innerText = teacher.teacherId || '';
-
-      document.getElementById('cardQualification').innerText = teacher.qualification || '-';
-      document.getElementById('cardContact').innerText = teacher.contact || '-';
-      document.getElementById('cardDob').innerText = teacher.dob || '-';
-      document.getElementById('cardAddress').innerText = teacher.address || '-';
-
-      const viewUrl = `${window.location.origin}/sis/${schoolId}/teacher.html?id=${key}`;
-      document.getElementById('qrcode').innerHTML = "";
-      new QRCode(document.getElementById('qrcode'), { text: viewUrl, width: 75, height: 75 });
-
-      document.getElementById('idCardModal').style.display = 'flex';
-    }
-
-    function closeIdCardModal() {
-      document.getElementById('idCardModal').style.display = 'none';
-    }
-
-    // POPUP HANDLERS FOR DETAILS
-    function openDetailsModalByKey(key) {
-      const t = cachedTeachers.find(item => (item.id || item.key) === key);
-      if (!t) return;
-
-      document.getElementById('detailsContent').innerHTML = `
-        <p><strong>Full Name:</strong> ${escapeHtml(t.fullName)}</p>
-        <p><strong>System ID:</strong> ${escapeHtml(t.teacherId)}</p>
-        <p><strong>Subject:</strong> ${escapeHtml(t.subject)}</p>
-        <p><strong>Qualification:</strong> ${escapeHtml(t.qualification)}</p>
-        <p><strong>Date of Birth:</strong> ${escapeHtml(t.dob)}</p>
-        <p><strong>Contact:</strong> ${escapeHtml(t.contact)}</p>
-        <p><strong>Address:</strong> ${escapeHtml(t.address)}</p>
-        <p><strong>Account Status:</strong> ${t.claimed ? 'Claimed (Active)' : 'Unclaimed'}</p>
-      `;
-      document.getElementById('detailsModal').style.display = 'flex';
-    }
-
-    function closeDetailsModal() {
-      document.getElementById('detailsModal').style.display = 'none';
-    }
-
-    async function confirmDelete(key, name) {
-  if (!confirm(`Are you sure you want to delete ${name}?`)) return;
-  
-  try {
-    const userRef = db.ref(`schools/${schoolId}/users/${key}`);
-    const user = firebase.auth().currentUser;
-    // Perform soft delete using short keys (D: isDeleted, A: updatedAt, B: updatedBy)
-    await userRef.update({
-      D: true,
-      A: firebase.database.ServerValue.TIMESTAMP,
-      B: user.uid
-    });
-
-    alertbox(`${name} deleted successfully!`, "success");
-    cachedTeachers = cachedTeachers.filter(s => (s.id || s.key) !== key);
-    renderTeacherTable(cachedTeachers);
-  } catch (err) {
-    console.error("Delete error:", err);
-    alertbox("Delete failed: " + err.message, "error");
-  }
-}
-
-    function escapeHtml(str) {
-      return String(str || '').replace(/[&<>"']/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[match]));
-    }
-
-    auth.onAuthStateChanged(user => {
-      if (!user) window.location.href = `admin.html?school=${schoolId}`;
-    });
-
-    initApp();
-  </script>
+  <script src="js/teachers.js?x5"></script>
 </body>
+
 </html>
