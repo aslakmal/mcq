@@ -96,12 +96,12 @@
       <div style="display: flex; gap: 12px; margin-bottom: 16px;">
         <div style="flex: 1;">
           <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Exam</label>
-          <select id="scoreSemesterSelect" class="form-control" onchange="fetchAndUpdateModalScores()">
+          <select id="scoreSemesterSelect" class="form-control" onclick="checkOptions()" onchange="fetchAndUpdateModalScores()">
           </select>
         </div>
         <div style="flex: 1;">
           <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Subject</label>
-          <select id="scoreSubjectSelect" class="form-control" onchange="fetchAndUpdateModalScores()">
+          <select id="scoreSubjectSelect" class="form-control" onclick="checkOptions()" onchange="fetchAndUpdateModalScores()">
           </select>
 
         </div>
@@ -235,11 +235,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?x9"></script>
-  <script src="js/id_manager.js?x9"></script>
+  <script src="sync.js?z9"></script>
+  <script src="js/id_manager.js?z9"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/students.js?x9"></script>
-  <script src="js/studentData.js?x9"></script>
+  <script src="js/students.js?z9"></script>
+  <script src="js/studentData.js?z9"></script>
  </body>
 <!-- Include library via CDN (or install via npm: npm install html-to-image) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
