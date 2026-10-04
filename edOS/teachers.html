@@ -187,7 +187,8 @@
 
     /* MOBILE-RESPONSIVE CARD TRANSFORMATION */
     @media screen and (max-width: 768px) {
-
+      .container{padding: 10px;}
+      body{padding: 2px;}
       table,
       thead,
       tbody,
@@ -204,10 +205,7 @@
       tr {
         margin-bottom: 16px;
         background: #fff;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 12px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        border-bottom: 1px solid #eee;
       }
 
       td {
@@ -215,8 +213,8 @@
         justify-content: space-between;
         align-items: center;
         padding: 8px 0;
-        border-bottom: 1px dashed #edf2f7;
         text-align: right;
+        border-bottom: none;
       }
 
       td:last-child {
@@ -224,8 +222,8 @@
         padding-top: 12px;
         justify-content: flex-end;
       }
-
-      td::before {
+      td:not(:first-child):not(:last-child)::before
+   {
         content: attr(data-label);
         font-weight: 700;
         color: #718096;
@@ -553,7 +551,11 @@
     padding: 4px;
     gap: 8px;
 }
-
+@media only screen and (max-width: 768px) {
+  .invite-link-box {
+    flex-direction: column;
+  }
+}
 .invite-link-box input {
     flex: 1;
     border: none;
@@ -589,7 +591,7 @@
     transform: scale(0.98);
 }
   </style>
-  <link rel="stylesheet" href="css/studentData.css?x5" />
+  <link rel="stylesheet" href="css/studentData.css" />
 </head>
 
 <body>
@@ -608,7 +610,7 @@
       <table>
         <thead>
           <tr>
-            <th>Teacher</th>
+            <th>Name</th>
             <th>Classes</th>
             <th>Subject</th>
             <th>Contact</th>
@@ -729,9 +731,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?x6"></script>
+  <script src="sync.js?rr"></script>
 
-  <script src="js/teachers.js?x5"></script>
+  <script src="js/teachers.js?c"></script>
 </body>
 
 </html>
