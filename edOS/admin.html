@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Principal Portal & Admin Area</title>
 
-<link rel="stylesheet" href="css/admin.css?x9">
+<link rel="stylesheet" href="css/admin.css?vv">
 <!-- Cropper.js CSS & JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 </head>
@@ -146,6 +146,12 @@
         <p>Manage exams and subjects</p>
         <button id="openExamsModal">Edit Exams</button>
       </div>
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <h3>Timetable Management</h3>
+        <p>Create, view, and schedule periods for all classes, manage classroom allocation.</p>
+        <button onclick="window.location.href='timetable.html?school=' + schoolId">Manage Timetable</button>
+      </div>
     </div>
   </div>
 
@@ -267,8 +273,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?x9"></script>
-  <script src="js/admin.js?x9"></script> 
+  <script src="sync.js?vv"></script>
+  <script src="js/admin.js?vv"></script> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 
