@@ -590,6 +590,231 @@
 .copy-btn:active {
     transform: scale(0.98);
 }
+
+/***TIMETABLE****/
+
+.timetable-wrapper {
+            max-width: 1400px;
+            margin: auto;
+            padding: 24px;
+        }
+
+        .timetable-title {
+            margin-bottom: 22px;
+        }
+
+        .timetable-title h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .timetable-title p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Day buttons */
+
+        .day-selector {
+            display: none;
+            gap: 8px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            padding-bottom: 3px;
+        }
+
+        .day-btn {
+            border: 0;
+            background: #fff;
+            color: #64748b;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .06);
+            transition: .2s;
+        }
+
+        .day-btn.active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 5px 14px rgba(37, 99, 235, .25);
+        }
+
+        /* All days */
+
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 2px;
+        }
+
+        .day-column {
+            background: #fff;
+            border-radius: 18px;
+            padding: 5px;
+            min-width: 0;
+            border: 1px solid #e8edf5;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 4px 14px;
+        }
+
+        .day-name {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .period-count {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 5px 8px;
+            border-radius: 8px;
+        }
+
+        /* Period cards */
+
+        .periods {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .period {
+            min-height: 65px;
+            padding: 10px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #edf1f6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .period-number {
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #e1e1e1;
+        }
+
+        .period-info {
+            min-width: 0;
+        }
+
+        .subject {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .class-name {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Empty period */
+
+        .period.empty {
+            background: #fafbfc;
+            border-style: dashed;
+            opacity: .7;
+        }
+
+        .period.empty .period-number {
+            color: #94a3b8;
+        }
+
+        .empty-text {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Missing day */
+
+        .day-empty {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Tablet */
+
+        @media (max-width: 1000px) {
+            .days-container {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            .timetable-wrapper {
+                padding: 16px;
+            }
+
+            .timetable-title h2 {
+                font-size: 22px;
+            }
+
+            .day-selector {
+                display: flex;
+            }
+
+            .days-container {
+                display: block;
+            }
+
+            .day-column {
+                display: none;
+            }
+
+            .day-column.active {
+                display: block;
+            }
+
+            .day-column.active {
+                display: block;
+                animation: daySlideIn .28s ease both;
+            }
+
+            @keyframes daySlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(18px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        }
   </style>
   <link rel="stylesheet" href="css/studentData.css" />
 </head>
@@ -723,7 +948,17 @@
       <div class="popup-grid" id="popupGridContainer">
         <!-- Info cards generated dynamically by JS -->
       </div>
-  
+      <div class="timetable-wrapper">
+
+        <div class="timetable-title">
+          <p>timetable</p>
+        </div>
+
+        <div class="day-selector" id="daySelector"></div>
+
+        <div class="days-container" id="daysContainer"></div>
+
+    </div>
     </div>
   </div>
 
@@ -731,9 +966,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?rr"></script>
+  <script src="sync.js?vf"></script>
 
-  <script src="js/teachers.js?c"></script>
+  <script src="js/teachers.js?vr"></script>
+  <script src="js/view_timetable.js?vf"></script>
 </body>
 
 </html>
