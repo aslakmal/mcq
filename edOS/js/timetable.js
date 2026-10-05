@@ -1,0 +1,55 @@
+let cachedTeachers=[];async function initApp(){try{await syncEngine.initIndexedDB(),navigator.onLine&&await syncEngine.syncUsers()}catch(e){console.error("Initialization error:",e)}}async function loadTimetableInterface(){var e=("function"==typeof getSetting?await getSetting():{})?.exams?.subjects,t=Array.isArray(e)?e:Object.keys(e),e="undefined"!=typeof syncEngine?await syncEngine.getLocalUsersByRole("teacher"):[];const a=document.getElementById("daySelect").value,s=document.getElementById("classInput").value.trim().toUpperCase();var o=parseInt(document.getElementById("totalPeriods").value)||8,i=document.getElementById("timetableGrid"),r=(i.innerHTML="",e.map(e=>{var t=e.id||e.uid,n=e.fullName||e.name||t,o=e.photoUrl||"img/user.svg";let s=[];return e.timetable&&e.timetable[a]&&Object.entries(e.timetable[a]).forEach(([e,t])=>{e=parseInt(e,10);!isNaN(e)&&0<e&&null!==t&&"object"==typeof t&&s.push(e)}),s.sort((e,t)=>e-t),{id:t,fullName:n,photoUrl:o,dailyLoad:s.join(", ")||"0",timetable:e.timetable||{}}}));const c={},d=(r.forEach(e=>{for(const n in e.timetable)for(const o in e.timetable[n]){var t=e.timetable[n][o];t&&t.c===s&&t.s&&(c[t.s]=(c[t.s]||0)+1)}}),{});r.forEach(e=>{if(e.timetable&&e.timetable[a])for(const o in e.timetable[a]){var t,n=parseInt(o,10);isNaN(n)||n<=0||(t=e.timetable[a][o])&&"object"==typeof t&&t.c&&String(t.c).trim().toUpperCase()===s&&(d[n]={teacherId:e.id,subject:t.s})}});for(let n=1;n<=o;n++){const b=d[n]||{teacherId:"",subject:""};var l=r.find(e=>e.id===b.teacherId),p=l?l.fullName:"-- Select Teacher --",l=l?l.photoUrl:"img/user.svg",u=b.subject||"-- Select Subject --",m=b.subject||"",y=document.createElement("div"),l=(y.className="period-box",y.style.animationDelay=70*(n-1)+"ms",y.innerHTML=`
+            <h4>Period ${n}</h4>
+            
+            <!-- Subject Dropdown -->
+            <div class="slot-group">
+                <label>Subject</label>
+                <div class="custom-dropdown" id="subject-dropdown-${n}">
+                <div class="dropdown-selected" onclick="toggleDropdown('subject', ${n})">
+                <span id="subject-selected-text-${n}">${u}</span>
+                <span>▼</span>
+            </div>
+            <div class="dropdown-options" id="subject-options-${n}">
+                 <div class="dropdown-option" onclick="selectSubject(${n}, '')">
+                            <div class="option-info"><span class="option-title">-- None --</span></div>
+                        </div>
+                        ${t.map(e=>{var t=c[e]||0;return`
+                                <div class="dropdown-option" onclick="selectSubject(${n}, '${e}')">
+                                    <div class="option-info">
+                                        <span class="option-title">${e}</span>
+                                        <span class="option-sub">${t} periods learning(week)</span>
+                                    </div>
+                                </div>
+                            `}).join("")}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Dropdown -->
+            <div class="slot-group">
+                <label>Teacher</label>
+                <div class="custom-dropdown" id="teacher-dropdown-${n}" data-selected-id="${b.teacherId||""}">
+                <div class="dropdown-selected" onclick="toggleDropdown('teacher', ${n})">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <img id="teacher-selected-img-${n}" src="${l}" alt="">
+                    <span id="teacher-selected-text-${n}">${p}</span>
+                </div>
+                <span>▼</span>
+            </div>
+            <div class="dropdown-options" id="teacher-options-${n}">
+                 <div class="dropdown-option" onclick="selectTeacher(${n}, '', '-- Select Teacher--', 'img/user.svg')">
+                            <div class="option-info"><span class="option-title">-- None --</span></div>
+                        </div>
+                        ${renderTeacherOptionsMarkup(r,a,n,b.teacherId,s,m)}
+                    </div>
+                </div>
+            </div>
+        `,i.appendChild(y),u&&!u.startsWith("--")),p=document.getElementById("teacher-dropdown-"+n);p&&(l?(p.classList.remove("disabled"),p.style.pointerEvents="auto",p.style.opacity="1"):(console.log(p.innerHTML),p.classList.add("disabled"),p.style.pointerEvents="none",p.style.opacity="0.5"))}}function renderTeacherOptionsMarkup(e,n,o,s,a,t){const i=new Set,r=(e.forEach(e=>{var t;e.timetable[n]&&e.timetable[n][o]&&(t=e.timetable[n][o]).c&&t.c!==a&&i.add(e.id)}),t&&!t.startsWith("--")?t.trim().toLowerCase():"");return[...e].sort((e,t)=>{return r?(e=e.subjects||e.subject||"",t=t.subjects||t.subject||"",e=e.split(",").map(e=>e.trim().toLowerCase()),t=t.split(",").map(e=>e.trim().toLowerCase()),e=e.includes(r),t=t.includes(r),e&&!t?-1:!e&&t?1:0):0}).map(e=>{var t=i.has(e.id),n=e.id===s;return t&&!n?"":(t=e.subjects||e.subject||"",n=r&&t.toLowerCase().includes(r),`
+            <div class="dropdown-option" data-teacher-id="${e.id}" onclick="selectTeacher(${o}, '${e.id}', '${e.fullName}', '${e.photoUrl}')">
+                <img src="${e.photoUrl}" alt="">
+                <div class="option-info">
+                    <span class="option-title">${e.fullName}${n?" ⭐":""}</span>
+                    <span class="option-sub">${e.dailyLoad} period(s) teaching(today)</span>
+                </div>
+            </div>
+        `)}).join("")}function toggleDropdown(e,t){const n=e+"-options-"+t;document.querySelectorAll(".dropdown-options").forEach(e=>{e.id!==n&&(e.style.display="none")});e=document.getElementById(n);e?e.style.display="block"===e.style.display?"none":"block":console.warn("Dropdown options element not found for ID: "+n)}async function selectSubject(e,t){document.getElementById("subject-selected-text-"+e).innerText=t||"-- Select Subject --",document.getElementById("subject-options-"+e).style.display="none";var n=document.getElementById("teacher-dropdown-"+e),n=(n&&(t&&!t.startsWith("--")?(n.classList.remove("disabled"),n.style.pointerEvents="auto",n.style.opacity="1"):(n.classList.add("disabled"),n.style.pointerEvents="none",n.style.opacity="0.5")),"undefined"!=typeof syncEngine?await syncEngine.getLocalUsersByRole("teacher"):[]);const a=document.getElementById("daySelect").value;var o,s=document.getElementById("classInput").value.trim(),i=document.getElementById("teacher-options-"+e);i&&(o=document.getElementById("teacher-dropdown-"+e).getAttribute("data-selected-id"),n=n.map(e=>{var t=e.id||e.uid,n=e.fullName||e.name||t,o=e.photoUrl||"img/user.svg";let s=[];return e.timetable&&e.timetable[a]&&Object.entries(e.timetable[a]).forEach(([e,t])=>{e=parseInt(e,10);!isNaN(e)&&0<e&&null!==t&&"object"==typeof t&&s.push(e)}),s.sort((e,t)=>e-t),{id:t,fullName:n,photoUrl:o,dailyLoad:s.join(", ")||"0",subjects:e.subjects||e.subject||"",timetable:e.timetable||{}}}),i.innerHTML=`<div class="dropdown-option" onclick="selectTeacher(${e}, '', '-- Select Teacher--', 'img/user.svg')"><div class="option-info"><span class="option-title">-- None --</span></div></div>`+renderTeacherOptionsMarkup(n,a,e,o,s,t)),await updateWorkloadSubtextsLive()}async function selectTeacher(e,t,n,o){console.log(e,t,n,o),document.getElementById("teacher-selected-text-"+e).innerText=n,document.getElementById("teacher-selected-img-"+e).src=o,document.getElementById("teacher-dropdown-"+e).setAttribute("data-selected-id",t),document.getElementById("teacher-options-"+e).style.display="none",await updateWorkloadSubtextsLive()}async function saveCompleteTimetable(){const r=document.getElementById("daySelect").value,c=document.getElementById("classInput").value.trim().toUpperCase();var t=parseInt(document.getElementById("totalPeriods").value)||8;const d={};for(let e=1;e<=t;e++){var n=document.getElementById("subject-selected-text-"+e).innerText,o=document.getElementById("teacher-dropdown-"+e),o=o?o.getAttribute("data-selected-id"):"";n&&!n.startsWith("--")&&o&&(d[e]={c:c,s:n,tId:o})}let l="";if("undefined"!=typeof firebase&&firebase.auth&&firebase.auth().currentUser?l=await firebase.auth().currentUser.getIdToken():window.firebaseAuthToken&&(l=window.firebaseAuthToken),l){const p="undefined"!=typeof firebaseConfig?firebaseConfig.databaseURL:"";if(p)try{var e=("undefined"!=typeof syncEngine?await syncEngine.getLocalUsersByRole("teacher"):[]).map(async e=>{var t,n,o=e.id||e.uid,s=e.timetable?JSON.parse(JSON.stringify(e.timetable)):{},a=s[r]?{...s[r]}:{};for(const i in a)a[i]&&String(a[i].c).trim().toUpperCase()===c&&delete a[i];for([t,n]of Object.entries(d))n.tId===o&&(a[t]={c:n.c,s:n.s});0===Object.keys(a).length?delete s[r]:s[r]=a,e.timetable=s;e=`${p}/schools/${schoolId}/users/${o}.json?auth=`+l;if(!(await fetch(e,{method:"PATCH",body:JSON.stringify({timetable:s,A:{".sv":"timestamp"}})})).ok)throw new Error("Failed to save for teacher "+o)});await Promise.all(e),"undefined"!=typeof syncEngine&&syncEngine.syncUsers&&await syncEngine.syncUsers(),alertbox("Timetable successfully saved!","success"),loadTimetableInterface()}catch(e){console.error("Error saving timetable:",e),alertbox("Failed to save timetable.: "+e,"error")}else alertbox("database URL is not configured.","error")}else alertbox("Authentication error: You must be logged in to save the timetable.","error")}async function updateWorkloadSubtextsLive(){var e="undefined"!=typeof syncEngine?await syncEngine.getLocalUsersByRole("teacher"):[];const o=document.getElementById("daySelect").value,s=document.getElementById("classInput").value.trim().toUpperCase();var t=parseInt(document.getElementById("totalPeriods").value)||8;const a={},n={};for(let e=1;e<=t;e++){var i=document.getElementById("teacher-dropdown-"+e),i=i?i.getAttribute("data-selected-id"):"",r=document.getElementById("subject-selected-text-"+e).innerText;i&&(a[i]||(a[i]=[]),a[i].push(e)),r&&!r.startsWith("--")&&(n[r]||(n[r]=[]),n[r].push(e))}const c=e.map(e=>{var t=e.id||e.uid;let n=[];return e.timetable&&e.timetable[o]&&Object.entries(e.timetable[o]).forEach(([e,t])=>{e=parseInt(e,10),t=t&&t.c&&String(t.c).trim().toUpperCase()!==s;!isNaN(e)&&0<e&&t&&n.push(e)}),a[t]&&(n=n.concat(a[t])),{id:t,assignedPeriods:n=[...new Set(n)].sort((e,t)=>e-t),periodText:0<n.length?n.join(", "):"0"}});document.querySelectorAll(".dropdown-option[data-teacher-id]").forEach(e=>{const t=e.getAttribute("data-teacher-id");var n=c.find(e=>e.id===t);n&&(e=e.querySelector(".option-sub"))&&(e.innerText=n.periodText+" period(s) teaching(today)")}),document.querySelectorAll('[id^="subject-options-"]').forEach(e=>{e.querySelectorAll(".dropdown-option").forEach(e=>{var t=e.querySelector(".option-title");t&&(t=t.innerText.trim())&&!t.startsWith("--")&&(e=e.querySelector(".option-sub"))&&(t=(n[t]||[]).length,e.innerText=t+" periods learning(week)")})})}initApp(),window.onclick=function(e){e.target.closest(".custom-dropdown")||document.querySelectorAll(".dropdown-options").forEach(e=>{e.style.display="none"})};
