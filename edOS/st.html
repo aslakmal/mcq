@@ -246,26 +246,40 @@
  </body>
 <!-- Include library via CDN (or install via npm: npm install html-to-image) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+<!-- Include html2pdf or use browser print fallback -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
 <script>
 async function exportTo300DpiPNG(elementId) {
   const node = document.getElementById(elementId);
-  const scale = 300 / 96; // 3.125 for 300 DPI
   const studentKey = document.querySelector('.print-btn').dataset.student;
+  
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  const scale = isMobile ? 2 : (300 / 96); 
+
   try {
     const dataUrl = await htmlToImage.toPng(node, {
-      pixelRatio: scale, // <--- Native html-to-image scaling
-      cacheBust: true    // Prevents cached SVG/image glitches
+      pixelRatio: scale, 
+      cacheBust: true   
     });
-    alertbox('Downloading', "success")
+    
+    alertbox('Downloading image...', "success");
     const link = document.createElement('a');
     link.download = `student-${studentKey}.png`;
     link.href = dataUrl;
     link.click();
+    
   } catch (error) {
-    console.error('Export failed:', error);
-    alertbox('Download failed:', "error")
+    console.error('Image export failed, falling back to PDF/Print:', error);
+    alertbox('Image export failed. Opening PDF / Print dialog...', "error");
+    
+    // Fallback: Trigger browser's Print-to-PDF functionality
+    fallbackToPDF(elementId);
   }
 }
-exportTo300DpiPNG('missingSchoolAlert')
+
+function fallbackToPDF(elementId) {
+  window.print();
+}
 </script>
 </html>
