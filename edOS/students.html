@@ -13,17 +13,9 @@
   <link rel="stylesheet" href="css/id_templates.css?x9">
   <link rel="stylesheet" href="css/studentData.css?dd">
  <style>
-   @media screen and (max-width: 500px) {
       #idCardWrapper{
-    width: 100% !important;
-    overflow: scroll;
-    padding-top: 50px !important;
-   }
-   .id-cards-container{
-     padding-top: 50px !important;
-     margin-top:50px !important;
-   }  
-   }
+   margin-top: 30px;}
+   
  </style>
 </head>
 
@@ -335,8 +327,9 @@ async function exportTo300DpiPNG(elementId) {
 <script>
 // Updated fallbackToPDF to show this tester panel instead of blind printing
 function fallbackToPDF(elementId) {
+   window.print();
   const panel = document.getElementById('print-tester-panel');
-  panel.style.display = 'block'; // Show the form on screen
+//  panel.style.display = 'block'; // Show the form on screen
 }
 
 function applyAndPrint() {
