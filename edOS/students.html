@@ -245,26 +245,37 @@
 <script>
 async function exportTo300DpiPNG(elementId) {
   const node = document.getElementById(elementId);
-  const scale = 300 / 96; 
   const studentKey = document.querySelector('.print-btn').dataset.student;
+  
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  const scale = isMobile ? 2 : (300 / 96); 
+
   try {
     const dataUrl = await htmlToImage.toPng(node, {
       pixelRatio: scale, 
       cacheBust: true   
     });
-    alertbox('Downloading', "success")
+    
+    alertbox('Downloading image...', "success");
     const link = document.createElement('a');
     link.download = `student-${studentKey}.png`;
     link.href = dataUrl;
     link.click();
+    
   } catch (error) {
-    console.error('Export failed:', error);
-    alertbox('Download failed:', "error")
+    console.error('Image export failed, falling back to PDF/Print:', error);
+   // alertbox('Image export failed. Opening PDF / Print dialog...', "error");
+    
+    // Fallback: Trigger browser's Print-to-PDF functionality
+    fallbackToPDF(elementId);
   }
 }
 
-</script>
-<script>
+function fallbackToPDF(elementId) {
+  window.print();
+}
+
   const params = new URLSearchParams(window.location.search);
   
   if (params.get('school') === 'choola') {
