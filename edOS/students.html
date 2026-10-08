@@ -13,7 +13,6 @@
   <link rel="stylesheet" href="css/id_templates.css?x9">
   <link rel="stylesheet" href="css/studentData.css?x9">
  
-
 </head>
 
 <body>
@@ -56,7 +55,7 @@
             <th>Student</th>
             <th>ID</th>
             <th>Class</th>
-            <th>Contact</th>
+           <!-- <th>Contact</th>-->
             <th>Actions</th>
           </tr>
         </thead>
@@ -235,11 +234,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="sync.js?z9"></script>
-  <script src="js/id_manager.js?zjk"></script>
+  <script src="sync.js?x9"></script>
+  <script src="js/id_manager.js?x9"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/students.js?zkl"></script>
-  <script src="js/studentData.js?z9"></script>
+  <script src="js/students.js?x9"></script>
+  <script src="js/studentData.js?xd9"></script>
  </body>
 <!-- Include library via CDN (or install via npm: npm install html-to-image) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
@@ -265,4 +264,19 @@ async function exportTo300DpiPNG(elementId) {
 }
 
 </script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  
+  if (params.get('school') === 'choola') {
+    const style = document.createElement('style');
+    style.textContent = `
+      #cardPhoto,
+      .avatar,
+      #popupAvatar {
+        filter: blur(2px);
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  </script>
 </html>
