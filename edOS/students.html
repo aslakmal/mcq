@@ -284,9 +284,7 @@ async function exportTo300DpiPNG(elementId) {
   }
 }
 
-function fallbackToPDF(elementId) {
-  window.print();
-}
+
 
   const params = new URLSearchParams(window.location.search);
   
@@ -302,4 +300,85 @@ function fallbackToPDF(elementId) {
     document.head.appendChild(style);
   }
   </script>
+
+  <!-- Live CSS Testing Panel for Printing -->
+<div id="print-tester-panel" style="display:none; position:fixed; top:20px; right:20px; background:#fff; border:2px solid #333; padding:15px; z-index:99999; box-shadow:0 4px 15px rgba(0,0,0,0.3); font-family:sans-serif; border-radius:8px; width:280px;">
+  <h3 style="margin:0 0 10px 0; font-size:16px; color:#333;">🖨️ Print CSS Tester</h3>
+  
+  <label style="font-size:12px; font-weight:bold; display:block; margin-top:8px;">#idCardWrapper height:</label>
+  <input type="text" id="test-height" value="auto" style="width:100%; padding:4px; box-sizing:border-box;">
+
+  <label style="font-size:12px; font-weight:bold; display:block; margin-top:8px;">#idCardWrapper margin/padding top:</label>
+  <div style="display:flex; gap:5px;">
+    <input type="text" id="test-wrapper-m" value="0px" placeholder="margin" style="width:50%; padding:4px; box-sizing:border-box;">
+    <input type="text" id="test-wrapper-p" value="0px" placeholder="padding" style="width:50%; padding:4px; box-sizing:border-box;">
+  </div>
+
+  <label style="font-size:12px; font-weight:bold; display:block; margin-top:8px;">.id-cards-container margin/padding top:</label>
+  <div style="display:flex; gap:5px;">
+    <input type="text" id="test-container-m" value="0px" placeholder="margin" style="width:50%; padding:4px; box-sizing:border-box;">
+    <input type="text" id="test-container-p" value="0px" placeholder="padding" style="width:50%; padding:4px; box-sizing:border-box;">
+  </div>
+
+  <label style="font-size:12px; font-weight:bold; display:block; margin-top:8px;">#frontCard margin/padding top:</label>
+  <div style="display:flex; gap:5px;">
+    <input type="text" id="test-card-m" value="0px" placeholder="margin" style="width:50%; padding:4px; box-sizing:border-box;">
+    <input type="text" id="test-card-p" value="0px" placeholder="padding" style="width:50%; padding:4px; box-sizing:border-box;">
+  </div>
+
+  <div style="margin-top:12px; display:flex; gap:5px;">
+    <button onclick="applyAndPrint()" style="background:#28a745; color:#white; border:none; padding:8px 12px; cursor:pointer; border-radius:4px; font-weight:bold; flex:1;">Apply & Print</button>
+    <button onclick="document.getElementById('print-tester-panel').style.display='none'" style="background:#dc3545; color:white; border:none; padding:8px 10px; cursor:pointer; border-radius:4px;">Close</button>
+  </div>
+</div>
+
+<script>
+// Updated fallbackToPDF to show this tester panel instead of blind printing
+function fallbackToPDF(elementId) {
+  const panel = document.getElementById('print-tester-panel');
+  panel.style.display = 'block'; // Show the form on screen
+}
+
+function applyAndPrint() {
+  // Grab values from the input fields
+  const hVal = document.getElementById('test-height').value;
+  const wmVal = document.getElementById('test-wrapper-m').value;
+  const wpVal = document.getElementById('test-wrapper-p').value;
+  const cmVal = document.getElementById('test-container-m').value;
+  const cpVal = document.getElementById('test-container-p').value;
+  const fcVal = document.getElementById('test-card-m').value;
+  const fcpVal = document.getElementById('test-card-p').value;
+
+  // Inject or update the dynamic style tag
+  const printStyleId = 'dynamic-print-fixes';
+  let styleEl = document.getElementById(printStyleId);
+  
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = printStyleId;
+    document.head.appendChild(styleEl);
+  }
+
+  styleEl.innerHTML = `
+    @media print {
+      #idCardWrapper {
+        height: ${hVal} !important;
+        margin-top: ${wmVal} !important;
+        padding-top: ${wpVal} !important;
+      }
+      .id-cards-container {
+        margin-top: ${cmVal} !important;
+        padding-top: ${cpVal} !important;
+      }
+      #frontCard {
+        margin-top: ${fcVal} !important;
+        padding-top: ${fcpVal} !important;
+      }
+    }
+  `;
+
+  // Trigger print so you can see the results immediately
+  window.print();
+}
+</script>
 </html>
