@@ -271,7 +271,7 @@ async function exportTo300DpiPNG(elementId) {
     
   } catch (error) {
     console.error('Image export failed, falling back to PDF/Print:', error);
-    alertbox('Image export failed. Opening PDF / Print dialog...', "error");
+   // alertbox('Image export failed. Opening PDF / Print dialog...', "error");
     
     // Fallback: Trigger browser's Print-to-PDF functionality
     fallbackToPDF(elementId);
