@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --gray-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-bg);
+            color: var(--text-main);
+            padding: 2px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Controls Row */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        @media(max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+
+        /* Horizontal Scrolling Table Wrapper */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+            background: #fff;
+        }
+
+        th,
+        td {
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+
+        /* Sticky First Columns (Student Photo & Name) */
+        th.sticky-col,
+        td.sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            text-align: center;
+            min-width: 40px;
+            padding: 0;
+        }
+
+        th.sticky-col-2,
+        td.sticky-col-2 {
+            left: 60px;
+            /* Width of avatar column */
+            background: #ffffff;
+            z-index: 2;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            z-index: 3;
+        }
+
+        th {
+            width: 40px;
+            display: inline-block;
+            height: 20px;
+            text-align: center;
+        }
+
+        td {
+            width: 40px;
+            display: inline-block;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        @media(min-width: 768px) {}
+
+        .student-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Attendance Icons */
+        .badge-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin: 7px;
+        }
+
+        .present-icon {
+            background-color: var(--success-light);
+            color: var(--success);
+        }
+
+        .absent-icon {
+            background-color: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #alertBox {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        .alert-success {
+            background: var(--success);
+        }
+
+        .alert-error {
+            background: var(--danger);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            align-items: center;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, display 0.3s ease;
+            transition-behavior: allow-discrete;
+        }
+
+        .modal-overlay.active,
+        .modal-overlay[style*="display: flex"] {
+            display: flex;
+            align-items: center;
+            opacity: 1;
+        }
+
+        @starting-style {
+
+            .modal-overlay.active,
+            .modal-overlay[style*="display: flex"] {
+                opacity: 0;
+            }
+        }
+
+        .modal-content {
+            background: #fff;
+            position: relative;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #1a202c;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #a0aec0;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #edf2f7;
+            padding-top: 14px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/studentData.css?x9">
+</head>
+
+<body>
+
+    <div class="container">
+
+
+
+        <!-- Controls Card -->
+        <div class="card">
+            <h1>Attendance Report</h1>
+            <div class="controls-grid">
+                <div class="form-group">
+                    <label>Class Name</label>
+                    <input type="text" id="reportClassInput" placeholder="e.g. 1A, 1B"
+                        style="text-transform: uppercase;" name="class">
+                </div>
+                <div class="form-group">
+                    <label>Select Year</label>
+                    <select id="reportYearSelect">
+                        <!-- Populated dynamically (Current year + 3 years back) -->
+                    </select>
+                </div>
+                <div>
+                    <button onclick="loadAttendanceReport()" class="btn btn-primary"
+                        style="width: 100%; padding: 0.625rem;">View</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Table Section -->
+        <div id="reportSection" class="hidden">
+
+            <div class="table-responsive">
+                <table id="reportTable">
+                    <thead>
+                        <tr id="tableHeaderRow">
+                            <!-- Dynamically populated headers -->
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Dynamically populated rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div id="detailsPopup" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="student-profile-header">
+                    <!-- Profile Image -->
+                    <img id="popupAvatar" class="profile-avatar" src="img/user.svg" alt="Student Photo" />
+                </div>
+                <button class="btn-close" onclick="closeDetails()">&times;</button>
+            </div>
+
+            <!-- Dynamic Personal Data Grid -->
+            <div class="popup-grid" id="popupGridContainer">
+                <!-- Info cards generated dynamically by JS -->
+            </div>
+
+            <h3 style="color: #2d3748; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+                Exam Performance
+            </h3>
+
+            <!-- Chart Canvas Container -->
+            <div class="popup-chart-container">
+                <canvas id="popupScoresChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="alertBox" class="hidden"></div>
+    <script src="sync.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/studentData.js"></script>
+    <script>
+        let cachedStudents = [];
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            populateYearDropdown();
+            try {
+                await syncEngine.initIndexedDB();
+                await syncEngine.syncStudents();
+                await loadFromIndexedDBDirect();
+            } catch (err) {
+                console.warn("Offline mode active:", err);
+            }
+        });
+
+        function loadFromIndexedDBDirect() {
+            return new Promise((resolve) => {
+                syncEngine.getLocalData('students').then((students) => {
+                    if (students && students.length > 0) cachedStudents = students;
+                    resolve();
+                }).catch(() => resolve());
+            });
+        }
+
+
+
+        // Populate Year Dropdown up to 3 years back (e.g. 2026, 2025, 2024)
+        function populateYearDropdown() {
+            const select = document.getElementById('reportYearSelect');
+            const currentYear = new Date().getFullYear();
+            select.innerHTML = '';
+
+            for (let i = 0; i < 3; i++) {
+                const year = currentYear - i;
+                const opt = document.createElement('option');
+                opt.value = year;
+                opt.innerText = year;
+                if (i === 0) opt.selected = true; // Select current year by default
+                select.appendChild(opt);
+            }
+        }
+
+        // Load and Render Attendance Matrix Report
+        async function loadAttendanceReport() {
+            const className = document.getElementById('reportClassInput').value.trim().toUpperCase();
+            const selectedYear = document.getElementById('reportYearSelect').value;
+
+            if (!className) {
+                alertbox("Please enter a valid class name.", "error");
+                return;
+            }
+
+            try {
+                db.goOnline();
+                const snapshot = await db.ref(`schools/${schoolId}/attendanceDates/${selectedYear}/${className}`).once('value');
+                const attendanceDatesArray = snapshot.val() || [];
+                db.goOffline();
+
+                if (attendanceDatesArray.length === 0) {
+                    alertbox(`No attendance data found for Class ${className} in ${selectedYear}.`, "error");
+                    document.getElementById('reportSection').classList.add('hidden');
+                    return;
+                }
+
+                const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === className);
+
+                if (classStudents.length === 0) {
+                    alertbox(`No students found in cached data for Class ${className}.`, "error");
+                    document.getElementById('reportSection').classList.add('hidden');
+                    return;
+                }
+
+
+                renderReportTable(classStudents, attendanceDatesArray);
+                document.getElementById('reportSection').classList.remove('hidden');
+
+
+            } catch (err) {
+                db.goOffline();
+                alertbox("Failed to load attendance report: " + err.message, "error");
+            }
+        }
+
+        function renderReportTable(students, datesArray) {
+            const headerRow = document.getElementById('tableHeaderRow');
+            const tbody = document.getElementById('tableBody');
+
+            // Determine total columns (at least 20)
+            const minColumns = 48;
+            const totalCols = Math.max(datesArray.length, minColumns);
+            const placeholdersNeeded = totalCols - datesArray.length;
+
+            // 1. Build Table Headers (Photo column)
+            headerRow.innerHTML = `<th class="sticky-col"></th>`;
+
+            // Render actual date headers
+            datesArray.forEach(dateKey => {
+                const [month, day] = dateKey.split(':');
+                headerRow.innerHTML += `<th>${month}/${day}</th>`;
+            });
+
+            // Append placeholder headers up to min 20 columns
+            for (let i = 0; i < placeholdersNeeded; i++) {
+                headerRow.innerHTML += `<th style="color: #cbd5e1; font-weight: normal;">-</th>`;
+            }
+
+            // 2. Build Table Rows
+            tbody.innerHTML = '';
+            students.forEach(s => {
+                const name = s.fullName || s.name || 'Unnamed Student';
+                const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
+                const studentAttendance = Array.isArray(s.attendance) ? s.attendance : [];
+
+                // Added title attribute so hovering over the photo shows the student's name
+                let trHtml = `
+                    <td class="sticky-col" onclick="openDetails('${s.id}','${schoolId}')" style="cursor: pointer;">
+                        <img src="${photo}" class="avatar" alt="Avatar" title="${name}">
+                    </td>
+                `;
+
+                // Render actual attendance for recorded dates
+                datesArray.forEach((_, index) => {
+                    const status = studentAttendance[index];
+                    const isPresent = status === 1;
+
+                    if (isPresent) {
+                        trHtml += `<td><span class="badge-icon present-icon">✓</span></td>`;
+                    } else {
+                        trHtml += `<td><span class="badge-icon absent-icon">X</span></td>`;
+                    }
+                });
+
+                // Append empty placeholder cells up to min 20 columns
+                for (let i = 0; i < placeholdersNeeded; i++) {
+                    trHtml += `<td><span style="color: #cbd5e1; font-size: 0.8rem;">-</span></td>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = trHtml;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+
+</html>

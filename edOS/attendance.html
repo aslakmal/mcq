@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance Manager</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --gray-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-bg);
+            color: var(--text-main);
+            padding: 5px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Card Box */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header */
+        .header-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            float: right;
+            margin: 10px;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-secondary {
+            background: #00000000;
+            color: var(--text-main);
+        }
+
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+        }
+
+        @media(max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Controls */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        input:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+
+        /* Calendar */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-header h2 {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .cal-day-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding-bottom: 0.25rem;
+        }
+
+        .cal-cell {
+            padding: 0.75rem 0.25rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .cal-cell:hover {
+            background: #f1f5f9;
+        }
+
+        .cal-cell.saved {
+            background: #eff6ff;
+            color: var(--primary);
+            border-color: #bfdbfe;
+            font-weight: 600;
+        }
+
+        .cal-cell.selected {
+            background: var(--primary) !important;
+            color: white !important;
+            font-weight: bold;
+        }
+
+
+
+        /* Student Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 2px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+
+        .badge {
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-paid {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .badge-unpaid {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .attendance-btn {
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: #f1f5f9;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .attendance-btn.present {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Alert Banner */
+        #alertBox {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+
+        .alert-success {
+            background: var(--success);
+        }
+
+        .alert-error {
+            background: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+
+            /* Hide table header */
+            table thead {
+                display: none;
+            }
+
+            /* Turn table structure into block cards */
+            table,
+            table tbody,
+            table tr,
+            table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                background: #ffffff;
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            }
+
+            table td {
+                border: none;
+                padding: 0;
+            }
+
+            /* Mobile Actions Row: Side-by-side layout with space between */
+            .mobile-actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            /* Style the fee toggle button on mobile */
+            .fee-toggle-btn {
+                padding: 0.5rem 0.875rem !important;
+                font-size: 0.85rem !important;
+                border-radius: 8px !important;
+            }
+
+            /* Style the attendance button on mobile */
+            .attendance-btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.85rem !important;
+                border-radius: 8px !important;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Unified Toggle Switch Styles */
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 104px;
+            height: 34px;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Slider Track */
+        .slider-text {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #fee2e2;
+            color: var(--danger);
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 17px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            border: 1px solid #fecaca;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Sliding Knob */
+        .slider-text:before {
+            position: absolute;
+            content: "";
+            height: 28px;
+            width: 28px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+        }
+
+        /* Off-state text (Right side) */
+        .slider-text::after {
+            content: attr(data-off);
+            position: absolute;
+            right: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Checked (On) State Colors & Slide */
+        input:checked+.slider-text {
+            background-color: var(--success-light);
+            color: var(--success);
+            border-color: #bbf7d0;
+        }
+
+        input:checked+.slider-text:before {
+            transform: translateX(70px);
+        }
+
+        /* On-state text switches to the left side */
+        input:checked+.slider-text::after {
+            content: attr(data-on);
+            left: 14px;
+            right: auto;
+        }
+
+        /* Responsive adjustments for mobile screens */
+        @media (max-width: 768px) {
+            table thead {
+                display: none;
+            }
+
+            table,
+            table tbody,
+            table tr,
+            table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                background: #ffffff;
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                margin-bottom: 5px;
+                padding: 5px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            }
+
+            table td {
+                border: none;
+                padding: 0;
+            }
+
+            .card {
+                padding: 5px;
+            }
+
+            table td:nth-child(1) {
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            /* Place Fee switch on left and Attendance switch on right side */
+            table td:nth-child(2),
+            table td:nth-child(3) {
+                display: inline-block;
+                width: 48%;
+            }
+
+            table td:nth-child(3) {
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="card header-card">
+            <div>
+                <h3>Student Attendance & Fees</h3>
+            </div>
+            <a onclick="window.location.href='attendance-report.html?school=' + schoolId"><button class="btn btn-secondary"  >View attendance report</button></a>
+        </div>
+
+        <!-- Controls: Class Input & Calendar -->
+        <div class="grid-2">
+
+            <!-- Class Card -->
+            <div class="card form-group">
+                <label>Select Class</label>
+                <input type="text" id="classInput" placeholder="e.g. 1A, 1B">
+                <button onclick="handleClassSelection()" class="btn btn-primary" style="margin-top: 0.5rem;">Proceed</button>
+            </div>
+
+            <!-- Calendar Card -->
+            <div class="card">
+                <div class="calendar-header">
+                    <h2 id="calendarMonthYear"></h2>
+                    <div>
+                        <button onclick="changeMonth(-1)" class="btn btn-secondary">&larr;</button>
+                        <button onclick="changeMonth(1)" class="btn btn-secondary">&rarr;</button>
+                    </div>
+                </div>
+                <div id="calendarGrid" class="calendar-grid">
+                    <div style="grid-column: span 7; padding: 2rem 0; color: var(--text-muted); text-align: center;">
+                        Please load a class name first.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Student Attendance List Section -->
+        <div id="studentSection" class="card hidden">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h2 id="currentSelectedDateLabel" style="font-size: 16px; font-weight: 700;">Attendance List
+                    </h2>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Class Fee Status</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <button onclick="saveSessionAndMarkAbsents()" class="btn btn-success">Save Attendance</button>
+
+        </div>
+
+    </div>
+
+    <!-- Alert Box -->
+    <div id="alertBox" class="hidden"></div>
+    <script src="sync.js"></script>
+    <script>
+        let cachedStudents = [];
+        let currentClass = "";
+        let activeYear = new Date().getFullYear();
+        let activeMonth = new Date().getMonth() + 1;
+        let activeDay = null;
+        let attendanceDatesArray = []; // e.g., ["2:4", "2:11", "2:18", "3:1"]
+        let sessionAttendance = {};    // studentId -> 1 or 0
+        let sessionFees = {};          // studentId -> 1 or 0
+
+        async function initApp() {
+            try {
+                await syncEngine.initIndexedDB();
+                await syncEngine.syncStudents();
+                await loadFromIndexedDBDirect();
+            } catch (err) {
+                console.warn("Offline mode active:", err);
+            }
+        }
+
+        function loadFromIndexedDBDirect() {
+            return new Promise((resolve) => {
+                syncEngine.getLocalData('students').then((students) => {
+                    if (students && students.length > 0) cachedStudents = students;
+                    resolve();
+                }).catch(() => resolve());
+            });
+        }
+
+
+
+        // 1. Load attendanceDates array from Firebase for this class & year
+        async function handleClassSelection() {
+            const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
+            if (!inputVal) {
+                alertbox("Please enter a valid class name.", "error");
+                return;
+            }
+            currentClass = inputVal;
+
+            try {
+                db.goOnline();
+                const snapshot = await db.ref(`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`).once('value');
+                attendanceDatesArray = snapshot.val() || [];
+                db.goOffline();
+
+                renderCalendarGrid();
+                const today = new Date();
+        if (activeYear === today.getFullYear() && activeMonth === (today.getMonth() + 1)) {
+          selectDate(today.getDate());
+        }
+            } catch (err) {
+                db.goOffline();
+                alertbox("Failed to load attendance dates.", "error");
+            }
+        }
+
+        // 2. Render Calendar with highlights from attendanceDatesArray
+        fn = changeMonth = function (direction) {
+            activeMonth += direction;
+            if (activeMonth > 12) { activeMonth = 1; activeYear++; }
+            if (activeMonth < 1) { activeMonth = 12; activeYear--; }
+            if (currentClass) renderCalendarGrid();
+        }
+
+        function renderCalendarGrid() {
+            const grid = document.getElementById('calendarGrid');
+            const monthYearLabel = document.getElementById('calendarMonthYear');
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            monthYearLabel.innerText = `${monthNames[activeMonth - 1]} ${activeYear}`;
+            grid.innerHTML = '';
+
+            ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach(d => {
+                grid.innerHTML += `<div class="cal-day-name">${d}</div>`;
+            });
+
+            const firstDayIndex = new Date(activeYear, activeMonth - 1, 1).getDay();
+            const totalDays = new Date(activeYear, activeMonth, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                grid.innerHTML += `<div></div>`;
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dateKey = `${activeMonth}:${day}`;
+                const isSaved = attendanceDatesArray.includes(dateKey);
+                const isSelected = activeDay === day;
+
+                let cellClass = "cal-cell";
+                if (isSaved) cellClass += " saved";
+                if (isSelected) cellClass += " selected";
+
+                const dayEl = document.createElement('div');
+                dayEl.className = cellClass;
+                dayEl.innerHTML = `<span>${day}</span>`;
+                dayEl.onclick = () => selectDate(day);
+                grid.appendChild(dayEl);
+            }
+        }
+
+        // 3. Select Date and prepare student session list
+        async function selectDate(day) {
+            activeDay = day;
+            renderCalendarGrid();
+
+            const dateKey = `${activeMonth}:${activeDay}`;
+            document.getElementById('currentSelectedDateLabel').innerText = `Class ${currentClass} (${activeYear}:${dateKey})`;
+            document.getElementById('studentSection').classList.remove('hidden');
+
+            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+
+            // Find if date already exists in attendanceDatesArray
+            const dateIndex = attendanceDatesArray.indexOf(dateKey);
+
+            // RESET session states for the newly selected date
+            sessionAttendance = {};
+            sessionFees = {};
+
+            classStudents.forEach(s => {
+                const studentId = s.id || s.key;
+
+                // 1. Set fee status from student record
+                sessionFees[studentId] = s.isPaid !== undefined ? s.isPaid : (s.C !== undefined ? s.C : (s.F !== undefined ? s.F : 0));
+
+                // 2. Load existing attendance if date exists in record, otherwise RESET to 0 (Absent)
+                if (dateIndex !== -1 && s.attendance && Array.isArray(s.attendance) && s.attendance[dateIndex] !== undefined) {
+                    sessionAttendance[studentId] = s.attendance[dateIndex];
+                } else {
+                    sessionAttendance[studentId] = 0; // Fresh reset for new dates
+                }
+            });
+
+            // Re-render table with the fresh states
+            renderStudentTable(classStudents);
+        }
+
+        function renderStudentTable(students) {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 2rem;">No students found in Class ${currentClass}.</td></tr>`;
+                return;
+            }
+
+            students.forEach(s => {
+                const studentId = s.id || s.key;
+                const name = s.fullName;
+                const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
+                const feeVal = sessionFees[studentId];
+                const attVal = sessionAttendance[studentId];
+
+                const isPaid = feeVal == 1;
+                const isPresent = attVal === 1;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+  <td>
+    <div class="student-info">
+      <img src="${photo}" class="avatar" alt="Avatar">
+      <div><p style="font-weight: 600;">${name}</p>
+      <p>Class Fee:${s.classFee}</p>
+    </div>
+    </div>
+  </td>
+  <td>
+    <!-- Fee Switch (Left) -->
+    <label class="switch-toggle">
+      <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="toggleFee('${studentId}', this)">
+      <span class="slider-text" data-on="Paid" data-off="Unpaid"></span>
+    </label>
+  </td>
+  <td>
+    <!-- Attendance Switch (Right) -->
+    <label class="switch-toggle">
+      <input type="checkbox" ${isPresent ? 'checked' : ''} onchange="toggleAttendance('${studentId}', this)">
+      <span class="slider-text" data-on="Present" data-off="Absent"></span>
+    </label>
+  </td>
+`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 4. Update Paid status instantly in background (No table re-render)
+        async function toggleFee(studentId, checkboxEl) {
+            const newFeeStatus = checkboxEl.checked ? 1 : 0;
+            sessionFees[studentId] = newFeeStatus;
+
+            // Update local cache immediately
+            const student = cachedStudents.find(s => (s.id || s.key) === studentId);
+            if (student) {
+                student.isPaid = newFeeStatus;
+                student.F = newFeeStatus;
+                // Also sync to local IndexedDB if needed
+                if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
+                    syncEngine.saveToIDB('students', student);
+                }
+            }
+
+            try {
+                db.goOnline();
+                await db.ref(`schools/${schoolId}/students/${studentId}`).update({
+                    F: newFeeStatus,
+                    C: newFeeStatus,
+                    A: firebase.database.ServerValue.TIMESTAMP
+                });
+                db.goOffline();
+                alertbox("Payment status saved!", "success");
+            } catch (err) {
+                db.goOffline();
+                // Revert checkbox state on failure
+                checkboxEl.checked = !checkboxEl.checked;
+                sessionFees[studentId] = checkboxEl.checked ? 1 : 0;
+                alertbox("Failed to update fee: " + err.message, "error");
+            }
+        }
+
+        // 5. Toggle attendance locally (No re-render, saved in bulk later)
+        function toggleAttendance(studentId, checkboxEl) {
+            sessionAttendance[studentId] = checkboxEl.checked ? 1 : 0;
+        }
+
+        // 6. Global Save Button: Batch update attendance list and attendanceDates array
+        async function saveSessionAndMarkAbsents() {
+            if (!activeDay) {
+                alertbox("Please select a date on the calendar first.", "error");
+                return;
+            }
+            const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
+            const dateKey = `${activeMonth}:${activeDay}`;
+            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+
+            let dateIndex = attendanceDatesArray.indexOf(dateKey);
+            let isNewDate = dateIndex === -1;
+
+            if (isNewDate) {
+                attendanceDatesArray.push(dateKey);
+                dateIndex = attendanceDatesArray.length - 1;
+            }
+
+            const updates = {};
+
+            // Update attendanceDates array in Firebase
+            updates[`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`] = attendanceDatesArray;
+
+            // Update each student's attendance list array
+            classStudents.forEach(s => {
+                const studentId = s.id || s.key;
+                if (!s.attendance) s.attendance = [];
+
+                // Ensure array length covers dateIndex
+                while (s.attendance.length <= dateIndex) {
+                    s.attendance.push(0);
+                }
+
+                s.attendance[dateIndex] = sessionAttendance[studentId] !== undefined ? sessionAttendance[studentId] : 0;
+                const basePath = `schools/${schoolId}/students/${studentId}`;
+                updates[`${basePath}/E`] = s.attendance;
+                updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
+                updates[`${basePath}/B`] = userId;
+            });
+
+            try {
+                db.goOnline();
+                await db.ref().update(updates);
+                db.goOffline();
+
+                renderCalendarGrid();
+                alertbox(`Attendance saved!`, "success");
+            } catch (err) {
+                db.goOffline();
+                alertbox("Failed to save attendance session: " + err.message, "error");
+            }
+        }
+        initApp();
+    </script>
+</body>
+
+</html>
