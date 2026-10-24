@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Principal Portal & Admin Area</title>
+  <title>Admin Portal</title>
 
 <link rel="stylesheet" href="css/admin.css">
 <!-- Cropper.js CSS & JS -->
@@ -31,7 +31,7 @@
     <!-- Two Tabs -->
     <div class="tab-header">
       <button class="tab-btn active" onclick="switchTab('login')">Login</button>
-      <button class="tab-btn" onclick="switchTab('signup')">Sign Up as Principal</button>
+      <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
     </div>
 
     <!-- Login Form -->
@@ -39,7 +39,7 @@
       <form id="loginForm">
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" id="loginEmail" required placeholder="principal@school.com">
+          <input type="email" id="loginEmail" required placeholder="lakmal33@gmail.com">
         </div>
         <div class="form-group">
           <label>Password</label>
@@ -60,7 +60,7 @@
         </div>
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" id="signupEmail" required placeholder="principal@school.com">
+          <input type="email" id="signupEmail" required placeholder="lakmal33@gmail.com">
         </div>
         <div class="form-group">
           <label>Password</label>
@@ -80,7 +80,7 @@
           </div>
         </div>
       
-        <button type="submit" class="submit-btn" id="signupBtn">Create Principal Account</button>
+        <button type="submit" class="submit-btn" id="signupBtn">Create Account</button>
         <div class="error-msg" id="signupError"></div>
       </form>
     </div>
@@ -91,7 +91,7 @@
     <div class="nav-bar">
       <div class="nav-title">
         <h2 id="dashSchoolTitle">School Admin Panel</h2>
-        <small id="userWelcomeText">Welcome, Principal</small>
+        <small id="userWelcomeText">Welcome,</small>
       </div>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
@@ -151,7 +151,6 @@
       <div class="card">
         <div class="card-icon">✏️</div>
         <h3>Edit Information</h3>
-        <p>Edit school and principal Information</p>
         <button id="editDetails">Edit</button>
       </div>
       <div class="card">
@@ -194,8 +193,8 @@
         </div>
       
         <div class="form-group">
-          <label for="modalPrincipalName">Principal Name</label>
-          <input type="text" id="modalPrincipalName" required placeholder="Enter principal name" />
+          <label for="modalPrincipalName">Principal/OWner Name</label>
+          <input type="text" id="modalPrincipalName" required placeholder="Enter name" />
         </div>
       
         <!-- School Logo Input & Preview -->
