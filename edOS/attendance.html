@@ -37,6 +37,10 @@
             min-height: 100vh;
         }
 
+        a {
+            text-decoration: none;
+        }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -511,7 +515,8 @@
             <div>
                 <h3>Student Attendance & Fees</h3>
             </div>
-            <a onclick="window.location.href='attendance-report.html?school=' + schoolId"><button class="btn btn-secondary"  >View attendance report</button></a>
+            <a href="#" onclick="window.location.href='attendance-report.html?school=' + schoolId">View attendance
+                report</a>
         </div>
 
         <!-- Controls: Class Input & Calendar -->
@@ -521,7 +526,8 @@
             <div class="card form-group">
                 <label>Select Class</label>
                 <input type="text" id="classInput" placeholder="e.g. 1A, 1B">
-                <button onclick="handleClassSelection()" class="btn btn-primary" style="margin-top: 0.5rem;">Proceed</button>
+                <button onclick="handleClassSelection()" class="btn btn-primary"
+                    style="margin-top: 0.5rem;">Proceed</button>
             </div>
 
             <!-- Calendar Card -->
@@ -622,9 +628,9 @@
 
                 renderCalendarGrid();
                 const today = new Date();
-        if (activeYear === today.getFullYear() && activeMonth === (today.getMonth() + 1)) {
-          selectDate(today.getDate());
-        }
+                if (activeYear === today.getFullYear() && activeMonth === (today.getMonth() + 1)) {
+                    selectDate(today.getDate());
+                }
             } catch (err) {
                 db.goOffline();
                 alertbox("Failed to load attendance dates.", "error");
@@ -779,7 +785,7 @@
                 db.goOnline();
                 await db.ref(`schools/${schoolId}/students/${studentId}`).update({
                     F: newFeeStatus,
-                    C: newFeeStatus,
+                    G: newFeeStatus === 1 ? firebase.database.ServerValue.TIMESTAMP : null,
                     A: firebase.database.ServerValue.TIMESTAMP
                 });
                 db.goOffline();
