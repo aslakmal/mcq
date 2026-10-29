@@ -496,13 +496,67 @@
             table td:nth-child(2),
             table td:nth-child(3) {
                 display: inline-block;
-                width: 48%;
+                text-align: right;
             }
 
             table td:nth-child(3) {
                 text-align: right;
             }
         }
+
+        /**Loading*/
+        .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+.loader-content {
+    background: #fff;
+    padding: 1.5rem 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-color, #3b82f6);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 0.75rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Disable body interaction when active */
+body.is-loading {
+    pointer-events: none;
+}
+body.is-loading .loading-overlay {
+    pointer-events: auto; /* Keep overlay responsive or let container block */
+}
     </style>
 </head>
 
@@ -513,7 +567,7 @@
         <!-- Header -->
         <div class="card header-card">
             <div>
-                <h3>Student Attendance & Fees</h3>
+                <h3>Student Attendance</h3>
             </div>
             <a href="#" onclick="window.location.href='attendance-report.html?school=' + schoolId">View attendance
                 report</a>
@@ -525,7 +579,7 @@
             <!-- Class Card -->
             <div class="card form-group">
                 <label>Select Class</label>
-                <input type="text" id="classInput" placeholder="e.g. 1A, 1B">
+                <input type="text" id="classInput">
                 <button onclick="handleClassSelection()" class="btn btn-primary"
                     style="margin-top: 0.5rem;">Proceed</button>
             </div>
@@ -541,7 +595,7 @@
                 </div>
                 <div id="calendarGrid" class="calendar-grid">
                     <div style="grid-column: span 7; padding: 2rem 0; color: var(--text-muted); text-align: center;">
-                        Please load a class name first.</div>
+                        Please select a class name first.</div>
                 </div>
             </div>
 
@@ -556,13 +610,17 @@
                     </h2>
                 </div>
             </div>
-
+            <div id="loadingOverlay" class="loading-overlay hidden">
+                <div class="loader-content">
+                    <div class="spinner"></div>
+                    <p id="loadingText">Updating...</p>
+                </div>
+            </div>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>Student</th>
-                            <th>Class Fee Status</th>
                             <th>Attendance</th>
                         </tr>
                     </thead>
@@ -577,10 +635,10 @@
 
     </div>
 
-    <!-- Alert Box -->
-    <div id="alertBox" class="hidden"></div>
     <script src="sync.js"></script>
     <script>
+        const instituteType = localStorage.getItem('instituteType') || '';
+
         let cachedStudents = [];
         let currentClass = "";
         let activeYear = new Date().getFullYear();
@@ -683,39 +741,44 @@
 
         // 3. Select Date and prepare student session list
         async function selectDate(day) {
-            activeDay = day;
-            renderCalendarGrid();
+    activeDay = day;
+    renderCalendarGrid();
 
-            const dateKey = `${activeMonth}:${activeDay}`;
-            document.getElementById('currentSelectedDateLabel').innerText = `Class ${currentClass} (${activeYear}:${dateKey})`;
-            document.getElementById('studentSection').classList.remove('hidden');
+    const dateKey = `${activeMonth}:${activeDay}`;
+    document.getElementById('currentSelectedDateLabel').innerText = `Class ${currentClass} (${activeYear}:${dateKey})`;
+    document.getElementById('studentSection').classList.remove('hidden');
 
-            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+    const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
 
-            // Find if date already exists in attendanceDatesArray
-            const dateIndex = attendanceDatesArray.indexOf(dateKey);
+    // Find if date already exists in attendanceDatesArray
+    const dateIndex = attendanceDatesArray.indexOf(dateKey);
 
-            // RESET session states for the newly selected date
-            sessionAttendance = {};
-            sessionFees = {};
+    // RESET session states for the newly selected date
+    sessionAttendance = {};
+    sessionFees = {};
 
-            classStudents.forEach(s => {
-                const studentId = s.id || s.key;
+    classStudents.forEach(s => {
+        const studentId = s.id || s.key;
 
-                // 1. Set fee status from student record
-                sessionFees[studentId] = s.isPaid !== undefined ? s.isPaid : (s.C !== undefined ? s.C : (s.F !== undefined ? s.F : 0));
+        // 1.Load existing attendance from string (with fallback for legacy arrays)
+        let attendanceVal = 0;
 
-                // 2. Load existing attendance if date exists in record, otherwise RESET to 0 (Absent)
-                if (dateIndex !== -1 && s.attendance && Array.isArray(s.attendance) && s.attendance[dateIndex] !== undefined) {
-                    sessionAttendance[studentId] = s.attendance[dateIndex];
-                } else {
-                    sessionAttendance[studentId] = 0; // Fresh reset for new dates
-                }
-            });
-
-            // Re-render table with the fresh states
-            renderStudentTable(classStudents);
+        if (dateIndex !== -1 && s.attendance != null) {
+            if (typeof s.attendance === 'string' && s.attendance.length > dateIndex) {
+                // Read character from string and convert to number (e.g., "1" -> 1)
+                attendanceVal = parseInt(s.attendance[dateIndex], 10) || 0;
+            } else if (Array.isArray(s.attendance) && s.attendance[dateIndex] !== undefined) {
+                // Legacy fallback for old array data
+                attendanceVal = s.attendance[dateIndex];
+            }
         }
+
+        sessionAttendance[studentId] = attendanceVal;
+    });
+
+    // Re-render table with the fresh states
+    renderStudentTable(classStudents);
+}
 
         function renderStudentTable(students) {
             const tbody = document.getElementById('studentTableBody');
@@ -730,10 +793,8 @@
                 const studentId = s.id || s.key;
                 const name = s.fullName;
                 const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
-                const feeVal = sessionFees[studentId];
                 const attVal = sessionAttendance[studentId];
 
-                const isPaid = feeVal == 1;
                 const isPresent = attVal === 1;
 
                 const tr = document.createElement('tr');
@@ -742,16 +803,8 @@
     <div class="student-info">
       <img src="${photo}" class="avatar" alt="Avatar">
       <div><p style="font-weight: 600;">${name}</p>
-      <p>Class Fee:${s.classFee}</p>
     </div>
     </div>
-  </td>
-  <td>
-    <!-- Fee Switch (Left) -->
-    <label class="switch-toggle">
-      <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="toggleFee('${studentId}', this)">
-      <span class="slider-text" data-on="Paid" data-off="Unpaid"></span>
-    </label>
   </td>
   <td>
     <!-- Attendance Switch (Right) -->
@@ -765,39 +818,6 @@
             });
         }
 
-        // 4. Update Paid status instantly in background (No table re-render)
-        async function toggleFee(studentId, checkboxEl) {
-            const newFeeStatus = checkboxEl.checked ? 1 : 0;
-            sessionFees[studentId] = newFeeStatus;
-
-            // Update local cache immediately
-            const student = cachedStudents.find(s => (s.id || s.key) === studentId);
-            if (student) {
-                student.isPaid = newFeeStatus;
-                student.F = newFeeStatus;
-                // Also sync to local IndexedDB if needed
-                if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
-                    syncEngine.saveToIDB('students', student);
-                }
-            }
-
-            try {
-                db.goOnline();
-                await db.ref(`schools/${schoolId}/students/${studentId}`).update({
-                    F: newFeeStatus,
-                    G: newFeeStatus === 1 ? firebase.database.ServerValue.TIMESTAMP : null,
-                    A: firebase.database.ServerValue.TIMESTAMP
-                });
-                db.goOffline();
-                alertbox("Payment status saved!", "success");
-            } catch (err) {
-                db.goOffline();
-                // Revert checkbox state on failure
-                checkboxEl.checked = !checkboxEl.checked;
-                sessionFees[studentId] = checkboxEl.checked ? 1 : 0;
-                alertbox("Failed to update fee: " + err.message, "error");
-            }
-        }
 
         // 5. Toggle attendance locally (No re-render, saved in bulk later)
         function toggleAttendance(studentId, checkboxEl) {
@@ -806,56 +826,82 @@
 
         // 6. Global Save Button: Batch update attendance list and attendanceDates array
         async function saveSessionAndMarkAbsents() {
-            if (!activeDay) {
-                alertbox("Please select a date on the calendar first.", "error");
-                return;
-            }
-            const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
-            const dateKey = `${activeMonth}:${activeDay}`;
-            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+    if (!activeDay) {
+        alertbox("Please select a date on the calendar first.", "error");
+        return;
+    }
+    setAppBusy(true, "Saving attendace...");
+    const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
+    const dateKey = `${activeMonth}:${activeDay}`;
+    const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
 
-            let dateIndex = attendanceDatesArray.indexOf(dateKey);
-            let isNewDate = dateIndex === -1;
+    let dateIndex = attendanceDatesArray.indexOf(dateKey);
+    let isNewDate = dateIndex === -1;
 
-            if (isNewDate) {
-                attendanceDatesArray.push(dateKey);
-                dateIndex = attendanceDatesArray.length - 1;
-            }
+    if (isNewDate) {
+        attendanceDatesArray.push(dateKey);
+        dateIndex = attendanceDatesArray.length - 1; // Fixed missing minus sign from your snippet
+    }
 
-            const updates = {};
+    const updates = {};
 
-            // Update attendanceDates array in Firebase
-            updates[`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`] = attendanceDatesArray;
+    // Update attendanceDates array in Firebase
+    updates[`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`] = attendanceDatesArray;
 
-            // Update each student's attendance list array
-            classStudents.forEach(s => {
-                const studentId = s.id || s.key;
-                if (!s.attendance) s.attendance = [];
+    // Update each student's attendance string
+    classStudents.forEach(s => {
+        const studentId = s.id || s.key;
+        
+        // Default to an empty string if attendance doesn't exist yet
+        let attendanceStr = typeof s.attendance === 'string' ? s.attendance : '';
 
-                // Ensure array length covers dateIndex
-                while (s.attendance.length <= dateIndex) {
-                    s.attendance.push(0);
-                }
-
-                s.attendance[dateIndex] = sessionAttendance[studentId] !== undefined ? sessionAttendance[studentId] : 0;
-                const basePath = `schools/${schoolId}/students/${studentId}`;
-                updates[`${basePath}/E`] = s.attendance;
-                updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
-                updates[`${basePath}/B`] = userId;
-            });
-
-            try {
-                db.goOnline();
-                await db.ref().update(updates);
-                db.goOffline();
-
-                renderCalendarGrid();
-                alertbox(`Attendance saved!`, "success");
-            } catch (err) {
-                db.goOffline();
-                alertbox("Failed to save attendance session: " + err.message, "error");
-            }
+        // Ensure string length covers dateIndex by padding with '0'
+        while (attendanceStr.length <= dateIndex) {
+            attendanceStr += '0';
         }
+
+        // Get attendance value (0 or 1)
+        const attendanceVal = sessionAttendance[studentId] !== undefined ? sessionAttendance[studentId] : 0;
+
+        // Replace the character at dateIndex
+        attendanceStr = attendanceStr.substring(0, dateIndex) + attendanceVal + attendanceStr.substring(dateIndex + 1);
+
+        // Update local cache so UI updates correctly
+        s.attendance = attendanceStr;
+
+        const basePath = `schools/${schoolId}/students/${studentId}`;
+        updates[`${basePath}/E`] = attendanceStr; // Saved as "110..."
+        updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
+        updates[`${basePath}/B`] = userId;
+    });
+
+    try {
+        db.goOnline();
+        await db.ref().update(updates);
+        db.goOffline();
+
+        renderCalendarGrid();
+        setAppBusy(false);
+        alertbox(`Attendance saved!`, "success");
+    } catch (err) {
+        db.goOffline();
+        setAppBusy(false);
+        alertbox("Failed to save attendance session: " + err.message, "error");
+    }
+}
+   function setAppBusy(isBusy, message = "Updating...") {
+    const overlay = document.getElementById('loadingOverlay');
+    const textEl = document.getElementById('loadingText');
+    if (textEl) textEl.innerText = message;
+    
+    if (isBusy) {
+        document.body.classList.add('is-loading');
+        overlay.classList.remove('hidden');
+    } else {
+        document.body.classList.remove('is-loading');
+        overlay.classList.add('hidden');
+    }
+}
         initApp();
     </script>
 </body>

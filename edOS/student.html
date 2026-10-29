@@ -9,9 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 
-  <link rel="stylesheet" href="css/students.css?x9">
-  <link rel="stylesheet" href="css/id_templates.css?x9">
-  <link rel="stylesheet" href="css/studentData.css?x9">
+  <link rel="stylesheet" href="css/students.css">
+  <link rel="stylesheet" href="css/id_templates.css">
+  <link rel="stylesheet" href="css/studentData.css">
  
 
 </head>
@@ -32,7 +32,7 @@
     <div class="popup-grid" id="popupGridContainer">
       <!-- Info cards generated dynamically by JS -->
     </div>
-
+<div id="attendance"></div>
     <h3 style="color: #2d3748; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
       Exam Performance Overview
     </h3>
@@ -46,9 +46,9 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="sync.js?x9"></script>
+<script src="sync.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/studentData.js?z"></script>
+<script src="js/studentData.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
   const urlData = new URLSearchParams(window.location.search);

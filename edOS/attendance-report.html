@@ -361,9 +361,8 @@
             <h1>Attendance Report</h1>
             <div class="controls-grid">
                 <div class="form-group">
-                    <label>Class Name</label>
-                    <input type="text" id="reportClassInput" placeholder="e.g. 1A, 1B"
-                        style="text-transform: uppercase;" name="class">
+                    <label>Select Class</label>
+                    <input type="text" id="reportClassInput" style="text-transform: uppercase;" name="class">
                 </div>
                 <div class="form-group">
                     <label>Select Year</label>
@@ -512,7 +511,7 @@
             const headerRow = document.getElementById('tableHeaderRow');
             const tbody = document.getElementById('tableBody');
 
-            // Determine total columns (at least 20)
+            // Determine total columns (at least 48)
             const minColumns = 48;
             const totalCols = Math.max(datesArray.length, minColumns);
             const placeholdersNeeded = totalCols - datesArray.length;
@@ -526,7 +525,7 @@
                 headerRow.innerHTML += `<th>${month}/${day}</th>`;
             });
 
-            // Append placeholder headers up to min 20 columns
+            // Append placeholder headers up to min columns
             for (let i = 0; i < placeholdersNeeded; i++) {
                 headerRow.innerHTML += `<th style="color: #cbd5e1; font-weight: normal;">-</th>`;
             }
@@ -536,7 +535,6 @@
             students.forEach(s => {
                 const name = s.fullName || s.name || 'Unnamed Student';
                 const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
-                const studentAttendance = Array.isArray(s.attendance) ? s.attendance : [];
 
                 // Added title attribute so hovering over the photo shows the student's name
                 let trHtml = `
@@ -547,7 +545,18 @@
 
                 // Render actual attendance for recorded dates
                 datesArray.forEach((_, index) => {
-                    const status = studentAttendance[index];
+                    let status = 0;
+
+                    if (s.attendance != null) {
+                        if (typeof s.attendance === 'string') {
+                            // Read from string format (e.g., "110"[index])
+                            status = parseInt(s.attendance[index], 10) || 0;
+                        } else if (Array.isArray(s.attendance)) {
+                            // Fallback for legacy array format
+                            status = s.attendance[index] !== undefined ? s.attendance[index] : 0;
+                        }
+                    }
+
                     const isPresent = status === 1;
 
                     if (isPresent) {
@@ -557,7 +566,7 @@
                     }
                 });
 
-                // Append empty placeholder cells up to min 20 columns
+                // Append empty placeholder cells up to min columns
                 for (let i = 0; i < placeholdersNeeded; i++) {
                     trHtml += `<td><span style="color: #cbd5e1; font-size: 0.8rem;">-</span></td>`;
                 }

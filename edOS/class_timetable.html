@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Timetable</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #1e293b;
+}
+.timetable-wrapper {
+    max-width: 1400px;
+    margin: auto;
+    padding: 24px;
+}
+/* =========================
+   TOP & SEARCH CONTROLS
+========================= */
+.timetable-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+.timetable-title h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+}
+.timetable-title p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+.class-search-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.class-input {
+    padding: 11px 15px;
+    border: 1px solid #dbe3ef;
+    border-radius: 12px;
+    background: #fff;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, .05);
+}
+.class-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+}
+.class-submit-btn {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(37, 99, 235, .2);
+    transition: background .2s;
+}
+.class-submit-btn:hover {
+    background: #1d4ed8;
+}
+/* =========================
+   MOBILE DAY SELECTOR
+========================= */
+.day-selector {
+    display: none;
+    gap: 8px;
+    margin-bottom: 18px;
+    overflow-x: auto;
+    padding-bottom: 3px;
+    scrollbar-width: none;
+}
+.day-selector::-webkit-scrollbar {
+    display: none;
+}
+.day-btn {
+    border: 0;
+    background: #fff;
+    color: #64748b;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, .06);
+}
+.day-btn.active {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 5px 14px rgba(37, 99, 235, .25);
+}
+/* =========================
+   DAYS & COLUMNS
+========================= */
+.days-container {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+.day-column {
+    background: #fff;
+    border-radius: 18px;
+    padding: 14px;
+    min-width: 0;
+    border: 1px solid #e8edf5;
+    box-shadow: 0 3px 15px rgba(15, 23, 42, .06);
+}
+.day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 4px 14px;
+}
+.day-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+.period-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 5px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+.periods {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.period {
+    min-height: 65px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #edf1f6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.period-number {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #e8f0ff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+}
+.period-info {
+    min-width: 0;
+}
+.subject {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.35;
+    word-break: break-word;
+}
+.teacher-name {
+    margin-top: 3px;
+    font-size: 11px;
+    color: #64748b;
+    word-break: break-word;
+}
+.period.empty {
+    background: #fafbfc;
+    border-style: dashed;
+    opacity: .7;
+}
+.period.empty .period-number {
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+.empty-text {
+    font-size: 12px;
+    color: #94a3b8;
+}
+.no-timetable {
+    grid-column: 1 / -1;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #94a3b8;
+    background: #fff;
+    border: 1px dashed #dbe3ef;
+    border-radius: 18px;
+}
+@media (max-width: 1100px) {
+    .days-container {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+@media (max-width: 700px) {
+    .timetable-wrapper {
+        padding: 16px;
+    }
+    .timetable-top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .class-search-container {
+        width: 100%;
+    }
+    .class-input {
+        flex: 1;
+    }
+    .day-selector {
+        display: flex;
+    }
+    .days-container {
+        display: block;
+    }
+    .day-column {      
+        display: none;
+    }
+    .day-column.active {
+        display: block;
+    }
+}
+
+.day-column {      
+        animation: zoomIn .5s cubic-bezier(.16, 1, .3, 1) both;
+    }
+      @keyframes zoomIn {
+            0% {
+                opacity: 0;
+                transform: scale(.78);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+         
+</style>
+</head>
+<body>
+<div class="timetable-wrapper">
+    <div class="timetable-top">
+        <div class="timetable-title">
+            <h2>Classes Timetable</h2>
+        </div>
+        <!-- Replaced form with a normal div container -->
+        <div class="class-search-container">
+            <input 
+                type="text" 
+                id="classInput" 
+                class="class-input" 
+                placeholder="Class">
+            <button type="button" id="classSearchBtn" class="class-submit-btn">View</button>
+        </div>
+    </div>
+    <div id="daySelector" class="day-selector"></div>
+    <div id="daysContainer" class="days-container"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="sync.js"></script>
+<script>
+function renderClassTimetable(teachers, selectedClass, daysContainer, daySelector) {
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+    const dayNames = {
+        monday: "Monday",
+        tuesday: "Tuesday",
+        wednesday: "Wednesday",
+        thursday: "Thursday",
+        friday: "Friday"
+    };
+
+    if (!daysContainer || !daySelector) return;
+
+    if (!Array.isArray(teachers)) {
+        daysContainer.innerHTML = `<div class="no-timetable">No teacher data available</div>`;
+        daySelector.innerHTML = "";
+        return;
+    }
+
+    function getPeriods(dayData) {
+        if (!dayData) return [];
+        if (Array.isArray(dayData)) {
+            return dayData.map((data, index) => ({ period: index, data: data }));
+        }
+        if (typeof dayData === "object") {
+            return Object.entries(dayData)
+                .map(([period, data]) => ({ period: Number(period), data: data }))
+                .filter(item => Number.isFinite(item.period));
+        }
+        return [];
+    }
+
+    const classTimetable = {};
+    days.forEach(day => { classTimetable[day] = {}; });
+
+    teachers.forEach(teacher => {
+        if (!teacher || !teacher.timetable) return;
+        const timetable = teacher.timetable;
+        const teacherName = teacher.name || teacher.fullName || teacher.displayName || teacher.username || "Teacher";
+
+        days.forEach(day => {
+            const periods = getPeriods(timetable[day]);
+            periods.forEach(item => {
+                if (!item.data || !item.data.c) return;
+                const className = item.data.c;
+                const subject = item.data.s;
+
+                if (selectedClass && className.trim().toLowerCase() !== selectedClass.trim().toLowerCase()) {
+                    return;
+                }
+
+                if (!classTimetable[day][item.period]) {
+                    classTimetable[day][item.period] = [];
+                }
+                classTimetable[day][item.period].push({
+                    subject: subject || "Unknown subject",
+                    teacher: teacherName
+                });
+            });
+        });
+    });
+
+    let maxPeriods = 0;
+    days.forEach(day => {
+        const periodNumbers = Object.keys(classTimetable[day]).map(Number);
+        if (periodNumbers.length) {
+            maxPeriods = Math.max(maxPeriods, ...periodNumbers);
+        }
+    });
+
+    daysContainer.innerHTML = "";
+    daySelector.innerHTML = "";
+
+    if (!maxPeriods) {
+        daysContainer.innerHTML = `
+            <div class="no-timetable">
+                No timetable found for <strong>${selectedClass || "this class"}</strong>
+            </div>
+        `;
+        return;
+    }
+
+    days.forEach((day, dayIndex) => {
+        const column = document.createElement("div");
+        column.className = "day-column";
+        column.dataset.day = day;
+        if (dayIndex === 0) column.classList.add("active");
+        column.style.animationDelay = `${(dayIndex - 1) * 100}ms`;
+
+        const header = document.createElement("div");
+        header.className = "day-header";
+        const name = document.createElement("div");
+        name.className = "day-name";
+        name.textContent = dayNames[day];
+
+        const assignedCount = Object.keys(classTimetable[day]).length;
+       
+        header.appendChild(name);
+        column.appendChild(header);
+
+        const periodsContainer = document.createElement("div");
+        periodsContainer.className = "periods";
+
+        for (let periodNumber = 1; periodNumber <= maxPeriods; periodNumber++) {
+            const assignments = classTimetable[day][periodNumber];
+            const period = document.createElement("div");
+            period.className = "period";
+
+            if (!assignments) period.classList.add("empty");
+
+            const number = document.createElement("div");
+            number.className = "period-number";
+            number.textContent = periodNumber;
+            period.appendChild(number);
+
+            if (assignments && assignments.length) {
+                const info = document.createElement("div");
+                info.className = "period-info";
+                assignments.forEach((assignment, assignmentIndex) => {
+                    const subject = document.createElement("div");
+                    subject.className = "subject";
+                    subject.textContent = assignment.subject;
+
+                    const teacherName = document.createElement("div");
+                    teacherName.className = "teacher-name";
+                    teacherName.textContent = assignment.teacher;
+
+                    info.appendChild(subject);
+                    info.appendChild(teacherName);
+
+                    if (assignmentIndex < assignments.length - 1) {
+                        const separator = document.createElement("div");
+                        separator.style.cssText = "height:1px;background:#e5e7eb;margin:7px 0;";
+                        info.appendChild(separator);
+                    }
+                });
+                period.appendChild(info);
+            } else {
+                const emptyText = document.createElement("div");
+                emptyText.className = "empty-text";
+                emptyText.textContent = "Free";
+                period.appendChild(emptyText);
+            }
+            periodsContainer.appendChild(period);
+        }
+        column.appendChild(periodsContainer);
+        daysContainer.appendChild(column);
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day-btn";
+        if (dayIndex === 0) button.classList.add("active");
+        button.textContent = dayNames[day];
+
+        button.addEventListener("click", () => {
+            if (button.classList.contains("active")) return;
+            daySelector.querySelectorAll(".day-btn").forEach(btn => btn.classList.remove("active"));
+            daysContainer.querySelectorAll(".day-column").forEach(item => item.classList.remove("active"));
+            button.classList.add("active");
+            const selectedDay = daysContainer.querySelector(`.day-column[data-day="${day}"]`);
+            if (selectedDay) selectedDay.classList.add("active");
+        });
+        daySelector.appendChild(button);
+    });
+}
+
+async function initApp() {
+    try {
+        await syncEngine.initIndexedDB();
+        if (navigator.onLine) {
+            await syncEngine.syncUsers();
+        }
+        const teachers = await syncEngine.getLocalUsersByRole("teacher");
+
+        const classSearchBtn = document.getElementById("classSearchBtn");
+        const classInput = document.getElementById("classInput");
+        const daysContainer = document.getElementById("daysContainer");
+        const daySelector = document.getElementById("daySelector");
+
+        if (!classSearchBtn) return;
+
+        // Bind standard click event listener instead of form submit
+        classSearchBtn.addEventListener("click", () => {
+            const queryClass = classInput.value.trim();
+            if (!queryClass) return;
+            renderClassTimetable(teachers, queryClass, daysContainer, daySelector);
+        });
+
+        // Optional: also allow pressing "Enter" key inside the input box to trigger search
+        classInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                classSearchBtn.click();
+            }
+        });
+
+    } catch (err) {
+        console.error("Initialization error:", err);
+    }
+}
+
+initApp();
+</script>
+</body>
+</html>

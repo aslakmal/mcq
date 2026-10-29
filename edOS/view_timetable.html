@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Timetable</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        .timetable-wrapper {
+            max-width: 1400px;
+            margin: auto;
+            padding: 24px;
+        }
+
+        .timetable-title {
+            margin-bottom: 22px;
+        }
+
+        .timetable-title h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .timetable-title p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Day buttons */
+
+        .day-selector {
+            display: none;
+            gap: 8px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            padding-bottom: 3px;
+        }
+
+        .day-btn {
+            border: 0;
+            background: #fff;
+            color: #64748b;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .06);
+            transition: .2s;
+        }
+
+        .day-btn.active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 5px 14px rgba(37, 99, 235, .25);
+        }
+
+        /* All days */
+
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .day-column {
+            background: #fff;
+            border-radius: 18px;
+            padding: 14px;
+            min-width: 0;
+            box-shadow: 0 3px 15px rgba(15, 23, 42, .06);
+            border: 1px solid #e8edf5;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 4px 14px;
+        }
+
+        .day-name {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .period-count {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 5px 8px;
+            border-radius: 8px;
+        }
+
+        /* Period cards */
+
+        .periods {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .period {
+            min-height: 65px;
+            padding: 10px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #edf1f6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .period-number {
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #e8f0ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .period-info {
+            min-width: 0;
+        }
+
+        .subject {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .class-name {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Empty period */
+
+        .period.empty {
+            background: #fafbfc;
+            border-style: dashed;
+            opacity: .7;
+        }
+
+        .period.empty .period-number {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        .empty-text {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Missing day */
+
+        .day-empty {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Tablet */
+
+        @media (max-width: 1000px) {
+            .days-container {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            .timetable-wrapper {
+                padding: 16px;
+            }
+
+            .timetable-title h2 {
+                font-size: 22px;
+            }
+
+            .day-selector {
+                display: flex;
+            }
+
+            .days-container {
+                display: block;
+            }
+
+            .day-column {
+                display: none;
+            }
+
+            .day-column.active {
+                display: block;
+            }
+
+            .day-column.active {
+                display: block;
+                animation: daySlideIn .28s ease both;
+            }
+
+            @keyframes daySlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(18px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="timetable-wrapper">
+
+        <div class="timetable-title">
+            <h2>Class Timetable</h2>
+            <p>Weekly class schedule</p>
+        </div>
+
+        <div class="day-selector" id="daySelector"></div>
+
+        <div class="days-container" id="daysContainer"></div>
+
+    </div>
+
+    <script>
+const timetableData = {
+    "monday": [
+        null,
+        { "c": "1A", "s": "ගණිතය" },
+        { "c": "1A", "s": "ගණිතය" },
+        null,
+        { "c": "1A", "s": "ගණිතය" },
+        null,
+        { "c": "1A", "s": "ගණිතය" },
+        { "c": "1A", "s": "ගණිතය" },
+        { "c": "1A", "s": "සිංහල" }
+    ],
+    "tuesday": [
+        null,
+        { "c": "1A", "s": "විද්‍යාව" },
+        null,
+        { "c": "1A", "s": "විද්‍යාව" }
+    ]
+};
+
+const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday"
+];
+
+const dayNames = {
+    monday: "Monday",
+    tuesday: "Tuesday",
+    wednesday: "Wednesday",
+    thursday: "Thursday",
+    friday: "Friday"
+};
+
+const daysContainer = document.getElementById("daysContainer");
+const daySelector = document.getElementById("daySelector");
+
+function getPeriods(dayData) {
+    if (!dayData) {
+        return [];
+    }
+
+    // Array format
+    // [null, {...}, {...}, null]
+    if (Array.isArray(dayData)) {
+        return dayData.map((data, index) => ({
+            period: index,
+            data: data
+        }));
+    }
+
+    // Object format
+    // {"2": {...}, "5": {...}}
+    if (typeof dayData === "object") {
+        return Object.entries(dayData).map(([period, data]) => ({
+            period: Number(period),
+            data: data
+        }));
+    }
+
+    return [];
+}
+
+function createDay(day, index) {
+    const dayData = timetableData[day];
+    const periods = getPeriods(dayData);
+
+    const column = document.createElement("div");
+    column.className = "day-column";
+    column.dataset.day = day;
+
+    if (index === 0) {
+        column.classList.add("active");
+    }
+
+    // Header
+    const header = document.createElement("div");
+    header.className = "day-header";
+
+    const name = document.createElement("div");
+    name.className = "day-name";
+    name.textContent = dayNames[day];
+
+    const count = document.createElement("div");
+    count.className = "period-count";
+
+    const assignedCount = periods.filter(
+        period => period.data
+    ).length;
+
+    count.textContent = `${assignedCount} classes`;
+
+    header.appendChild(name);
+    header.appendChild(count);
+    column.appendChild(header);
+
+    const periodsContainer = document.createElement("div");
+    periodsContainer.className = "periods";
+
+    // No data for this day
+    if (!periods.length) {
+        const empty = document.createElement("div");
+        empty.className = "day-empty";
+        empty.textContent = "No timetable data";
+        periodsContainer.appendChild(empty);
+    } else {
+        // Find the highest period number.
+        // This is important for object format.
+        const maxPeriod = Math.max(
+            ...periods.map(item => item.period)
+        );
+
+        // Create every period from 1 to max period
+        for (let i = 1; i <= maxPeriod; i++) {
+            const periodObj = periods.find(
+                item => item.period === i
+            );
+
+            const data = periodObj
+                ? periodObj.data
+                : null;
+
+            const period = document.createElement("div");
+            period.className = "period";
+
+            if (!data) {
+                period.classList.add("empty");
+            }
+
+            // Period number
+            const number = document.createElement("div");
+            number.className = "period-number";
+            number.textContent = i;
+            period.appendChild(number);
+
+            if (data) {
+                const info = document.createElement("div");
+                info.className = "period-info";
+
+                // Subject
+                const subject = document.createElement("div");
+                subject.className = "subject";
+                subject.textContent = data.s || "Unknown subject";
+
+                // Class
+                const className = document.createElement("div");
+                className.className = "class-name";
+                className.textContent = data.c || "";
+
+                info.appendChild(subject);
+                info.appendChild(className);
+                period.appendChild(info);
+            } else {
+                const emptyText = document.createElement("div");
+                emptyText.className = "empty-text";
+                emptyText.textContent = "Free";
+                period.appendChild(emptyText);
+            }
+
+            periodsContainer.appendChild(period);
+        }
+    }
+
+    column.appendChild(periodsContainer);
+    daysContainer.appendChild(column);
+}
+
+function createDayButtons() {
+    days.forEach((day, index) => {
+        const button = document.createElement("button");
+        button.className = "day-btn";
+
+        if (index === 0) {
+            button.classList.add("active");
+        }
+
+        button.textContent = dayNames[day];
+
+        button.addEventListener("click", () => {
+            if (button.classList.contains("active")) {
+                return;
+            }
+
+            document.querySelectorAll(".day-btn")
+                .forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+            document.querySelectorAll(".day-column")
+                .forEach(column => {
+                    column.classList.remove("active");
+                });
+
+            button.classList.add("active");
+
+            const selectedDay = document.querySelector(
+                `.day-column[data-day="${day}"]`
+            );
+
+            if (selectedDay) {
+                selectedDay.classList.add("active");
+            }
+        });
+
+        daySelector.appendChild(button);
+    });
+}
+
+days.forEach(createDay);
+createDayButtons();
+
+    </script>
+
+</body>
+
+</html>
