@@ -281,7 +281,7 @@ async function loadSavedSettings() {
       }
     }
   } catch (err) {
-    console.error("Failed to load saved card settings from Firebase:", err);
+    console.error("Failed to load saved card settings from Database:", err);
   }finally{
     db.goOffline()
   }

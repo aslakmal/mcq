@@ -35,7 +35,6 @@ const studentKey = urlParams.get('id');
 
   function loadFromFirebaseDirect() {
     return new Promise((resolve) => {
-      console.log("Fetching student directly from Firebase...");
       
       // Bring database online just for this fetch
       db.goOnline();
@@ -50,12 +49,12 @@ const studentKey = urlParams.get('id');
             populateForm(decodedData);
             resolve(decodedData);
           } else {
-            console.warn("Student not found in Firebase.");
+            console.warn("Student not found in DB.");
             resolve(null);
           }
         })
         .catch((error) => {
-          console.error("Error fetching student from Firebase:", error);
+          console.error("Error fetching student from DB:", error);
           resolve(null);
         })
         .finally(() => {

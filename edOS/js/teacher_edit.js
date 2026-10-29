@@ -195,7 +195,6 @@ function loadFromFirebaseDirect() {
   setFormDisabled(true);
   
   return new Promise(async (resolve) => {
-    console.log("Fetching user directly from Firebase...");
     
     // Bring database online just for this fetch
   
@@ -211,11 +210,11 @@ function loadFromFirebaseDirect() {
         populateForm(decodedData);
         resolve(decodedData);
       } else {
-        console.warn("User not found in Firebase.");
+        console.warn("User not found in DB.");
         resolve(null);
       }
     } catch (error) {
-      console.error("Error fetching from Firebase:", error);
+      console.error("Error fetching from DB:", error);
       resolve(null);
     } finally {
       // Go offline immediately after fetch to reduce simultaneous connections
