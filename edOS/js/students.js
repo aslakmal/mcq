@@ -81,7 +81,7 @@ async function renderStudentTable(students) {
 
   const filtered = students.filter(s => {
     const matchesNameOrId = !searchTerm ||
-      (s.fullName && s.fullName.toLowerCase().includes(searchTerm)) ||
+      (s.name && s.name.toLowerCase().includes(searchTerm)) ||
       (s.id && s.id.toLowerCase().includes(searchTerm));
 
     let matchesClass = true;
@@ -132,9 +132,9 @@ async function renderStudentTable(students) {
           </td>-->
           <td data-label="Student">
             <div class="student-info" onclick="openDetails('${key}','${schoolId}')">
-              <img src="${photoUrl}" class="avatar" alt="${escapeHtml(s.fullName)}">
+              <img src="${photoUrl}" class="avatar" alt="${escapeHtml(s.name)}">
               <div>
-                <strong>${escapeHtml(s.fullName)}</strong>
+                <strong>${escapeHtml(s.name)}</strong>
               </div>
             </div>
           </td>
@@ -186,7 +186,7 @@ async function renderStudentTable(students) {
         </svg>
     </a>
 
-    <button onclick="confirmDelete('${key}', '${escapeHtml(s.fullName)}')"
+    <button onclick="confirmDelete('${key}', '${escapeHtml(s.name)}')"
             class="action-btn delete"
             title="Delete">
         <svg viewBox="0 0 24 24">
@@ -352,7 +352,7 @@ function getSelectedStudents() {
   
     return students.filter(s => {
       const matchesNameOrId = !searchTerm ||
-        (s.fullName && s.fullName.toLowerCase().includes(searchTerm)) ||
+        (s.name && s.name.toLowerCase().includes(searchTerm)) ||
         (s.id && s.id.toLowerCase().includes(searchTerm));
   
       const matchesClass = !classTerm ||
@@ -411,9 +411,9 @@ console.log(selectedList)
     return `
     <div class="score-list-item" data-id="${key}">
       <div class="score-student-detail">
-        <img src="${photoUrl}" class="avatar" alt="${escapeHtml(s.fullName)}">
+        <img src="${photoUrl}" class="avatar" alt="${escapeHtml(s.name)}">
         <div>
-          <strong>${escapeHtml(s.fullName)}</strong>
+          <strong>${escapeHtml(s.name)}</strong>
           <div style="font-size: 0.78rem; color: #718096;">ID: ${escapeHtml(s.id || 'N/A')}</div>
         </div>
       </div>
@@ -687,7 +687,7 @@ async function openIdCardModalByKey(key, btnElement) {
   // 1. Static Front Header Elements
   document.getElementById('cardSchoolFront').innerText = schoolDetails.schoolName || 'SCHOOL';
   document.getElementById('cardPhoto').src = student.photoUrl ? getFullCloudinaryUrl(student.photoUrl)+'?c' : 'img/user.svg';
-  document.getElementById('cardName').innerText = student.fullName || '';
+  document.getElementById('cardName').innerText = student.name || '';
 
   // 2. Get saved active fields from schoolDetails (with fallbacks if not yet saved)
   const frontFields = schoolDetails.frontFields || ['i', 'b', 'h'];  // default: admissionNo, dob, class
@@ -701,7 +701,7 @@ async function openIdCardModalByKey(key, btnElement) {
       if (!fieldName) return '';
 
       const label = formatLabel(fieldName);
-      // Handles both long key (fullName) and short key ('a') fallback in student object
+      // Handles both long key (name) and short key ('a') fallback in student object
       const value = student[fieldName] ?? student[shortKey] ?? '-';
 
       return `

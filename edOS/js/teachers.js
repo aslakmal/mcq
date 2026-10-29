@@ -32,7 +32,7 @@ function renderTeacherTable(teachers) {
   const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
 
   const filtered = teachers.filter(t => 
-    (t.fullName && t.fullName.toLowerCase().includes(searchTerm)) ||
+    (t.name && t.name.toLowerCase().includes(searchTerm)) ||
     (t.subject && t.subject.toLowerCase().includes(searchTerm)) ||
     (t.classes && t.classes.toLowerCase().includes(searchTerm))
   );
@@ -60,9 +60,9 @@ function renderTeacherTable(teachers) {
       <tr>
         <td data-label="Teacher">
           <div class="teacher-info">
-            <img src="${photoUrl}" class="avatar" alt="${t.fullName}">
+            <img src="${photoUrl}" class="avatar" alt="${t.name}">
             <div>
-              <strong>${escapeHtml(t.fullName)}</strong><br>
+              <strong>${escapeHtml(t.name)}</strong><br>
               <small style="color: #718096;">${escapeHtml(t.qualification || '')}</small>
             </div>
           </div>
@@ -91,7 +91,7 @@ function renderTeacherTable(teachers) {
         </svg>
     </button>
 
-    <button onclick="confirmDelete('${key}', '${escapeHtml(t.fullName)}')"
+    <button onclick="confirmDelete('${key}', '${escapeHtml(t.name)}')"
             class="action-btn delete"
             title="Delete">
         <svg viewBox="0 0 24 24">
@@ -157,7 +157,7 @@ function openIdCardModalByKey(key) {
 
   document.getElementById('cardSchoolFront').innerText = schoolId.toUpperCase();
   document.getElementById('cardPhoto').src = teacher.photoUrl || 'img/user.svg';
-  document.getElementById('cardName').innerText = teacher.fullName || '';
+  document.getElementById('cardName').innerText = teacher.name || '';
   document.getElementById('cardSubject').innerText = teacher.subject || '';
   document.getElementById('cardTeacherId').innerText = teacher.teacherId || '';
 

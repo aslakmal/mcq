@@ -118,7 +118,7 @@ let detailsChartInstance = null;
     });
   }
   
-// Helper to convert camelCase keys (e.g., "fullName", "fatherNic") to Title Case ("Full Name", "Father Nic")
+// Helper to convert camelCase keys (e.g., "name", "fatherNic") to Title Case ("Full Name", "Father Nic")
 function camelToTitle(str) {
     return str
       // Insert a space before capital letters
@@ -214,10 +214,10 @@ function camelToTitle(str) {
     const colorPalette = [
       { start: '#3b82f6', end: '#1d4ed8' },
       { start: '#22c55e', end: '#15803d' },
-      { start: '#a855f7', end: '#7e22ce' },
-      { start: '#ef4444', end: '#b91c1c' },
-      { start: '#14b8a6', end: '#0f766e' },
       { start: '#f97316', end: '#c2410c' },
+      { start: '#14b8a6', end: '#0f766e' },
+      { start: '#ef4444', end: '#b91c1c' },
+      { start: '#a855f7', end: '#7e22ce' },
       { start: '#ec4899', end: '#be185d' },
       { start: '#1e3a8a', end: '#0f172a' },
       { start: '#78716c', end: '#44403c' },
@@ -244,7 +244,7 @@ function camelToTitle(str) {
         label: semLabel,
         data: scores,
         backgroundColor: barGradient,
-        borderRadius: 5,        // 5px rounded corners
+        borderRadius: 1,        // 5px rounded corners
         borderSkipped: false    // Rounds all corners evenly
       });
 

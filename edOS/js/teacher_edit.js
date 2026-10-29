@@ -37,7 +37,7 @@ function populateForm(teacherData){
 
 // 4. Auto-populate form fields
 
-document.getElementById('fullName').value = teacherData.fullName || '';
+document.getElementById('name').value = teacherData.name || '';
 document.getElementById('dob').value = teacherData.dob || '';
 document.getElementById('gender').value = teacherData.gender || '';
 document.getElementById('subject').value = teacherData.subject || '';
@@ -153,7 +153,7 @@ document.getElementById('editTeacherForm').addEventListener('submit', async (e) 
     }
 
     const updatedData = {
-      fullName: document.getElementById('fullName').value,
+      name: document.getElementById('name').value,
       dob: document.getElementById('dob').value,
       gender: document.getElementById('gender').value,
       nic: document.getElementById('nic').value,                        
@@ -173,7 +173,7 @@ document.getElementById('editTeacherForm').addEventListener('submit', async (e) 
       school: schoolId
     };
 
-// Map human-readable long keys to Firebase short keys (e.g., fullName -> a, updatedAt -> A)
+// Map human-readable long keys to Firebase short keys (e.g., name -> a, updatedAt -> A)
 const shortPayload = mapUserToFirebase(updatedData);
 // Update Firebase with short keys
 await db.ref(`schools/${schoolId}/users/${teacherKey}`).update(shortPayload);

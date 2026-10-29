@@ -76,7 +76,7 @@ auth.onAuthStateChanged(async (user) => {
       if (!userRes.ok) throw new Error(`HTTP error status: ${userRes.status}`);
       
       const userData = await userRes.json();
-      
+      console.log(userData)
       instituteType = userData.instituteType || '';
       localStorage.setItem('instituteType', instituteType);
       if (instituteType === 'school') {
@@ -99,7 +99,7 @@ auth.onAuthStateChanged(async (user) => {
        
 
         document.getElementById('userWelcomeText').innerText =
-          `Logged in as: ${userData.fullName}`;
+          `Logged in as: ${userData.name}`;
 
         authLoading.style.display = 'none';
         adminDashboard.style.display = 'block';
@@ -142,7 +142,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('signupEmail').value.trim().toLowerCase();
   const password = document.getElementById('signupPassword').value;
-  const fullName = document.getElementById('signupName').value.trim();
+  const name = document.getElementById('signupName').value.trim();
   
   // 1. Get the new type input value (e.g., 'school' or 'tuition')
   const instituteType = document.querySelector('input[name="signupType"]:checked').value;
@@ -183,7 +183,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
     // 2. Save schoolId AND the new 'type' into Realtime Database under schools/$schoolId/users/$uid
     await db.ref(`schools/${fetchedSchoolId}/users/${user.uid}`).set({
-      fullName: fullName,
+      name: name,
       email: email,
       role: 'principal',
       schoolId: fetchedSchoolId,
@@ -263,7 +263,7 @@ const editForm = document.getElementById('editSchoolForm');
 editBtn.addEventListener('click', async () => {
   if (!currentUserData || !syncEngine) return;
 
-  document.getElementById('modalPrincipalName').value = currentUserData.fullName || '';
+  document.getElementById('modalPrincipalName').value = currentUserData.name || '';
   
   // Reset pending blobs when opening modal
   pendingLogoBlob = null;
@@ -345,9 +345,9 @@ if (editForm) {
       });
   
       // 2. Update principal name in DB if changed
-      if (principalName !== currentUserData.fullName) {
-        await db.ref(`schools/${schoolId}/users/${currentUid}`).update({ fullName: principalName });
-        currentUserData.fullName = principalName;
+      if (principalName !== currentUserData.name) {
+        await db.ref(`schools/${schoolId}/users/${currentUid}`).update({ name: principalName });
+        currentUserData.name = principalName;
         document.getElementById('userWelcomeText').innerText = `Logged in as: ${principalName}`;
       }
   

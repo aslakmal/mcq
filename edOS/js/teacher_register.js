@@ -123,7 +123,7 @@ if (!schoolId) {
 
       // 4. Prepare human-readable teacher data
       const teacherData = {
-        fullName: document.getElementById('fullName').value,
+        name: document.getElementById('name').value,
         dob: document.getElementById('dob').value,
         gender: document.getElementById('gender').value,
         nic: document.getElementById('nic').value,                   

@@ -73,7 +73,7 @@ if (!data){
   return;
 }
 currentStudentData=data;
-document.getElementById('fullName').value = data.fullName || '';
+document.getElementById('name').value = data.name || '';
 document.getElementById('dob').value = data.dob || '';
 
 // Gender Radio Button (mapped from key: 'gender')
@@ -174,7 +174,7 @@ photoUrl = getCloudinaryPath(photoUrl);
 const rawUpdatedStudent = {
 ...(currentStudentData || {}),
 
-fullName: getValue('fullName'),
+name: getValue('name'),
 dob: getValue('dob'),
 gender: document.querySelector('input[name="gender"]:checked')?.value || '',
 studentContact: await encryptField(getValue('studentContact')),

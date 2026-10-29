@@ -76,7 +76,7 @@
           throw new Error("This teacher account has already been activated. Please log in.");
         }
 
-        if (nameInput) nameInput.value = pendingTeacherData.fullName || "Teacher";
+        if (nameInput) nameInput.value = pendingTeacherData.name || "Teacher";
         if (emailInput && pendingTeacherData.email) {
           emailInput.value = pendingTeacherData.email;
         }
@@ -132,7 +132,7 @@
             }
 
             document.getElementById('userWelcomeText').innerText =
-              `Logged in as: ${userData.fullName} (Teacher)`;
+              `Logged in as: ${userData.name} (Teacher)`;
 
             authLoading.style.display = 'none';
             teacherDashboard.style.display = 'block';

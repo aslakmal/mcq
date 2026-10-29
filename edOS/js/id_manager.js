@@ -47,7 +47,7 @@ const DEFAULT_BACK_KEYS = ['e', 'f', 'd', 'g'];  // fatherName, motherName, stud
 
 // Sample Data for Live Card Preview
 const SAMPLE_PREVIEW_DATA = {
-  fullName: "PATHIRANA MUDALIGE DON KAVINDU LAKSHAN",
+  name: "KAVINDU LAKSHAN",
   dob: "14/08/2012",
   gender: "Male",
   studentContact: "0712345678",

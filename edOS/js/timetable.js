@@ -27,7 +27,7 @@ async function getTimetableContextData() {
 
     const teachersArray = rawTeachersCache.map(teacher => {
         const teacherId = teacher.id || teacher.uid;
-        const fullName = teacher.fullName || teacher.name || teacherId;
+        const name = teacher.name || teacher.name || teacherId;
         const photoUrl = teacher.photoUrl || "img/user.svg";
 
         let assignedPeriods = [];
@@ -43,7 +43,7 @@ async function getTimetableContextData() {
 
         return {
             id: teacherId,
-            fullName: fullName,
+            name: name,
             photoUrl: photoUrl,
             dailyLoad: assignedPeriods.join(', ') || '0',
             subjects: teacher.subjects || teacher.subject || "",
@@ -170,7 +170,7 @@ async function loadTimetableInterface() {
         state.subjects.forEach((subj, subIndex) => {
             const currentAssignedTeacherId = state.teachers[subIndex] || "";
             const assignedTeacherObj = teachersArray.find(t => t.id === currentAssignedTeacherId);
-            const displayTeacherName = assignedTeacherObj ? assignedTeacherObj.fullName : "-- Select Teacher --";
+            const displayTeacherName = assignedTeacherObj ? assignedTeacherObj.name : "-- Select Teacher --";
             const displayTeacherAvatar = assignedTeacherObj ? assignedTeacherObj.photoUrl : "img/user.svg";
 
             periodHtml += `
@@ -331,7 +331,7 @@ async function updateSinglePeriodDOM(periodIndex) {
     state.subjects.forEach((subj, subIndex) => {
         const currentAssignedTeacherId = state.teachers[subIndex] || "";
         const assignedTeacherObj = teachersArray.find(t => t.id === currentAssignedTeacherId);
-        const displayTeacherName = assignedTeacherObj ? assignedTeacherObj.fullName : "-- Select Teacher --";
+        const displayTeacherName = assignedTeacherObj ? assignedTeacherObj.name : "-- Select Teacher --";
         const displayTeacherAvatar = assignedTeacherObj ? assignedTeacherObj.photoUrl : "img/user.svg";
 
         html += `
@@ -401,10 +401,10 @@ function renderTeacherOptionsMarkup(teachersArray, dayKey, periodIndex, currentT
         const isSpecialist = activeSubject && (teacher.subjects || teacher.subject || "").toLowerCase().includes(activeSubject);
         const specialistBadge = isSpecialist ? ' ⭐' : '';
         return `
-            <div class="dropdown-option" data-teacher-id="${teacher.id}" onclick="selectTeacher(${periodIndex}, this.closest('.slot-row-item').getAttribute('data-sub-index'), '${teacher.id}', '${teacher.fullName.replace(/'/g, "\\'")}', '${teacher.photoUrl}')">
+            <div class="dropdown-option" data-teacher-id="${teacher.id}" onclick="selectTeacher(${periodIndex}, this.closest('.slot-row-item').getAttribute('data-sub-index'), '${teacher.id}', '${teacher.name.replace(/'/g, "\\'")}', '${teacher.photoUrl}')">
                 <img src="${teacher.photoUrl}" alt="">
                 <div class="option-infoT">
-                    <span class="option-title">${teacher.fullName}${specialistBadge}</span>
+                    <span class="option-title">${teacher.name}${specialistBadge}</span>
                     <span class="option-sub">${teacher.dailyLoad} period(s) teaching(today)</span>
                 </div>
             </div>

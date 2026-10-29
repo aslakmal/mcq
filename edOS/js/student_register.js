@@ -163,7 +163,7 @@ if (!schoolId) {
 
       // 1. Build student object using clean, human-readable keys
       const rawStudentData = {
-        fullName: getValue('fullName'),
+        name: getValue('name'),
         dob: getValue('dob'),
         gender: document.querySelector('input[name="gender"]:checked')?.value || '',
         studentContact: await encryptField(getValue('studentContact')),
