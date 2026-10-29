@@ -576,6 +576,11 @@
                 tbody.appendChild(tr);
             });
         }
+        const params = new URLSearchParams(window.location.search);
+
+if (params.get('school') === 'choola') {
+    document.getElementById('classInput').value = '6A';
+}
     </script>
 </body>
 
