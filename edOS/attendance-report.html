@@ -362,7 +362,7 @@
             <div class="controls-grid">
                 <div class="form-group">
                     <label>Select Class</label>
-                    <input type="text" id="reportClassInput" style="text-transform: uppercase;" name="class">
+                    <input type="text" id="classInput" style="text-transform: uppercase;" name="class">
                 </div>
                 <div class="form-group">
                     <label>Select Year</label>
@@ -468,7 +468,7 @@
 
         // Load and Render Attendance Matrix Report
         async function loadAttendanceReport() {
-            const className = document.getElementById('reportClassInput').value.trim().toUpperCase();
+            const className = document.getElementById('classInput').value.trim().toUpperCase();
             const selectedYear = document.getElementById('reportYearSelect').value;
 
             if (!className) {
