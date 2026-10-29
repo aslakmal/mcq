@@ -1,9 +1,307 @@
-function renderTimetable(u,v,h){var e=["monday","tuesday","wednesday","thursday","friday"];const f={monday:"Monday",tuesday:"Tuesday",wednesday:"Wednesday",thursday:"Thursday",friday:"Friday"};if(v&&h)if(!u||"object"!=typeof u||Array.isArray(u))v.innerHTML=`
+function renderTimetable(timetableData, daysContainer, daySelector) {
+
+    const days = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+    ];
+
+    const dayNames = {
+        monday: "Monday",
+        tuesday: "Tuesday",
+        wednesday: "Wednesday",
+        thursday: "Thursday",
+        friday: "Friday"
+    };
+
+
+    if (!daysContainer || !daySelector) {
+        return;
+    }
+
+
+    if (
+        !timetableData ||
+        typeof timetableData !== "object" ||
+        Array.isArray(timetableData)
+    ) {
+        daysContainer.innerHTML = `
             <div class="day-empty">
                 Free
             </div>
-        `,h.innerHTML="";else{v.innerHTML="",h.innerHTML="";let y=0;function C(e){return e?Array.isArray(e)?e.map((e,a)=>({period:a,data:e})):"object"==typeof e?Object.entries(e).map(([e,a])=>({period:Number(e),data:a})).filter(e=>!isNaN(e.period)):[]:[]}e.forEach(e=>{var e=C(u[e]);e.length&&(e=Math.max(...e.map(e=>e.period)),y=Math.max(y,e))}),0===y?v.innerHTML=`
+        `;
+
+        daySelector.innerHTML = "";
+
+        return;
+    }
+
+
+    daysContainer.innerHTML = "";
+    daySelector.innerHTML = "";
+
+
+    function getPeriods(dayData) {
+
+        if (!dayData) {
+            return [];
+        }
+
+
+        // Array format
+        if (Array.isArray(dayData)) {
+
+            return dayData.map((data, index) => ({
+                period: index,
+                data: data
+            }));
+
+        }
+
+
+        // Object format
+        if (typeof dayData === "object") {
+
+            return Object.entries(dayData)
+                .map(([period, data]) => ({
+                    period: Number(period),
+                    data: data
+                }))
+                .filter(item => !isNaN(item.period));
+
+        }
+
+
+        return [];
+    }
+
+
+    /*
+     * First find the maximum period
+     * used by any day.
+     */
+    let maxPeriods = 0;
+
+
+    days.forEach(day => {
+
+        const periods = getPeriods(
+            timetableData[day]
+        );
+
+        if (periods.length) {
+
+            const dayMax = Math.max(
+                ...periods.map(item => item.period)
+            );
+
+            maxPeriods = Math.max(
+                maxPeriods,
+                dayMax
+            );
+        }
+    });
+
+
+    /*
+     * No periods anywhere
+     */
+    if (maxPeriods === 0) {
+
+        daysContainer.innerHTML = `
             <div class="day-empty">
                 Free
             </div>
-        `:e.forEach((a,e)=>{var t=C(u[a]),d=document.createElement("div"),n=(d.className="day-column",d.dataset.day=a,0===e&&d.classList.add("active"),document.createElement("div")),s=(n.className="day-header",document.createElement("div")),c=(s.className="day-name",s.textContent=f[a],t.filter(e=>e.data).length,n.appendChild(s),d.appendChild(n),document.createElement("div"));c.className="periods";for(let a=1;a<=y;a++){var i,r,l=t.find(e=>e.period===a),l=l?l.data:null,m=document.createElement("div"),o=(m.className="period",l||m.classList.add("empty"),document.createElement("div"));o.className="period-number",o.textContent=a,m.appendChild(o),l?((o=document.createElement("div")).className="period-info",(i=document.createElement("div")).className="subject",i.textContent=l.s||"Unknown subject",(r=document.createElement("div")).className="class-name",r.textContent=l.c||"",o.appendChild(i),o.appendChild(r),m.appendChild(o)):((l=document.createElement("div")).className="empty-text",l.textContent="Free",m.appendChild(l)),c.appendChild(m)}d.appendChild(c),v.appendChild(d);const p=document.createElement("button");p.className="day-btn",0===e&&p.classList.add("active"),p.textContent=f[a],p.addEventListener("click",()=>{var e;!p.classList.contains("active")&&(h.querySelectorAll(".day-btn").forEach(e=>{e.classList.remove("active")}),v.querySelectorAll(".day-column").forEach(e=>{e.classList.remove("active")}),p.classList.add("active"),e=v.querySelector(`.day-column[data-day="${a}"]`))&&e.classList.add("active")}),h.appendChild(p)})}}
+        `;
+
+        return;
+    }
+
+
+    /*
+     * Render all five days
+     */
+    days.forEach((day, dayIndex) => {
+
+        const dayData = timetableData[day];
+
+        const periods = getPeriods(dayData);
+
+
+        const column = document.createElement("div");
+
+        column.className = "day-column";
+        column.dataset.day = day;
+
+
+        if (dayIndex === 0) {
+            column.classList.add("active");
+        }
+
+
+        // Header
+        const header = document.createElement("div");
+
+        header.className = "day-header";
+
+
+        const name = document.createElement("div");
+
+        name.className = "day-name";
+        name.textContent = dayNames[day];
+
+
+        const assignedCount = periods.filter(
+            item => item.data
+        ).length;
+        header.appendChild(name);
+/*
+        const count = document.createElement("div");
+
+        count.className = "period-count";
+        count.textContent = `${assignedCount} classes`;
+
+
+        
+        header.appendChild(count);
+*/
+        column.appendChild(header);
+
+
+        // Period container
+        const periodsContainer = document.createElement("div");
+
+        periodsContainer.className = "periods";
+
+
+        /*
+         * Always render maxPeriods.
+         */
+        for (let i = 1; i <= maxPeriods; i++) {
+
+            const periodObj = periods.find(
+                item => item.period === i
+            );
+
+
+            const data = periodObj
+                ? periodObj.data
+                : null;
+
+
+            const period = document.createElement("div");
+
+            period.className = "period";
+
+
+            if (!data) {
+                period.classList.add("empty");
+            }
+
+
+            // Period number
+            const number = document.createElement("div");
+
+            number.className = "period-number";
+            number.textContent = i;
+
+            period.appendChild(number);
+
+
+            if (data) {
+
+                const info = document.createElement("div");
+
+                info.className = "period-info";
+
+
+                const subject = document.createElement("div");
+
+                subject.className = "subject";
+                subject.textContent =
+                    data.s || "Unknown subject";
+
+
+                const className = document.createElement("div");
+
+                className.className = "class-name";
+                className.textContent = data.c || "";
+
+
+                info.appendChild(subject);
+                info.appendChild(className);
+
+                period.appendChild(info);
+
+            } else {
+
+                const emptyText = document.createElement("div");
+
+                emptyText.className = "empty-text";
+                emptyText.textContent = "Free";
+
+                period.appendChild(emptyText);
+            }
+
+
+            periodsContainer.appendChild(period);
+        }
+
+
+        column.appendChild(periodsContainer);
+
+        daysContainer.appendChild(column);
+
+
+        // Mobile day button
+        const button = document.createElement("button");
+
+        button.className = "day-btn";
+
+        if (dayIndex === 0) {
+            button.classList.add("active");
+        }
+
+        button.textContent = dayNames[day];
+
+
+        button.addEventListener("click", () => {
+
+            if (button.classList.contains("active")) {
+                return;
+            }
+
+
+            daySelector.querySelectorAll(".day-btn")
+                .forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+
+            daysContainer.querySelectorAll(".day-column")
+                .forEach(item => {
+                    item.classList.remove("active");
+                });
+
+
+            button.classList.add("active");
+
+
+            const selectedDay =
+                daysContainer.querySelector(
+                    `.day-column[data-day="${day}"]`
+                );
+
+
+            if (selectedDay) {
+                selectedDay.classList.add("active");
+            }
+        });
+
+
+        daySelector.appendChild(button);
+    });
+}
+

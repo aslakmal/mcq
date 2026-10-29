@@ -1,102 +1,554 @@
-let cachedTeachers=[];const multiSelectStates={};let pressTimer=null;async function initApp(){try{await syncEngine.initIndexedDB(),navigator.onLine&&await syncEngine.syncUsers()}catch(e){console.error("Initialization error:",e)}}async function getTimetableContextData(){var e=("function"==typeof getSetting?await getSetting():{})?.exams?.subjects,e=Array.isArray(e)?e:Object.keys(e||{}),t="undefined"!=typeof syncEngine?await syncEngine.getLocalUsersByRole("teacher"):[];const n=document.getElementById("daySelect").value,i=document.getElementById("classInput").value.trim().toUpperCase();t=t.map(e=>{var t=e.id||e.uid,s=e.fullName||e.name||t,a=e.photoUrl||"img/user.svg";let i=[];return e.timetable&&e.timetable[n]&&Object.entries(e.timetable[n]).forEach(([e,t])=>{e=parseInt(e,10);!isNaN(e)&&0<e&&null!==t&&"object"==typeof t&&i.push(e)}),i.sort((e,t)=>e-t),{id:t,fullName:s,photoUrl:a,dailyLoad:i.join(", ")||"0",subjects:e.subjects||e.subject||"",timetable:e.timetable||{}}});const c={};return t.forEach(e=>{for(const s in e.timetable)for(const a in e.timetable[s]){var t=e.timetable[s][a];t&&String(t.c).trim().toUpperCase()===i&&t.s&&(c[t.s]=(c[t.s]||0)+1)}}),{subjectList:e,teachersArray:t,subjectWorkloadMap:c,selectedDay:n,selectedClass:i}}async function loadTimetableInterface(){let{subjectList:e,teachersArray:o,subjectWorkloadMap:a,selectedDay:l,selectedClass:r}=await getTimetableContextData();var t=parseInt(document.getElementById("totalPeriods").value)||8,s=document.getElementById("timetableGrid");s.innerHTML="";const i={};o.forEach(e=>{if(e.timetable&&e.timetable[l])for(const a in e.timetable[l]){var t,s=parseInt(a,10);isNaN(s)||s<=0||(t=e.timetable[l][a])&&"object"==typeof t&&t.c&&String(t.c).trim().toUpperCase()===r&&(i[s]||(i[s]=[]),i[s].push({teacherId:e.id,subject:t.s}))}});for(let c=1;c<=t;c++){var d=i[c]&&0<i[c].length?i[c]:[{teacherId:"",subject:""}],p=[...new Set(d.map(e=>e.subject).filter(Boolean))],d=d.map(e=>e.teacherId);multiSelectStates[c]={active:1<p.length,subjects:0<p.length?p:[""],teachers:0<d.length?d:[""]};const m=multiSelectStates[c];var p=document.createElement("div"),d=(p.className="period-box",p.id="period-box-"+c,p.style.animationDelay=70*(c-1)+"ms",1===m.subjects.length&&m.subjects[0]?m.subjects[0]:1<m.subjects.length?m.subjects.length+" Subjects Selected":"-- Select Subject --"),u=m.active?"multi-select-active border-primary":"";let n=`
-            <h4>Period ${c}</h4>
+let cachedTeachers = [];
+const multiSelectStates = {}; 
+let pressTimer = null;
+let changed=false;
+async function initApp() {
+    try {
+        await syncEngine.initIndexedDB();
+        if (navigator.onLine) {
+            await syncEngine.syncUsers();
+        }
+    } catch (err) {
+        console.error("Initialization error:", err);
+    }
+
+}
+initApp();
+
+// Helper to fetch and normalize teachers and workloads cleanly
+async function getTimetableContextData() {
+    const schoolData = typeof getSetting === 'function' ? await getSetting() : {};
+    const subjectListSource = schoolData?.exams?.subjects;
+    const subjectList = Array.isArray(subjectListSource) ? subjectListSource : Object.keys(subjectListSource || {});
+
+    const rawTeachersCache = typeof syncEngine !== 'undefined' ? await syncEngine.getLocalUsersByRole('teacher') : [];
+    const selectedDay = document.getElementById("daySelect").value;
+    const selectedClass = document.getElementById("classInput").value.trim().toUpperCase();
+
+    const teachersArray = rawTeachersCache.map(teacher => {
+        const teacherId = teacher.id || teacher.uid;
+        const fullName = teacher.fullName || teacher.name || teacherId;
+        const photoUrl = teacher.photoUrl || "img/user.svg";
+
+        let assignedPeriods = [];
+        if (teacher.timetable && teacher.timetable[selectedDay]) {
+            Object.entries(teacher.timetable[selectedDay]).forEach(([periodKey, slotData]) => {
+                const periodNum = parseInt(periodKey, 10);
+                if (!isNaN(periodNum) && periodNum > 0 && slotData !== null && typeof slotData === 'object') {
+                    assignedPeriods.push(periodNum);
+                }
+            });
+        }
+        assignedPeriods.sort((a, b) => a - b);
+
+        return {
+            id: teacherId,
+            fullName: fullName,
+            photoUrl: photoUrl,
+            dailyLoad: assignedPeriods.join(', ') || '0',
+            subjects: teacher.subjects || teacher.subject || "",
+            timetable: teacher.timetable || {}
+        };
+    });
+
+    const subjectWorkloadMap = {};
+    teachersArray.forEach(teacher => {
+        for (const dayKey in teacher.timetable) {
+            for (const periodKey in teacher.timetable[dayKey]) {
+                const slotData = teacher.timetable[dayKey][periodKey];
+                if (slotData && String(slotData.c).trim().toUpperCase() === selectedClass && slotData.s) {
+                    subjectWorkloadMap[slotData.s] = (subjectWorkloadMap[slotData.s] || 0) + 1;
+                }
+            }
+        }
+    });
+
+    return { subjectList, teachersArray, subjectWorkloadMap, selectedDay, selectedClass };
+}
+
+// Main interface loader (Called on page load, Submit button click, and after saving to Firebase)
+async function loadTimetableInterface() {
+    const { subjectList, teachersArray, subjectWorkloadMap, selectedDay, selectedClass } = await getTimetableContextData();
+    const totalPeriodsCount = parseInt(document.getElementById("totalPeriods").value) || 8;
+    const gridContainer = document.getElementById("timetableGrid");
+
+    gridContainer.innerHTML = "";
+
+    // Clear or reset multiSelectStates when loading a new class/day to prevent stale cache!
+    // (Alternatively, you can clear it completely: Object.keys(multiSelectStates).forEach(k => delete multiSelectStates[k]);)
+    
+    const currentClassAssignments = {}; 
+    teachersArray.forEach(teacher => {
+        if (teacher.timetable && teacher.timetable[selectedDay]) {
+            for (const periodKey in teacher.timetable[selectedDay]) {
+                const periodNum = parseInt(periodKey, 10);
+                if (isNaN(periodNum) || periodNum <= 0) continue;
+
+                const slotData = teacher.timetable[selectedDay][periodKey];
+                if (slotData && typeof slotData === 'object' && slotData.c) {
+                    const slotClassNormalized = String(slotData.c).trim().toUpperCase();
+                    if (slotClassNormalized === selectedClass) {
+                        if (!currentClassAssignments[periodNum]) {
+                            currentClassAssignments[periodNum] = [];
+                        }
+                        currentClassAssignments[periodNum].push({
+                            teacherId: teacher.id,
+                            subject: slotData.s
+                        });
+                    }
+                }
+            }
+        }
+    });
+
+    for (let periodIndex = 1; periodIndex <= totalPeriodsCount; periodIndex++) {
+        const assignments = (currentClassAssignments[periodIndex] && currentClassAssignments[periodIndex].length > 0) 
+            ? currentClassAssignments[periodIndex] 
+            : [{ teacherId: "", subject: "" }];
+
+        // Force reset state for this period based on the newly selected class/day assignments
+        const initialSubjects = [...new Set(assignments.map(a => a.subject).filter(Boolean))];
+        const initialTeachers = assignments.map(a => a.teacherId);
+        
+        multiSelectStates[periodIndex] = {
+            active: initialSubjects.length > 1,
+            subjects: initialSubjects.length > 0 ? initialSubjects : [""],
+            teachers: initialTeachers.length > 0 ? initialTeachers : [""]
+        };
+
+        const state = multiSelectStates[periodIndex];
+
+        const periodBox = document.createElement("div");
+        periodBox.className = "period-box";
+        periodBox.id = `period-box-${periodIndex}`;
+        periodBox.style.animationDelay = `${(periodIndex - 1) * 70}ms`;
+
+        const primarySubjectText = state.subjects.length === 1 && state.subjects[0] ? state.subjects[0] : (state.subjects.length > 1 ? `${state.subjects.length} Subjects Selected` : "-- Select Subject --");
+        const multiSelectClass = state.active ? 'multi-select-active border-primary' : '';
+
+        let periodHtml = `
+            <h4>Period ${periodIndex}</h4>
             
             <div class="slot-group">
                 <label>Subject</label>
-                <div class="custom-dropdown ${u}" id="subject-dropdown-${c}">
-                    <div class="dropdown-selected" onclick="toggleDropdown('subject_${c}', 0)">
-                        <span id="subject-selected-text-${c}">${d}</span>
+                <div class="custom-dropdown ${multiSelectClass}" id="subject-dropdown-${periodIndex}">
+                    <div class="dropdown-selected" onclick="toggleDropdown('subject_${periodIndex}', 0)">
+                        <span id="subject-selected-text-${periodIndex}">${primarySubjectText}</span>
                         <span>▼</span>
                     </div>
-                    <div class="dropdown-options" id="subject_${c}-options-0" style="display:none;">
-                        <div class="dropdown-option" onclick="selectSubjectOption(${c}, '')">
+                    <div class="dropdown-options" id="subject_${periodIndex}-options-0" style="display:none;">
+                        <div class="dropdown-option" onclick="selectSubjectOption(${periodIndex}, '')">
                             <div class="option-info"><span class="option-title">-- None --</span></div>
                         </div>
-                        ${e.map(e=>{var t=a[e]||0,s=m.subjects.includes(e);return`
+                        ${subjectList.map(subjectName => {
+                            const weeklyCount = subjectWorkloadMap[subjectName] || 0;
+                            const isChecked = state.subjects.includes(subjectName);
+                            return `
                                 <div class="dropdown-option" 
-                                     onmousedown="startLongPress(${c}, event)" 
+                                     onmousedown="startLongPress(${periodIndex}, event)" 
                                      onmouseup="cancelLongPress()" 
-                                     ontouchstart="startLongPress(${c}, event)" 
+                                     ontouchstart="startLongPress(${periodIndex}, event)" 
                                      ontouchend="cancelLongPress()" 
-                                     onclick="selectSubjectOption(${c}, '${e}')">
+                                     onclick="selectSubjectOption(${periodIndex}, '${subjectName}')">
                                     <div class="option-infoS">
-                                    ${m.active?`<input type="checkbox" ${s?"checked":""} style="pointer-events: none;" />`:""}
+                                    ${state.active ? `<input type="checkbox" ${isChecked ? 'checked' : ''} style="pointer-events: none;" />` : ''}
                                     <div>
-                                            <span class="option-title">${e}</span>
-                                            <span class="option-sub">${t} periods learning(week)</span>
+                                            <span class="option-title">${subjectName}</span>
+                                            <span class="option-sub">${weeklyCount} periods learning(week)</span>
                                         </div>
                                     </div>
                                 </div>
-                            `}).join("")}
+                            `;
+                        }).join('')}
                     </div>
                 </div>
             </div>
 
-            <div id="teacher-slots-container-${c}">
-        `;m.subjects.forEach((e,t)=>{const s=m.teachers[t]||"";var a=o.find(e=>e.id===s),i=a?a.fullName:"-- Select Teacher --",a=a?a.photoUrl:"img/user.svg";n+=`
-                <div class="slot-row-item" data-sub-index="${t}" style="margin-top: 8px; padding-top: 8px;">
-                    <label>Teacher ${m.active?"for "+(e||"Selection "+(t+1)):""}</label>
-                    <div class="custom-dropdown" id="teacher-dropdown-${c}-${t}" data-selected-id="${s}">
-                        <div class="dropdown-selected" onclick="toggleDropdown('teacher_${c}', ${t})">
+            <div id="teacher-slots-container-${periodIndex}">
+        `;
+
+        state.subjects.forEach((subj, subIndex) => {
+            const currentAssignedTeacherId = state.teachers[subIndex] || "";
+            const assignedTeacherObj = teachersArray.find(t => t.id === currentAssignedTeacherId);
+            const displayTeacherName = assignedTeacherObj ? assignedTeacherObj.fullName : "-- Select Teacher --";
+            const displayTeacherAvatar = assignedTeacherObj ? assignedTeacherObj.photoUrl : "img/user.svg";
+
+            periodHtml += `
+                <div class="slot-row-item" data-sub-index="${subIndex}" style="margin-top: 8px; padding-top: 8px;">
+                    <label>Teacher ${state.active ? `for ${subj || 'Selection ' + (subIndex + 1)}` : ''}</label>
+                    <div class="custom-dropdown" id="teacher-dropdown-${periodIndex}-${subIndex}" data-selected-id="${currentAssignedTeacherId}">
+                        <div class="dropdown-selected" onclick="toggleDropdown('teacher_${periodIndex}', ${subIndex})">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <img id="teacher-selected-img-${c}-${t}" src="${a}" alt="">
-                                <span id="teacher-selected-text-${c}-${t}">${i}</span>
+                                <img id="teacher-selected-img-${periodIndex}-${subIndex}" src="${displayTeacherAvatar}" alt="">
+                                <span id="teacher-selected-text-${periodIndex}-${subIndex}">${displayTeacherName}</span>
                             </div>
                             <span>▼</span>
                         </div>
-                        <div class="dropdown-options" id="teacher_${c}-options-${t}" style="display:none;">
-                            <div class="dropdown-option" onclick="selectTeacher(${c}, ${t}, '', '-- Select Teacher--', 'img/user.svg')">
+                        <div class="dropdown-options" id="teacher_${periodIndex}-options-${subIndex}" style="display:none;">
+                            <div class="dropdown-option" onclick="selectTeacher(${periodIndex}, ${subIndex}, '', '-- Select Teacher--', 'img/user.svg')">
                                 <div class="option-info"><span class="option-title">-- None --</span></div>
                             </div>
-                            ${renderTeacherOptionsMarkup(o,l,c,s,r,e,m.teachers,t)}
+                            ${renderTeacherOptionsMarkup(teachersArray, selectedDay, periodIndex, currentAssignedTeacherId, selectedClass, subj, state.teachers, subIndex)}
                         </div>
                     </div>
                 </div>
-            `}),n+="</div>",p.innerHTML=n,s.appendChild(p)}}function startLongPress(e,t){pressTimer=setTimeout(()=>{toggleMultiSelectMode(e)},600)}function cancelLongPress(){pressTimer&&(clearTimeout(pressTimer),pressTimer=null)}async function toggleMultiSelectMode(e){multiSelectStates[e]||(multiSelectStates[e]={active:!1,subjects:[""],teachers:[""]});var t=multiSelectStates[e];t.active=!t.active,t.active||0<t.subjects.length&&(t.subjects=[t.subjects[0]],t.teachers=[t.teachers[0]||""]),await updateSinglePeriodDOM(e)}async function selectSubjectOption(e,t){multiSelectStates[e]||(multiSelectStates[e]={active:!1,subjects:[""],teachers:[""]});var s,a=multiSelectStates[e];a.active?""===t?(a.subjects=[""],a.teachers=[""]):a.subjects.includes(t)?(s=a.subjects.indexOf(t),a.subjects.splice(s,1),a.teachers.splice(s,1),0===a.subjects.length&&(a.subjects=[""],a.teachers=[""])):(a.subjects=a.subjects.filter(e=>""!==e),a.teachers=a.teachers.filter(e=>""!==e),a.subjects.push(t),a.teachers.push("")):(a.subjects=[t],a.teachers||(a.teachers=[""]),(s=document.getElementById(`subject_${e}-options-0`))&&(s.style.display="none")),await updateSinglePeriodDOM(e)}async function updateSinglePeriodDOM(c){let{subjectList:e,teachersArray:o,subjectWorkloadMap:a,selectedDay:l,selectedClass:r}=await getTimetableContextData();const d=multiSelectStates[c];var t=1===d.subjects.length&&d.subjects[0]?d.subjects[0]:1<d.subjects.length?d.subjects.length+" Subjects Selected":"-- Select Subject --",s=document.getElementById("subject-selected-text-"+c),s=(s&&(s.innerText=t),document.getElementById("subject-dropdown-"+c)),t=(s&&(d.active?s.classList.add("multi-select-active","border-primary"):s.classList.remove("multi-select-active","border-primary")),document.getElementById(`subject_${c}-options-0`)),s=(t&&(t.innerHTML=`
-            <div class="dropdown-option" onclick="selectSubjectOption(${c}, '')">
+            `;
+        });
+
+        periodHtml += `</div>`;
+        periodBox.innerHTML = periodHtml;
+        gridContainer.appendChild(periodBox);
+    }
+}
+
+// Long-press handlers
+function startLongPress(periodIndex, event) {
+    pressTimer = setTimeout(() => {
+        toggleMultiSelectMode(periodIndex);
+    }, 600);
+}
+
+function cancelLongPress() {
+    if (pressTimer) {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+    }
+}
+
+// Granular toggle for multi-select mode without full grid reload
+async function toggleMultiSelectMode(periodIndex) {
+    if (!multiSelectStates[periodIndex]) {
+        multiSelectStates[periodIndex] = { active: false, subjects: [""], teachers: [""] };
+    }
+    const state = multiSelectStates[periodIndex];
+    state.active = !state.active;
+    
+    if (state.active) {
+    //    alertbox(`Multi-select mode activated for Period ${periodIndex}. Select multiple subjects.`, "info");
+    } else {
+        if (state.subjects.length > 0) {
+            state.subjects = [state.subjects[0]];
+            state.teachers = [state.teachers[0] || ""];
+        }
+    }
+    await updateSinglePeriodDOM(periodIndex);
+}
+
+// Granular Subject Selection Handler
+async function selectSubjectOption(periodIndex, subjectName) {
+    if (!multiSelectStates[periodIndex]) {
+        multiSelectStates[periodIndex] = { active: false, subjects: [""], teachers: [""] };
+    }
+    const state = multiSelectStates[periodIndex];
+    changed=true;
+    if (state.active) {
+        if (subjectName === "") {
+            state.subjects = [""];
+            state.teachers = [""];
+        } else {
+            if (state.subjects.includes(subjectName)) {
+                const idx = state.subjects.indexOf(subjectName);
+                state.subjects.splice(idx, 1);
+                state.teachers.splice(idx, 1);
+                if (state.subjects.length === 0) {
+                    state.subjects = [""];
+                    state.teachers = [""];
+                }
+            } else {
+                state.subjects = state.subjects.filter(s => s !== "");
+                state.teachers = state.teachers.filter(t => t !== "");
+                state.subjects.push(subjectName);
+                state.teachers.push(""); 
+            }
+        }
+    } else {
+        state.subjects = [subjectName];
+        if (!state.teachers) state.teachers = [""];
+        
+        // Collapse options dropdown immediately on single selection
+        const targetOptions = document.getElementById(`subject_${periodIndex}-options-0`);
+        if (targetOptions) targetOptions.style.display = 'none';
+    }
+
+    await updateSinglePeriodDOM(periodIndex);
+}
+
+// Granularly updates just the specific period box elements without resetting container animations
+async function updateSinglePeriodDOM(periodIndex) {
+    const { subjectList, teachersArray, subjectWorkloadMap, selectedDay, selectedClass } = await getTimetableContextData();
+    const state = multiSelectStates[periodIndex];
+
+    // 1. Update header label
+    const primarySubjectText = state.subjects.length === 1 && state.subjects[0] ? state.subjects[0] : (state.subjects.length > 1 ? `${state.subjects.length} Subjects Selected` : "-- Select Subject --");
+    const textSpan = document.getElementById(`subject-selected-text-${periodIndex}`);
+    if (textSpan) textSpan.innerText = primarySubjectText;
+
+    // 2. Update multi-select class styling
+    const dropdownEl = document.getElementById(`subject-dropdown-${periodIndex}`);
+    if (dropdownEl) {
+        if (state.active) {
+            dropdownEl.classList.add('multi-select-active', 'border-primary');
+        } else {
+            dropdownEl.classList.remove('multi-select-active', 'border-primary');
+        }
+    }
+
+    // 3. Update options container and checkboxes
+    const optionsContainer = document.getElementById(`subject_${periodIndex}-options-0`);
+    if (optionsContainer) {
+        optionsContainer.innerHTML = `
+            <div class="dropdown-option" onclick="selectSubjectOption(${periodIndex}, '')">
                 <div class="option-info"><span class="option-title">-- None --</span></div>
             </div>
-            ${e.map(e=>{var t=a[e]||0,s=d.subjects.includes(e);return`
+            ${subjectList.map(subjectName => {
+                const weeklyCount = subjectWorkloadMap[subjectName] || 0;
+                const isChecked = state.subjects.includes(subjectName);
+                return `
                     <div class="dropdown-option" 
-                         onmousedown="startLongPress(${c}, event)" 
+                         onmousedown="startLongPress(${periodIndex}, event)" 
                          onmouseup="cancelLongPress()" 
-                         ontouchstart="startLongPress(${c}, event)" 
+                         ontouchstart="startLongPress(${periodIndex}, event)" 
                          ontouchend="cancelLongPress()" 
-                         onclick="selectSubjectOption(${c}, '${e}')">
+                         onclick="selectSubjectOption(${periodIndex}, '${subjectName}')">
                         <div class="option-infoS">
-                        ${d.active?`<input type="checkbox" ${s?"checked":""} style="pointer-events: none;" />`:""}
+                        ${state.active ? `<input type="checkbox" ${isChecked ? 'checked' : ''} style="pointer-events: none;" />` : ''}
                         <div>
-                                <span class="option-title">${e}</span>
-                                <span class="option-sub">${t} periods learning(week)</span>
+                                <span class="option-title">${subjectName}</span>
+                                <span class="option-sub">${weeklyCount} periods learning(week)</span>
                             </div>
                         </div>
                     </div>
-                `}).join("")}
-        `),document.getElementById("teacher-slots-container-"+c));if(s){let n="";d.subjects.forEach((e,t)=>{const s=d.teachers[t]||"";var a=o.find(e=>e.id===s),i=a?a.fullName:"-- Select Teacher --",a=a?a.photoUrl:"img/user.svg";n+=`
-            <div class="slot-row-item" data-sub-index="${t}" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e0e0e0;">
-                <label>Teacher ${d.active?"for "+(e||"Selection "+(t+1)):""}</label>
-                <div class="custom-dropdown" id="teacher-dropdown-${c}-${t}" data-selected-id="${s}">
-                    <div class="dropdown-selected" onclick="toggleDropdown('teacher_${c}', ${t})">
+                `;
+            }).join('')}
+        `;
+    }
+
+    // 4. Update teacher sub-slots container
+    const container = document.getElementById(`teacher-slots-container-${periodIndex}`);
+    if (!container) return;
+
+    let html = '';
+    state.subjects.forEach((subj, subIndex) => {
+        const currentAssignedTeacherId = state.teachers[subIndex] || "";
+        const assignedTeacherObj = teachersArray.find(t => t.id === currentAssignedTeacherId);
+        const displayTeacherName = assignedTeacherObj ? assignedTeacherObj.fullName : "-- Select Teacher --";
+        const displayTeacherAvatar = assignedTeacherObj ? assignedTeacherObj.photoUrl : "img/user.svg";
+
+        html += `
+            <div class="slot-row-item" data-sub-index="${subIndex}" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e0e0e0;">
+                <label>Teacher ${state.active ? `for ${subj || 'Selection ' + (subIndex + 1)}` : ''}</label>
+                <div class="custom-dropdown" id="teacher-dropdown-${periodIndex}-${subIndex}" data-selected-id="${currentAssignedTeacherId}">
+                    <div class="dropdown-selected" onclick="toggleDropdown('teacher_${periodIndex}', ${subIndex})">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <img id="teacher-selected-img-${c}-${t}" src="${a}" alt="">
-                            <span id="teacher-selected-text-${c}-${t}">${i}</span>
+                            <img id="teacher-selected-img-${periodIndex}-${subIndex}" src="${displayTeacherAvatar}" alt="">
+                            <span id="teacher-selected-text-${periodIndex}-${subIndex}">${displayTeacherName}</span>
                         </div>
                         <span>▼</span>
                     </div>
-                    <div class="dropdown-options" id="teacher_${c}-options-${t}" style="display:none;">
-                        <div class="dropdown-option" onclick="selectTeacher(${c}, ${t}, '', '-- Select Teacher--', 'img/user.svg')">
+                    <div class="dropdown-options" id="teacher_${periodIndex}-options-${subIndex}" style="display:none;">
+                        <div class="dropdown-option" onclick="selectTeacher(${periodIndex}, ${subIndex}, '', '-- Select Teacher--', 'img/user.svg')">
                             <div class="option-infoT"><span class="option-title">-- None --</span></div>
                         </div>
-                        ${renderTeacherOptionsMarkup(o,l,c,s,r,e,d.teachers,t)}
+                        ${renderTeacherOptionsMarkup(teachersArray, selectedDay, periodIndex, currentAssignedTeacherId, selectedClass, subj, state.teachers, subIndex)}
                     </div>
                 </div>
             </div>
-        `}),s.innerHTML=n}}function renderTeacherOptionsMarkup(e,s,a,i,n,t,c=[],o=0){const l=new Set,r=(e.forEach(e=>{var t;e.timetable[s]&&e.timetable[s][a]&&(t=e.timetable[s][a]).c&&String(t.c).trim().toUpperCase()!==n&&l.add(e.id)}),c.forEach((e,t)=>{e&&t!==o&&l.add(e)}),t&&!t.startsWith("--")?t.trim().toLowerCase():"");return[...e].sort((e,t)=>{return r?(e=(e.subjects||e.subject||"").split(",").map(e=>e.trim().toLowerCase()),t=(t.subjects||t.subject||"").split(",").map(e=>e.trim().toLowerCase()),e=e.includes(r),t=t.includes(r),e&&!t?-1:!e&&t?1:0):0}).map(e=>{var t=l.has(e.id),s=e.id===i;return t&&!s?"":(t=r&&(e.subjects||e.subject||"").toLowerCase().includes(r)?" ⭐":"",`
-            <div class="dropdown-option" data-teacher-id="${e.id}" onclick="selectTeacher(${a}, this.closest('.slot-row-item').getAttribute('data-sub-index'), '${e.id}', '${e.fullName.replace(/'/g,"\\'")}', '${e.photoUrl}')">
-                <img src="${e.photoUrl}" alt="">
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+// Teacher options markup renderer with cross-subslot busy checking
+function renderTeacherOptionsMarkup(teachersArray, dayKey, periodIndex, currentTeacherId, selectedClass, selectedSubject, periodAssignedTeachers = [], currentSubIndex = 0) {
+    const busyTeacherIds = new Set();
+    
+    // Check external classes workload during this period
+    teachersArray.forEach(teacher => {
+        if (teacher.timetable[dayKey] && teacher.timetable[dayKey][periodIndex]) {
+            const slot = teacher.timetable[dayKey][periodIndex];
+            if (slot.c && String(slot.c).trim().toUpperCase() !== selectedClass) {
+                busyTeacherIds.add(teacher.id);
+            }
+        }
+    });
+
+    // Check local selections in other concurrent sub-slots for this period box
+    periodAssignedTeachers.forEach((tId, idx) => {
+        if (tId && idx !== currentSubIndex) {
+            busyTeacherIds.add(tId);
+        }
+    });
+
+    const activeSubject = selectedSubject && !selectedSubject.startsWith("--") ? selectedSubject.trim().toLowerCase() : "";
+
+    const sortedTeachers = [...teachersArray].sort((teacherA, teacherB) => {
+        if (!activeSubject) return 0;
+        const listA = (teacherA.subjects || teacherA.subject || "").split(',').map(s => s.trim().toLowerCase());
+        const listB = (teacherB.subjects || teacherB.subject || "").split(',').map(s => s.trim().toLowerCase());
+        const isSpecialistA = listA.includes(activeSubject);
+        const isSpecialistB = listB.includes(activeSubject);
+        if (isSpecialistA && !isSpecialistB) return -1;
+        if (!isSpecialistA && isSpecialistB) return 1;
+        return 0;
+    });
+
+    return sortedTeachers.map(teacher => {
+        const isBusy = busyTeacherIds.has(teacher.id);
+        const isSelected = teacher.id === currentTeacherId;
+        if (isBusy && !isSelected) return '';
+
+        const isSpecialist = activeSubject && (teacher.subjects || teacher.subject || "").toLowerCase().includes(activeSubject);
+        const specialistBadge = isSpecialist ? ' ⭐' : '';
+        return `
+            <div class="dropdown-option" data-teacher-id="${teacher.id}" onclick="selectTeacher(${periodIndex}, this.closest('.slot-row-item').getAttribute('data-sub-index'), '${teacher.id}', '${teacher.fullName.replace(/'/g, "\\'")}', '${teacher.photoUrl}')">
+                <img src="${teacher.photoUrl}" alt="">
                 <div class="option-infoT">
-                    <span class="option-title">${e.fullName}${t}</span>
-                    <span class="option-sub">${e.dailyLoad} period(s) teaching(today)</span>
+                    <span class="option-title">${teacher.fullName}${specialistBadge}</span>
+                    <span class="option-sub">${teacher.dailyLoad} period(s) teaching(today)</span>
                 </div>
             </div>
-        `)}).join("")}function toggleDropdown(e,t){const s=e+"-options-"+t;document.querySelectorAll(".dropdown-options").forEach(e=>{e.id!==s&&(e.style.display="none")});e=document.getElementById(s);e&&(e.style.display="block"===e.style.display?"none":"block")}async function selectTeacher(e,t,s,a,i){multiSelectStates[e]||(multiSelectStates[e]={active:!1,subjects:[""],teachers:[""]}),multiSelectStates[e].teachers[t]=s,document.getElementById(`teacher-selected-text-${e}-`+t).innerText=a,document.getElementById(`teacher-selected-img-${e}-`+t).src=i,document.getElementById(`teacher-dropdown-${e}-`+t).setAttribute("data-selected-id",s);a=document.getElementById(`teacher_${e}-options-`+t);a&&(a.style.display="none"),await updateSinglePeriodDOM(e)}async function saveCompleteTimetable(){const o=document.getElementById("daySelect").value,l=document.getElementById("classInput").value.trim().toUpperCase();var e=parseInt(document.getElementById("totalPeriods").value)||8;const r={};for(let s=1;s<=e;s++){const a=multiSelectStates[s]||{subjects:[""],teachers:[""]};a.subjects.forEach((e,t)=>{e&&!e.startsWith("--")&&(t=a.teachers&&a.teachers[t]?a.teachers[t]:"")&&(r[t]||(r[t]={}),r[t][s]={c:l,s:e})})}let d="";if("undefined"!=typeof firebase&&firebase.auth&&firebase.auth().currentUser?d=await firebase.auth().currentUser.getIdToken():window.firebaseAuthToken&&(d=window.firebaseAuthToken),d){const p="undefined"!=typeof firebaseConfig?firebaseConfig.databaseURL:"";if(p)try{var t=("undefined"!=typeof syncEngine?await syncEngine.getLocalUsersByRole("teacher"):[]).map(async e=>{var t=e.id||e.uid,e=e.timetable?JSON.parse(JSON.stringify(e.timetable)):{},s=e[o]?{...e[o]}:{};for(const c in s)s[c]&&String(s[c].c).trim().toUpperCase()===l&&delete s[c];if(r[t])for(var[a,i]of Object.entries(r[t]))s[a]=i;0===Object.keys(s).length?delete e[o]:e[o]=s;var n=`${p}/schools/${schoolId}/users/${t}.json?auth=`+d;if(!(await fetch(n,{method:"PATCH",body:JSON.stringify({timetable:e,A:{".sv":"timestamp"}})})).ok)throw new Error("Failed to save for teacher "+t)});await Promise.all(t),"undefined"!=typeof syncEngine&&syncEngine.syncUsers&&await syncEngine.syncUsers(),alertbox("Timetable successfully saved!","success"),loadTimetableInterface()}catch(e){console.error("Error saving timetable:",e),alertbox("Failed to save timetable: "+e,"error")}else alertbox("Database URL is not configured.","error")}else alertbox("Authentication error: You must be logged in to save the timetable.","error")}initApp(),window.onclick=function(e){e.target.closest(".custom-dropdown")||document.querySelectorAll(".dropdown-options").forEach(e=>{e.style.display="none"})};
+        `;
+    }).join('');
+}
+
+function toggleDropdown(type, index) {
+    const targetId = `${type}-options-${index}`;
+    document.querySelectorAll('.dropdown-options').forEach(element => {
+        if (element.id !== targetId) element.style.display = 'none';
+    });
+    const targetOptions = document.getElementById(targetId);
+    if (targetOptions) {
+        targetOptions.style.display = targetOptions.style.display === 'block' ? 'none' : 'block';
+    }
+}
+
+window.onclick = function (event) {
+    if (!event.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.dropdown-options').forEach(element => {
+            element.style.display = 'none';
+        });
+    }
+}
+
+async function selectTeacher(periodIndex, subIndex, teacherId, teacherName, teacherPhotoUrl) {
+    if (!multiSelectStates[periodIndex]) {
+        multiSelectStates[periodIndex] = { active: false, subjects: [""], teachers: [""] };
+    }
+    changed=true;
+    // Update state memory
+    multiSelectStates[periodIndex].teachers[subIndex] = teacherId;
+
+    document.getElementById(`teacher-selected-text-${periodIndex}-${subIndex}`).innerText = teacherName;
+    document.getElementById(`teacher-selected-img-${periodIndex}-${subIndex}`).src = teacherPhotoUrl;
+    document.getElementById(`teacher-dropdown-${periodIndex}-${subIndex}`).setAttribute('data-selected-id', teacherId);
+    
+    const tOpts = document.getElementById(`teacher_${periodIndex}-options-${subIndex}`);
+    if (tOpts) tOpts.style.display = 'none';
+
+    // Re-render sub-slots so other dropdowns in this period immediately hide this selected teacher
+    await updateSinglePeriodDOM(periodIndex);
+}
+
+// Saving Timetable Data to Firebase
+async function saveCompleteTimetable() {
+    const selectedDay = document.getElementById("daySelect").value;
+    const selectedClass = document.getElementById("classInput").value.trim().toUpperCase();
+    const totalPeriodsCount = parseInt(document.getElementById("totalPeriods").value) || 8;
+if(changed==false){
+    alertbox("please make changes before save","warning");
+    return;
+}
+    const teacherNewSchedules = {};
+
+    for (let periodIndex = 1; periodIndex <= totalPeriodsCount; periodIndex++) {
+        const state = multiSelectStates[periodIndex] || { subjects: [""], teachers: [""] };
+        state.subjects.forEach((subjectText, subIndex) => {
+            if (subjectText && !subjectText.startsWith("--")) {
+                const teacherId = state.teachers && state.teachers[subIndex] ? state.teachers[subIndex] : "";
+
+                if (teacherId) {
+                    if (!teacherNewSchedules[teacherId]) teacherNewSchedules[teacherId] = {};
+                    teacherNewSchedules[teacherId][periodIndex] = {
+                        c: selectedClass,
+                        s: subjectText
+                    };
+                }
+            }
+        });
+    }
+
+    let authToken = "";
+    if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+        authToken = await firebase.auth().currentUser.getIdToken();
+    } else if (window.firebaseAuthToken) {
+        authToken = window.firebaseAuthToken;
+    }
+
+    if (!authToken) {
+        alertbox("Authentication error: You must be logged in to save the timetable.", "error");
+        return;
+    }
+
+    const databaseBaseURL = typeof firebaseConfig !== 'undefined' ? firebaseConfig.databaseURL : "";
+    if (!databaseBaseURL) {
+        alertbox("Database URL is not configured.", "error");
+        return;
+    }
+
+    try {
+        const rawTeachersCache = typeof syncEngine !== 'undefined' ? await syncEngine.getLocalUsersByRole('teacher') : [];
+
+        const savePromises = rawTeachersCache.map(async (teacher) => {
+            const teacherId = teacher.id || teacher.uid;
+            let teacherTimetable = teacher.timetable ? JSON.parse(JSON.stringify(teacher.timetable)) : {};
+            let daySchedule = teacherTimetable[selectedDay] ? { ...teacherTimetable[selectedDay] } : {};
+
+            for (const pKey in daySchedule) {
+                if (daySchedule[pKey] && String(daySchedule[pKey].c).trim().toUpperCase() === selectedClass) {
+                    delete daySchedule[pKey];
+                }
+            }
+
+            if (teacherNewSchedules[teacherId]) {
+                for (const [pIndex, slotContent] of Object.entries(teacherNewSchedules[teacherId])) {
+                    daySchedule[pIndex] = slotContent;
+                }
+            }
+
+            if (Object.keys(daySchedule).length === 0) {
+                delete teacherTimetable[selectedDay];
+            } else {
+                teacherTimetable[selectedDay] = daySchedule;
+            }
+
+            const restUrl = `${databaseBaseURL}/schools/${schoolId}/users/${teacherId}.json?auth=${authToken}`;
+            const patchPayload = {
+                timetable: teacherTimetable,
+                A: { ".sv": "timestamp" }
+            };
+
+            const response = await fetch(restUrl, {
+                method: 'PATCH',
+                body: JSON.stringify(patchPayload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to save for teacher ${teacherId}`);
+            }
+        });
+
+        await Promise.all(savePromises);
+
+        if (typeof syncEngine !== 'undefined' && syncEngine.syncUsers) {
+            await syncEngine.syncUsers();
+        }
+
+        alertbox("Timetable successfully saved!", "success");
+        loadTimetableInterface();
+
+    } catch (error) {
+        console.error("Error saving timetable:", error);
+        alertbox("Failed to save timetable: " + error, "error");
+    }
+}

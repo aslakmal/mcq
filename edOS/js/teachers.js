@@ -1,20 +1,78 @@
-let cachedTeachers=[],currentPage=1,pageSize=50;async function initApp(){try{await syncEngine.initIndexedDB(),navigator.onLine&&(await syncEngine.syncUsers(),await refreshTeacherList())}catch(e){console.error("Initialization error:",e)}}async function refreshTeacherList(){renderTeacherTable(cachedTeachers=await syncEngine.getLocalUsersByRole("teacher"))}function renderTeacherTable(e){var t=document.getElementById("teacherTableBody");const n=document.getElementById("searchInput").value.toLowerCase().trim();var a,c,o,r,e=e.filter(e=>e.fullName&&e.fullName.toLowerCase().includes(n)||e.subject&&e.subject.toLowerCase().includes(n)||e.classes&&e.classes.toLowerCase().includes(n));0===e.length?t.innerHTML=`<tr><td colspan="5" class="empty-state">${n?"No matching teachers found.":"No teachers registered yet."}</td></tr>`:(a=e.length,c=Math.ceil(a/pageSize),o=((currentPage=(currentPage=currentPage>c?c:currentPage)<1?1:currentPage)-1)*pageSize,r=Math.min(o+pageSize,a),e=e.slice(o,r),t.innerHTML=e.map(e=>{var t=e.photoUrl||"img/user.svg",n=e.id||e.key;return`
+
+let cachedTeachers = [];
+let currentPage = 1;
+let pageSize = 50;
+async function initApp() {
+try {
+// 1. Initialize IndexedDB
+await syncEngine.initIndexedDB();
+
+// 2. Load and render immediately from IndexedDB for instant display
+//await refreshTeacherList();
+
+// 3. If online, check for user delta logs and apply them to IndexedDB
+if (navigator.onLine) {
+  await syncEngine.syncUsers();
+
+  // 4. Refresh UI table only if changes were pulled from Firebase
+  await refreshTeacherList();
+}
+} catch (err) {
+console.error("Initialization error:", err);
+}
+}
+
+async function refreshTeacherList() {
+cachedTeachers = await syncEngine.getLocalUsersByRole('teacher');
+renderTeacherTable(cachedTeachers);
+}
+
+function renderTeacherTable(teachers) {
+  const tbody = document.getElementById('teacherTableBody');
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  const filtered = teachers.filter(t => 
+    (t.fullName && t.fullName.toLowerCase().includes(searchTerm)) ||
+    (t.subject && t.subject.toLowerCase().includes(searchTerm)) ||
+    (t.classes && t.classes.toLowerCase().includes(searchTerm))
+  );
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">${searchTerm ? 'No matching teachers found.' : 'No teachers registered yet.'}</td></tr>`;
+    return;
+  }
+    // 2. Paginate filtered data
+    const totalItems = filtered.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+  
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+  
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const paginatedItems = filtered.slice(startIndex, endIndex);
+
+  tbody.innerHTML = paginatedItems.map(t => {
+    const photoUrl = t.photoUrl || 'img/user.svg';
+    const key = t.id || t.key;
+
+    return `
       <tr>
         <td data-label="Teacher">
           <div class="teacher-info">
-            <img src="${t}" class="avatar" alt="${e.fullName}">
+            <img src="${photoUrl}" class="avatar" alt="${t.fullName}">
             <div>
-              <strong>${escapeHtml(e.fullName)}</strong><br>
-              <small style="color: #718096;">${escapeHtml(e.qualification||"")}</small>
+              <strong>${escapeHtml(t.fullName)}</strong><br>
+              <small style="color: #718096;">${escapeHtml(t.qualification || '')}</small>
             </div>
           </div>
         </td>
-        <td data-label="Classes"><span class="badge-id">${escapeHtml(e.classes||"N/A")}</span></td>
-        <td data-label="Subject">${escapeHtml(e.subject||"N/A")}</td>
-        <td data-label="Contact">${escapeHtml(e.contact||"N/A")}</td>
+        <td data-label="Classes"><span class="badge-id">${escapeHtml(t.classes || 'N/A')}</span></td>
+        <td data-label="Subject">${escapeHtml(t.subject || 'N/A')}</td>
+        <td data-label="Contact">${escapeHtml(t.contact || 'N/A')}</td>
         <td data-label="Actions">
           <div class="actions">
-   <!--  <button onclick="openIdCardModalByKey('${n}', this)"
+   <!--  <button onclick="openIdCardModalByKey('${key}', this)"
             class="action-btn view"
             title="View ID">
         <svg viewBox="0 0 24 24">
@@ -24,7 +82,7 @@ let cachedTeachers=[],currentPage=1,pageSize=50;async function initApp(){try{awa
         </svg>
     </button>-->
 
-    <button onclick="openDetailsModalByKey('${n}','${schoolId}')"
+    <button onclick="openDetailsModalByKey('${key}','${schoolId}')"
             class="action-btn details"
             title="Details">
         <svg viewBox="0 0 24 24">
@@ -33,7 +91,7 @@ let cachedTeachers=[],currentPage=1,pageSize=50;async function initApp(){try{awa
         </svg>
     </button>
 
-    <button onclick="confirmDelete('${n}', '${escapeHtml(e.fullName)}')"
+    <button onclick="confirmDelete('${key}', '${escapeHtml(t.fullName)}')"
             class="action-btn delete"
             title="Delete">
         <svg viewBox="0 0 24 24">
@@ -50,9 +108,197 @@ let cachedTeachers=[],currentPage=1,pageSize=50;async function initApp(){try{awa
 
         </td>
       </tr>
-    `}).join(""),renderPagination(a,c,1+o,r))}function renderPagination(e,n,a,c){var o=document.getElementById("paginationInfo"),r=document.getElementById("paginationControls");if(0===e)o.innerText="Showing 0 of 0 students",r.innerHTML="";else{o.innerText=`Showing ${a}-${c} of ${e} students`;let t=`<button class="page-btn" ${1===currentPage?"disabled":""} onclick="goToPage(${currentPage-1})">Prev</button>`;for(let e=1;e<=n;e++)1===e||e===n||e>=currentPage-1&&e<=currentPage+1?t+=`<button class="page-btn ${e===currentPage?"active":""}" onclick="goToPage(${e})">${e}</button>`:e!==currentPage-2&&e!==currentPage+2||(t+='<span style="padding: 0 4px; color: #a0aec0;">...</span>');t+=`<button class="page-btn" ${currentPage===n?"disabled":""} onclick="goToPage(${currentPage+1})">Next</button>`,r.innerHTML=t}}function goToPage(e){currentPage=e,renderTeacherTable(cachedTeachers)}function openIdCardModalByKey(t){var e=cachedTeachers.find(e=>(e.id||e.key)===t);e&&(document.getElementById("cardSchoolFront").innerText=schoolId.toUpperCase(),document.getElementById("cardPhoto").src=e.photoUrl||"img/user.svg",document.getElementById("cardName").innerText=e.fullName||"",document.getElementById("cardSubject").innerText=e.subject||"",document.getElementById("cardTeacherId").innerText=e.teacherId||"",document.getElementById("cardQualification").innerText=e.qualification||"-",document.getElementById("cardContact").innerText=e.contact||"-",document.getElementById("cardDob").innerText=e.dob||"-",document.getElementById("cardAddress").innerText=e.address||"-",e=`${window.location.origin}/sis/${schoolId}/teacher.html?id=`+t,document.getElementById("qrcode").innerHTML="",new QRCode(document.getElementById("qrcode"),{text:e,width:75,height:75}),document.getElementById("idCardModal").style.display="flex")}function closeIdCardModal(){document.getElementById("idCardModal").style.display="none"}function openDetailsModalByKey(t){var e=cachedTeachers.find(e=>(e.id||e.key)===t);e&&(renderPersonalData(e),document.getElementById("detailsModal").style.display="flex")}function renderPersonalData(n){const a=document.getElementById("popupGridContainer");if(a){const c=new Set(["photoUrl","exam","updatedAt","updatedBy","isDeleted","id","key","school","timetable","claimed"]);var e=document.getElementById("popupAvatar");e&&n.photoUrl&&""!==n.photoUrl.trim()&&(e.src=getFullCloudinaryUrl(n.photoUrl),e.style.display="block"),a.innerHTML="",Object.keys(n).forEach(e=>{var t;c.has(e)||null!=(t=n[e])&&""!==String(t).trim()&&(e=`
+    `;
+  }).join('');
+  renderPagination(totalItems, totalPages, startIndex + 1, endIndex);
+}
+function renderPagination(totalItems, totalPages, start, end) {
+    const infoText = document.getElementById('paginationInfo');
+    const controlsContainer = document.getElementById('paginationControls');
+  
+    if (totalItems === 0) {
+      infoText.innerText = 'Showing 0 of 0 students';
+      controlsContainer.innerHTML = '';
+      return;
+    }
+  
+    infoText.innerText = `Showing ${start}-${end} of ${totalItems} students`;
+  
+    let paginationHtml = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">Prev</button>`;
+  
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        paginationHtml += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        paginationHtml += `<span style="padding: 0 4px; color: #a0aec0;">...</span>`;
+      }
+    }
+  
+    paginationHtml += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next</button>`;
+  
+    controlsContainer.innerHTML = paginationHtml;
+  }
+  function goToPage(page) {
+    currentPage = page;
+    renderTeacherTable(cachedTeachers);
+  }
+window.addEventListener('idb_updated_users', async () => {
+  await refreshTeacherList();
+});
+
+document.getElementById('searchInput').addEventListener('input', () => {
+  renderTeacherTable(cachedTeachers);
+});
+
+// POPUP HANDLERS FOR ID CARD
+function openIdCardModalByKey(key) {
+  const teacher = cachedTeachers.find(t => (t.id || t.key) === key);
+  if (!teacher) return;
+
+  document.getElementById('cardSchoolFront').innerText = schoolId.toUpperCase();
+  document.getElementById('cardPhoto').src = teacher.photoUrl || 'img/user.svg';
+  document.getElementById('cardName').innerText = teacher.fullName || '';
+  document.getElementById('cardSubject').innerText = teacher.subject || '';
+  document.getElementById('cardTeacherId').innerText = teacher.teacherId || '';
+
+  document.getElementById('cardQualification').innerText = teacher.qualification || '-';
+  document.getElementById('cardContact').innerText = teacher.contact || '-';
+  document.getElementById('cardDob').innerText = teacher.dob || '-';
+  document.getElementById('cardAddress').innerText = teacher.address || '-';
+
+  const viewUrl = `${window.location.origin}/sis/${schoolId}/teacher.html?id=${key}`;
+  document.getElementById('qrcode').innerHTML = "";
+  new QRCode(document.getElementById('qrcode'), { text: viewUrl, width: 75, height: 75 });
+
+  document.getElementById('idCardModal').style.display = 'flex';
+}
+
+function closeIdCardModal() {
+  document.getElementById('idCardModal').style.display = 'none';
+}
+
+// POPUP HANDLERS FOR DETAILS
+function openDetailsModalByKey(key) {
+  const t = cachedTeachers.find(item => (item.id || item.key) === key);
+  if (!t) return;
+  renderPersonalData(t);
+  document.getElementById('detailsModal').style.display = 'flex';
+}
+function renderPersonalData(data) {
+    const container = document.getElementById('popupGridContainer');
+    if (!container) return;
+  
+    // Fields to explicitly ignore in the info-card grid
+    const skipFields = new Set(['photoUrl', 'exam', 'updatedAt', 'updatedBy', 'isDeleted', 'id','key','school','timetable', 'claimed' ]);
+  
+    // 1. Handle Profile Photo separately
+    const avatarImg = document.getElementById('popupAvatar');
+    if (avatarImg) {
+      if (data.photoUrl && data.photoUrl.trim() !== '') {
+        avatarImg.src = getFullCloudinaryUrl(data.photoUrl);
+        avatarImg.style.display = 'block';
+      } 
+    }
+  
+    // 2. Clear old dynamic cards
+    container.innerHTML = '';
+  
+    // 3. Dynamically generate cards for all non-empty fields
+    Object.keys(data).forEach(key => {
+      // Skip internal/ignored keys
+      if (skipFields.has(key)) return;
+  
+      const value = data[key];
+  
+      // Check for non-empty, non-null values
+      if (value !== undefined && value !== null && String(value).trim() !== '') {
+        const formattedLabel = camelToTitle(key);
+  
+        // Construct info-card element
+        const cardHtml = `
           <div class="info-card">
-            <label>${camelToTitle(e)}</label>
-            <span>${t}</span>
+            <label>${formattedLabel}</label>
+            <span>${value}</span>
           </div>
-        `,a.insertAdjacentHTML("beforeend",e))}),renderTimetable(n.timetable,document.getElementById("daysContainer"),document.getElementById("daySelector"))}}function camelToTitle(e){return e.replace(/([A-Z])/g," $1").replace(/^./,e=>e.toUpperCase()).replace(/\bNic\b/gi,"NIC").replace(/\bNo\b/gi,"No.")}function closeDetailsModal(){document.getElementById("detailsModal").style.display="none"}async function confirmDelete(t,e){if(confirm(`Are you sure you want to delete ${e}?`))try{db.goOnline();var n=db.ref(`schools/${schoolId}/users/`+t),a=firebase.auth().currentUser;await n.update({D:!0,A:firebase.database.ServerValue.TIMESTAMP,B:a.uid}),alertbox(e+" deleted successfully!","success"),renderTeacherTable(cachedTeachers=cachedTeachers.filter(e=>(e.id||e.key)!==t))}catch(e){console.error("Delete error:",e),alertbox("Delete failed: "+e.message,"error")}finally{db.goOffline()}}function escapeHtml(e){return String(e||"").replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}function copyInviteLink(){var e=document.getElementById("inviteLinkInput");const t=document.querySelector(".copy-btn"),n=document.getElementById("copyIcon"),a=document.getElementById("checkIcon"),c=document.getElementById("copyText");navigator.clipboard.writeText(e.value).then(()=>{n.style.display="none",a.style.display="block",c.textContent="Copied!",t.style.background="#16a34a",setTimeout(()=>{n.style.display="block",a.style.display="none",c.textContent="Copy",t.style.background="#2563eb"},2e3)}).catch(e=>{console.error("Failed to copy text: ",e)})}window.addEventListener("idb_updated_users",async()=>{await refreshTeacherList()}),document.getElementById("searchInput").addEventListener("input",()=>{renderTeacherTable(cachedTeachers)}),auth.onAuthStateChanged(e=>{e||(window.location.href="admin.html?school="+schoolId)}),initApp(),document.getElementById("inviteLinkInput").value="https://digibook.edu.lk/edOS/teacher_register.html?school="+schoolId;
+        `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
+      }
+    });
+
+    renderTimetable(data.timetable, document.getElementById("daysContainer"),document.getElementById("daySelector"))
+  }
+  function camelToTitle(str) {
+    return str
+      // Insert a space before capital letters
+      .replace(/([A-Z])/g, ' $1')
+      // Capitalize the first character
+      .replace(/^./, (match) => match.toUpperCase())
+      // Clean up specific abbreviations if needed
+      .replace(/\bNic\b/gi, 'NIC')
+      .replace(/\bNo\b/gi, 'No.');
+  }
+function closeDetailsModal() {
+  document.getElementById('detailsModal').style.display = 'none';
+}
+
+async function confirmDelete(key, name) {
+if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+
+try {
+    db.goOnline();
+const userRef = db.ref(`schools/${schoolId}/users/${key}`);
+const user = firebase.auth().currentUser;
+// Perform soft delete using short keys (D: isDeleted, A: updatedAt, B: updatedBy)
+await userRef.update({
+  D: true,
+  A: firebase.database.ServerValue.TIMESTAMP,
+  B: user.uid
+});
+
+alertbox(`${name} deleted successfully!`, "success");
+cachedTeachers = cachedTeachers.filter(s => (s.id || s.key) !== key);
+renderTeacherTable(cachedTeachers);
+} catch (err) {
+console.error("Delete error:", err);
+alertbox("Delete failed: " + err.message, "error");
+}finally{
+    db.goOffline();
+}
+}
+
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>"']/g, match => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[match]));
+}
+
+auth.onAuthStateChanged(user => {
+  if (!user) window.location.href = `admin.html?school=${schoolId}`;
+});
+
+initApp();
+document.getElementById('inviteLinkInput').value=`https://digibook.edu.lk/edOS/teacher_register.html?school=${schoolId}`
+function copyInviteLink() {
+    const linkInput = document.getElementById('inviteLinkInput');
+    const copyBtn = document.querySelector('.copy-btn');
+    const copyIcon = document.getElementById('copyIcon');
+    const checkIcon = document.getElementById('checkIcon');
+    const copyText = document.getElementById('copyText');
+
+    // Copy text to clipboard
+    navigator.clipboard.writeText(linkInput.value).then(() => {
+        // Switch to success state
+        copyIcon.style.display = 'none';
+        checkIcon.style.display = 'block';
+        copyText.textContent = 'Copied!';
+        copyBtn.style.background = '#16a34a'; // Green success color
+
+        // Revert back after 2 seconds
+        setTimeout(() => {
+            copyIcon.style.display = 'block';
+            checkIcon.style.display = 'none';
+            copyText.textContent = 'Copy';
+            copyBtn.style.background = '#2563eb';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
