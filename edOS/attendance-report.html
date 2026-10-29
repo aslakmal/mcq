@@ -517,7 +517,7 @@
             const placeholdersNeeded = totalCols - datesArray.length;
 
             // 1. Build Table Headers (Photo column)
-            headerRow.innerHTML = `<th class="sticky-col"></th>`;
+            headerRow.innerHTML = `<th class="sticky-col">Date</th>`;
 
             // Render actual date headers
             datesArray.forEach(dateKey => {
@@ -533,7 +533,7 @@
             // 2. Build Table Rows
             tbody.innerHTML = '';
             students.forEach(s => {
-                const name = s.fullName || s.name || 'Unnamed Student';
+                const name = s.name || s.name || 'Unnamed Student';
                 const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
 
                 // Added title attribute so hovering over the photo shows the student's name
@@ -578,9 +578,13 @@
         }
         const params = new URLSearchParams(window.location.search);
 
-if (params.get('school') === 'choola') {
+        if (params.get('school') === 'choola') {
     document.getElementById('classInput').value = '6A';
 }
+if (params.get('school') === '68ewd') {
+    document.getElementById('classInput').value = '6';
+}
+
     </script>
 </body>
 

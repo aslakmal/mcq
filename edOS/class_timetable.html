@@ -322,7 +322,7 @@ function renderClassTimetable(teachers, selectedClass, daysContainer, daySelecto
     teachers.forEach(teacher => {
         if (!teacher || !teacher.timetable) return;
         const timetable = teacher.timetable;
-        const teacherName = teacher.name || teacher.fullName || teacher.displayName || teacher.username || "Teacher";
+        const teacherName = teacher.name || teacher.name || teacher.displayName || teacher.username || "Teacher";
 
         days.forEach(day => {
             const periods = getPeriods(timetable[day]);

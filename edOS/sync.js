@@ -1,7 +1,7 @@
 // Dictionary Mappings (Short Key <-> Long Key)
 const MODULE_FIELD_MAPS = {
   students: {
-    a: "fullName",
+    a: "name",
     b: "dob",
     c: "gender",
     d: "studentContact",
@@ -39,7 +39,7 @@ const MODULE_FIELD_MAPS = {
   // You can easily add maps for users, library, etc. here
 };
 const MODULE_FIELD_MAPS_USERS = {
-  a: "fullName",
+  a: "name",
   b: "dob",
   c: "gender",
   d: "contact",
@@ -64,7 +64,7 @@ const MODULE_FIELD_MAPS_USERS = {
 
 // Merged into your main engine dictionary map:
 MODULE_FIELD_MAPS.users = MODULE_FIELD_MAPS_USERS;
-// Build reverse map once for quick lookup (fullName -> a)
+// Build reverse map once for quick lookup (name -> a)
 const USER_REVERSE_MAP = {};
 for (const shortKey in MODULE_FIELD_MAPS_USERS) {
   USER_REVERSE_MAP[MODULE_FIELD_MAPS_USERS[shortKey]] = shortKey;
@@ -72,7 +72,7 @@ for (const shortKey in MODULE_FIELD_MAPS_USERS) {
 
 /**
  * 1. Map: Convert readable user data -> Firebase short keys
- * e.g., { fullName: "John", role: "teacher" } -> { a: "John", i: "teacher" }
+ * e.g., { name: "John", role: "teacher" } -> { a: "John", i: "teacher" }
  */
 function mapUserToFirebase(readableData) {
   if (!readableData || typeof readableData !== 'object') return readableData;
@@ -87,7 +87,7 @@ function mapUserToFirebase(readableData) {
 
 /**
  * 2. Unmap: Convert Firebase short keys -> readable user data
- * e.g., { a: "John", i: "teacher" } -> { fullName: "John", role: "teacher" }
+ * e.g., { a: "John", i: "teacher" } -> { name: "John", role: "teacher" }
  */
 function unmapUserFromFirebase(firebaseData) {
   if (!firebaseData || typeof firebaseData !== 'object') return firebaseData;
@@ -111,7 +111,7 @@ class SchoolSyncEngine {
     this.modules = ['students', 'users', 'library', 'timetables', 'student_progress', 'schoolDetails'];
   }
 
-  // 1. Unmap: Convert short Firebase object { a: "John", A: 1772... } -> { fullName: "John", updatedAt: 1772... }
+  // 1. Unmap: Convert short Firebase object { a: "John", A: 1772... } -> { name: "John", updatedAt: 1772... }
   unmapFromFirebase(moduleName, firebaseData) {
     if (!firebaseData || typeof firebaseData !== 'object') return firebaseData;
     const map = MODULE_FIELD_MAPS[moduleName];
@@ -125,13 +125,13 @@ class SchoolSyncEngine {
     return readableData;
   }
 
-  // 2. Map: Convert long object { fullName: "John", updatedAt: 1772... } -> { a: "John", A: 1772... }
+  // 2. Map: Convert long object { name: "John", updatedAt: 1772... } -> { a: "John", A: 1772... }
   mapToFirebase(moduleName, readableData) {
     if (!readableData || typeof readableData !== 'object') return readableData;
     const map = MODULE_FIELD_MAPS[moduleName];
     if (!map) return readableData;
 
-    // Build reverse map (fullName -> a)
+    // Build reverse map (name -> a)
     const reverseMap = {};
     for (const shortKey in map) {
       reverseMap[map[shortKey]] = shortKey;
@@ -642,7 +642,7 @@ function alertbox(message, type = "success") {
 
 // Mapping of single-letter keys to their human-readable labels
 const STUDENT_FIELD_MAP = {
-  a: "Full Name",
+  a: "Name",
   b: "Date of Birth",
   c: "Gender",
   d: "Student Contact",

@@ -647,7 +647,7 @@ body.is-loading .loading-overlay {
 
             students.forEach(s => {
                 const studentId = s.id || s.key;
-                const name = s.fullName;
+                const name = s.name;
                 const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
                 const feeVal = sessionFees[studentId];
                
@@ -789,9 +789,11 @@ async function resetAllFees() {
 
         initApp();
         const params = new URLSearchParams(window.location.search);
-
-if (params.get('school') === 'choola') {
+        if (params.get('school') === 'choola') {
     document.getElementById('classInput').value = '6A';
+}
+if (params.get('school') === '68ewd') {
+    document.getElementById('classInput').value = '6';
 }
     </script>
 </body>
