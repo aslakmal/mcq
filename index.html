@@ -4,367 +4,876 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="icons/icon-192.png">
-    <title>Digital Book</title>
-
-    <meta name="theme-color" content="#4f46e5">
-
-    <style>
-        /* -------- Reset -------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
-        }
-
-        /* -------- Background -------- */
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* -------- Floating math symbols -------- */
-        .math-bg span {
-            position: absolute;
-            font-size: 3rem;
-            opacity: 0.1;
-            animation: float 12s linear infinite;
-        }
-
-        .math-bg span:nth-child(1) {
-            top: 10%;
-            left: 15%;
-            animation-duration: 10s;
-        }
-
-        .math-bg span:nth-child(2) {
-            top: 70%;
-            left: 80%;
-            animation-duration: 14s;
-        }
-
-        .math-bg span:nth-child(3) {
-            top: 40%;
-            left: 60%;
-            animation-duration: 12s;
-        }
-
-        .math-bg span:nth-child(4) {
-            top: 80%;
-            left: 20%;
-            animation-duration: 16s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0);
-            }
-
-            50% {
-                transform: translateY(-40px) rotate(20deg);
-            }
-
-            100% {
-                transform: translateY(0) rotate(0);
-            }
-        }
-
-        /* -------- Card -------- */
-        .card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            animation: fadeIn 1.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        h1 {
-            font-size: 1.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        p {
-            opacity: 0.9;
-            margin-bottom: 1.8rem;
-        }
-
-        /* -------- Buttons -------- */
-        button {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-        }
-
-        .install-btn {
-            background: #22c55e;
-            color: #022c22;
-            margin-bottom: 12px;
-            display: none;
-        }
-
-        .open-btn {
-            background: white;
-            color: #4f46e5;
-        }
-
-        .footer {
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        :root {
-            --img-width: 300px;
-            --img-height: 533px; /* Standard 16:9 mobile ratio */
-            --gap: 20px;
-        }
-        a{text-decoration:none}
-/* The container limits the viewable area */
-.slider-container {
-            position: relative;
-            /* width for 3 images + gaps */
-            width: calc((var(--img-width) * 3) + (var(--gap) * 2));
-        }
-
-        /* Tablet View: Limit to 2 images */
-        @media (max-width: 1050px) {
-            .slider-container {
-                width: calc((var(--img-width) * 2) + var(--gap));
-            }
-        }
-
-        /* Mobile View: Limit to 1 image */
-        @media (max-width: 700px) {
-            .slider-container {
-                width: var(--img-width);
-            }
-            .nav-btn { display: none; } /* Hide buttons on mobile touch */
-        }
-
-        .screenshot-wrapper {
-            display: flex;
-            gap: var(--gap);
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            padding: 10px 0;
-        }
-
-        .screenshot-wrapper::-webkit-scrollbar {
-            display: none;
-        }
-
-        .screenshot-wrapper img {
-            width: var(--img-width);
-            height: 606px; /* Controls the vertical "largeness" */
-            flex-shrink: 0;
-            border-radius: 12px;
-            scroll-snap-align: start;
-            object-fit: cover; /* Prevents stretching */
-            transition: transform 0.3s ease;
-        }
-
-        .screenshot-wrapper img:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Navigation Buttons */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-size: 22px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .prev-btn { left: 0; }
-        .next-btn { right: 0; }
-        .nav-btn:active { scale: 0.95; }
-
-        .whatsapp-btn {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: linear-gradient(45deg, #25D366, #128C7E);
-    color: white;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-family: sans-serif;
-    font-size: 18px;
-    font-weight: bold;
-    box-shadow: 0 -3px 15px rgba(0,0,0,0.2);
-    z-index: 9999;
-    transition: all 0.3s ease;
-}
-
-/* Icon */
-.whatsapp-icon {
-    font-size: 22px;
-    animation: bounce 1.5s infinite;
-}
-
-/* Hover effect */
-.whatsapp-btn:hover {
-    background: linear-gradient(45deg, #128C7E, #25D366);
-    letter-spacing: 1px;
-}
-
-/* Bounce animation */
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-/* Mobile optimization */
-@media (max-width: 600px) {
-    .whatsapp-btn {
-        font-size: 16px;
-        height: 55px;
-    }
-}
-    </style>
+    <meta name="theme-color" content="#080d20">
+    <meta name="description"
+        content="DigiBook helps schools and tuition classes manage students, teachers, timetables, attendance, payments and parent communication.">
+    <title>DigiBook — Smarter Education Management</title>
+    <link rel="stylesheet" href="css/landing.css">
 </head>
 
 <body>
 
-    <div class="math-bg">
-        <span>∑</span>
-        <span>π</span>
-        <span>√</span>
-        <span>×</span>
-    </div>
+    <header id="header">
+        <nav class="navbar container" aria-label="Main navigation">
 
-    <div class="card">
-        <div class="logo">📘</div>
-        <h1>O/L Maths Digital book</h1>
-        <p>
-            • ගණිතයේ රස තැන් ගවේශණය • පුහුණු විභාග • ප්‍රගතිය නිරීක්ෂණය 
-            <br><br>• අන්තර්ජාලය නොමැතිව පහසු තැනක සිට ඉගෙන ගන්න
-            <br>• ශ්‍රී ලාංකික අපොස (සා.පෙළ) සිසුන් සඳහා නිර්මාණය කර ඇත
-        </p>
+            <a href="#home" class="brand" aria-label="DigiBook home">
+                <span class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H12v17H5.5A2.5 2.5 0 0 0 3 22z" />
+                        <path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H12v17h6.5A2.5 2.5 0 0 1 21 22z" />
+                    </svg>
+                </span>
+                DigiBook
+            </a>
 
-     
-        
-    <a href="https://wa.me/+94764042528" class="whatsapp-float" target="_blank" style="
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    color: #fff;
-    background: green;
-    padding: 10px;
-    box-shadow: 0 0 3px #0000004d;
-">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="
-    height: 20px;
-">
-Contact Us
-</a>
-        <div class="footer">
-           • Offline • Fast
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+
+            <a class="btn btn-primary nav-cta" href="#contact">Get Started ↗</a>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false"
+                aria-controls="navLinks">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
+            </button>
+
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- HERO -->
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+
+                <div class="hero-copy">
+                    <div class="pill">
+                        <span class="pill-dot"></span>
+                        A smarter way to manage education
+                    </div>
+
+                    <h1>
+                        Education management,
+                        <span class="gradient-text">made simple.</span>
+                    </h1>
+
+                    <p>
+                        One powerful platform for schools and tuition classes.
+                        Manage students, track attendance, organize timetables
+                        and keep parents connected — all in one place.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#pricing" class="btn btn-primary">
+                            Explore Plans <span>↗</span>
+                        </a>
+                        <a href="#features" class="btn btn-outline">
+                            Discover Features <span>↓</span>
+                        </a>
+                    </div>
+
+                    <div class="hero-note">
+                        <span>✓</span>
+                        Designed for modern education in Sri Lanka
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+
+                    <div class="float-card one">
+                        <strong>✦ Everything connected</strong>
+                        <small>One platform, less paperwork</small>
+                    </div>
+
+                    <div class="dashboard">
+                        <div class="dash-top">
+                            <div class="dash-dots"><span></span><span></span><span></span></div>
+                            <div class="dash-address">DigiBook.edu.lk</div>
+                            <div style="color:#7de4c5;font-size:.7rem">● Online</div>
+                        </div>
+
+                        <div class="dash-body">
+                            <div class="dash-welcome">Education Dashboard</div>
+                            <div class="dash-subtitle">Your institution at a glance</div>
+
+                            <div class="dash-stats">
+                                <div class="stat">
+                                    <div class="stat-icon" style="background:#6383ff20">♙</div>
+                                    <strong>1,248</strong>
+                                    <small>Students</small>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-icon" style="background:#4bd6e41b">▦</div>
+                                    <strong>48</strong>
+                                    <small>Teachers</small>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-icon" style="background:#47cda31b">✓</div>
+                                    <strong>96%</strong>
+                                    <small>Attendance</small>
+                                </div>
+                            </div>
+
+                            <div class="dash-bottom">
+                                <div class="dash-panel">
+                                    <div class="dash-panel-title">Student Progress</div>
+                                    <div class="chart">
+                                        <span style="height:35%"></span>
+                                        <span style="height:52%"></span>
+                                        <span style="height:43%"></span>
+                                        <span style="height:70%"></span>
+                                        <span style="height:59%"></span>
+                                        <span style="height:85%"></span>
+                                    </div>
+                                    <div class="chart-labels">
+                                        <span>Jan</span><span>Feb</span><span>Mar</span>
+                                        <span>Apr</span><span>May</span><span>Jun</span>
+                                    </div>
+                                </div>
+
+                                <div class="dash-panel">
+                                    <div class="dash-panel-title">Recent Activity</div>
+                                    <div class="student-mini">
+                                        <div class="avatar">AK</div>
+                                        <div><strong>Attendance</strong><small>Student checked in</small></div>
+                                        <span class="status">Done</span>
+                                    </div>
+                                    <div class="student-mini">
+                                        <div class="avatar" style="background:linear-gradient(145deg,#b28aff,#6485ff)">
+                                            NS</div>
+                                        <div><strong>New student</strong><small>Profile updated</small></div>
+                                    </div>
+                                    <div class="student-mini" style="border:0">
+                                        <div class="avatar" style="background:linear-gradient(145deg,#4bd6b0,#42a7b7)">
+                                            PM</div>
+                                        <div><strong>Payment</strong><small>Payment recorded</small></div>
+                                        <span class="status">Paid</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="float-card two">
+                        <strong>✓ Parents connected</strong>
+                        <small>Progress at their fingertips</small>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- BENEFITS
+        <div class="benefits">
+            <div class="container benefits-grid">
+                <div class="benefit"><span>🎓</span><span>Student Management</span></div>
+                <div class="benefit"><span>📅</span><span>Smart Timetables</span></div>
+                <div class="benefit"><span>📱</span><span>Parent Access</span></div>
+                <div class="benefit"><span>📊</span><span>Progress Tracking</span></div>
+            </div>
+        </div> -->
+
+        <!-- FEATURES -->
+        <section class="features" id="features">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <span class="eyebrow">Powerful Features</span>
+                    <h2>Everything you need.<br><span class="gradient-text">Nothing you don't.</span></h2>
+                    <p>
+                        Spend less time managing paperwork and more time helping
+                        students succeed.
+                    </p>
+                </div>
+
+                <div class="feature-grid">
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg></div>
+                        <h3>Student Management</h3>
+                        <p>Organize student profiles, records, class information
+                            and essential details in one convenient place.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg></div>
+                        <h3>Teacher Management</h3>
+                        <p>Maintain teacher information, assignments and class
+                            responsibilities with less administrative work.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg></div>
+                        <h3>Smart Timetables</h3>
+                        <p>Organize class schedules and teacher allocations.
+                            Make daily planning easier for everyone.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                <path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"></path>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg></div>
+                        <h3>Attendance Tracking</h3>
+                        <p>Record attendance and make attendance information
+                            easier to review for authorized users and parents.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"></path>
+                            <path d="M12 7v10M15 9.5H10.5a2 2 0 0 0 0 4h3a2 2 0 0 1 0 4H9"></path>
+                          </svg></div>
+                        <h3>Payment Management</h3>
+                        <p>Keep tuition payment records organized, monitor
+                            payment status and simplify fee administration.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"></path>
+                            <path d="M8 15l3-3 2 2 5-5"></path>
+                            <path d="M14 9h4v4"></path>
+                          </svg></div>
+                        <h3>Student Progress</h3>
+                        <p>Help parents follow available academic progress,
+                            attendance and student information online.</p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SCHOOLS AND TUITION -->
+        <section class="audience">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <span class="eyebrow">One Platform, Two Solutions</span>
+                    <h2>Built for your <span class="gradient-text">institution.</span></h2>
+                    <p>Whether you run a school or a tuition class, manage your
+                        daily operations from one place.</p>
+                </div>
+
+                <div class="audience-grid">
+
+                    <article class="audience-card reveal">
+                        <div class="audience-top">
+                            <div class="audience-icon">🏫</div>
+                            <div>
+                                <h3>For Schools</h3>
+                                <p style="font-size:.82rem;margin-top:5px">A more organized school day</p>
+                            </div>
+                        </div>
+
+                        <p>
+                            Simplify school administration while keeping student
+                            information and school activities organized.
+                        </p>
+
+                        <ul class="check-list">
+                            <li><span>✓</span> Student profiles and digital ID cards</li>
+                            <li><span>✓</span> Teacher and class management</li>
+                            <li><span>✓</span> Class and teacher timetables</li>
+                            <li><span>✓</span> Student attendance records</li>
+                            <li><span>✓</span> Academic progress and parent access</li>
+                        </ul>
+                    </article>
+
+                    <article class="audience-card reveal">
+                        <div class="audience-top">
+                            <div class="audience-icon">📚</div>
+                            <div>
+                                <h3>For Tuition Classes</h3>
+                                <p style="font-size:.82rem;margin-top:5px">Less paperwork, more teaching</p>
+                            </div>
+                        </div>
+
+                        <p>
+                            Keep student registrations, class attendance and
+                            tuition payments organized without unnecessary paperwork.
+                        </p>
+
+                        <ul class="check-list">
+                            <li><span>✓</span> Student registration and records</li>
+                            <li><span>✓</span> Attendance management</li>
+                            <li><span>✓</span> Tuition payment tracking</li>
+                            <li><span>✓</span> Digital student identification</li>
+                            <li><span>✓</span> Online parent access to available records</li>
+                        </ul>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- DIGITAL ID -->
+        <section class="digital-id" id="digital-id">
+            <div class="container id-grid">
+
+                <div class="id-copy reveal">
+                    <span class="eyebrow">Digital Student ID</span>
+                    <h2>A student ID that goes <span class="gradient-text">beyond a card.</span></h2>
+
+                    <p>
+                        Give every student a modern digital identity. QR-enabled
+                        student ID cards make it easier to identify students and
+                        access their associated records using supported features.
+                    </p>
+
+                    <div class="id-points">
+                        <div class="id-point">
+                            <div class="id-point-icon">▦</div>
+                            <div>
+                                <h3>QR-enabled identification</h3>
+                                <p>Make student identification and record lookup easier.</p>
+                            </div>
+                        </div>
+
+                        <div class="id-point">
+                            <div class="id-point-icon">📱</div>
+                            <div>
+                                <h3>Parent access, online</h3>
+                                <p>Give parents convenient access to available student information.</p>
+                            </div>
+                        </div>
+
+                        <div class="id-point">
+                            <div class="id-point-icon">📊</div>
+                            <div>
+                                <h3>Progress and attendance</h3>
+                                <p>Help parents stay informed about attendance and academic progress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="id-showcase reveal">
+                    <div class="id-float left">
+                        <strong>✓ Digital Identity</strong>
+                        <small>Student identification</small>
+                    </div>
+
+                    <div class="id-card">
+                        <div class="id-card-header">
+                            <div class="id-logo">▤</div>
+                            <div>
+                                DigiBook
+                                <div style="font-size:.59rem;color:#a8baff;font-weight:500">
+                                    STUDENT IDENTITY
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="id-card-label">Student identification card</div>
+
+                        <div class="id-student">
+                            <div class="id-avatar">👨‍🎓</div>
+                            <div>
+                                <strong>Student Name</strong>
+                                <small>Student ID: 10001</small>
+                                <div style="font-size:.7rem;color:#8be8d0;margin-top:5px">
+                                    ● Registered Student
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="qr-row">
+                            <svg class="qr-pattern" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"
+                                shape-rendering="crispEdges" aria-label="Decorative QR-like pattern">
+                                <rect width="21" height="21" fill="#fff" />
+                                <path fill="#101a34" d="
+                        M1 1h7v7H1z M3 3v3h3V3z M13 1h7v7h-7z
+                        M15 3v3h3V3z M1 13h7v7H1z M3 15v3h3v-3z
+                        M10 1h1v1h-1z M9 4h2v1H9z M10 7h2v2h-2z
+                        M9 10h3v1H9z M13 10h1v3h-1z M16 10h2v1h-2z
+                        M19 9h1v3h-1z M9 13h2v2H9z M12 15h2v1h-2z
+                        M15 14h2v2h-2z M18 14h2v1h-2z M10 17h2v2h-2z
+                        M13 18h2v1h-2z M17 18h3v2h-3z" />
+                            </svg>
+                            <div>
+                                <strong>Scan to identify</strong>
+                                <p>Connected student records</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="id-float right">
+                        <strong>📈 Progress updates</strong>
+                        <small>Stay informed online</small>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PARENTS -->
+        <section class="parents">
+            <div class="container parents-grid">
+
+                <div class="parent-panel reveal">
+                    <div class="parent-panel-head">
+                        <div>
+                            <strong>Student Progress</strong>
+                            <br><small>Illustrative parent dashboard</small>
+                        </div>
+                        <span style="color:#76e4c2;font-size:.78rem">● Overview</span>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Mathematics</span><span>85%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-width="85%"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Science</span><span>92%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-width="92%"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>English</span><span>78%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-width="78%"></div>
+                        </div>
+                    </div>
+
+               
+                </div>
+
+                <div class="parents-copy reveal">
+                    <span class="eyebrow">Connected Parents</span>
+                    <h2>Parents deserve to be <span class="gradient-text">in the know.</span></h2>
+
+                    <p>
+                        Help parents stay connected to their children's educational
+                        journey. With supported online access or a parents app,
+                        they can check available progress information and attendance
+                        without always needing to visit the institution.
+                    </p>
+
+                    <ul class="check-list">
+                        <li><span>✓</span> Access available student information online</li>
+                        <li><span>✓</span> Review attendance records</li>
+                        <li><span>✓</span> Follow recorded academic progress</li>
+                        <li><span>✓</span> Stay connected with the institution</li>
+                    </ul>
+
+                    <a href="#contact" class="btn btn-primary" style="margin-top:28px">
+                        Learn More ↗
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section class="pricing" id="pricing">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <span class="eyebrow">Simple, Affordable Pricing</span>
+                    <h2>The right plan for <span class="gradient-text">your institution.</span></h2>
+                    <p>
+                        Choose your plan based on the number of students.
+                        Enjoy our discounted monthly rates.
+                    </p>
+                    <div class="pricing-note">✦ Special discounted monthly prices</div>
+                </div>
+
+                <div class="pricing-grid">
+
+                    <article class="price-card reveal">
+                        <h3>Micro</h3>
+                        <p class="range">Less than 500 students</p>
+
+                        <div class="old-price">LKR 500 / month</div>
+                        <div class="new-price"><strong>300</strong><span>LKR / month</span></div>
+                        <span class="discount">Save LKR 200/month</span>
+
+                        <div class="price-divider"></div>
+
+                        <ul class="check-list">
+                            <li><span>✓</span> Student management</li>
+                            <li><span>✓</span> Digital student IDs</li>
+                            <li><span>✓</span> Institution management tools</li>
+                            <li><span>✓</span> Parent access features</li>
+                        </ul>
+
+                        <a href="#contact" class="btn btn-outline">Get Started</a>
+                    </article>
+
+                    <article class="price-card reveal">
+                        <h3>Mini</h3>
+                        <p class="range">500–1,000 students</p>
+
+                        <div class="old-price">LKR 750 / month</div>
+                        <div class="new-price"><strong>500</strong><span>LKR / month</span></div>
+                        <span class="discount">Save LKR 250/month</span>
+
+                        <div class="price-divider"></div>
+
+                        <ul class="check-list">
+                            <li><span>✓</span> Student management</li>
+                            <li><span>✓</span> Digital student IDs</li>
+                            <li><span>✓</span> Institution management tools</li>
+                            <li><span>✓</span> Parent access features</li>
+                        </ul>
+
+                        <a href="#contact" class="btn btn-outline">Get Started</a>
+                    </article>
+
+                    <article class="price-card reveal">
+                       <h3>Small</h3>
+                        <p class="range">1,000–2,000 students</p>
+
+                        <div class="old-price">LKR 1,300 / month</div>
+                        <div class="new-price"><strong>1,000</strong><span>LKR / month</span></div>
+                        <span class="discount">Save LKR 300/month</span>
+
+                        <div class="price-divider"></div>
+
+                        <ul class="check-list">
+                            <li><span>✓</span> Student management</li>
+                            <li><span>✓</span> Digital student IDs</li>
+                            <li><span>✓</span> Institution management tools</li>
+                            <li><span>✓</span> Parent access features</li>
+                        </ul>
+
+                        <a href="#contact" class="btn btn-outline">Get Started</a>
+                    </article>
+
+                    <article class="price-card reveal">
+                        <h3>Medium</h3>
+                        <p class="range">More than 2,000 students</p>
+
+                        <div class="old-price">LKR 1,800 / month</div>
+                        <div class="new-price"><strong>1,500</strong><span>LKR / month</span></div>
+                        <span class="discount">Save LKR 300/month</span>
+
+                        <div class="price-divider"></div>
+
+                        <ul class="check-list">
+                            <li><span>✓</span> Student management</li>
+                            <li><span>✓</span> Digital student IDs</li>
+                            <li><span>✓</span> Institution management tools</li>
+                            <li><span>✓</span> Parent access features</li>
+                        </ul>
+
+                        <a href="#contact" class="btn btn-outline">Get Started</a>
+                    </article>
+
+                </div>
+
+                <p class="price-disclaimer">
+                    Contact us to confirm plan eligibility, included features and payment terms.
+                </p>
+
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="about" id="about">
+            <div class="container about-grid">
+
+                <div class="about-copy reveal">
+                    <span class="eyebrow">About DigiBook</span>
+                    <h2>Helping education move <span class="gradient-text">forward.</span></h2>
+
+                    <p>
+                        DigiBook is an education management platform designed
+                        to make everyday administration easier for schools and
+                        tuition classes. We bring important student information,
+                        staff management and classroom administration into one
+                        convenient digital environment.
+                    </p>
+
+                    <p>
+                        From student identity cards and timetables to attendance,
+                        tuition payments and parent access, our goal is to reduce
+                        repetitive paperwork and make educational information
+                        easier to manage.
+                    </p>
+
+                    <p>
+                        We believe technology should support teachers, simplify
+                        administration and help parents stay involved in a
+                        student's learning journey.
+                    </p>
+                </div>
+
+                <div class="about-visual reveal">
+                    <div class="about-tile">
+                        <span>🎓</span>
+                        <strong>Student First</strong>
+                        <p>Keep student information organized.</p>
+                    </div>
+
+                    <div class="about-tile">
+                        <span>⚡</span>
+                        <strong>Less Paperwork</strong>
+                        <p>Make everyday tasks simpler.</p>
+                    </div>
+
+                    <div class="about-tile">
+                        <span>🤝</span>
+                        <strong>Connected Parents</strong>
+                        <p>Make information easier to access.</p>
+                    </div>
+
+                    <div class="about-tile">
+                        <span>📚</span>
+                        <strong>Better Management</strong>
+                        <p>Support organized education.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="contact" id="contact">
+            <div class="container">
+
+                <div class="contact-card reveal">
+
+                    <div class="contact-top">
+                        <span class="eyebrow">Let's Talk</span>
+                        <h2>Ready to make education <span class="gradient-text">simpler?</span></h2>
+                        <p>
+                            Have a question about DigiBook or want to get started
+                            with your school or tuition class? Get in touch with us.
+                        </p>
+                    </div>
+
+                    <div class="contact-grid">
+
+                        <a class="contact-item" href="tel:+94764042528">
+                            <div class="contact-icon">☎</div>
+                            <strong>Call Us</strong>
+                            <p>+94 76 404 2528</p>
+                        </a>
+
+                       
+                        <a class="contact-item"
+                            href="https://wa.me/94764042528?text=Hello%20DigiBook%2C%20I%20am%20interested%20in%20your%20education%20management%20system."
+                            target="_blank" rel="noopener noreferrer">
+                            <div class="contact-icon">☏</div>
+                            <strong>WhatsApp Us</strong>
+                            <p>+94 76 404 2528</p>
+                        </a>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+      
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-inner">
+            <a href="#home" class="brand" style="font-size:1.05rem">
+                <span class="brand-icon" style="width:32px;height:32px;border-radius:9px">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H12v17H5.5A2.5 2.5 0 0 0 3 22z" />
+                        <path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H12v17h6.5A2.5 2.5 0 0 1 21 22z" />
+                    </svg>
+                </span>
+                DigiBook
+            </a>
+
+            <p>© <span id="year"></span> DigiBook. All rights reserved.</p>
+
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#contact">Contact</a>
+            </div>
         </div>
-    </div>
-    <div class="slider-container">
-        <button class="nav-btn prev-btn" onclick="slide('left')">❮</button>
-        
-        <div class="screenshot-wrapper" id="slider">
-            <img src="img/s4.jpg" alt="4">
-            <img src="img/s1.jpg" alt="1">
-            <img src="img/s2.jpg" alt="2">
-            <img src="img/s3.jpg" alt="3">
-            <img src="img/s6.jpg" alt="6">
-            <img src="img/s5.jpg" alt="5">
-            <img src="img/s7.jpg" alt="7">
-            <img src="img/s8.jpg" alt="8">
-            <img src="img/s9.jpg" alt="9">
-        </div>
-    
-        <button class="nav-btn next-btn" onclick="slide('right')">❯</button>
-    </div>
+    </footer>
 
+    <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
 
+    <script>
+        const header = document.getElementById("header");
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+        const backTop = document.getElementById("backTop");
+        const navItems = document.querySelectorAll(".nav-links a");
+        const sections = document.querySelectorAll("main section[id]");
 
-<script>
-function slide(direction) {
-        const slider = document.getElementById('slider');
-        const step = 320; // 300px width + 20px gap
-        
-        if (direction === 'left') {
-            slider.scrollBy({ left: -step, behavior: 'smooth' });
-        } else {
-            slider.scrollBy({ left: step, behavior: 'smooth' });
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        /* Header and back-to-top */
+
+        function updateScrollUI() {
+            header.classList.toggle("scrolled", window.scrollY > 20);
+            backTop.classList.toggle("show", window.scrollY > 450);
         }
-    }
-</script>
-    
-<a href="#" onclick="openWhatsApp()" class="whatsapp-btn">
-    <span class="whatsapp-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="
-    height: 20px;
-"></span>
-    <span class="whatsapp-text">Chat with us</span>
-</a>
 
-<script>
-function openWhatsApp() {
-    let phone = "94764042528";
-    let message = "Hello! I need more details";
-    let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
-    window.open(url, "_blank");
-}
-</script>
+        window.addEventListener("scroll", updateScrollUI, { passive: true });
+        updateScrollUI();
+
+        /* Mobile navigation */
+
+        function closeMenu() {
+            navLinks.classList.remove("open");
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Open navigation");
+        }
+
+        menuToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation" : "Open navigation"
+            );
+        });
+
+        navItems.forEach(link => {
+            link.addEventListener("click", closeMenu);
+        });
+
+        document.addEventListener("click", event => {
+            if (
+                !navLinks.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") closeMenu();
+        });
+
+        /* Scroll reveal animations */
+
+        const reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        if ("IntersectionObserver" in window && !reduceMotion) {
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.12,
+                rootMargin: "0px 0px -35px 0px"
+            });
+
+            document.querySelectorAll(".reveal").forEach(element => {
+                revealObserver.observe(element);
+            });
+        } else {
+            document.querySelectorAll(".reveal").forEach(element => {
+                element.classList.add("visible");
+            });
+        }
+
+        /* Animate parent progress bars when visible */
+
+        const progressFills = document.querySelectorAll(".progress-fill");
+
+        if ("IntersectionObserver" in window && !reduceMotion) {
+            const progressObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.width = entry.target.dataset.width;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            progressFills.forEach(bar => progressObserver.observe(bar));
+        } else {
+            progressFills.forEach(bar => {
+                bar.style.width = bar.dataset.width;
+            });
+        }
+
+        /* Highlight current navigation section */
+
+        if ("IntersectionObserver" in window) {
+            const sectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navItems.forEach(link => {
+                            const active =
+                                link.getAttribute("href") === "#" + entry.target.id;
+
+                            if (active) {
+                                link.classList.add("active");
+                                link.setAttribute("aria-current", "location");
+                            } else {
+                                link.classList.remove("active");
+                                link.removeAttribute("aria-current");
+                            }
+                        });
+                    }
+                });
+            }, {
+                rootMargin: "-30% 0px -60% 0px"
+            });
+
+            sections.forEach(section => sectionObserver.observe(section));
+        }
+
+        /* Back to top */
+
+        backTop.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: reduceMotion ? "auto" : "smooth"
+            });
+        });
+    </script>
+
 </body>
 
 </html>
