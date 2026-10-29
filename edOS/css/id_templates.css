@@ -3156,6 +3156,7 @@
   }
 span{overflow-wrap: break-word;}
 .info-row .label{text-align: left;}
+.info-row .value{text-align: right;}
 
 
 
