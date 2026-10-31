@@ -83,7 +83,8 @@
     <div class="bulk-bar">
       <div class="bulk-info" id="selectedCountText">0 students selected</div>
       <div class="bulk-buttons">
-        <button type="button" class="btn-bulk btn-bulk-score" onclick="openBulkScoreModal()">+ Add Exam Score</button>
+        <button type="button" class="btn-bulk btn-bulk-progress" onclick="openBulkProgressModal()">Compare Marks</button>
+        <button type="button" class="btn-bulk btn-bulk-score" onclick="openBulkScoreModal()">+ Add Exam Marks</button>
         <button type="button" class="btn-bulk btn-bulk-class" onclick="openBulkClassModal()">Change Class</button>
         <button type="button" class="btn-bulk btn-bulk-price" onclick="openBulkPriceModal()" style="display: none;">Change Class Fee</button>
       </div>
@@ -108,12 +109,12 @@
       <div style="display: flex; gap: 12px; margin-bottom: 16px;">
         <div style="flex: 1;">
           <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Exam</label>
-          <select id="scoreSemesterSelect" class="form-control" onclick="checkOptions()" onchange="fetchAndUpdateModalScores()">
+          <select class="form-control scoreSemesterSelect" onclick="checkOptions()" onchange="fetchAndUpdateModalScores()">
           </select>
         </div>
         <div style="flex: 1;">
           <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Subject</label>
-          <select id="scoreSubjectSelect" class="form-control" onclick="checkOptions()" onchange="fetchAndUpdateModalScores()">
+          <select class="form-control scoreSubjectSelect" onclick="checkOptions()" onchange="fetchAndUpdateModalScores()">
           </select>
 
         </div>
@@ -129,6 +130,37 @@
       </div>
     </div>
   </div>
+
+  <!-- UPDATED BULK EXAM SCORE MODAL -->
+  <div id="bulkProgressModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-height: 100%;display: block;overflow: scroll;">
+      <div class="modal-header">
+        <h3>Student progress</h3>
+        <button type="button" class="close-modal" onclick="closeModal('bulkProgressModal')">×</button>
+      </div>
+
+      <!-- Controls trigger dynamic reloading of current scores -->
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div style="flex: 1;">
+          <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Exam</label>
+          <select class="form-control scoreSemesterSelect" onclick="checkOptions()" onchange="updateChart()">
+          </select>
+        </div>
+        <div style="flex: 1;">
+          <label style="font-size: 0.82rem; font-weight: 600; color: #4a5568;">Subject</label>
+          <select class="form-control scoreSubjectSelect" onclick="checkOptions()" onchange="updateChart()">
+          </select>
+
+        </div>
+      </div>
+
+      <div id="chartWrapper" style="position: relative; height:auto; width: 100%; margin-top: 15px;overflow: scroll;">
+        <canvas id="bulkProgressChart"></canvas>
+      </div>
+
+    </div>
+  </div>
+
 
   <!-- BULK CLASS CHANGE MODAL -->
   <div id="bulkClassModal" class="modal-overlay" role="dialog" aria-modal="true">
@@ -268,9 +300,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="sync.js?x9"></script>
-  <script src="js/id_manager.js?x9"></script>
+  <script src="js/id_manager.js?xd9"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/students.js?x9"></script>
+  <script src="js/students.js?www"></script>
   <script src="js/studentData.js?x9"></script>
  </body>
 <!-- Include library via CDN (or install via npm: npm install html-to-image) -->
