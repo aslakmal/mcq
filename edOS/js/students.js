@@ -394,6 +394,8 @@ function getStudentFromIDB(studentId) {
 
 // Opens modal & populates initial student list
 async function openBulkScoreModal() {
+  document.getElementById('bulkScoreModal').style.display = 'flex';
+
   const schoolData = await getSetting();
   if(schoolData){populateExamDropdowns(schoolData.exams);}
   const selectedList = getSelectedStudents();
@@ -402,7 +404,7 @@ async function openBulkScoreModal() {
     alertbox("Please select at least one student to add or edit exam scores.", "error");
     return;
   }
-console.log(selectedList)
+
   const container = document.getElementById('bulkScoreStudentList');
   container.innerHTML = selectedList.map(s => {
     const key = s.id || s.key;
@@ -424,14 +426,144 @@ console.log(selectedList)
   `;
   }).join('');
 
-  document.getElementById('bulkScoreModal').style.display = 'flex';
-
+  
   // Auto fetch initial scores for selected semester & subject
   await fetchAndUpdateModalScores();
 }
+// Opens modal & populates initial student list
+let bulkProgressChartInstance = null;
+
+async function openBulkProgressModal() {
+  document.getElementById('bulkProgressModal').style.display = 'flex';
+
+  const schoolData = await getSetting();
+  if (schoolData) {
+    populateExamDropdowns(schoolData.exams);
+  }
+
+  const selectedList = getSelectedStudents();
+  if (selectedList.length === 0) {
+    alertbox("Please select at least one student to view progress.", "error");
+    return;
+  }
+  const dynamicHeight = Math.max(300, selectedList.length * 35);
+  
+  // Target the container wrapping your canvas and apply the height
+  const chartWrapper = document.getElementById('chartWrapper');
+  if (chartWrapper) {
+    chartWrapper.style.height = `${dynamicHeight}px`;
+  }
+  // Render initial chart data
+  await updateChart();
+}
+
+async function updateChart() {
+  const sem = getActiveModalSelect('scoreSemesterSelect').value;
+  const subject = getActiveModalSelect('scoreSubjectSelect').value;
+
+  const selectedList = getSelectedStudents();
+  if (selectedList.length === 0) return;
+
+  const labels = [];
+  const scores = [];
+
+  for (const s of selectedList) {
+    const studentId = s.id || s.key;
+    labels.push(s.name || 'Unknown');
+
+    let existingScore = null;
+
+    // 1. Check IndexedDB first
+    const idbStudent = await getStudentFromIDB(studentId);
+    if (idbStudent && idbStudent.exam && idbStudent.exam[sem] && idbStudent.exam[sem][subject] !== undefined) {
+      existingScore = idbStudent.exam[sem][subject];
+    }
+
+    // 2. Fallback to cached memory array
+    if (existingScore === null) {
+      const memoryStudent = cachedStudents.find(st => (st.id || st.key) === studentId);
+      if (memoryStudent && memoryStudent.exam && memoryStudent.exam[sem] && memoryStudent.exam[sem][subject] !== undefined) {
+        existingScore = memoryStudent.exam[sem][subject];
+      }
+    }
+
+    scores.push(existingScore !== null ? Number(existingScore) : 0);
+  }
+
+  const canvas = document.getElementById('bulkProgressChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Gradient setup
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+  gradient.addColorStop(0, '#5dd8e8');
+  gradient.addColorStop(1, '#5576fa');
+
+  // If the chart already exists, just update its data seamlessly (keeps old width as transition start)
+  if (bulkProgressChartInstance) {
+    bulkProgressChartInstance.data.labels = labels;
+    bulkProgressChartInstance.data.datasets[0].data = scores;
+    bulkProgressChartInstance.update();
+  } else {
+    // Create new chart instance if it doesn't exist yet
+    bulkProgressChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Score',
+          data: scores,
+          backgroundColor: gradient,
+          borderRadius: 4,
+          barPercentage: 0.75,     // Increases bar thickness (0.0 to 1.0)
+          categoryPercentage: 0.85 // Increases spacing control for bars
+        }]
+      },
+      options: {
+        indexAxis: 'y', // Horizontal bars
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 100
+          },
+          y: {
+            ticks: {
+              // Automatically truncate names longer than 18 characters
+              callback: function(value) {
+                const fullLabel = this.getLabelForValue(value);
+                return fullLabel.length > 18 ? fullLabel.substring(0, 10) + '...' : fullLabel;
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          // Enable tooltips to show the full student name and score on hover
+          tooltip: {
+            callbacks: {
+              title: function(context) {
+                // This ensures the tooltip shows the FULL name when hovered
+                return context[0].label;
+              },
+              label: function(context) {
+                return ` Score: ${context.raw}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
+
 async function checkOptions() {
-  const sem = document.getElementById('scoreSemesterSelect');
-  const subject = document.getElementById('scoreSubjectSelect');
+  const sem = getActiveModalSelect('scoreSemesterSelect');
+  const subject = getActiveModalSelect('scoreSubjectSelect');
   if (sem.options.length <= 1||subject.options.length <= 1) {
     alertbox("Should add exams and subjects in principal dashboard","error");
 }
@@ -439,9 +571,10 @@ async function checkOptions() {
 
 // Fetches scores (IndexedDB -> Firebase -> Memory Fallback) when Semester/Subject dropdown changes
 async function fetchAndUpdateModalScores() {
-  const sem = document.getElementById('scoreSemesterSelect').value;
-  const subject = document.getElementById('scoreSubjectSelect').value;
-  const scoreInputs = document.querySelectorAll('.student-score-field');
+const sem = getActiveModalSelect('scoreSemesterSelect').value;
+const subject = getActiveModalSelect('scoreSubjectSelect').value;
+
+const scoreInputs = document.querySelectorAll('.student-score-field');
   
   const enableInputs = sem !== "" && subject !== "";
   for (const input of scoreInputs) {
@@ -469,11 +602,21 @@ async function fetchAndUpdateModalScores() {
     input.value = existingScore !== null ? existingScore : '';
   }
 }
+function getActiveModalSelect(className) {
+  // Find the modal overlay that is currently displayed
+  const visibleModal = Array.from(document.querySelectorAll('.modal-overlay')).find(modal => {
+    const displayStyle = window.getComputedStyle(modal).display;
+    return displayStyle === 'flex' || displayStyle === 'block';
+  });
+
+  // Return the element with the class from inside that specific modal
+  return visibleModal ? visibleModal.querySelector(`.${className}`) : null;
+}
 
 // Writes updated scores to Firebase & updates local memory/cache
 async function submitBulkScores() {
-  const sem = document.getElementById('scoreSemesterSelect').value;
-  const subject = document.getElementById('scoreSubjectSelect').value;
+  const sem = getActiveModalSelect('scoreSemesterSelect').value;
+  const subject = getActiveModalSelect('scoreSubjectSelect').value;
   const scoreInputs = document.querySelectorAll('.student-score-field');
 
   const updates = {};
@@ -825,31 +968,43 @@ auth.onAuthStateChanged(user => {
 });
 
 function populateExamDropdowns(examsData) {
-  const semesterSelect = document.getElementById("scoreSemesterSelect");
-  const subjectSelect = document.getElementById("scoreSubjectSelect");
+  const sem = getActiveModalSelect('scoreSemesterSelect');
+  const subject = getActiveModalSelect('scoreSubjectSelect');
+  
+  if (!sem || !subject) return;
 
   // Clear existing options
-  semesterSelect.innerHTML = '<option value="">Select Exam</option>';
-  subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+  sem.innerHTML = '<option value="">Select Exam</option>';
+  subject.innerHTML = '<option value="">Select Subject</option>';
 
   // 1. Populate Exam Types (using key as value)
   if (examsData && examsData.types) {
     Object.entries(examsData.types).forEach(([key, val]) => {
       const option = document.createElement("option");
-      option.value = key;       // Using the key (e.g., "0", "1")
-      option.textContent = val; // Using the value (e.g., "Semester 1")
-      semesterSelect.appendChild(option);
+      option.value = key;       
+      option.textContent = val; 
+      sem.appendChild(option);
     });
+    
+    // Auto-select the first actual exam option if available
+    if (sem.options.length > 1) {
+      sem.selectedIndex = 1;
+    }
   }
 
   // 2. Populate Subjects / Topics (using key as value)
   if (examsData && examsData.subjects) {
     Object.entries(examsData.subjects).forEach(([key, val]) => {
       const option = document.createElement("option");
-      option.value = key;       // Using the key (e.g., "0", "1")
-      option.textContent = val; // Using the value (e.g., "maths")
-      subjectSelect.appendChild(option);
+      option.value = key;       
+      option.textContent = val; 
+      subject.appendChild(option);
     });
+    
+    // Auto-select the first actual subject option if available
+    if (subject.options.length > 1) {
+      subject.selectedIndex = 1;
+    }
   }
 }
 
