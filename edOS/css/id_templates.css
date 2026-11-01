@@ -869,7 +869,7 @@
 
 
 .tpl-neo-glass h4 {
-    color: #ffffff;
+    color: #111;
     font-size: 15px;
     font-weight: 800;
     letter-spacing: 0.5px;
@@ -1651,7 +1651,6 @@
   .tpl-top-polygons h4 {
     position: relative;
     z-index: 10;
-    color: #b45309; /* Deep Gold/Amber Name */
     font-size: 12px;
     font-weight: 800;
     margin: 2px 0 1px 0;
@@ -3157,6 +3156,8 @@
 span{overflow-wrap: break-word;}
 .info-row .label{text-align: left;}
 .info-row .value{text-align: right;}
+#cardName,.card-badge{z-index: 1;
+  position: relative}
 
 
 
