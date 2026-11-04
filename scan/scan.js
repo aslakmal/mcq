@@ -442,16 +442,23 @@ manualSaveBtn.addEventListener('click', () => {
 });
 
 async function saveAttendance(student, checked, currentClass) {
+  if (!currentClass) {
+      alertbox("Class is required to save attendance.", "error");
+      return;
+  }
+
+  // Define active date variables inside the function
   const now = new Date();
   const activeYear = now.getFullYear();
-  const activeMonth = String(now.getMonth() + 1); 
-  const activeDay = String(now.getDate());  
-
-  setAppBusy(true, "Saving attendance...");
-
-  const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
+  const activeMonth = String(now.getMonth() + 1).padStart(2, '0'); // e.g. "05"
+  const activeDay = String(now.getDate()).padStart(2, '0');     // e.g. "09"
   const dateKey = `${activeMonth}:${activeDay}`;
 
+  setAppBusy(true, "Saving attendace...");
+
+  const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system';
+
+  // Resolve student ID and local cache object
   const studentId = (typeof student === 'object' && student !== null) ? (student.id || student.key) : student;
   const studentObj = (typeof student === 'object' && student !== null) ? student : cachedStudents.find(s => (s.id || s.key) === studentId);
 
@@ -461,44 +468,62 @@ async function saveAttendance(student, checked, currentClass) {
       return;
   }
 
-  if (typeof attendanceDatesArray === 'undefined') {
-      window.attendanceDatesArray = [];
-  }
-
-  let dateIndex = attendanceDatesArray.indexOf(dateKey);
-  let isNewDate = dateIndex === -1;
-
-  if (isNewDate) {
-      attendanceDatesArray.push(dateKey);
-      dateIndex = attendanceDatesArray.length - 1;
-  }
-
-  let attendanceStr = (studentObj && typeof studentObj.attendance === 'string') ? studentObj.attendance : '';
-
-  while (attendanceStr.length <= dateIndex) {
-      attendanceStr += '0';
-  }
-
-  const attendanceVal = checked ? 1 : 0;
-  attendanceStr = attendanceStr.substring(0, dateIndex) + attendanceVal + attendanceStr.substring(dateIndex + 1);
-
-  if (studentObj) {
-      studentObj.attendance = attendanceStr;
-  }
-
-  const updates = {};
-
-  if (isNewDate) {
-      updates[`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`] = attendanceDatesArray;
-  }
-
-  const basePath = `schools/${schoolId}/students/${studentId}`;
-  updates[`${basePath}/E`] = attendanceStr;
-  updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
-  updates[`${basePath}/B`] = userId;
-
   try {
       db.goOnline();
+
+      // Initialize local class attendance dates cache to reduce Firebase connections
+      if (typeof window.classAttendanceDatesCache === 'undefined') {
+          window.classAttendanceDatesCache = {};
+      }
+
+      // Check if attendanceDatesArray is already cached for this class, otherwise fetch from Firebase
+      let attendanceDatesArray = window.classAttendanceDatesCache[currentClass];
+      if (!attendanceDatesArray) {
+          const snapshot = await db.ref(`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`).once('value');
+          attendanceDatesArray = snapshot.val() || [];
+          window.classAttendanceDatesCache[currentClass] = attendanceDatesArray;
+      }
+
+      // Check if today's dateKey already exists in attendanceDatesArray
+      let dateIndex = attendanceDatesArray.indexOf(dateKey);
+      let isNewDate = dateIndex === -1;
+
+      if (isNewDate) {
+          attendanceDatesArray.push(dateKey);
+          dateIndex = attendanceDatesArray.length - 1;
+      }
+
+      // Default to an empty string if attendance doesn't exist yet
+      let attendanceStr = (studentObj && typeof studentObj.attendance === 'string') ? studentObj.attendance : '';
+
+      // Ensure attendance string length matches or covers dateIndex by padding with '0'
+      while (attendanceStr.length <= dateIndex) {
+          attendanceStr += '0';
+      }
+
+      // Convert boolean checked value to 1 or 0
+      const attendanceVal = checked ? 1 : 0;
+
+      // Replace/update the character at dateIndex (e.g., updating the 3rd date or appending new)
+      attendanceStr = attendanceStr.substring(0, dateIndex) + attendanceVal + attendanceStr.substring(dateIndex + 1);
+
+      // Update local student cache so UI reflects changes correctly
+      if (studentObj) {
+          studentObj.attendance = attendanceStr;
+      }
+
+      const updates = {};
+
+      // Update attendanceDates array in Firebase only if it's a new date entry
+      if (isNewDate) {
+          updates[`schools/${schoolId}/attendanceDates/${activeYear}/${currentClass}`] = attendanceDatesArray;
+      }
+
+      const basePath = `schools/${schoolId}/students/${studentId}`;
+      updates[`${basePath}/E`] = attendanceStr; // Saved as full attendance string like "10111"
+      updates[`${basePath}/A`] = firebase.database.ServerValue.TIMESTAMP;
+      updates[`${basePath}/B`] = userId;
+
       await db.ref().update(updates);
       db.goOffline();
 
