@@ -1,285 +1,616 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QR Scanner</title>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #eef4ff, #f8faff);
-}
-.scanner-card {
-    width: 100%;
-    max-width: 430px;
-    padding: 25px;
-    background: #fff;
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(30, 64, 175, 0.12);
-}
-.scanner-header { text-align: center; margin-bottom: 22px; }
-.scanner-icon {
-    width: 62px; height: 62px; margin: 0 auto 14px;
-    border-radius: 18px; display: flex; align-items: center;
-    justify-content: center; background: #eff6ff; color: #2563eb;
-}
-.scanner-icon svg { width: 34px; height: 34px; }
-.scanner-header h2 { color: #172033; font-size: 24px; margin-bottom: 7px; }
-.scanner-header p { color: #718096; font-size: 14px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Attendance & Payment Portal</title>
 
-#reader {
-    width: 100%; aspect-ratio: 1 / 1; max-height: 380px;
-    overflow: hidden; position: relative; background: #0f172a; border-radius: 18px;
-}
-#reader__scan_region { width: 100% !important; height: 100% !important; display: flex !important; align-items: center; justify-content: center; }
-#reader__scan_region video { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 18px !important; }
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-.scan-status {
-    margin-top: 18px; padding: 13px 15px; border-radius: 12px;
-    background: #f8fafc; color: #64748b; font-size: 14px; text-align: center;
-}
-.scan-status.success { background: #ecfdf5; color: #047857; }
-.scan-status.error { background: #fef2f2; color: #dc2626; }
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --text: #172033;
+      --muted: #718096;
+      --border: #e7ebf2;
+      --success: #16a36a;
+      --danger: #e5484d;
+      --shadow: 0 8px 30px rgba(22, 34, 58, .06);
+      --radius: 20px;
+      --bottom-bar-height: 90px;
+    }
 
-.student-card {
-    display: none;
-    margin-top: 16px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-}
-.student-card h3 { font-size: 16px; color: #1e293b; margin-bottom: 8px; }
-.student-card p { font-size: 14px; color: #475569; margin-bottom: 6px; }
-.badge {
-    display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: bold;
-}
-.badge.paid { background: #d1fae5; color: #065f46; }
-.badge.unpaid { background: #fee2e2; color: #991b1b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
 
-.btn {
-    display: block; width: 100%; border: none; outline: none;
-    margin-top: 12px; padding: 12px; border-radius: 12px;
-    background: #2563eb; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
-}
-.btn:hover { background: #1d4ed8; }
-.btn-success { background: #10b981; }
-.btn-success:hover { background: #059669; }
-.btn-secondary { background: #64748b; }
-.btn-secondary:hover { background: #475569; }
+    .container {
+      width: min(100% - 32px, 520px);
+      margin: 0 auto;
+      padding: 22px 0 calc(var(--bottom-bar-height) + env(safe-area-inset-bottom) + 30px);
+    }
 
-@media (max-width: 480px) {
-    body { padding: 12px; }
-    .scanner-card { padding: 18px; }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 15px;
+      color: white;
+      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+      box-shadow: 0 7px 16px rgba(37, 99, 235, .22);
+    }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-title { font-size: 17px; font-weight: 800; letter-spacing: -.45px; }
+    .brand-subtitle { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: 0 0 auto;
+      padding: 8px 11px;
+      border: 1px solid #d8f1e5;
+      border-radius: 30px;
+      color: #138253;
+      background: #effbf5;
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #20b477; }
+
+    .card {
+      padding: 21px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(226, 232, 240, .9);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .card-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card-heading h2, h2 {
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.35px;
+    }
+    .eyebrow {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+    }
+
+    /* Login */
+    #auth-section { margin-top: 8vh; padding: 27px 23px; }
+    #auth-main-title { margin-bottom: 22px; text-align: left; font-size: 23px; }
+    .auth-tabs {
+      display: flex;
+      padding: 4px;
+      margin-bottom: 22px;
+      border-radius: 12px;
+      background: #f1f4f9;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 11px 10px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      background: white;
+      box-shadow: 0 2px 7px rgba(20, 35, 60, .08);
+    }
+    .form-group { margin-bottom: 16px; }
+    label.form-label, .form-group > label {
+      display: block;
+      margin-bottom: 7px;
+      color: #536176;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--text);
+      background: #fbfcfe;
+      font-size: 14px;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    input:focus {
+      border-color: #8bb4ff;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .09);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 13px;
+      color: white;
+      background: var(--primary);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn:hover { background: var(--primary-dark); }
+    .btn-primary { box-shadow: 0 6px 15px rgba(37, 99, 235, .18); }
+    .btn-secondary { color: #43516a; background: #eef2f7; box-shadow: none; }
+    .btn-secondary:hover { background: #e4eaf2; }
+    .btn-danger { color: #c63d43; background: #fff0f0; box-shadow: none; }
+    .btn-danger:hover { background: #ffe4e4; }
+    .btn svg, .action-btn svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .info-hint { margin: -8px 0 16px; color: var(--muted); font-size: 12px; text-align: center; }
+
+    /* Dashboard */
+    #dashboard-section { padding-bottom: 4px; }
+    .welcome-row { margin: 4px 2px 17px; }
+    .welcome-row h1 { font-size: 22px; font-weight: 850; letter-spacing: -.7px; }
+    .welcome-row p { margin-top: 5px; color: var(--muted); font-size: 13px; }
+
+    .auto-save-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 17px;
+      margin-bottom: 15px;
+      border: 1px solid #dce9ff;
+      border-radius: 16px;
+      background: linear-gradient(110deg, #f0f6ff, #f8fbff);
+    }
+    .auto-save-info { display: flex; align-items: center; gap: 11px; }
+    .auto-save-icon {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 12px;
+      color: var(--primary);
+      background: #dceaff;
+    }
+    .auto-save-icon svg { width: 19px; height: 19px; }
+    .auto-save-title { font-size: 13px; font-weight: 800; }
+    .auto-save-caption { margin-top: 3px; color: var(--muted); font-size: 11px; }
+
+    .switch-toggle {
+      position: relative;
+      display: inline-flex;
+      width: 94px;
+      height: 34px;
+      flex: 0 0 auto;
+    }
+    .switch-toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .slider-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 30px;
+      color: white;
+      background: var(--danger);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .35px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    .slider-text::before { content: attr(data-off); }
+    .switch-toggle input:checked + .slider-text { background: var(--success); }
+    .switch-toggle input:checked + .slider-text::before { content: attr(data-on); }
+    .switch-toggle input:focus-visible + .slider-text { outline: 3px solid rgba(37, 99, 235, .22); outline-offset: 2px; }
+
+    #reader {
+      width: 100%;
+      min-height: 210px;
+      overflow: hidden;
+      border: 1px dashed #cbd6e5;
+      border-radius: 16px;
+      background: #f8fafd;
+    }
+    #reader video { border-radius: 12px; }
+    /* The scanner library controls are kept in the DOM for compatibility,
+       but hidden because the fixed PWA dock controls them. */
+    #html5-qrcode-button-camera-start,
+    #html5-qrcode-button-camera-stop,
+    #html5-qrcode-button-file-selection {
+      display: none !important;
+    }
+    #reader img { max-width: 100%; }
+    .scan-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 13px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .scan-tip svg { width: 16px; height: 16px; flex: 0 0 auto; color: var(--primary); }
+
+    .student-card { text-align: center; }
+    .student-topline { margin-bottom: 16px; text-align: left; }
+    .student-photo {
+      display: block;
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 12px;
+      border: 4px solid #edf4ff;
+      border-radius: 26px;
+      object-fit: cover;
+      background: #f1f5f9;
+    }
+    .student-name { margin-bottom: 7px; font-size: 19px; font-weight: 850; letter-spacing: -.45px; }
+    .student-details {
+      display: inline-block;
+      padding: 7px 11px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      color: #64748b;
+      background: #f8fafc;
+      font-size: 11px;
+      font-weight: 650;
+    }
+    .student-details span { color: #334155; font-weight: 800; }
+    .student-controls {
+      margin-top: 21px;
+      border-top: 1px solid var(--border);
+    }
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .switch-label-wrap { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .setting-icon {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 11px;
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .setting-icon svg { width: 17px; height: 17px; }
+    .switch-label-text { font-size: 13px; font-weight: 800; }
+    .switch-description { margin-top: 3px; color: var(--muted); font-size: 10px; }
+    #manual-save-btn { width: 100%; margin-top: 17px; }
+
+    .bottom-dock {
+  position: fixed;
+  z-index: 1000;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(226, 232, 240, .9);
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 -8px 28px rgba(24, 39, 75, .08);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
 }
-</style>
+
+.dock-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.action-btn {
+  display: flex;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+  min-height: 52px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.action-btn svg { width: 19px; height: 19px; }
+.action-btn.start { color: white; background: var(--primary); box-shadow: 0 4px 10px rgba(37, 99, 235, .2); }
+.action-btn.stop { color: #d14343; background: #fff0f0; }
+.action-btn.logout { color: #64748b; background: #f1f4f8; }
+
+    .hidden { display: none !important; }
+
+    #loading-overlay {
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      color: white;
+      background: rgba(15, 23, 42, .68);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+      font-size: 14px;
+      font-weight: 750;
+    }
+    .spinner {
+      width: 43px;
+      height: 43px;
+      border: 4px solid rgba(255, 255, 255, .28);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (min-width: 700px) {
+      .container { padding-top: 30px; }
+      .bottom-dock { padding-top: 12px; }
+      .dock-inner { gap: 12px; }
+      .action-btn { min-height: 61px; font-size: 10px; }
+    }
+    @media (max-width: 380px) {
+      .container { width: calc(100% - 22px); padding-top: 14px; }
+      .card { padding: 17px; border-radius: 17px; }
+      .dock-inner { gap: 3px; }
+      .action-btn { font-size: 8px; }
+      .action-btn svg { width: 18px; height: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="scanner-card">
-    <div class="scanner-header">
-        <div class="scanner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                <rect x="7" y="7" width="4" height="4"/>
-                <rect x="13" y="13" width="4" height="4"/>
-                <path d="M13 7h4"/>
-                <path d="M7 13h4"/>
-            </svg>
-        </div>
-        <h2>Scan QR Code</h2>
-        <p>Position student QR code inside scanner</p>
-    </div>
-
-    <div id="reader"></div>
-
-    <div id="scanStatus" class="scan-status">Starting camera...</div>
-
-    <div id="studentCard" class="student-card">
-        <h3 id="studentName">Student Name</h3>
-        <p><strong>School ID:</strong> <span id="lblSchool"></span></p>
-        <p><strong>Student ID:</strong> <span id="lblId"></span></p>
-        <p><strong>Status:</strong> <span id="lblPaidBadge" class="badge">Checking...</span></p>
-        <p><strong>Note:</strong> <span id="lblNote">None</span></p>
-
-        <button id="updateFeeBtn" class="btn btn-success" style="display:none;">Mark Fee as Paid</button>
-    </div>
-
-    <button id="scanAgain" class="btn btn-secondary" style="display:none;">Scan Another QR</button>
+<div id="loading-overlay" class="hidden">
+  <div class="spinner"></div>
+  <div id="loading-text">Loading...</div>
 </div>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>    
+
+<div class="container">
+
+  <!-- AUTH SECTION -->
+  <div id="auth-section" class="card">
+    <div class="brand" style="margin-bottom:24px">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5v15.5M8 7h8M8 11h7"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">Student Portal</div>
+        <div class="brand-subtitle">Attendance & payment management</div>
+      </div>
+    </div>
+    <h2 id="auth-main-title">Welcome back</h2>
+
+    <div class="auth-tabs">
+      <button type="button" class="tab-btn active" id="tab-login-btn">Login</button>
+      <button type="button" class="tab-btn" id="tab-signup-btn">Sign Up</button>
+    </div>
+
+    <div id="signup-notice" class="info-hint hidden">Institute ID detected from URL. Ready to register.</div>
+
+    <form id="auth-form">
+      <div class="form-group hidden" id="name-group">
+        <label for="user-name">Full Name</label>
+        <input type="text" id="user-name" placeholder="John Doe">
+      </div>
+
+      <div class="form-group hidden" id="signup-id-group">
+        <label for="manual-institute-id">Institute ID</label>
+        <input type="text" id="manual-institute-id" placeholder="Enter Institute ID">
+      </div>
+
+      <div class="form-group">
+        <label for="user-email">Email Address</label>
+        <input type="email" id="user-email" required placeholder="checker@example.com" autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="user-password">Password</label>
+        <input type="password" id="user-password" required placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn" style="width:100%">Login</button>
+    </form>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div id="dashboard-section" class="hidden">
+
+    <header class="page-header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5v15.5M8 7h8M8 11h7"/></svg>
+        </div>
+        <div>
+          <div class="brand-title">QR Scanner</div>
+          <div class="brand-subtitle">Attendance & payments</div>
+        </div>
+      </div>
+     </header>
+
+
+    <div class="auto-save-bar">
+      <div class="auto-save-info">
+        <div class="auto-save-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M5.64 5.64l2.12 2.12m8.48 8.48 2.12 2.12M3 12h3m12 0h3M5.64 18.36l2.12-2.12m8.48-8.48 2.12-2.12"/><circle cx="12" cy="12" r="4"/></svg>
+        </div>
+        <div>
+          <div class="auto-save-title">Auto-save mode</div>
+          <div class="auto-save-caption">Save changes automatically</div>
+        </div>
+      </div>
+      <label class="switch-toggle" aria-label="Auto-save mode">
+        <input type="checkbox" id="auto-save-toggle" checked>
+        <span class="slider-text" data-on="ON" data-off="OFF"></span>
+      </label>
+    </div>
+
+    <section class="card" id="scanner-card">
+   
+      <div id="reader"></div>
+      <div class="scan-tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 11v5m0-8h.01"/></svg>
+        <span>Keep the QR code inside the camera frame.</span>
+      </div>
+    </section>
+
+    <div id="student-result" class="card hidden student-card">
+      <div class="student-topline">
+        <span class="eyebrow">Scan result</span>
+        <h2>Student details</h2>
+      </div>
+      <img id="st-photo" class="student-photo" src="" alt="Student Photo">
+      <div id="st-name" class="student-name">-</div>
+      <div>
+        <div id="st-details" class="student-details">ID: <span id="st-id"></span> <span aria-hidden="true">·</span> Last Paid: <span id="st-paidat"></span></div>
+      </div>
+
+      <div class="student-controls">
+        <div class="switch-row">
+          <div class="switch-label-wrap">
+            <div class="setting-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+            </div>
+            <div>
+              <div class="switch-label-text">Attendance</div>
+              <div class="switch-description">Mark student presence</div>
+            </div>
+          </div>
+          <label class="switch-toggle" aria-label="Attendance">
+            <input type="checkbox" id="attendance-chk" checked>
+            <span class="slider-text" data-on="Present" data-off="Absent"></span>
+          </label>
+        </div>
+
+        <div class="switch-row">
+          <div class="switch-label-wrap">
+            <div class="setting-icon" aria-hidden="true" style="color:#138253;background:#eaf8f1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20m-15 5h3"/></svg>
+            </div>
+            <div>
+              <div class="switch-label-text">Payment · Rs. <span id="st-fee">0</span></div>
+              <div class="switch-description">Update monthly payment status</div>
+            </div>
+          </div>
+          <label class="switch-toggle" aria-label="Payment">
+            <input type="checkbox" id="payment-chk">
+            <span class="slider-text" data-on="Paid" data-off="Unpaid"></span>
+          </label>
+        </div>
+      </div>
+
+      <button id="manual-save-btn" class="btn btn-primary hidden">Save Changes</button>
+    </div>
+
+  </div>
+</div>
+
+<nav id="bottom-actions" class="bottom-dock hidden" aria-label="Scanner actions">
+  <div class="dock-inner">
+    <button type="button" id="toggle-scan-btn" class="action-btn start" aria-label="Start or Pause scanning">
+      <svg id="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+      <span id="toggle-text">Start</span>
+    </button>
+    <button type="button" id="logout-btn" class="action-btn logout" aria-label="Logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5m5 5H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg>
+      <span>Logout</span>
+    </button>
+  </div>
+</nav>
+
 <script src="../edOS/sync.js"></script>
+<script src="scan.js"></script>
 <script>
-let scanner = null;
-let scanFinished = false;
-let currentScannedStudent = null;
-let currentSchoolId = null;
-let currentStudentId = null;
-
-function startScanner() {
-    scanFinished = false;
-    currentScannedStudent = null;
-    currentSchoolId = null;
-    currentStudentId = null;
-
-    document.getElementById("scanStatus").className = "scan-status";
-    document.getElementById("scanStatus").textContent = "Camera ready — scan a QR code";
-    document.getElementById("scanAgain").style.display = "none";
-    document.getElementById("studentCard").style.display = "none";
-    document.getElementById("reader").innerHTML = "";
-
-    scanner = new Html5Qrcode("reader");
-    const isMobile = window.innerWidth <= 480;
-
-    scanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: isMobile ? 210 : 240, height: isMobile ? 210 : 240 }, aspectRatio: 1.0 },
-        function(decodedText) {
-            if (scanFinished) return;
-            scanFinished = true;
-            scanner.stop().then(() => processQRCode(decodedText)).catch(() => processQRCode(decodedText));
-        },
-        function(errorMessage) {}
-    ).catch(error => {
-        console.error(error);
-        document.getElementById("scanStatus").className = "scan-status error";
-        document.getElementById("scanStatus").textContent = "Unable to access camera. Please allow permission.";
-    });
-}
-
-async function processQRCode(data) {
-    console.log("QR Data:", data);
-    try {
-        const url = new URL(data);
-        currentSchoolId = url.searchParams.get("school");
-        currentStudentId = url.searchParams.get("id");
-
-        if (!currentSchoolId || !currentStudentId) {
-            throw new Error("Missing parameters in QR URL");
-        }
-
-        document.getElementById("scanStatus").className = "scan-status success";
-        document.getElementById("scanStatus").textContent = "QR Scanned Successfully!";
-        
-        await checkStudentFee(currentSchoolId, currentStudentId);
-
-    } catch (err) {
-        console.error(err);
-        document.getElementById("scanStatus").className = "scan-status error";
-        document.getElementById("scanStatus").textContent = "Invalid student QR code format.";
-        document.getElementById("scanAgain").style.display = "block";
+  // Keep the fixed action dock visible only after the dashboard is shown.
+  // Existing scanner/auth logic remains in js/scan.js.
+  const dashboardObserver = new MutationObserver(() => {
+    const dashboard = document.getElementById('dashboard-section');
+    const dock = document.getElementById('bottom-actions');
+    if (dashboard && dock) {
+      dock.classList.toggle('hidden', dashboard.classList.contains('hidden'));
     }
-}
+  });
+  dashboardObserver.observe(document.getElementById('dashboard-section'), {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+  document.getElementById('bottom-actions').classList.toggle(
+    'hidden',
+    document.getElementById('dashboard-section').classList.contains('hidden')
+  );
 
-async function checkStudentFee(schoolId, studentId) {
-    try {
-        const students = await syncEngine.getLocalData('students');
-        const student = students.find(s => 
-            (s.school === schoolId || s.schoolId === schoolId) && 
-            (s.id === studentId || s.key === studentId)
-        );
-
-        if (!student) {
-            document.getElementById("scanStatus").className = "scan-status error";
-            document.getElementById("scanStatus").textContent = "Student record not found in local database.";
-            document.getElementById("scanAgain").style.display = "block";
-            return;
-        }
-
-        currentScannedStudent = student;
-        renderStudentInfo(student);
-
-    } catch (e) {
-        console.error("Database read error:", e);
-        document.getElementById("scanStatus").className = "scan-status error";
-        document.getElementById("scanStatus").textContent = "Error reading local student records.";
-        document.getElementById("scanAgain").style.display = "block";
-    }
-}
-
-function renderStudentInfo(student) {
-    document.getElementById("studentName").textContent = student.name || student.fullName || "Unknown Student";
-    document.getElementById("lblSchool").textContent = currentSchoolId;
-    document.getElementById("lblId").textContent = currentStudentId;
-    document.getElementById("lblNote").textContent = student.note || student.remarks || "None";
-
-    const badge = document.getElementById("lblPaidBadge");
-    const updateBtn = document.getElementById("updateFeeBtn");
-
-    const isPaid = Number(student.paid) === 1;
-
-    if (isPaid) {
-        badge.className = "badge paid";
-        badge.textContent = "PAID";
-        updateBtn.style.display = "none";
-    } else {
-        badge.className = "badge unpaid";
-        badge.textContent = "NOT PAID";
-        updateBtn.style.display = "block";
-    }
-
-    document.getElementById("studentCard").style.display = "block";
-    document.getElementById("scanAgain").style.display = "block";
-}
-
-// Update fee status: Firebase + IndexedDB
-document.getElementById("updateFeeBtn").addEventListener("click", async function() {
-    if (!currentScannedStudent || !currentSchoolId || !currentStudentId) return;
-
-    const btn = this;
-    btn.disabled = true;
-    btn.textContent = "Updating...";
-
-    try {
-        // 1. Update local student data object
-        currentScannedStudent.paid = 1;
-
-        // 2. Update Firebase Realtime Database
-        // Assumes 'db' is your initialized Firebase database reference instance
-        await db.ref(`schools/${currentSchoolId}/students/${currentStudentId}`).set(currentScannedStudent);
-
-        // 3. Update local IndexedDB / sync engine store
-        if (typeof syncEngine.saveLocalData === "function") {
-            await syncEngine.saveLocalData('students', currentScannedStudent);
-        } else if (typeof syncEngine.updateStudent === "function") {
-            await syncEngine.updateStudent(currentScannedStudent);
-        }
-
-        // 4. Refresh UI
-        renderStudentInfo(currentScannedStudent);
-        alert("Fee marked as paid and synced successfully!");
-
-    } catch (err) {
-        console.error("Failed to update fee status:", err);
-        alert("Failed to update Firebase / local DB. Please check your connection.");
-    } finally {
-        btn.disabled = false;
-        btn.textContent = "Mark Fee as Paid";
-    }
-});
-
-document.getElementById("scanAgain").addEventListener("click", function() {
-    if (scanner) {
-        try { scanner.clear(); } catch (e) {}
-        scanner = null;
-    }
-    startScanner();
-});
-
-startScanner();
 </script>
-
 </body>
 </html>
