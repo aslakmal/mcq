@@ -7,12 +7,7 @@ let lastScannedId = null;
 let isInitialized = false;
 let currentUserRole = null;
 
-if (typeof window.alertbox !== 'function') {
-  window.alertbox = function(msg, type) {
-    alert(`[${type.toUpperCase()}] ${msg}`);
-  };
-}
-
+setAppBusy(true, "");
 function setAppBusy(isBusy, text = "Loading...") {
   const overlay = document.getElementById('loading-overlay');
   const loadingText = document.getElementById('loading-text');
@@ -133,6 +128,9 @@ auth.onAuthStateChanged(async (user) => {
     await verifyUserRoleAndInit(user, false);
   } else if (!user) {
     db.goOffline();
+    setAppBusy(false);
+    dashboardSection.classList.add('hidden');
+    authSection.classList.remove('hidden');
   }
 });
 
@@ -143,8 +141,10 @@ async function verifyUserRoleAndInit(user, isExplicitLogin) {
   if (!schoolId) {
     setAppBusy(false);
     db.goOffline();
+    dashboardSection.classList.add('hidden');
+    authSection.classList.remove('hidden');
     if (isExplicitLogin) {
-      alertbox("No Associated School ID found. Contact your administrator.", "error");
+      alertbox("No Associated ID found. Contact your administrator.", "error");
       auth.signOut();
     }
     return;
@@ -175,6 +175,8 @@ async function verifyUserRoleAndInit(user, isExplicitLogin) {
 
     db.goOffline();
     setAppBusy(false);
+    dashboardSection.classList.add('hidden');
+    authSection.classList.remove('hidden');
     if (isExplicitLogin) {
       alertbox("Access denied. Your account is not authorized or claim is pending approval.", "error");
       auth.signOut();
@@ -185,6 +187,8 @@ async function verifyUserRoleAndInit(user, isExplicitLogin) {
   } catch (err) {
     setAppBusy(false);
     db.goOffline();
+    dashboardSection.classList.add('hidden');
+    authSection.classList.remove('hidden');
     if (isExplicitLogin) {
       alertbox("Network error verifying permissions: " + err.message, "error");
     }
@@ -211,9 +215,7 @@ async function grantAccessAndInit(isExplicitLogin) {
     initQrScanner();
   }, 50);
 
-  if (isExplicitLogin) {
-    alertbox(`Login successful (${currentUserRole.toUpperCase()})! Loaded ${cachedStudents.length} students.`, "success");
-  }
+
 }
 
 async function initApp() {
