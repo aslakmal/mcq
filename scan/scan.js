@@ -218,7 +218,6 @@ async function grantAccessAndInit(isExplicitLogin) {
 
 async function initApp() {
   try {
-      console.log(schoolId)
       syncEngine = new SchoolSyncEngine(db, schoolId);     
     if (typeof syncEngine !== 'undefined') {
       await syncEngine.initIndexedDB();
@@ -357,6 +356,21 @@ async function onScanSuccess(decodedText) {
     if (decodedText.includes('?')) {
       const parsedUrl = new URL(decodedText);
       studentId = parsedUrl.searchParams.get('id');
+      
+      // Check if school matches
+      if (schoolId !== parsedUrl.searchParams.get('school')) {
+        isProcessingScan = true; // Lock scanning immediately to prevent spam
+        await stopCamera();      // Stop the camera feed
+        setScannerButtonState('start');
+        
+        alertbox("Something went wrong! Invalid school QR code.", "error");
+        
+        // Reset processing lock after 2 seconds so the user can try scanning again
+        setTimeout(() => {
+          isProcessingScan = false;
+        }, 2000);
+        return;
+      }
     } else {
       studentId = decodedText;
     }
