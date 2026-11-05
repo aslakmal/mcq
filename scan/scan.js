@@ -363,7 +363,7 @@ async function onScanSuccess(decodedText) {
         await stopCamera();      // Stop the camera feed
         setScannerButtonState('start');
         
-        alertbox("Something went wrong! Invalid school QR code.", "error");
+        alertbox("Something went wrong!", "error");
         
         // Reset processing lock after 2 seconds so the user can try scanning again
         setTimeout(() => {
