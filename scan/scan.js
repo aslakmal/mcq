@@ -450,8 +450,8 @@ async function saveAttendance(student, checked, currentClass) {
   // Define active date variables inside the function
   const now = new Date();
   const activeYear = now.getFullYear();
-  const activeMonth = String(now.getMonth() + 1).padStart(2, '0'); // e.g. "05"
-  const activeDay = String(now.getDate()).padStart(2, '0');     // e.g. "09"
+  const activeMonth = String(now.getMonth() + 1);
+  const activeDay = String(now.getDate());
   const dateKey = `${activeMonth}:${activeDay}`;
 
   setAppBusy(true, "Saving attendace...");
