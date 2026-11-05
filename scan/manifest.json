@@ -1,7 +1,7 @@
 {
   "name": "Student Scanner",
   "short_name": "Student Scanner",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#317EFB",
