@@ -763,8 +763,8 @@
         }
         let storedData = sessionStorage.getItem("userData");
         if (storedData) {
-            storedData=JSON.parse(storedData)
-            console.log(storedData)
+           console.log(storedData)
+             storedData=JSON.parse(storedData)
             document.getElementById('teacherName').value=storedData['a'];
             
         }
