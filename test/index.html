@@ -12,76 +12,81 @@
   <meta name="theme-color" content="#2563eb">
 
   <script>
-    (function () {
-      // 1. Read query parameters from the URL
-      const params = new URLSearchParams(window.location.search);
-      const instituteKey = params.get('institute') || 'default';
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const instituteKey = params.get('institute') || 'default';
 
-      // 2. Define branding data per institute (or fetch from a lightweight JSON file)
-      const instituteConfig = {
-        aplus: {
-          name: "Aplus Institute Portal",
-          shortName: "Aplus",
-          themeColor: "#1d4ed8",
-          icon: "../scan/icon-512.png"
-        },
-        successpath: {
-          name: "SuccessPath Academy",
-          shortName: "SuccessPath",
-          themeColor: "#059669",
-          icon: "../scan/icon-512.png"
-        },
-        default: {
-          name: "EduPortal PWA",
-          shortName: "EduPortal",
-          themeColor: "#2563eb",
-          icon: "../scan/icon-512.png"
-        }
-      };
-
-      // Fallback if an unknown institute name is passed in the URL
-      const config = instituteConfig[instituteKey.toLowerCase()] || {
-        name: `${instituteKey.toUpperCase()} Portal`,
-        shortName: instituteKey,
+    const instituteConfig = {
+      aplus: {
+        name: "Aplus Institute Portal",
+        shortName: "Aplus",
+        themeColor: "#1d4ed8",
+        icon: "https://digibook.edu.lk/scan/icon-512.png"
+      },
+      successpath: {
+        name: "SuccessPath Academy",
+        shortName: "SuccessPath",
+        themeColor: "#059669",
+        icon: "https://digibook.edu.lk/scan/icon-512.png"
+      },
+      default: {
+        name: "EduPortal PWA",
+        shortName: "EduPortal",
         themeColor: "#2563eb",
-        icon: "../scan/icon-512.png"
-      };
+        icon: "https://digibook.edu.lk/scan/icon-512.png"
+      }
+    };
 
-      // 3. Construct the Web App Manifest object
-      const manifest = {
-        name: config.name,
-        short_name: config.shortName,
-        start_url: `/test?institute=${encodeURIComponent(instituteKey)}`,
-        scope: "/test",
-        display: "standalone",
-        background_color: "#ffffff",
-        theme_color: config.themeColor,
-        icons: [
-          {
-            src: "../scan/icon-192.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable"
-          }
-        ]
-      };
+    const config = instituteConfig[instituteKey.toLowerCase()] || {
+      name: `${instituteKey.toUpperCase()} Portal`,
+      shortName: instituteKey,
+      themeColor: "#2563eb",
+      icon: "https://digibook.edu.lk/scan/icon-512.png"
+    };
 
-      // 4. Convert the JSON object to a Blob URL and inject it into the DOM
-      const stringManifest = JSON.stringify(manifest);
-      const blob = new Blob([stringManifest], { type: 'application/json' });
-      const manifestURL = URL.createObjectURL(blob);
+    const baseUrl = window.location.origin;
+    const currentPath = window.location.pathname;
+    const targetUrl = `${baseUrl}${currentPath}?institute=${encodeURIComponent(instituteKey)}`;
 
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
-        
-        // Optionally update theme-color meta tag dynamically too
-        let themeMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeMeta) {
-          themeMeta.setAttribute('content', config.themeColor);
+    // Construct the Web App Manifest using your exact paths
+    const manifest = {
+      name: config.name,
+      short_name: config.shortName,
+      start_url: targetUrl,
+      scope: `${baseUrl}${currentPath}`,
+      display: "standalone",
+      background_color: "#ffffff",
+      theme_color: config.themeColor,
+      icons: [
+        {
+          src: "https://digibook.edu.lk/scan/icon-192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any maskable"
+        },
+        {
+          src: "https://digibook.edu.lk/scan/icon-512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any maskable"
         }
-      });
-    })();
-  </script>
+      ]
+    };
+
+    const stringManifest = JSON.stringify(manifest);
+    const blob = new Blob([stringManifest], { type: 'application/json' });
+    const manifestURL = URL.createObjectURL(blob);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
+      
+      let themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (themeMeta) {
+        themeMeta.setAttribute('content', config.themeColor);
+      }
+    });
+  })();
+</script>
 </head>
 <body>
   <h1>Welcome to the Institute Portal</h1>
