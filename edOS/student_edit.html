@@ -153,6 +153,43 @@
     border-radius: 20px;
     margin-bottom: 20px;
 }
+/* Base fieldset styling */
+.form-section {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #ffffff;
+}
+
+/* Style the legend to act as a clickable toggle header */
+.form-section legend {
+  font-weight: 600;
+  padding: 0 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+/* Add the dropdown arrow icon using a pseudo-element */
+.form-section legend::after {
+  content: "▼";
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+  margin-left: 8px;
+}
+
+/* Collapsed state: hide children content except the legend */
+.form-section.collapsed > *:not(legend) {
+  display: none;
+}
+
+/* Rotate arrow when collapsed */
+.form-section.collapsed legend::after {
+  transform: rotate(-90deg); /* points right when closed, down when open */
+}
   </style>
 </head>
 
@@ -169,25 +206,14 @@
     <form id="editStudentForm">
 
       <!-- Basic Details -->
-      <fieldset class="form-section">
-        <legend>Student Information</legend>
+      <fieldset class="form-section required">
+        <legend>Student Information(Required)</legend>
 
         <div class="form-group">
-          <label for="admissionNo">Admission Number *</label>
-          <input type="text" id="admissionNo">
-        </div>
-
-        <div class="form-group">
-          <label for="name">Full Name *</label>
+          <label for="name">Name</label>
           <input type="text" id="name" required>
         </div>
-
-        <div class="form-group">
-          <label for="birthCertificateNo">Birth Certificate Number *</label>
-          <input type="text" id="birthCertificateNo">
-        </div>
-
-        <div class="form-group">
+       <div class="form-group">
           <label for="dob">Date of Birth</label>
           <input type="date" id="dob" required>
         </div>
@@ -199,7 +225,10 @@
             <label><input type="radio" name="gender" value="female"> Female</label>
           </div>
         </div>
+ </fieldset>
 
+      <fieldset class="form-section">
+        <legend>Student Information(Optional)</legend>
         <div class="form-group">
           <label for="address">Address</label>
           <textarea id="address" rows="3"></textarea>
@@ -209,8 +238,15 @@
           <label for="studentContact">Contact Number</label>
           <input type="tel" id="studentContact">
         </div>
+        <div class="form-group">
+          <label for="birthCertificateNo">Birth Certificate Number</label>
+          <input type="text" id="birthCertificateNo">
+        </div>
+        <div class="form-group">
+          <label for="admissionNo">Admission Number</label>
+          <input type="text" id="admissionNo">
+        </div>
       </fieldset>
-
       <!-- School & Academic Details -->
       <fieldset class="form-section">
         <legend>School Details</legend>
@@ -248,8 +284,8 @@
         </div>
 
         <div class="form-group">
-          <label for="class">Current Class</label>
-          <input type="text" id="class" placeholder="1A">
+          <label for="class">Current Class/Grade</label>
+          <input type="text" id="class" name="class" placeholder="10,10A,10B etc" required>
         </div>
 
         <div class="form-group">

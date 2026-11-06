@@ -22,24 +22,13 @@
       </div>
     </div>
     <form id="studentForm">
-      <fieldset class="form-section">
-        <legend>Student Information</legend>
+      <fieldset class="form-section required">
+        <legend>Student Information(Required)</legend>
 
         <div class="form-group">
-          <label for="admissionNo">Admission Number</label>
-          <input type="text" id="admissionNo" name="admissionNo">
-        </div>
-
-        <div class="form-group">
-          <label for="name">Full Name</label>
+          <label for="name">Name</label>
           <input type="text" id="name" name="name" required>
         </div>
-
-        <div class="form-group">
-          <label for="birthCertificateNo">Birth Certificate Number</label>
-          <input type="text" id="birthCertificateNo" name="birthCertificateNo">
-        </div>
-
         <div class="form-group">
           <label for="dob">Date of Birth</label>
           <div style="display: flex; gap: 10px;">
@@ -87,6 +76,15 @@
         </div>
 
         <div class="form-group">
+          <label for="class">Current Class/Grade</label>
+          <input type="text" id="class" name="class" placeholder="10,10A,10B etc" required>
+        </div>
+        
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>Student Information(Optional)</legend>
+        <div class="form-group">
           <label for="address">Home Address</label>
           <textarea id="address" name="address"></textarea>
         </div>
@@ -94,6 +92,14 @@
         <div class="form-group">
           <label for="studentContact">Contact Number</label>
           <input type="tel" id="studentContact" name="studentContact">
+        </div>
+        <div class="form-group">
+          <label for="birthCertificateNo">Birth Certificate Number</label>
+          <input type="text" id="birthCertificateNo" name="birthCertificateNo">
+        </div>
+        <div class="form-group">
+          <label for="admissionNo">Admission Number</label>
+          <input type="text" id="admissionNo" name="admissionNo">
         </div>
       </fieldset>
 
@@ -132,10 +138,6 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="class">Current Class</label>
-          <input type="text" id="class" name="class" placeholder="1A">
-        </div>
 
         <div class="form-group">
           <label for="positionsHeld">Positions Held</label>
