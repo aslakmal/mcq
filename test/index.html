@@ -51,14 +51,14 @@
       const manifest = {
         name: config.name,
         short_name: config.shortName,
-        start_url: `/pwa?institute=${encodeURIComponent(instituteKey)}`,
-        scope: "/pwa",
+        start_url: `/test?institute=${encodeURIComponent(instituteKey)}`,
+        scope: "/test",
         display: "standalone",
         background_color: "#ffffff",
         theme_color: config.themeColor,
         icons: [
           {
-            src: config.icon,
+            src: ../scan/icon-192.png,
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable"
