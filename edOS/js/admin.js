@@ -1,5 +1,6 @@
 let currentUserData = null;
 let instituteType;
+let userrole;
 document.getElementById('schoolHeaderTitle').innerText = "ADMIN PANEL";
 document.getElementById('dashSchoolTitle').innerText = "ADMIN PANEL";
 
@@ -76,36 +77,48 @@ auth.onAuthStateChanged(async (user) => {
       if (!userRes.ok) throw new Error(`HTTP error status: ${userRes.status}`);
       
       const userData = await userRes.json();
-      console.log(userData)
+      userrole = userData.role === 'principal' ? 'principal' : 'teacher';
+  
       instituteType = userData.instituteType || '';
       localStorage.setItem('instituteType', instituteType);
-      if (instituteType === 'school') {
+       if (instituteType === 'school') {
         // Selects both elements and hides them
         document.querySelectorAll('#timetableLink').forEach(el => {
             el.style.display = 'none';
         });
+      
+if(userrole=='principal'){
+  document.querySelectorAll('#teacherEdit').forEach(el => {
+    el.style.display = 'none';
+});
+}
     } else if (instituteType === 'tuition') {
-      document.querySelectorAll('#timetableLink,#teacherLink').forEach(el => {
+      document.querySelectorAll('#timetableLink,#teacherLink,#downloadDocs,#teacherEdit').forEach(el => {
         el.style.display = 'none';
     });
+    }else{
+      if(userrole=='teacher'){
+        document.querySelectorAll('#idDesign,#editInfo,#examStructiure').forEach(el => {
+          el.style.display = 'none';
+      });
+      }
     }
  // Initialize Sync Engine with resolved school ID
  syncEngine = new SchoolSyncEngine(db, schoolId);
  await syncEngine.initIndexedDB();
  loadExamReportData()
-      if (userData && userData.role === 'principal') {
-        currentUserData = userData;
-     
-       
+let currentUserData;
 
-        document.getElementById('userWelcomeText').innerText =
-          `Logged in as: ${userData.name}`;
-
-        authLoading.style.display = 'none';
-        adminDashboard.style.display = 'block';
-      } else {
-        location.href = 'teacher.html?school=' + schoolId;
-      }
+if (userData) {
+  currentUserData = userData;
+  sessionStorage.setItem("userData", userData);
+console.log(userData)
+  // Set common data / welcome text for both roles
+  document.getElementById('userWelcomeText').innerText = 
+    `Logged in as: ${userData.a||userrole}`;
+  authLoading.style.display = 'none';
+  adminDashboard.style.display = 'block';
+}
     } catch (err) {
       console.error("Authentication/authorization check failed:", err);
 
