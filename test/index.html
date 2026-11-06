@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institute Portal</title>
+
+  <!-- Empty manifest link that we will populate via JS -->
+  <link id="dynamic-manifest" rel="manifest" />
+  
+  <!-- Fallback theme color -->
+  <meta name="theme-color" content="#2563eb">
+
+  <script>
+    (function () {
+      // 1. Read query parameters from the URL
+      const params = new URLSearchParams(window.location.search);
+      const instituteKey = params.get('institute') || 'default';
+
+      // 2. Define branding data per institute (or fetch from a lightweight JSON file)
+      const instituteConfig = {
+        aplus: {
+          name: "Aplus Institute Portal",
+          shortName: "Aplus",
+          themeColor: "#1d4ed8",
+          icon: "/icons/aplus-512.png"
+        },
+        successpath: {
+          name: "SuccessPath Academy",
+          shortName: "SuccessPath",
+          themeColor: "#059669",
+          icon: "/icons/successpath-512.png"
+        },
+        default: {
+          name: "EduPortal PWA",
+          shortName: "EduPortal",
+          themeColor: "#2563eb",
+          icon: "/icons/default-512.png"
+        }
+      };
+
+      // Fallback if an unknown institute name is passed in the URL
+      const config = instituteConfig[instituteKey.toLowerCase()] || {
+        name: `${instituteKey.toUpperCase()} Portal`,
+        shortName: instituteKey,
+        themeColor: "#2563eb",
+        icon: "/icons/default-512.png"
+      };
+
+      // 3. Construct the Web App Manifest object
+      const manifest = {
+        name: config.name,
+        short_name: config.shortName,
+        start_url: `/pwa?institute=${encodeURIComponent(instituteKey)}`,
+        scope: "/pwa",
+        display: "standalone",
+        background_color: "#ffffff",
+        theme_color: config.themeColor,
+        icons: [
+          {
+            src: config.icon,
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable"
+          }
+        ]
+      };
+
+      // 4. Convert the JSON object to a Blob URL and inject it into the DOM
+      const stringManifest = JSON.stringify(manifest);
+      const blob = new Blob([stringManifest], { type: 'application/json' });
+      const manifestURL = URL.createObjectURL(blob);
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
+        
+        // Optionally update theme-color meta tag dynamically too
+        let themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) {
+          themeMeta.setAttribute('content', config.themeColor);
+        }
+      });
+    })();
+  </script>
+</head>
+<body>
+  <h1>Welcome to the Institute Portal</h1>
+  <p>Loading your customized learning environment...</p>
+</body>
+</html>
