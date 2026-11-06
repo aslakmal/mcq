@@ -310,3 +310,22 @@ if (!schoolId) {
       window.location.href = 'admin.html';
     }
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const sections = document.querySelectorAll(".form-section");
+  
+    sections.forEach((section) => {
+      // If it doesn't have the 'required' class, collapse it on load
+      if (!section.classList.contains("required")) {
+        section.classList.add("collapsed");
+      }
+  
+      // Find the legend to make it clickable
+      const legend = section.querySelector("legend");
+      if (legend) {
+        legend.addEventListener("click", () => {
+          section.classList.toggle("collapsed");
+        });
+      }
+    });
+  });
