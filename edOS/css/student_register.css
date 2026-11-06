@@ -424,7 +424,40 @@
       border-radius: 17px;
     }
   }
-  form fieldset{border: 2px solid #eee;
-    padding: 15px;
-    border-radius: 20px;
-    margin-bottom: 20px;}
+/* Base fieldset styling */
+.form-section {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #ffffff;
+}
+
+/* Style the legend to act as a clickable toggle header */
+.form-section legend {
+  font-weight: 600;
+  padding: 0 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+/* Add the dropdown arrow icon using a pseudo-element */
+.form-section legend::after {
+  content: "▼";
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+  margin-left: 8px;
+}
+
+/* Collapsed state: hide children content except the legend */
+.form-section.collapsed > *:not(legend) {
+  display: none;
+}
+
+/* Rotate arrow when collapsed */
+.form-section.collapsed legend::after {
+  transform: rotate(-90deg); /* points right when closed, down when open */
+}
