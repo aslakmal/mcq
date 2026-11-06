@@ -111,7 +111,7 @@ let currentUserData;
 
 if (userData) {
   currentUserData = userData;
-  sessionStorage.setItem("userData", userData);
+  sessionStorage.setItem("userData", JSON.stringify(userData));
 console.log(userData)
   // Set common data / welcome text for both roles
   document.getElementById('userWelcomeText').innerText = 
