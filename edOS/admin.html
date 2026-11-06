@@ -171,7 +171,7 @@
         <button onclick="window.location.href='teachers.html?school=' + schoolId">Manage Teachers</button>
       </div>
 
-      <div class="card">
+      <div class="card" id="idDesign">
         <div class="card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="18" height="18" rx="2"></rect>
           <path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"></path>
@@ -182,7 +182,7 @@
         <p>Customize, preview Students ID card</p>
         <button onclick="window.location.href='id_design.html?school=' + schoolId">Open customizer</button>
       </div>
-      <div class="card">
+      <div class="card" id="editInfo">
         <div class="card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="18" height="18" rx="2"></rect>
           <path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"></path>
@@ -193,7 +193,7 @@
         <p>Update institution details.Cover image and logo will appear on student ID cards</p>
         <button id="editDetails">Edit</button>
       </div>
-      <div class="card">
+      <div class="card" id="examStructiure">
         <div class="card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="18" height="18" rx="2"></rect>
           <path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01"></path>
@@ -236,6 +236,29 @@
         <h3>Payment collection</h3>
         <p>Manage student monthly and/or custom fees. Easily mark payments, track due balances, and preview paid and unpaid student lists.</p>
         <button onclick="window.location.href='payment.html?school=' + schoolId">Manage Payments</button>
+      </div>
+      <div class="card" id="downloadDocs">
+        <div class="card-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <path d="M12 18v-6"></path>
+                <path d="m9 15 3 3 3-3"></path>
+            </svg>
+        </div>
+        <h3>Document Downloads</h3>
+        <p>Access and download essential school forms, leave applications, certificates, and administrative documents.</p>
+        <button onclick="window.location.href='documents.html?school=' + schoolId">Download Documents</button>
+    </div>
+
+      <div class="card" id="teacherEdit">
+        <div class="card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg></div>
+        <h3>Profile</h3>
+        <p>Update personal information</p>
+        <button onclick="window.location.href='teacher_edit.html?school=' + schoolId +'&id='+userID">Edit Account</button>
       </div>
     </div>
   </div>

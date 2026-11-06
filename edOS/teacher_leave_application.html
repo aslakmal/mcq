@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ගුරුවරුන්ගේ නිවාඩු අයදුම්පත - Teacher's Leave Application</title>
+    <!-- Google Fonts for authentic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modern Base Reset & Variables */
+        :root {
+            --bg-color: #f1f5f9;
+            --paper-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --primary: #1e40af;
+            --primary-hover: #1e3a8a;
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-sinhala: 'Abhaya Libre', 'Noto Sans Sinhala', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.4;
+            padding: 24px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Action Bar */
+        .action-bar {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        .action-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0f172a;
+        }
+        .action-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-sinhala);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #334155;
+        }
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-primary {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #1e293b;
+        }
+
+        /* Paper Document Sheet */
+        .paper-form {
+            width: 100%;
+            max-width: 820px;
+            background: var(--paper-bg);
+            padding: 40px 50px;
+            border-radius: 4px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Header Title */
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0f172a;
+        }
+
+        .header-title-si {
+            font-family: var(--font-sinhala);
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .header-title-en {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+
+        /* Form Row Grid Structure */
+        .form-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+            gap: 12px;
+        }
+
+        .field-label {
+            flex: 0 0 44%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 8px;
+        }
+
+        .label-text-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .si-lbl {
+            font-family: var(--font-sinhala);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.25;
+        }
+
+        .en-lbl {
+            font-size: 0.78rem;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .curly-brace {
+            font-family: serif;
+            font-size: 2.2rem;
+            font-weight: 300;
+            line-height: 1;
+            color: #0f172a;
+            margin-left: 6px;
+            user-select: none;
+        }
+
+        .field-input-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Dotted Dotted Line Form Inputs */
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            border: none;
+            border-bottom: 1.5px dotted #334155;
+            padding: 4px 8px;
+            font-size: 0.95rem;
+            font-family: var(--font-main);
+            color: #0f172a;
+            background: transparent;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            border-bottom: 2px solid var(--primary);
+            background-color: #f8fafc;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 38px;
+        }
+
+        /* Inline Date Range & Specific Row Styles */
+        .date-range-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .inline-date-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .inline-date-group span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* Radio Options styling */
+        .radio-options {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            padding-top: 4px;
+        }
+
+        .radio-lbl {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: #1e293b;
+        }
+
+        /* Signatures Section */
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .signature-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .signature-canvas-container {
+            border: 1px border-dashed #cbd5e1;
+            background-color: #fafafa;
+            border-radius: 4px;
+            position: relative;
+            margin-top: 6px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 60px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .clear-canvas-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #e2e8f0;
+            border: none;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            color: #475569;
+        }
+
+        .clear-canvas-btn:hover {
+            background: #cbd5e1;
+        }
+
+        /* Approval Box */
+        .approval-block {
+            margin-top: 10px;
+        }
+
+        .approval-line-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .principal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 10px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        /* Media Print Specific Styles */
+        @media print {
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .action-bar, .clear-canvas-btn, .toast,.btn {
+                display: none !important;
+            }
+
+            .paper-form {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 15px 25px !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="date"],
+            select,
+            textarea {
+                border-bottom: 1px dotted #000000 !important;
+                background: transparent !important;
+            }
+
+            .signature-canvas-container {
+                border: none !important;
+                background: transparent !important;
+            }
+
+            canvas {
+                border-bottom: 1px dotted #000000 !important;
+            }
+            .printable-container {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  @page {
+    size: auto;   /* auto is the initial printer value */
+    margin: 10mm; /* Reduce margins to prevent accidental overflow */
+  }
+        }
+
+        /* Responsive Layout Adjustments */
+        @media (max-width: 640px) {
+            .paper-form {
+                padding: 24px 18px;
+            }
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .field-label {
+                flex: none;
+                width: 100%;
+            }
+            .curly-brace {
+                display: none;
+            }
+            .signature-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Action Toolbar (Hidden during print) -->
+    <div class="action-bar">
+        <div>
+            <div class="action-title">Teacher's Leave Application Form</div>
+            <div class="action-subtitle">ගුරුවරුන්ගේ නිවාඩු අයදුම්පත</div>
+        </div>
+    </div>
+
+    <!-- Paper Form Container -->
+    <div class="paper-form">
+        <form id="leaveApplicationForm" onsubmit="handleFormSubmit(event)">
+
+            <!-- Header Title -->
+            <div class="form-header">
+                <div class="header-title-si">ගුරුවරුන්ගේ නිවාඩු අයදුම්පත</div>
+                <div class="header-title-en">TEACHER'S LEAVE APPLICATION</div>
+            </div>
+
+            <!-- 1. Name of the Teacher -->
+            <div class="form-row">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">ගුරුවරයාගේ / ගුරුවරියගේ නම</span>
+                        <span class="en-lbl">Name of the Teacher</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap">
+                    <input type="text" id="teacherName" required placeholder="">
+                </div>
+            </div>
+
+   
+            <!-- 3. Status -->
+            <div class="form-row">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">තනතුර</span>
+                        <span class="en-lbl">Status</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap">
+                    <input type="text" id="status" required placeholder="">
+                </div>
+            </div>
+
+            <!-- 5. No. of days required Casual/Medical/Duty -->
+            <div class="form-row" style="align-items: flex-start;">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">අවශ්‍ය නිවාඩු දින ගණන අනියම්/අසනීප/රාජකාරි</span>
+                        <span class="en-lbl">No. of days required Casual/Medical</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap" style="flex-direction: column; gap: 8px;">
+                    <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+                        <input type="number" id="daysRequired" min="0.5" step="0.5" required style="width: 100px;">
+                        <span class="si-lbl" style="font-size: 0.95rem;">දින / Days</span>
+                    </div>
+                    <div class="date-range-container">
+                        <div class="inline-date-group">
+                            <span>From / සිට</span>
+                            <input type="date" id="fromDate" onchange="calculateDateDiff()" style="width: 140px;">
+                        </div>
+                        <div class="inline-date-group">
+                            <span>To / දක්වා</span>
+                            <input type="date" id="toDate" onchange="calculateDateDiff()" style="width: 140px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. No. of days previously taken -->
+            <div class="form-row">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">මීට කලින් ගෙන ඇති නිවාඩු ගණන</span>
+                        <span class="en-lbl">No. of days previously taken</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap">
+                    <input type="number" id="daysTaken" min="0" step="0.5" required style="width: 120px;">
+                    <span class="si-lbl" style="font-size: 0.95rem; margin-left: 8px;">දින / Days</span>
+                </div>
+            </div>
+
+            <!-- 7. Reason of leave -->
+            <div class="form-row" style="align-items: flex-start;">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">නිවාඩු අවශ්‍ය කාරණය</span>
+                        <span class="en-lbl">Reason of leave</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap">
+                    <textarea id="leaveReason" rows="2" required></textarea>
+                </div>
+            </div>
+
+            <!-- 8. Medical certificate submission -->
+            <div class="form-row" style="align-items: flex-start;">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">අසනීප නිවාඩුවක් නම් වෛද්‍ය සහතිකය ඉදිරිපත් කරන්නේද?</span>
+                        <span class="en-lbl">Whether submitting a certificate of medical if leave on medical ground</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap">
+                    <div class="radio-options">
+                        <label class="radio-lbl">
+                            <input type="radio" name="medicalCert" value="Yes">
+                            <span>ඔව් / Yes</span>
+                        </label>
+                        <label class="radio-lbl">
+                            <input type="radio" name="medicalCert" value="No" checked>
+                            <span>නැත / No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Acting programme proposed -->
+            <div class="form-row" style="align-items: flex-start;">
+                <div class="field-label">
+                    <div class="label-text-container">
+                        <span class="si-lbl">වැඩ බැලීමේ යෝජිත වැඩ පිළිවෙල</span>
+                        <span class="en-lbl">Acting programme proposed</span>
+                    </div>
+                    <span class="curly-brace">}</span>
+                </div>
+                <div class="field-input-wrap">
+                    <textarea id="actingProgramme" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- 10. Signature Section: Covering Teacher & Applicant -->
+            <div class="signature-section">
+                <!-- Covering Teacher -->
+                <div class="signature-box" style="flex: 1.2;">
+                    <div class="label-text-container">
+                        <span class="si-lbl">වැඩ ආවරණය කරන ගුරුභවතාගේ අත්සන</span>
+                        <span class="en-lbl">Signature of the covering teacher</span>
+                    </div>
+                    <div class="signature-canvas-container">
+                        <canvas id="canvasCovering" width="300" height="70"></canvas>
+                        <button type="button" class="clear-canvas-btn" onclick="clearPad('canvasCovering')">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Applicant Signature & Date -->
+                <div class="signature-box" style="flex: 1;">
+                    <div class="label-text-container" style="text-align: right;">
+                        <span class="si-lbl">ඉල්ලුම්කරුගේ අත්සන</span>
+                        <span class="en-lbl">Signature of Applicant</span>
+                    </div>
+                    <div class="signature-canvas-container">
+                        <canvas id="canvasApplicant" width="260" height="70"></canvas>
+                        <button type="button" class="clear-canvas-btn" onclick="clearPad('canvasApplicant')">Clear</button>
+                    </div>
+
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                        <div class="label-text-container">
+                            <span class="si-lbl" style="font-size: 1rem;">දිනය</span>
+                            <span class="en-lbl">Date</span>
+                        </div>
+                        <span class="curly-brace" style="font-size: 1.6rem;">}</span>
+                        <input type="date" id="applicationDate" required style="flex: 1;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. Approval Section -->
+            <div class="approval-block">
+                <div class="approval-line-row">
+                    <div class="label-text-container">
+                        <span class="si-lbl">අනියම්/අසනීප/රාජකාරි නිවාඩු දින</span>
+                        <span class="en-lbl">Casual / Medical days</span>
+                    </div>
+                    <input type="number" id="approvedDays" min="0" step="0.5" style="width: 80px; text-align: center;">
+                    <div class="label-text-container">
+                        <span class="si-lbl">ක් අනුමතයි.</span>
+                        <span class="en-lbl">Approved</span>
+                    </div>
+                </div>
+
+                <div class="principal-row">
+                    <!-- Approval Date -->
+                    <div style="display: flex; align-items: center; gap: 8px; width: 220px;">
+                        <div class="label-text-container">
+                            <span class="si-lbl" style="font-size: 1rem;">දිනය</span>
+                            <span class="en-lbl">Date</span>
+                        </div>
+                        <span class="curly-brace" style="font-size: 1.6rem;">}</span>
+                        <input type="date" id="approvalDate">
+                    </div>
+
+                    <!-- Principal Signature Box -->
+                    <div class="signature-box" style="width: 260px;">
+                        <div class="signature-canvas-container">
+                            <canvas id="canvasPrincipal" width="260" height="70"></canvas>
+                            <button type="button" class="clear-canvas-btn" onclick="clearPad('canvasPrincipal')">Clear</button>
+                        </div>
+                        <div style="text-align: center; margin-top: 6px;">
+                            <span class="si-lbl" style="display: block; font-size: 1.1rem;">විදුහල්පති / මුල්ගුරු</span>
+                            <span class="en-lbl">Principal / Head Master</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 12. Name of School -->
+                <div class="form-row" style="margin-top: 10px;">
+                    <div class="field-label" style="flex: 0 0 30%;">
+                        <div class="label-text-container">
+                            <span class="si-lbl">විද්‍යාලය</span>
+                            <span class="en-lbl">Name of School</span>
+                        </div>
+                        <span class="curly-brace">}</span>
+                    </div>
+                    <div class="field-input-wrap">
+                        <input type="text" id="schoolName" required placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button (Hidden when printing) -->
+            <div style="margin-top: 30px; text-align: right;" class="action-bar-submit">
+                <button type="submit" class="btn btn-primary" onclick="window.print()" style="padding: 10px 24px; font-size: 0.95rem;">
+                    Save Application(PDF)
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        Application Submitted Successfully! / නිවාඩු අයදුම්පත සාර්ථකව යොමු කරන ලදී.
+    </div>
+
+    <!-- Vanilla JavaScript Implementation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Default current date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('applicationDate').value = today;
+            document.getElementById('approvalDate').value = today;
+
+            // Initialize Signature Pads
+            initCanvas('canvasApplicant');
+            initCanvas('canvasCovering');
+            initCanvas('canvasPrincipal');
+        });
+
+        // Automatic day count calculation between From and To dates
+        function calculateDateDiff() {
+            const from = document.getElementById('fromDate').value;
+            const to = document.getElementById('toDate').value;
+
+            if (from && to) {
+                const d1 = new Date(from);
+                const d2 = new Date(to);
+                if (d2 >= d1) {
+                    const diffTime = Math.abs(d2 - d1);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    document.getElementById('daysRequired').value = diffDays;
+                    document.getElementById('approvedDays').value = diffDays;
+                }
+            }
+        }
+
+        // Form Reset
+        function resetForm() {
+            if (confirm("Are you sure you want to reset the form fields?")) {
+                document.getElementById('leaveApplicationForm').reset();
+                clearPad('canvasApplicant');
+                clearPad('canvasCovering');
+                clearPad('canvasPrincipal');
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('applicationDate').value = today;
+                document.getElementById('approvalDate').value = today;
+            }
+        }
+
+        // Handle Submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+
+        // Canvas Digital Signature Functionality
+        function initCanvas(id) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0f172a';
+
+            function getCoordinates(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            function startDraw(e) {
+                isDrawing = true;
+                const coords = getCoordinates(e);
+                ctx.beginPath();
+                ctx.moveTo(coords.x, coords.y);
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const coords = getCoordinates(e);
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+            }
+
+            function stopDraw() {
+                isDrawing = false;
+            }
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseleave', stopDraw);
+
+            canvas.addEventListener('touchstart', startDraw);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stopDraw);
+        }
+
+        function clearPad(id) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        let storedData = sessionStorage.getItem("userData");
+        if (storedData) {
+            storedData=JSON.parse(storedData)
+            console.log(storedData)
+            document.getElementById('teacherName').value=storedData['a'];
+            
+        }
+    </script>
+</body>
+</html>
