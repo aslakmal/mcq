@@ -434,10 +434,60 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
+/* Default: Hide main app, show landing container */
+#app-content {
+  display: none !important;
+}
+
+#install-landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+/* INSTALLED PWA MODE: Swap visibility */
+@media all and (display-mode: standalone), (display-mode: fullscreen) {
+  #install-landing {
+    display: none !important;
+  }
+  
+  #app-content {
+    display: block !important;
+  }
+}
+    #installAppBtn {
+  width: 100%;
+  z-index: 9999;
+  background-color: #10b981; /* Green banner style */
+  color: white;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#installAppBtn:hover {
+  background-color: #059669;
+}
   </style>
 </head>
 <body>
-
+  <div id="install-landing">
+  <div class="landing-card">
+    <h1>Welcome to Scanner app</h1>
+    <p>Please install the app to get full access to all features.</p>
+    <button id="installAppBtn" style="display: none;">Install App Now</button>
+  </div>
+</div>
+<div id="app-content">
 <div id="loading-overlay" class="hidden">
   <div class="spinner"></div>
   <div id="loading-text">Loading...</div>
@@ -591,7 +641,7 @@
     </button>
   </div>
 </nav>
-
+</div>
 <script src="../edOS/sync.js"></script>
 <script src="scan.js"></script>
 <script>
@@ -622,6 +672,53 @@
               .catch(err => console.log('Service Worker registration failed:', err));
       });
   }
+
+ let deferredPrompt;
+const installBtn = document.getElementById('installAppBtn');
+
+// 1. Listen for the install prompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  
+  // Stash the event so it can be triggered later
+  deferredPrompt = e;
+  
+  // Show the install button on your landing page
+  if (installBtn) {
+    installBtn.style.display = 'block';
+  }
+});
+
+// 2. Handle the click on your custom install button
+if (installBtn) {
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+
+    // Show the native browser install prompt
+    deferredPrompt.prompt();
+
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to install prompt: ${outcome}`);
+
+    // Clear the deferred prompt since it can only be used once
+    deferredPrompt = null;
+
+    // Optional: Hide the button after clicking
+    installBtn.style.display = 'none';
+  });
+}
+
+// 3. Handle post-installation cleanup
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  console.log('PWA was successfully installed');
+  
+  // Optional: Automatically reload or transition to the app view 
+  // (though the CSS media query will handle hiding the landing page on reload)
+  window.location.reload();
+}); 
 </script>
 </body>
 </html>
