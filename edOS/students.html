@@ -311,20 +311,21 @@
 async function exportTo300DpiPNG(elementId) {
   const node = document.getElementById(elementId);
   const scale = 300 / 96; 
-  const studentKey = document.querySelector('.print-btn').dataset.student;
+  const studentKey = document.querySelector('.print-btn')?.dataset.student || 'document';
+  
   try {
     const dataUrl = await htmlToImage.toPng(node, {
       pixelRatio: scale, 
       cacheBust: true   
     });
-    alertbox('Downloading', "success")
+    alertbox('Downloading', "success");
     const link = document.createElement('a');
     link.download = `student-${studentKey}.png`;
     link.href = dataUrl;
     link.click();
   } catch (error) {
-    console.error('Export failed:', error);
-    alertbox('Download failed:', "error")
+      // Fallback: Trigger browser print dialog so the user can save as PDF
+    window.print();
   }
 }
 
