@@ -29,7 +29,7 @@
       max-width: 900px;
       margin: 0 auto;
       background: #ffffff;
-      padding: 24px;
+      padding: 5px;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
@@ -97,7 +97,11 @@
   border-radius: 8px;
   border: 1px solid #ddd;
 }
-
+@media only screen and (max-width: 425px) {
+  .card-fields-selector{
+    flex-direction: column;
+  }
+}
 .selector-column {
   flex: 1;
 }
@@ -191,6 +195,30 @@
 
     <!-- CONTROL BAR: TEMPLATE & COLOR SELECTOR -->
     <div class="template-selector-bar">
+      <!-- Side Type Radio Options -->
+      <div class="selector-group side-type-group">
+        <span class="selector-label">Side Type:</span>
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="sideType" 
+            value="single" 
+            onchange="onSideTypeChange(this.value)"
+          > 
+          Single Side
+        </label>
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="sideType" 
+            value="double" 
+            checked 
+            onchange="onSideTypeChange(this.value)"
+          > 
+          Double Side
+        </label>
+      </div>
+    
       <div class="selector-group">
         <label for="templateSelect">Template Style:</label>
         <select id="templateSelect" class="template-select" onchange="onTemplateChange(this.value)">
@@ -204,18 +232,18 @@
           <option value="tpl-multi-wave">Multi-Wave Frame</option>
           <option value="tpl-top-polygons">Top Geometric Polygons</option>
           <option value="tpl-apex-modern">Apex Modern Glass</option>
-          <option value="tpl-wave-modern">Wave Mmodern</option>
+          <option value="tpl-wave-modern">Wave Modern</option>
           <option value="tpl-prism-luxe">Prism Luxe</option>
           <option value="tpl-prism-crystal">Prism Crystal</option>          
         </select>
       </div>
-
+    
       <div class="selector-group">
         <span>Color Preset:</span>
         <div class="color-palette">
-          <div class="color-box color-blue active" onclick="onColorChange('blue')" title="Blue"></div>
+          <div class="color-box color-blue" onclick="onColorChange('blue')" title="Blue"></div>
           <div class="color-box color-red" onclick="onColorChange('red')" title="Red"></div>
-          <div class="color-box color-emerald" onclick="onColorChange('emerald')" title="Emerald"></div>
+          <div class="color-box color-emerald active" onclick="onColorChange('emerald')" title="Emerald"></div>
           <div class="color-box color-purple" onclick="onColorChange('purple')" title="Purple"></div>
           <div class="color-box color-amber" onclick="onColorChange('amber')" title="Amber"></div>
         </div>
@@ -240,7 +268,6 @@
 
   <div class="body_">
     <h4 id="cardName">JOHN DOE</h4>
-    <div class="card-badge">STUDENT ID CARD</div>
 
     <!-- Dynamic Front Details Grid -->
     <div class="front-card-body" id="frontCardBody">
@@ -267,8 +294,7 @@
     <div id="qrcode"></div>
   </div>
   <div class="back-footer">
-    <p>If found, please return to school administration.</p>
-  </div>
+    </div>
 </div>
     </div>
 

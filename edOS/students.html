@@ -211,8 +211,8 @@
       <button type="button" class="close-modal" onclick="closeModal('idCardModal')">×</button>
     </div>
 
-    <div id="idCardWrapper" style="padding-top:20px">
-      <div class="id-cards-container">
+    <div id="idCardWrapper">
+      <div class="id-cards-container" id="id-cards-container"> 
 
         <div id="frontCard" class="id-card front-card tpl-modern-blue">
           <div class="card-header">
@@ -226,7 +226,6 @@
         
           <div class="body_">
             <h4 id="cardName">JOHN DOE</h4>
-            <div class="card-badge">STUDENT ID CARD</div>
         
             <!-- Dynamic Front Details Grid -->
             <div class="front-card-body" id="frontCardBody">
@@ -253,7 +252,6 @@
             <div id="qrcode"></div>
           </div>
           <div class="back-footer">
-            <p>If found, please return to school administration.</p>
           </div>
         </div>
 
@@ -304,6 +302,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="js/students.js?www"></script>
   <script src="js/studentData.js?x9"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
  </body>
 <!-- Include library via CDN (or install via npm: npm install html-to-image) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
