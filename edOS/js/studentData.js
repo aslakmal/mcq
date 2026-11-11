@@ -74,6 +74,7 @@ let detailsChartInstance = null;
             student.g= await syncEngine.decryptField(student.g)
             student = syncEngine.unmapFromFirebase('students', student);
           try {
+            student.id=studentId;
       await saveStudentToIndexedDB(student);
       
       // Refresh parent window list if loaded inside iframe modal
