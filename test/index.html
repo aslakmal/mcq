@@ -14,7 +14,8 @@
       font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 20px;
     }
     .action-btn { background: #059669; }
-    .ios-instructions { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
+    .ios-instructions, .installed-notice { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
+    .installed-notice { background: #d1fae5; color: #065f46; width: 100%; box-sizing: border-box; text-align: center; }
     
     /* Scanner & Student UI Styles */
     #scanner-container { width: 100%; max-width: 400px; margin: 20px auto; display: none; background: #000; border-radius: 8px; overflow: hidden; }
@@ -25,13 +26,19 @@
 </head>
 <body>
 
-  <!-- Browser Landing View (Shown only on web browser) -->
+  <!-- Browser Landing View (Shown on web browser) -->
   <div id="browser-view" class="browser-view">
     <h1 id="landing-school-name">Loading School Portal...</h1>
     <p>Install our app for the best experience.</p>
     
     <!-- Custom Install Button -->
     <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
+
+    <!-- Already Installed Notice -->
+    <div id="installed-notice" class="installed-notice" style="display: none;">
+      <p style="margin: 0; font-weight: 600;">📱 App is already installed on your device!</p>
+      <p style="margin: 5px 0 0 0; font-size: 14px;">Please open it from your home screen or app launcher. (In Chrome, check top-right menu <strong>⋮</strong> to "Open in app").</p>
+    </div>
 
     <!-- Apple / iOS Instructions -->
     <div id="ios-instructions" class="ios-instructions" style="display: none;">
@@ -43,7 +50,7 @@
     </div>
   </div>
 
-  <!-- App Main Content View (Shown only when opened as installed PWA) -->
+  <!-- App Main Content View (Shown when opened as installed PWA) -->
   <div id="app-view" class="app-view">
     <h1 style="margin-bottom: 5px;">Welcome to <span id="app-school-name">Portal</span></h1>
     <p style="color: #6b7280; margin-top: 0;">Installed Student PWA</p>
@@ -75,6 +82,25 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <script>
+    // Helper function for busy/loading states
+    function setAppBusy(isBusy, message = "Updating...") {
+      let overlay = document.getElementById('app-busy-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'app-busy-overlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-family:system-ui,sans-serif;z-index:9999;';
+        overlay.innerHTML = `<div style="background:white;color:#1f2937;padding:24px 32px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.2);text-align:center;"><div style="border:4px solid #f3f3f3;border-top:4px solid #2563eb;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:0 auto 12px auto;"></div><p id="busy-msg" style="margin:0;font-weight:600;font-size:16px;"></p></div>`;
+        
+        // Add spinner animation style dynamically
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
+        document.body.appendChild(overlay);
+      }
+      overlay.style.display = isBusy ? 'flex' : 'none';
+      document.getElementById('busy-msg').innerText = message;
+    }
+
     // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
@@ -90,7 +116,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- IndexedDB Setup (Read-Only/Listing in this file) ---
+    // --- IndexedDB Setup ---
     const DB_NAME = "SchoolPWA_DB";
     const STORE_NAME = "students";
 
@@ -149,7 +175,6 @@
       let schoolName = `${schoolId.toUpperCase()} Portal`;
       let themeColor = "#2563eb";
 
-      // Fetch school name from Firebase
       try {
         const snapshot = await db.ref(`schools/${schoolId}/details/schoolName`).once('value');
         if (snapshot.exists() && snapshot.val()) {
@@ -168,17 +193,20 @@
       setText('landing-school-name', schoolName);
       setText('app-school-name', schoolName);
 
-      // Check if running as Standalone PWA
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
       if (isStandalone) {
         document.getElementById('app-view').style.display = 'block';
-        renderStudentList(); // Load saved local students
+        renderStudentList();
       } else {
         document.getElementById('browser-view').style.display = 'block';
+
+        const isInstalledFlag = localStorage.getItem(`pwa_installed_${schoolId}`);
+        if (isInstalledFlag) {
+          document.getElementById('installed-notice').style.display = 'block';
+        }
       }
 
-      // Dynamically Build Manifest
       const baseUrl = window.location.origin;
       const currentPath = window.location.pathname;
       const targetUrl = `${baseUrl}${currentPath}?id=${encodeURIComponent(schoolId)}`;
@@ -217,10 +245,7 @@
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: 250, height: 250 } },
           async (decodedText) => {
-            // Stop scanner on successful scan
             await stopScanner();
-
-            // The QR code contains the full student.html URL, open it directly
             try {
               window.location.href = decodedText;
             } catch (e) {
@@ -228,9 +253,7 @@
               alert(`Scanned URL: ${decodedText}`);
             }
           },
-          (errorMessage) => {
-            // Scanning frame errors can be ignored
-          }
+          (errorMessage) => {}
         ).catch(err => {
           console.error("Unable to start scanning.", err);
           alert("Camera permission denied or unavailable.");
@@ -254,25 +277,43 @@
 
       stopScanBtn.addEventListener('click', stopScanner);
 
-      // Install prompt handling
+      // Install prompt handling with setAppBusy integration
       let deferredPrompt;
       const installBtn = document.getElementById('install-btn');
+      
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        if (installBtn) installBtn.style.display = 'inline-block';
+        if (!localStorage.getItem(`pwa_installed_${schoolId}`)) {
+          installBtn.style.display = 'inline-block';
+        }
       });
 
       if (installBtn) {
         installBtn.addEventListener('click', async () => {
           if (deferredPrompt) {
+            setAppBusy(true, "Preparing installation...");
             deferredPrompt.prompt();
+            
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.style.display = 'none';
+            
+            setAppBusy(false);
+
+            if (outcome === 'accepted') {
+              localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
+              installBtn.style.display = 'none';
+              document.getElementById('installed-notice').style.display = 'block';
+            }
             deferredPrompt = null;
           }
         });
       }
+
+      window.addEventListener('appinstalled', () => {
+        localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
+        if (installBtn) installBtn.style.display = 'none';
+        document.getElementById('installed-notice').style.display = 'block';
+      });
 
       const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       if (isIos && !window.navigator.standalone) {
