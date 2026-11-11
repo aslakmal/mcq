@@ -7,14 +7,20 @@
   <link id="dynamic-manifest" rel="manifest" href="">
   <meta name="theme-color" content="#2563eb">
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; }
-    /* Hidden by default until environment check runs */
-    .browser-view, .app-view { display: none; padding: 2rem; text-align: center; }
-    .install-btn {
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f9fafb; color: #1f2937; }
+    .browser-view, .app-view { display: none; padding: 1.5rem; max-width: 600px; margin: 0 auto; text-align: center; }
+    .install-btn, .action-btn {
       background: #2563eb; color: white; border: none; padding: 12px 24px;
       font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 20px;
     }
+    .action-btn { background: #059669; }
     .ios-instructions { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
+    
+    /* Scanner & Student UI Styles */
+    #scanner-container { width: 100%; max-width: 400px; margin: 20px auto; display: none; background: #000; border-radius: 8px; overflow: hidden; }
+    .students-list { margin-top: 30px; text-align: left; }
+    .student-card { display: flex; align-items: center; background: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .student-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; background: #e5e7eb; }
   </style>
 </head>
 <body>
@@ -24,7 +30,7 @@
     <h1 id="landing-school-name">Loading School Portal...</h1>
     <p>Install our app for the best experience.</p>
     
-    <!-- Custom Install Button (Android / Desktop Chrome/Edge) -->
+    <!-- Custom Install Button -->
     <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
 
     <!-- Apple / iOS Instructions -->
@@ -39,17 +45,37 @@
 
   <!-- App Main Content View (Shown only when opened as installed PWA) -->
   <div id="app-view" class="app-view">
-    <h1>Welcome to <span id="app-school-name">Portal</span></h1>
-    <p>Your portal is running as an installed app.</p>
+    <h1 style="margin-bottom: 5px;">Welcome to <span id="app-school-name">Portal</span></h1>
+    <p style="color: #6b7280; margin-top: 0;">Installed Student PWA</p>
+
+    <!-- Scan Button -->
+    <button id="start-scan-btn" class="action-btn">📷 Scan Student QR Code</button>
+
+    <!-- QR Scanner Viewport -->
+    <div id="scanner-container">
+      <div id="reader"></div>
+      <button id="stop-scan-btn" style="background: #dc2626; color: white; border: none; padding: 8px 16px; margin: 10px; border-radius: 6px; cursor: pointer;">Cancel Scanning</button>
+    </div>
+
+    <!-- Saved Students List (Loaded from IndexedDB) -->
+    <div class="students-list">
+      <h3>Saved Students (Offline Ready)</h3>
+      <div id="students-container">
+        <p style="color: #6b7280; font-style: italic;">No students saved yet. Scan a QR code to add.</p>
+      </div>
+    </div>
   </div>
 
   <!-- Firebase Compat SDKs (v9.22.0) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  
+  <!-- Html5-Qrcode Library for Camera Scanning -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <script>
-    // Your exact Firebase Configuration
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
       authDomain: "school-62c45.firebaseapp.com",
@@ -61,14 +87,72 @@
       measurementId: "G-8QG01WT32P"
     };
 
-    let userID = null;
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
-    const auth = firebase.auth();
     const db = firebase.database();
 
-    // Run PWA & School Logic safely inside an IIFE
+    // --- IndexedDB Setup ---
+    const DB_NAME = "SchoolPWA_DB";
+    const STORE_NAME = "students";
+
+    function openIndexedDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (e) => {
+          const dbInstance = e.target.result;
+          if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+            dbInstance.createObjectStore(STORE_NAME, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function saveStudentToDB(student) {
+      const dbInstance = await openIndexedDB();
+      return new Promise((resolve, reject) => {
+        const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
+        const store = transaction.objectStore(STORE_NAME);
+        store.put(student);
+        transaction.oncomplete = () => resolve(true);
+        transaction.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function getStoredStudents() {
+      const dbInstance = await openIndexedDB();
+      return new Promise((resolve, reject) => {
+        const transaction = dbInstance.transaction(STORE_NAME, "readonly");
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function renderStudentList() {
+      const container = document.getElementById('students-container');
+      try {
+        const students = await getStoredStudents();
+        if (students.length === 0) {
+          container.innerHTML = '<p style="color: #6b7280; font-style: italic;">No students saved yet. Scan a QR code to add.</p>';
+          return;
+        }
+        container.innerHTML = students.map(s => `
+          <div class="student-card">
+            <img src="${s.photoUrl || 'https://via.placeholder.com/50'}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/50'">
+            <div>
+              <strong>${s.name}</strong>
+              <div style="font-size: 12px; color: #6b7280;">ID: ${s.id}</div>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error("Error loading students from IndexedDB", err);
+      }
+    }
+
+    // --- Main PWA & App Logic ---
     (async function () {
       const params = new URLSearchParams(window.location.search);
       const schoolId = params.get('id') || 'default';
@@ -76,7 +160,7 @@
       let schoolName = `${schoolId.toUpperCase()} Portal`;
       let themeColor = "#2563eb";
 
-      // Fetch school name from Firebase using compat syntax (.once('value'))
+      // Fetch school name from Firebase
       try {
         const snapshot = await db.ref(`schools/${schoolId}/details/schoolName`).once('value');
         if (snapshot.exists() && snapshot.val()) {
@@ -86,7 +170,6 @@
         console.error("Error fetching school name from Firebase:", error);
       }
 
-      // Safe DOM text setter helper
       const setText = (id, text) => {
         const el = document.getElementById(id);
         if (el) el.innerText = text;
@@ -100,11 +183,10 @@
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
       if (isStandalone) {
-        const appView = document.getElementById('app-view');
-        if (appView) appView.style.display = 'block';
+        document.getElementById('app-view').style.display = 'block';
+        renderStudentList(); // Load saved local students
       } else {
-        const browserView = document.getElementById('browser-view');
-        if (browserView) browserView.style.display = 'block';
+        document.getElementById('browser-view').style.display = 'block';
       }
 
       // Dynamically Build Manifest
@@ -121,37 +203,97 @@
         background_color: "#ffffff",
         theme_color: themeColor,
         icons: [
-          {
-            src: "https://digibook.edu.lk/scan/icon-192.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "any maskable"
-          },
-          {
-            src: "https://digibook.edu.lk/scan/icon-512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable"
-          }
+          { src: "https://digibook.edu.lk/scan/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+          { src: "https://digibook.edu.lk/scan/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
         ]
       };
 
       const stringManifest = JSON.stringify(manifest);
       const blob = new Blob([stringManifest], { type: 'application/json' });
       const manifestURL = URL.createObjectURL(blob);
-      
-      const dynamicManifest = document.querySelector('#dynamic-manifest');
-      if (dynamicManifest) dynamicManifest.setAttribute('href', manifestURL);
+      document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
 
-      let themeMeta = document.querySelector('meta[name="theme-color"]');
-      if (themeMeta) {
-        themeMeta.setAttribute('content', themeColor);
+      // --- QR Code Scanner Integration ---
+      let html5QrCode = null;
+      const startScanBtn = document.getElementById('start-scan-btn');
+      const stopScanBtn = document.getElementById('stop-scan-btn');
+      const scannerContainer = document.getElementById('scanner-container');
+
+      startScanBtn.addEventListener('click', () => {
+        scannerContainer.style.display = 'block';
+        startScanBtn.style.display = 'none';
+
+        html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          async (decodedText) => {
+            // Stop scanner on successful scan
+            await stopScanner();
+
+            try {
+              // Parse scanned URL or parameters
+              let scannedUrl = new URL(decodedText);
+              let scannedStudentId = scannedUrl.searchParams.get('id') || scannedUrl.searchParams.get('studentId');
+              let scannedSchoolId = scannedUrl.searchParams.get('school') || schoolId;
+
+              if (scannedStudentId) {
+                // Fetch student details from Firebase path: schools/${scannedSchoolId}/students/${scannedStudentId}
+                const studentSnap = await db.ref(`schools/${scannedSchoolId}/students/${scannedStudentId}`).once('value');
+                if (studentSnap.exists()) {
+                  const studentData = studentSnap.val();
+                  const studentRecord = {
+                    id: scannedStudentId,
+                    name: studentData.name || "Unknown Student",
+                    photoUrl: studentData.photoUrl || ""
+                  };
+
+                  // Save to IndexedDB
+                  await saveStudentToDB(studentRecord);
+                  alert(`Successfully added ${studentRecord.name}!`);
+                  renderStudentList();
+                } else {
+                  alert("Student record not found in database.");
+                }
+              } else {
+                // If scanned text is just the direct student ID or custom string
+                alert(`Scanned code: ${decodedText}`);
+              }
+            } catch (e) {
+              // Fallback if scanned text is not a valid URL
+              console.error("Scan processing error:", e);
+              alert(`Scanned: ${decodedText}`);
+            }
+          },
+          (errorMessage) => {
+            // Scanning frame errors can be ignored
+          }
+        ).catch(err => {
+          console.error("Unable to start scanning.", err);
+          alert("Camera permission denied or unavailable.");
+          startScanBtn.style.display = 'inline-block';
+          scannerContainer.style.display = 'none';
+        });
+      });
+
+      async function stopScanner() {
+        if (html5QrCode) {
+          try {
+            await html5QrCode.stop();
+            html5QrCode.clear();
+          } catch (e) {
+            console.error("Failed to clear scanner", e);
+          }
+        }
+        scannerContainer.style.display = 'none';
+        startScanBtn.style.display = 'inline-block';
       }
 
-      // Handle Install Prompt (Android / Desktop Chrome/Edge)
+      stopScanBtn.addEventListener('click', stopScanner);
+
+      // Install prompt handling
       let deferredPrompt;
       const installBtn = document.getElementById('install-btn');
-
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -163,19 +305,14 @@
           if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-              installBtn.style.display = 'none';
-            }
+            if (outcome === 'accepted') installBtn.style.display = 'none';
             deferredPrompt = null;
           }
         });
       }
 
-      // Handle Apple / iOS Device Detection
       const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      const isInStandaloneMode = window.navigator.standalone;
-
-      if (isIos && !isInStandaloneMode) {
+      if (isIos && !window.navigator.standalone) {
         const iosInstructions = document.getElementById('ios-instructions');
         if (iosInstructions) iosInstructions.style.display = 'block';
       }
