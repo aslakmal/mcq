@@ -7,53 +7,58 @@
   <link id="dynamic-manifest" rel="manifest" href="">
   <meta name="theme-color" content="#2563eb">
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f9fafb; color: #1f2937; }
-    .browser-view, .app-view { display: none; padding: 1.5rem; max-width: 600px; margin: 0 auto; text-align: center; }
-    .install-btn, .action-btn {
-      background: #2563eb; color: white; border: none; padding: 12px 24px;
-      font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 20px;
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 0 0 80px 0; background: #f9fafb; color: #1f2937; }
+    .app-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; text-align: center; }
+    .action-btn {
+      background: #059669; color: white; border: none; padding: 12px 24px;
+      font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 15px; width: 100%; max-width: 300px;
     }
-    .action-btn { background: #059669; }
-    .manual-instructions, .installed-notice { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
-    .installed-notice { background: #d1fae5; color: #065f46; width: 100%; box-sizing: border-box; text-align: center; }
+    .manual-instructions { background: #eff6ff; color: #1e40af; padding: 12px 15px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: left; }
     
+    /* Fixed Bottom Install Bar */
+    .fixed-install-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: white; border-top: 1px solid #e5e7eb;
+      padding: 12px 20px; display: none; align-items: center; justify-content: space-between;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 1000;
+    }
+    .fixed-install-btn {
+      background: #2563eb; color: white; border: none; padding: 10px 20px;
+      font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer;
+    }
+
     /* Scanner & Student UI Styles */
     #scanner-container { width: 100%; max-width: 400px; margin: 20px auto; display: none; background: #000; border-radius: 8px; overflow: hidden; }
     .students-list { margin-top: 30px; text-align: left; }
     .student-card { display: flex; align-items: center; background: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .student-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; background: #e5e7eb; }
+
+    /* Full-Screen AJAX Modal Viewport for student.html */
+    #student-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: white; z-index: 9000; display: none; overflow-y: auto;
+    }
+    .modal-header {
+      position: sticky; top: 0; background: #ffffff; border-bottom: 1px solid #e5e7eb;
+      padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 9001;
+    }
+    .close-modal-btn {
+      background: #ef4444; color: white; border: none; padding: 6px 14px;
+      border-radius: 6px; cursor: pointer; font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Browser Landing View (Shown on web browser) -->
-  <div id="browser-view" class="browser-view">
-    <h1 id="landing-school-name">Loading School Portal...</h1>
-    <p>Install our app for the best experience.</p>
-    
-    <!-- Install Button (Hidden until beforeinstallprompt fires) -->
-    <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
+  <!-- Main Unified App Content -->
+  <div class="app-container">
+    <h1 style="margin-bottom: 5px;" id="app-school-name">School Portal</h1>
+    <p style="color: #6b7280; margin-top: 0;">Student Portal & Scanner</p>
 
-    <!-- Already Installed Notice (Shown when installed) -->
-    <div id="installed-notice" class="installed-notice" style="display: none;">
-      <p style="margin: 0; font-weight: 600;">📱 App is already installed on your device!</p>
-      <p style="margin: 5px 0 0 0; font-size: 14px;">Please open it from your home screen or app launcher.</p>
-    </div>
-
-    <!-- Manual Instructions (Shown on browsers that don't support custom install prompts like Safari/Firefox) -->
+    <!-- Manual Instructions (Fallback for Safari/Firefox) -->
     <div id="manual-instructions" class="manual-instructions" style="display: none;">
-      <p><strong>To install this app on your browser:</strong></p>
-      <ol style="margin: 0; padding-left: 20px;">
-        <li>Open your browser menu (or <strong>Share</strong> button)</li>
-        <li>Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong> ➕</li>
-      </ol>
+      ℹ️ <strong>To install on your home screen:</strong> Tap your browser menu or Share button ➕ and select <strong>"Add to Home Screen"</strong>.
     </div>
-  </div>
-
-  <!-- App Main Content View (Shown when opened as installed PWA) -->
-  <div id="app-view" class="app-view">
-    <h1 style="margin-bottom: 5px;">Welcome to <span id="app-school-name">Portal</span></h1>
-    <p style="color: #6b7280; margin-top: 0;">Installed Student PWA</p>
 
     <!-- Scan Button -->
     <button id="start-scan-btn" class="action-btn">📷 Scan Student QR Code</button>
@@ -71,6 +76,24 @@
         <p style="color: #6b7280; font-style: italic;">No students saved yet. Scan a QR code to add.</p>
       </div>
     </div>
+  </div>
+
+  <!-- Fixed Bottom Bar for App Installation -->
+  <div id="fixed-install-bar" class="fixed-install-bar">
+    <div style="text-align: left;">
+      <strong style="display: block; font-size: 14px;">Install App</strong>
+      <span style="font-size: 12px; color: #6b7280;">Get quick home screen access</span>
+    </div>
+    <button id="install-btn" class="fixed-install-btn">Install</button>
+  </div>
+
+  <!-- Modal View Container for AJAX Loaded student.html -->
+  <div id="student-modal">
+    <div class="modal-header">
+      <strong id="modal-title">Student Profile</strong>
+      <button id="close-modal-btn" class="close-modal-btn">✕ Close</button>
+    </div>
+    <div id="student-modal-body" style="padding: 16px;"></div>
   </div>
 
   <!-- Firebase Compat SDKs (v9.22.0) -->
@@ -166,7 +189,52 @@
       }
     }
 
-    // --- Main PWA & App Logic ---
+    // --- AJAX Load Function for student.html ---
+    async function loadStudentPageViaAJAX(url) {
+      setAppBusy(true, "Loading profile...");
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to load student page.");
+        
+        const htmlContent = await response.text();
+        
+        // Parse response to strip unnecessary outer <html> tags if present
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const contentBody = doc.body ? doc.body.innerHTML : htmlContent;
+
+        // Populate modal container and display
+        document.getElementById('student-modal-body').innerHTML = contentBody;
+        document.getElementById('student-modal').style.display = 'block';
+
+        // Execute any script tags contained within student.html
+        const scripts = doc.querySelectorAll('script');
+        scripts.forEach(script => {
+          const newScript = document.createElement('script');
+          if (script.src) {
+            newScript.src = script.src;
+          } else {
+            newScript.textContent = script.textContent;
+          }
+          document.body.appendChild(newScript);
+        });
+
+      } catch (error) {
+        console.error("AJAX error:", error);
+        alert("Failed to load student details. Please try again.");
+      } finally {
+        setAppBusy(false);
+      }
+    }
+
+    // Close Modal Handler
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+      document.getElementById('student-modal').style.display = 'none';
+      document.getElementById('student-modal-body').innerHTML = '';
+      renderStudentList(); // Refresh saved student list
+    });
+
+    // --- Main PWA Logic ---
     (async function () {
       const params = new URLSearchParams(window.location.search);
       const schoolId = params.get('id') || 'default';
@@ -189,8 +257,9 @@
       };
 
       setText('page-title', schoolName);
-      setText('landing-school-name', schoolName);
       setText('app-school-name', schoolName);
+
+      renderStudentList(); // Render student list initially everywhere
 
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
@@ -211,10 +280,7 @@
           { src: "https://digibook.edu.lk/scan/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
         ],
         related_applications: [
-          {
-            platform: "webapp",
-            url: targetUrl
-          }
+          { platform: "webapp", url: targetUrl }
         ]
       };
 
@@ -223,35 +289,16 @@
       const manifestURL = URL.createObjectURL(blob);
       document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
 
+      const fixedInstallBar = document.getElementById('fixed-install-bar');
       const installBtn = document.getElementById('install-btn');
-      const installedNotice = document.getElementById('installed-notice');
       const manualInstructions = document.getElementById('manual-instructions');
 
       const supportsCustomInstall = 'onbeforeinstallprompt' in window;
+      const isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
 
-      if (isStandalone) {
-        document.getElementById('app-view').style.display = 'block';
-        renderStudentList();
-      } else {
-        document.getElementById('browser-view').style.display = 'block';
-
-        let isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
-
-        if (supportsCustomInstall) {
-          if (isInstalled) {
-            if (installBtn) installBtn.style.display = 'none';
-            if (installedNotice) installedNotice.style.display = 'block';
-            if (manualInstructions) manualInstructions.style.display = 'none';
-          } else {
-            if (installBtn) installBtn.style.display = 'none'; 
-            if (installedNotice) installedNotice.style.display = 'none';
-            if (manualInstructions) manualInstructions.style.display = 'none';
-          }
-        } else {
-          if (installBtn) installBtn.style.display = 'none';
-          if (installedNotice) installedNotice.style.display = 'none';
-          if (manualInstructions) manualInstructions.style.display = 'block';
-        }
+      // Show manual fallback if not standalone and custom prompt not supported (Safari/Firefox)
+      if (!isStandalone && !supportsCustomInstall) {
+        if (manualInstructions) manualInstructions.style.display = 'block';
       }
 
       // --- QR Code Scanner Integration ---
@@ -270,12 +317,8 @@
           { fps: 10, qrbox: { width: 250, height: 250 } },
           async (decodedText) => {
             await stopScanner();
-            try {
-              window.location.href = decodedText;
-            } catch (e) {
-              console.error("Navigation error:", e);
-              alert(`Scanned URL: ${decodedText}`);
-            }
+            // Load scanned student URL inside modal using AJAX instead of redirecting
+            loadStudentPageViaAJAX(decodedText);
           },
           (errorMessage) => {}
         ).catch(err => {
@@ -301,15 +344,15 @@
 
       stopScanBtn.addEventListener('click', stopScanner);
 
-      // Install prompt handling with persistent setAppBusy until installation finishes
+      // Install prompt handling for Fixed Bottom Bar
       let deferredPrompt;
       
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         
-        if (!localStorage.getItem(`pwa_installed_${schoolId}`)) {
-          if (installBtn) installBtn.style.display = 'inline-block';
+        if (!isStandalone && !isInstalled) {
+          if (fixedInstallBar) fixedInstallBar.style.display = 'flex';
         }
       });
 
@@ -317,14 +360,10 @@
         installBtn.addEventListener('click', async () => {
           if (deferredPrompt) {
             deferredPrompt.prompt();
-            
             const { outcome } = await deferredPrompt.userChoice;
             
             if (outcome === 'accepted') {
-              // Keep loading overlay active until appinstalled event fires or timeout occurs
-              setAppBusy(true, "Installing app, please wait...");
-            } else {
-              setAppBusy(false);
+              setAppBusy(true, "Installing app...");
             }
             deferredPrompt = null;
           }
@@ -332,10 +371,9 @@
       }
 
       window.addEventListener('appinstalled', () => {
-        setAppBusy(false); // Hide loading overlay once fully installed
+        setAppBusy(false);
         localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
-        if (installBtn) installBtn.style.display = 'none';
-        if (installedNotice) installedNotice.style.display = 'block';
+        if (fixedInstallBar) fixedInstallBar.style.display = 'none';
       });
     })();
   </script>
