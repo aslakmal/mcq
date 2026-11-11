@@ -243,14 +243,11 @@
             if (installedNotice) installedNotice.style.display = 'block';
             if (manualInstructions) manualInstructions.style.display = 'none';
           } else {
-            // NOT installed: hide install-btn initially. 
-            // It will be revealed automatically when beforeinstallprompt event triggers.
             if (installBtn) installBtn.style.display = 'none'; 
             if (installedNotice) installedNotice.style.display = 'none';
             if (manualInstructions) manualInstructions.style.display = 'none';
           }
         } else {
-          // Browser does NOT support custom install prompts (Safari, Firefox, etc.)
           if (installBtn) installBtn.style.display = 'none';
           if (installedNotice) installedNotice.style.display = 'none';
           if (manualInstructions) manualInstructions.style.display = 'block';
@@ -304,14 +301,13 @@
 
       stopScanBtn.addEventListener('click', stopScanner);
 
-      // Install prompt handling with setAppBusy integration
+      // Install prompt handling with persistent setAppBusy until installation finishes
       let deferredPrompt;
       
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         
-        // Show the install button ONLY when beforeinstallprompt successfully fires
         if (!localStorage.getItem(`pwa_installed_${schoolId}`)) {
           if (installBtn) installBtn.style.display = 'inline-block';
         }
@@ -320,17 +316,15 @@
       if (installBtn) {
         installBtn.addEventListener('click', async () => {
           if (deferredPrompt) {
-            setAppBusy(true, "Preparing installation...");
             deferredPrompt.prompt();
             
             const { outcome } = await deferredPrompt.userChoice;
             
-            setAppBusy(false);
-
             if (outcome === 'accepted') {
-              localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
-              if (installBtn) installBtn.style.display = 'none';
-              if (installedNotice) installedNotice.style.display = 'block';
+              // Keep loading overlay active until appinstalled event fires or timeout occurs
+              setAppBusy(true, "Installing app, please wait...");
+            } else {
+              setAppBusy(false);
             }
             deferredPrompt = null;
           }
@@ -338,6 +332,7 @@
       }
 
       window.addEventListener('appinstalled', () => {
+        setAppBusy(false); // Hide loading overlay once fully installed
         localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
         if (installBtn) installBtn.style.display = 'none';
         if (installedNotice) installedNotice.style.display = 'block';
