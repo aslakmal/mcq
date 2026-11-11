@@ -198,16 +198,13 @@
         
         const htmlContent = await response.text();
         
-        // Parse response to strip unnecessary outer <html> tags if present
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         const contentBody = doc.body ? doc.body.innerHTML : htmlContent;
 
-        // Populate modal container and display
         document.getElementById('student-modal-body').innerHTML = contentBody;
         document.getElementById('student-modal').style.display = 'block';
 
-        // Execute any script tags contained within student.html
         const scripts = doc.querySelectorAll('script');
         scripts.forEach(script => {
           const newScript = document.createElement('script');
@@ -227,11 +224,10 @@
       }
     }
 
-    // Close Modal Handler
     document.getElementById('close-modal-btn').addEventListener('click', () => {
       document.getElementById('student-modal').style.display = 'none';
       document.getElementById('student-modal-body').innerHTML = '';
-      renderStudentList(); // Refresh saved student list
+      renderStudentList();
     });
 
     // --- Main PWA Logic ---
@@ -259,7 +255,7 @@
       setText('page-title', schoolName);
       setText('app-school-name', schoolName);
 
-      renderStudentList(); // Render student list initially everywhere
+      renderStudentList();
 
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
@@ -296,7 +292,6 @@
       const supportsCustomInstall = 'onbeforeinstallprompt' in window;
       const isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
 
-      // Show manual fallback if not standalone and custom prompt not supported (Safari/Firefox)
       if (!isStandalone && !supportsCustomInstall) {
         if (manualInstructions) manualInstructions.style.display = 'block';
       }
@@ -317,7 +312,6 @@
           { fps: 10, qrbox: { width: 250, height: 250 } },
           async (decodedText) => {
             await stopScanner();
-            // Load scanned student URL inside modal using AJAX instead of redirecting
             loadStudentPageViaAJAX(decodedText);
           },
           (errorMessage) => {}
@@ -344,7 +338,7 @@
 
       stopScanBtn.addEventListener('click', stopScanner);
 
-      // Install prompt handling for Fixed Bottom Bar
+      // Install prompt handling with instant and persistent background loading indicator
       let deferredPrompt;
       
       window.addEventListener('beforeinstallprompt', (e) => {
@@ -359,19 +353,24 @@
       if (installBtn) {
         installBtn.addEventListener('click', async () => {
           if (deferredPrompt) {
+            // Show busy indicator immediately when clicked
+            setAppBusy(true, "Installing app, please wait...");
+            
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             
-            if (outcome === 'accepted') {
-              setAppBusy(true, "Installing app...");
+            if (outcome !== 'accepted') {
+              // Hide loading indicator if user canceled the prompt
+              setAppBusy(false);
             }
+            // If accepted, keep loading indicator active until 'appinstalled' fires
             deferredPrompt = null;
           }
         });
       }
 
       window.addEventListener('appinstalled', () => {
-        setAppBusy(false);
+        setAppBusy(false); // Dismiss loading overlay upon successful installation
         localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
         if (fixedInstallBar) fixedInstallBar.style.display = 'none';
       });
