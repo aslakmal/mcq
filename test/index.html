@@ -14,9 +14,8 @@
       font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 20px;
     }
     .action-btn { background: #059669; }
-    .ios-instructions, .installed-notice, .fallback-tip { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
+    .ios-instructions, .installed-notice { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
     .installed-notice { background: #d1fae5; color: #065f46; width: 100%; box-sizing: border-box; text-align: center; }
-    .fallback-tip { background: #eff6ff; color: #1e40af; width: 100%; box-sizing: border-box; text-align: center; font-size: 14px; }
     
     /* Scanner & Student UI Styles */
     #scanner-container { width: 100%; max-width: 400px; margin: 20px auto; display: none; background: #000; border-radius: 8px; overflow: hidden; }
@@ -32,22 +31,16 @@
     <h1 id="landing-school-name">Loading School Portal...</h1>
     <p>Install our app for the best experience.</p>
     
-    <!-- Custom Install Button (Shown if browser triggers auto-prompt) -->
+    <!-- Install Button (Android / Supported Browsers when not installed) -->
     <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
 
-    <!-- Fallback Manual Install Tip (Always visible if automated button hasn't appeared) -->
-    <div id="fallback-tip" class="fallback-tip" style="display: none;">
-      <p style="margin: 0; font-weight: 600;">💡 How to install this app:</p>
-      <p style="margin: 5px 0 0 0;">Tap your browser menu (<strong>⋮</strong> or <strong>Share</strong>) at the top right/bottom and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>.</p>
-    </div>
-
-    <!-- Already Installed Notice -->
+    <!-- Already Installed Notice (Android when installed) -->
     <div id="installed-notice" class="installed-notice" style="display: none;">
       <p style="margin: 0; font-weight: 600;">📱 App is already installed on your device!</p>
-      <p style="margin: 5px 0 10px 0; font-size: 14px;">Please open it from your home screen or app launcher.</p>
+      <p style="margin: 5px 0 0 0; font-size: 14px;">Please open it from your home screen or app launcher.</p>
     </div>
 
-    <!-- Manual Override Link if user installed via browser menu -->
+    <!-- Manual Override Link -->
     <div style="margin-top: 25px;">
       <a href="#" id="manual-installed-link" style="color: #2563eb; font-size: 14px; text-decoration: underline;">Already installed? Click here to view app mode</a>
     </div>
@@ -235,6 +228,13 @@
       const manifestURL = URL.createObjectURL(blob);
       document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
 
+      const installBtn = document.getElementById('install-btn');
+      const installedNotice = document.getElementById('installed-notice');
+      const iosInstructions = document.getElementById('ios-instructions');
+
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isAndroid = /Android/.test(navigator.userAgent);
+
       if (isStandalone) {
         document.getElementById('app-view').style.display = 'block';
         renderStudentList();
@@ -242,27 +242,32 @@
         document.getElementById('browser-view').style.display = 'block';
 
         let isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
-        
-        if (!isInstalled && navigator.getInstalledRelatedApps) {
-          try {
-            const relatedApps = await navigator.getInstalledRelatedApps();
-            if (relatedApps && relatedApps.length > 0) {
-              isInstalled = true;
-            }
-          } catch (err) {
-            console.log("getInstalledRelatedApps check failed:", err);
-          }
-        }
 
-        if (isInstalled) {
-          document.getElementById('installed-notice').style.display = 'block';
-          const installBtn = document.getElementById('install-btn');
+        // Apply strict device-specific rules requested
+        if (isIos) {
+          // Apple / iOS device rules
           if (installBtn) installBtn.style.display = 'none';
-          const fallbackTip = document.getElementById('fallback-tip');
-          if (fallbackTip) fallbackTip.style.display = 'none';
+          if (installedNotice) installedNotice.style.display = 'none';
+          if (iosInstructions) iosInstructions.style.display = 'block';
+        } else if (isAndroid) {
+          // Android device rules
+          if (iosInstructions) iosInstructions.style.display = 'none';
+          if (isInstalled) {
+            if (installBtn) installBtn.style.display = 'none';
+            if (installedNotice) installedNotice.style.display = 'block';
+          } else {
+            // Not installed yet on Android
+            if (installedNotice) installedNotice.style.display = 'none';
+            // install-btn will be shown when 'beforeinstallprompt' event fires
+          }
         } else {
-          // Show fallback tip initially just in case beforeinstallprompt takes time or is blocked
-          document.getElementById('fallback-tip').style.display = 'block';
+          // Default Desktop / Other browser fallback
+          if (isInstalled) {
+            if (installBtn) installBtn.style.display = 'none';
+            if (installedNotice) installedNotice.style.display = 'block';
+          } else {
+            if (installedNotice) installedNotice.style.display = 'none';
+          }
         }
       }
 
@@ -270,9 +275,9 @@
       document.getElementById('manual-installed-link').addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
-        document.getElementById('installed-notice').style.display = 'block';
-        document.getElementById('install-btn').style.display = 'none';
-        document.getElementById('fallback-tip').style.display = 'none';
+        if (installedNotice) installedNotice.style.display = 'block';
+        if (installBtn) installBtn.style.display = 'none';
+        if (iosInstructions) iosInstructions.style.display = 'none';
         alert("Marked as installed on this device!");
       });
 
@@ -325,15 +330,12 @@
 
       // Install prompt handling with setAppBusy integration
       let deferredPrompt;
-      const installBtn = document.getElementById('install-btn');
-      const fallbackTip = document.getElementById('fallback-tip');
       
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        if (!localStorage.getItem(`pwa_installed_${schoolId}`)) {
-          installBtn.style.display = 'inline-block';
-          if (fallbackTip) fallbackTip.style.display = 'none'; // Hide general tip if automated button is available
+        if (isAndroid && !localStorage.getItem(`pwa_installed_${schoolId}`)) {
+          if (installBtn) installBtn.style.display = 'inline-block';
         }
       });
 
@@ -349,9 +351,8 @@
 
             if (outcome === 'accepted') {
               localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
-              installBtn.style.display = 'none';
-              if (fallbackTip) fallbackTip.style.display = 'none';
-              document.getElementById('installed-notice').style.display = 'block';
+              if (installBtn) installBtn.style.display = 'none';
+              if (installedNotice) installedNotice.style.display = 'block';
             }
             deferredPrompt = null;
           }
@@ -361,16 +362,8 @@
       window.addEventListener('appinstalled', () => {
         localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
         if (installBtn) installBtn.style.display = 'none';
-        if (fallbackTip) fallbackTip.style.display = 'none';
-        document.getElementById('installed-notice').style.display = 'block';
+        if (installedNotice) installedNotice.style.display = 'block';
       });
-
-      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      if (isIos && !window.navigator.standalone) {
-        const iosInstructions = document.getElementById('ios-instructions');
-        if (iosInstructions) iosInstructions.style.display = 'block';
-        if (fallbackTip) fallbackTip.style.display = 'none';
-      }
     })();
   </script>
 </body>
