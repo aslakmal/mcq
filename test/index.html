@@ -62,7 +62,7 @@
 
       // Fetch school name from Firebase path: schools/${schoolId}/details/schoolName
       try {
-        const schoolNameRef = ref(db, `schools/${schoolId}/details/schoolName`);
+        const schoolNameRef = db.ref(`schools/${schoolId}/details/schoolName`);
         const snapshot = await get(schoolNameRef);
         if (snapshot.exists()) {
           schoolName = snapshot.val();
