@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#2563eb">
   <style>
     body { font-family: system-ui, sans-serif; margin: 0; padding: 0; }
-    /* Hidden by default until JS checks environment */
+    /* Hidden by default until environment check runs */
     .browser-view, .app-view { display: none; padding: 2rem; text-align: center; }
     .install-btn {
       background: #2563eb; color: white; border: none; padding: 12px 24px;
@@ -31,7 +31,7 @@
     <div id="ios-instructions" class="ios-instructions" style="display: none;">
       <p><strong>To install on your Apple device:</strong></p>
       <ol style="margin: 0; padding-left: 20px;">
-        탭 Tap the <strong>Share</strong> button in Safari 
+        <li>Tap the <strong>Share</strong> button in Safari</li>
         <li>Select <strong>"Add to Home Screen"</strong> ➕</li>
       </ol>
     </div>
@@ -41,47 +41,70 @@
   <div id="app-view" class="app-view">
     <h1>Welcome to <span id="app-school-name">Portal</span></h1>
     <p>Your portal is running as an installed app.</p>
-    <!-- Put your actual app content here -->
   </div>
- <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
+  <!-- Firebase Compat SDKs (v9.22.0) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
-<script src="../edOS/sync.js"></script>
-  <!-- Firebase SDK (Modular CDN) -->
+
   <script>
+    // Your exact Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
+      authDomain: "school-62c45.firebaseapp.com",
+      databaseURL: "https://school-62c45-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "school-62c45",
+      storageBucket: "school-62c45.firebasestorage.app",
+      messagingSenderId: "213099404706",
+      appId: "1:213099404706:web:d65d7ec257c1119f3966fb",
+      measurementId: "G-8QG01WT32P"
+    };
 
+    let userID = null;
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
 
-    // Run PWA & School Logic
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Run PWA & School Logic safely inside an IIFE
     (async function () {
       const params = new URLSearchParams(window.location.search);
-      const schoolId = params.get('schoolId') || 'digibook';
+      const schoolId = params.get('id') || 'default';
 
       let schoolName = `${schoolId.toUpperCase()} Portal`;
       let themeColor = "#2563eb";
 
-      // Fetch school name from Firebase path: schools/${schoolId}/details/schoolName
- try {
-  const snapshot = await db.ref(`schools/${schoolId}/details/schoolName`).once('value');
-  if (snapshot.exists() && snapshot.val()) {
-    schoolName = snapshot.val(); // Updates the outer variable directly
-  }
-} catch (error) {
-  console.error("Error fetching school name from Firebase:", error);
-}
+      // Fetch school name from Firebase using compat syntax (.once('value'))
+      try {
+        const snapshot = await db.ref(`schools/${schoolId}/details/schoolName`).once('value');
+        if (snapshot.exists() && snapshot.val()) {
+          schoolName = snapshot.val();
+        }
+      } catch (error) {
+        console.error("Error fetching school name from Firebase:", error);
+      }
 
-      // Update UI Texts
-      document.getElementById('page-title').innerText = schoolName;
-      document.getElementById('landing-school-name').innerText = schoolName;
-      document.getElementById('app-school-name').innerText = schoolName;
+      // Safe DOM text setter helper
+      const setText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+      };
+
+      setText('page-title', schoolName);
+      setText('landing-school-name', schoolName);
+      setText('app-school-name', schoolName);
 
       // Check if running as Standalone PWA
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
       if (isStandalone) {
-        document.getElementById('app-view').style.display = 'block';
+        const appView = document.getElementById('app-view');
+        if (appView) appView.style.display = 'block';
       } else {
-        document.getElementById('browser-view').style.display = 'block';
+        const browserView = document.getElementById('browser-view');
+        if (browserView) browserView.style.display = 'block';
       }
 
       // Dynamically Build Manifest
@@ -116,7 +139,9 @@
       const stringManifest = JSON.stringify(manifest);
       const blob = new Blob([stringManifest], { type: 'application/json' });
       const manifestURL = URL.createObjectURL(blob);
-      document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
+      
+      const dynamicManifest = document.querySelector('#dynamic-manifest');
+      if (dynamicManifest) dynamicManifest.setAttribute('href', manifestURL);
 
       let themeMeta = document.querySelector('meta[name="theme-color"]');
       if (themeMeta) {
@@ -130,26 +155,29 @@
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = 'inline-block';
+        if (installBtn) installBtn.style.display = 'inline-block';
       });
 
-      installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          if (outcome === 'accepted') {
-            installBtn.style.display = 'none';
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+              installBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
           }
-          deferredPrompt = null;
-        }
-      });
+        });
+      }
 
       // Handle Apple / iOS Device Detection
       const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       const isInStandaloneMode = window.navigator.standalone;
 
       if (isIos && !isInStandaloneMode) {
-        document.getElementById('ios-instructions').style.display = 'block';
+        const iosInstructions = document.getElementById('ios-instructions');
+        if (iosInstructions) iosInstructions.style.display = 'block';
       }
     })();
   </script>
