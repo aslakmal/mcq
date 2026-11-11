@@ -33,18 +33,21 @@
     .student-card { display: flex; align-items: center; background: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .student-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; background: #e5e7eb; }
 
-    /* Full-Screen AJAX Modal Viewport for student.html */
+    /* Full-Screen Iframe Modal Viewport for student.html */
     #student-modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: white; z-index: 9000; display: none; overflow-y: auto;
+      background: white; z-index: 9000; display: none; overflow: hidden;
     }
     .modal-header {
-      position: sticky; top: 0; background: #ffffff; border-bottom: 1px solid #e5e7eb;
-      padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 9001;
+      position: absolute; top: 0; left: 0; right: 0; background: #ffffff; border-bottom: 1px solid #e5e7eb;
+      padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 9001; height: 45px; box-sizing: border-box;
     }
     .close-modal-btn {
       background: #ef4444; color: white; border: none; padding: 6px 14px;
       border-radius: 6px; cursor: pointer; font-weight: 600;
+    }
+    #student-iframe {
+      position: absolute; top: 45px; left: 0; width: 100%; height: calc(100% - 45px); border: none;
     }
   </style>
 </head>
@@ -87,13 +90,13 @@
     <button id="install-btn" class="fixed-install-btn">Install</button>
   </div>
 
-  <!-- Modal View Container for AJAX Loaded student.html -->
+  <!-- Modal View Container with Iframe for student.html -->
   <div id="student-modal">
     <div class="modal-header">
       <strong id="modal-title">Student Profile</strong>
       <button id="close-modal-btn" class="close-modal-btn">✕ Close</button>
     </div>
-    <div id="student-modal-body" style="padding: 16px;"></div>
+    <iframe id="student-iframe" src=""></iframe>
   </div>
 
   <!-- Firebase Compat SDKs (v9.22.0) -->
@@ -189,45 +192,19 @@
       }
     }
 
-    // --- AJAX Load Function for student.html ---
-    async function loadStudentPageViaAJAX(url) {
-      setAppBusy(true, "Loading profile...");
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Failed to load student page.");
-        
-        const htmlContent = await response.text();
-        
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, 'text/html');
-        const contentBody = doc.body ? doc.body.innerHTML : htmlContent;
-
-        document.getElementById('student-modal-body').innerHTML = contentBody;
-        document.getElementById('student-modal').style.display = 'block';
-
-        const scripts = doc.querySelectorAll('script');
-        scripts.forEach(script => {
-          const newScript = document.createElement('script');
-          if (script.src) {
-            newScript.src = script.src;
-          } else {
-            newScript.textContent = script.textContent;
-          }
-          document.body.appendChild(newScript);
-        });
-
-      } catch (error) {
-        console.error("AJAX error:", error);
-        alert("Failed to load student details. Please try again.");
-      } finally {
-        setAppBusy(false);
-      }
+    // --- Open student.html in Iframe Modal ---
+    function openStudentModal(url) {
+      const iframe = document.getElementById('student-iframe');
+      iframe.src = url;
+      document.getElementById('student-modal').style.display = 'block';
     }
 
+    // Close Modal Handler
     document.getElementById('close-modal-btn').addEventListener('click', () => {
+      const iframe = document.getElementById('student-iframe');
+      iframe.src = ''; // Clear source to stop processes inside iframe
       document.getElementById('student-modal').style.display = 'none';
-      document.getElementById('student-modal-body').innerHTML = '';
-      renderStudentList();
+      renderStudentList(); // Refresh saved student list
     });
 
     // --- Main PWA Logic ---
@@ -312,7 +289,7 @@
           { fps: 10, qrbox: { width: 250, height: 250 } },
           async (decodedText) => {
             await stopScanner();
-            loadStudentPageViaAJAX(decodedText);
+            openStudentModal(decodedText);
           },
           (errorMessage) => {}
         ).catch(err => {
@@ -338,7 +315,7 @@
 
       stopScanBtn.addEventListener('click', stopScanner);
 
-      // Install prompt handling with instant and persistent background loading indicator
+      // Install prompt handling with persistent background loading indicator
       let deferredPrompt;
       
       window.addEventListener('beforeinstallprompt', (e) => {
@@ -353,24 +330,21 @@
       if (installBtn) {
         installBtn.addEventListener('click', async () => {
           if (deferredPrompt) {
-            // Show busy indicator immediately when clicked
             setAppBusy(true, "Installing app, please wait...");
             
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             
             if (outcome !== 'accepted') {
-              // Hide loading indicator if user canceled the prompt
               setAppBusy(false);
             }
-            // If accepted, keep loading indicator active until 'appinstalled' fires
             deferredPrompt = null;
           }
         });
       }
 
       window.addEventListener('appinstalled', () => {
-        setAppBusy(false); // Dismiss loading overlay upon successful installation
+        setAppBusy(false);
         localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
         if (fixedInstallBar) fixedInstallBar.style.display = 'none';
       });
