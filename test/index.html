@@ -90,7 +90,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- IndexedDB Setup ---
+    // --- IndexedDB Setup (Read-Only/Listing in this file) ---
     const DB_NAME = "SchoolPWA_DB";
     const STORE_NAME = "students";
 
@@ -105,17 +105,6 @@
         };
         request.onsuccess = (e) => resolve(e.target.result);
         request.onerror = (e) => reject(e.target.error);
-      });
-    }
-
-    async function saveStudentToDB(student) {
-      const dbInstance = await openIndexedDB();
-      return new Promise((resolve, reject) => {
-        const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
-        const store = transaction.objectStore(STORE_NAME);
-        store.put(student);
-        transaction.oncomplete = () => resolve(true);
-        transaction.onerror = (e) => reject(e.target.error);
       });
     }
 
@@ -231,38 +220,12 @@
             // Stop scanner on successful scan
             await stopScanner();
 
+            // The QR code contains the full student.html URL, open it directly
             try {
-              // Parse scanned URL or parameters
-              let scannedUrl = new URL(decodedText);
-              let scannedStudentId = scannedUrl.searchParams.get('id') || scannedUrl.searchParams.get('studentId');
-              let scannedSchoolId = scannedUrl.searchParams.get('school') || schoolId;
-
-              if (scannedStudentId) {
-                // Fetch student details from Firebase path: schools/${scannedSchoolId}/students/${scannedStudentId}
-                const studentSnap = await db.ref(`schools/${scannedSchoolId}/students/${scannedStudentId}`).once('value');
-                if (studentSnap.exists()) {
-                  const studentData = studentSnap.val();
-                  const studentRecord = {
-                    id: scannedStudentId,
-                    name: studentData.name || "Unknown Student",
-                    photoUrl: studentData.photoUrl || ""
-                  };
-
-                  // Save to IndexedDB
-                  await saveStudentToDB(studentRecord);
-                  alert(`Successfully added ${studentRecord.name}!`);
-                  renderStudentList();
-                } else {
-                  alert("Student record not found in database.");
-                }
-              } else {
-                // If scanned text is just the direct student ID or custom string
-                alert(`Scanned code: ${decodedText}`);
-              }
+              window.location.href = decodedText;
             } catch (e) {
-              // Fallback if scanned text is not a valid URL
-              console.error("Scan processing error:", e);
-              alert(`Scanned: ${decodedText}`);
+              console.error("Navigation error:", e);
+              alert(`Scanned URL: ${decodedText}`);
             }
           },
           (errorMessage) => {
