@@ -31,7 +31,7 @@
     <h1 id="landing-school-name">Loading School Portal...</h1>
     <p>Install our app for the best experience.</p>
     
-    <!-- Install Button (Shown on Chromium browsers when not installed) -->
+    <!-- Install Button (Hidden until beforeinstallprompt fires) -->
     <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
 
     <!-- Already Installed Notice (Shown when installed) -->
@@ -227,7 +227,6 @@
       const installedNotice = document.getElementById('installed-notice');
       const manualInstructions = document.getElementById('manual-instructions');
 
-      // Check if browser natively supports programmatic custom install prompts
       const supportsCustomInstall = 'onbeforeinstallprompt' in window;
 
       if (isStandalone) {
@@ -239,15 +238,16 @@
         let isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
 
         if (supportsCustomInstall) {
-          // Browser supports custom install prompts (Chrome, Edge, etc.)
-          if (manualInstructions) manualInstructions.style.display = 'none';
-
           if (isInstalled) {
             if (installBtn) installBtn.style.display = 'none';
             if (installedNotice) installedNotice.style.display = 'block';
+            if (manualInstructions) manualInstructions.style.display = 'none';
           } else {
+            // NOT installed: hide install-btn initially. 
+            // It will be revealed automatically when beforeinstallprompt event triggers.
+            if (installBtn) installBtn.style.display = 'none'; 
             if (installedNotice) installedNotice.style.display = 'none';
-            if (installBtn) installBtn.style.display = 'inline-block';
+            if (manualInstructions) manualInstructions.style.display = 'none';
           }
         } else {
           // Browser does NOT support custom install prompts (Safari, Firefox, etc.)
@@ -310,6 +310,11 @@
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        
+        // Show the install button ONLY when beforeinstallprompt successfully fires
+        if (!localStorage.getItem(`pwa_installed_${schoolId}`)) {
+          if (installBtn) installBtn.style.display = 'inline-block';
+        }
       });
 
       if (installBtn) {
@@ -328,8 +333,6 @@
               if (installedNotice) installedNotice.style.display = 'block';
             }
             deferredPrompt = null;
-          } else {
-            alert("To install this app, please use your browser's menu (⋮) and select 'Install app' or 'Add to Home Screen'.");
           }
         });
       }
