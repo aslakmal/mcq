@@ -43,6 +43,10 @@
     <p>Your portal is running as an installed app.</p>
     <!-- Put your actual app content here -->
   </div>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
 <script src="../edOS/sync.js"></script>
   <!-- Firebase SDK (Modular CDN) -->
   <script type="module">
@@ -51,7 +55,7 @@
     // Run PWA & School Logic
     (async function () {
       const params = new URLSearchParams(window.location.search);
-      const schoolId = params.get('id') || 'digibook';
+      const schoolId = params.get('schoolId') || 'digibook';
 
       let schoolName = `${schoolId.toUpperCase()} Portal`;
       let themeColor = "#2563eb";
