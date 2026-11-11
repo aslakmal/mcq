@@ -75,6 +75,9 @@ let detailsChartInstance = null;
             student = syncEngine.unmapFromFirebase('students', student);
             console.log(student)
             await saveStudentToIndexedDB(student);
+            if (window.parent && typeof window.parent.renderStudentList === 'function') {
+              window.parent.renderStudentList();
+            }
           }
         } catch (err) {
           console.error("Error fetching single student from Firebase:", err);
