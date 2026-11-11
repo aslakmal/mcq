@@ -73,6 +73,7 @@ let detailsChartInstance = null;
             student.d= await syncEngine.decryptField(student.d)
             student.g= await syncEngine.decryptField(student.g)
             student = syncEngine.unmapFromFirebase('students', student);
+            console.log(student)
             await saveStudentToIndexedDB(student);
           }
         } catch (err) {
