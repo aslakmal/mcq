@@ -73,11 +73,16 @@ let detailsChartInstance = null;
             student.d= await syncEngine.decryptField(student.d)
             student.g= await syncEngine.decryptField(student.g)
             student = syncEngine.unmapFromFirebase('students', student);
-            console.log(student)
-            await saveStudentToIndexedDB(student);
-            if (window.parent && typeof window.parent.renderStudentList === 'function') {
-              window.parent.renderStudentList();
-            }
+          try {
+      await saveStudentToIndexedDB(student);
+      
+      // Refresh parent window list if loaded inside iframe modal
+      if (window.parent && typeof window.parent.renderStudentList === 'function') {
+        window.parent.renderStudentList();
+      }
+    } catch (dbErr) {
+      console.error("Failed to execute saveStudentToIndexedDB:", dbErr);
+    }
           }
         } catch (err) {
           console.error("Error fetching single student from Firebase:", err);
@@ -335,24 +340,75 @@ function camelToTitle(str) {
       }
     });
 }
-async function saveStudentToIndexedDB(student) {
-  if (!student || !student.id) return;
-  
-  const dbInstance = await openIndexedDB();
-  return new Promise((resolve, reject) => {
-    const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
+// --- Enhanced IndexedDB Save Function ---
+async function saveStudentToIndexedDB(studentData) {
+  if (!studentData) {
+    console.error("IndexedDB Error: studentData is null or undefined");
+    return;
+  }
 
-    // Construct object containing required profile fields
-    const record = {
-      id: student.id,
-      name: student.name || 'Unknown Student',
-      photoUrl: student.photoUrl || ''
+  // Fallback check for ID field names
+  const studentId = studentData.id || studentData.studentId || studentData.uid || studentData._id;
+  if (!studentId) {
+    console.error("IndexedDB Error: Could not find a valid ID in student object", studentData);
+    return;
+  }
+
+  const DB_NAME = "SchoolPWA_DB";
+  const STORE_NAME = "students";
+
+  return new Promise((resolve, reject) => {
+    // Open DB and handle upgrades automatically
+    const request = indexedDB.open(DB_NAME, 1);
+
+    request.onupgradeneeded = (e) => {
+      const dbInstance = e.target.result;
+      if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+        dbInstance.createObjectStore(STORE_NAME, { keyPath: "id" });
+        console.log(`IndexedDB: Store '${STORE_NAME}' created successfully.`);
+      }
     };
 
-    const request = store.put(record); // put() inserts or updates existing entry by keyPath ("id")
+    request.onsuccess = (e) => {
+      const dbInstance = e.target.result;
+      
+      // Check if object store exists
+      if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+        console.error(`IndexedDB Error: Store '${STORE_NAME}' does not exist.`);
+        reject(`Store '${STORE_NAME}' does not exist`);
+        return;
+      }
 
-    request.onsuccess = () => resolve();
-    request.onerror = (e) => reject(e.target.error);
+      const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+
+      // Clean extract of values
+      const record = {
+        id: String(studentId),
+        name: studentData.name || studentData.fullName || studentData.studentName || 'Unknown Student',
+        photoUrl: studentData.photoUrl || studentData.photo || studentData.image || ''
+      };
+
+      const putRequest = store.put(record);
+
+      putRequest.onsuccess = () => {
+        console.log("IndexedDB Success: Saved student record successfully ->", record);
+        resolve();
+      };
+
+      putRequest.onerror = (err) => {
+        console.error("IndexedDB Error on store.put():", err.target.error);
+        reject(err.target.error);
+      };
+
+      transaction.oncomplete = () => {
+        dbInstance.close();
+      };
+    };
+
+    request.onerror = (err) => {
+      console.error("IndexedDB Open Request Error:", err.target.error);
+      reject(err.target.error);
+    };
   });
 }
