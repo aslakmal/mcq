@@ -14,7 +14,7 @@
       font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 20px;
     }
     .action-btn { background: #059669; }
-    .ios-instructions, .installed-notice { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
+    .manual-instructions, .installed-notice { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
     .installed-notice { background: #d1fae5; color: #065f46; width: 100%; box-sizing: border-box; text-align: center; }
     
     /* Scanner & Student UI Styles */
@@ -31,26 +31,21 @@
     <h1 id="landing-school-name">Loading School Portal...</h1>
     <p>Install our app for the best experience.</p>
     
-    <!-- Install Button (Android / Supported Browsers when not installed) -->
+    <!-- Install Button (Shown on Chromium browsers when not installed) -->
     <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
 
-    <!-- Already Installed Notice (Android when installed) -->
+    <!-- Already Installed Notice (Shown when installed) -->
     <div id="installed-notice" class="installed-notice" style="display: none;">
       <p style="margin: 0; font-weight: 600;">📱 App is already installed on your device!</p>
       <p style="margin: 5px 0 0 0; font-size: 14px;">Please open it from your home screen or app launcher.</p>
     </div>
 
-    <!-- Manual Override Link -->
-    <div style="margin-top: 25px;">
-      <a href="#" id="manual-installed-link" style="color: #2563eb; font-size: 14px; text-decoration: underline;">Already installed? Click here to view app mode</a>
-    </div>
-
-    <!-- Apple / iOS Specific Instructions -->
-    <div id="ios-instructions" class="ios-instructions" style="display: none;">
-      <p><strong>To install on your Apple device:</strong></p>
+    <!-- Manual Instructions (Shown on browsers that don't support custom install prompts like Safari/Firefox) -->
+    <div id="manual-instructions" class="manual-instructions" style="display: none;">
+      <p><strong>To install this app on your browser:</strong></p>
       <ol style="margin: 0; padding-left: 20px;">
-        <li>Tap the <strong>Share</strong> button in Safari</li>
-        <li>Select <strong>"Add to Home Screen"</strong> ➕</li>
+        <li>Open your browser menu (or <strong>Share</strong> button)</li>
+        <li>Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong> ➕</li>
       </ol>
     </div>
   </div>
@@ -230,10 +225,10 @@
 
       const installBtn = document.getElementById('install-btn');
       const installedNotice = document.getElementById('installed-notice');
-      const iosInstructions = document.getElementById('ios-instructions');
+      const manualInstructions = document.getElementById('manual-instructions');
 
-      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      const isAndroid = /Android/.test(navigator.userAgent);
+      // Check if browser natively supports programmatic custom install prompts
+      const supportsCustomInstall = 'onbeforeinstallprompt' in window;
 
       if (isStandalone) {
         document.getElementById('app-view').style.display = 'block';
@@ -243,43 +238,24 @@
 
         let isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
 
-        // Apply strict device-specific rules requested
-        if (isIos) {
-          // Apple / iOS device rules
-          if (installBtn) installBtn.style.display = 'none';
-          if (installedNotice) installedNotice.style.display = 'none';
-          if (iosInstructions) iosInstructions.style.display = 'block';
-        } else if (isAndroid) {
-          // Android device rules
-          if (iosInstructions) iosInstructions.style.display = 'none';
+        if (supportsCustomInstall) {
+          // Browser supports custom install prompts (Chrome, Edge, etc.)
+          if (manualInstructions) manualInstructions.style.display = 'none';
+
           if (isInstalled) {
             if (installBtn) installBtn.style.display = 'none';
             if (installedNotice) installedNotice.style.display = 'block';
           } else {
-            // Not installed yet on Android
             if (installedNotice) installedNotice.style.display = 'none';
-            // install-btn will be shown when 'beforeinstallprompt' event fires
+            if (installBtn) installBtn.style.display = 'inline-block';
           }
         } else {
-          // Default Desktop / Other browser fallback
-          if (isInstalled) {
-            if (installBtn) installBtn.style.display = 'none';
-            if (installedNotice) installedNotice.style.display = 'block';
-          } else {
-            if (installedNotice) installedNotice.style.display = 'none';
-          }
+          // Browser does NOT support custom install prompts (Safari, Firefox, etc.)
+          if (installBtn) installBtn.style.display = 'none';
+          if (installedNotice) installedNotice.style.display = 'none';
+          if (manualInstructions) manualInstructions.style.display = 'block';
         }
       }
-
-      // Manual override click handler
-      document.getElementById('manual-installed-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
-        if (installedNotice) installedNotice.style.display = 'block';
-        if (installBtn) installBtn.style.display = 'none';
-        if (iosInstructions) iosInstructions.style.display = 'none';
-        alert("Marked as installed on this device!");
-      });
 
       // --- QR Code Scanner Integration ---
       let html5QrCode = null;
@@ -334,9 +310,6 @@
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        if (isAndroid && !localStorage.getItem(`pwa_installed_${schoolId}`)) {
-          if (installBtn) installBtn.style.display = 'inline-block';
-        }
       });
 
       if (installBtn) {
@@ -355,6 +328,8 @@
               if (installedNotice) installedNotice.style.display = 'block';
             }
             deferredPrompt = null;
+          } else {
+            alert("To install this app, please use your browser's menu (⋮) and select 'Install app' or 'Add to Home Screen'.");
           }
         });
       }
