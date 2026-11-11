@@ -3,93 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Institute Portal</title>
-
-  <!-- Empty manifest link that we will populate via JS -->
-  <link id="dynamic-manifest" rel="manifest" />
-  
-  <!-- Fallback theme color -->
+  <title id="page-title">EduPortal</title>
+  <link id="dynamic-manifest" rel="manifest" href="">
   <meta name="theme-color" content="#2563eb">
-
-  <script>
-  (function () {
-    const params = new URLSearchParams(window.location.search);
-    const instituteKey = params.get('institute') || 'default';
-
-    const instituteConfig = {
-      aplus: {
-        name: "Aplus Institute Portal",
-        shortName: "Aplus",
-        themeColor: "#1d4ed8",
-        icon: "https://digibook.edu.lk/scan/icon-512.png"
-      },
-      successpath: {
-        name: "SuccessPath Academy",
-        shortName: "SuccessPath",
-        themeColor: "#059669",
-        icon: "https://digibook.edu.lk/scan/icon-512.png"
-      },
-      default: {
-        name: "EduPortal PWA",
-        shortName: "EduPortal",
-        themeColor: "#2563eb",
-        icon: "https://digibook.edu.lk/scan/icon-512.png"
-      }
-    };
-
-    const config = instituteConfig[instituteKey.toLowerCase()] || {
-      name: `${instituteKey.toUpperCase()} Portal`,
-      shortName: instituteKey,
-      themeColor: "#2563eb",
-      icon: "https://digibook.edu.lk/scan/icon-512.png"
-    };
-
-    const baseUrl = window.location.origin;
-    const currentPath = window.location.pathname;
-    const targetUrl = `${baseUrl}${currentPath}?institute=${encodeURIComponent(instituteKey)}`;
-
-    // Construct the Web App Manifest using your exact paths
-    const manifest = {
-      name: config.name,
-      short_name: config.shortName,
-      start_url: targetUrl,
-      scope: `${baseUrl}${currentPath}`,
-      display: "standalone",
-      background_color: "#ffffff",
-      theme_color: config.themeColor,
-      icons: [
-        {
-          src: "https://digibook.edu.lk/scan/icon-192.png",
-          sizes: "192x192",
-          type: "image/png",
-          purpose: "any maskable"
-        },
-        {
-          src: "https://digibook.edu.lk/scan/icon-512.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "any maskable"
-        }
-      ]
-    };
-
-    const stringManifest = JSON.stringify(manifest);
-    const blob = new Blob([stringManifest], { type: 'application/json' });
-    const manifestURL = URL.createObjectURL(blob);
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
-      
-      let themeMeta = document.querySelector('meta[name="theme-color"]');
-      if (themeMeta) {
-        themeMeta.setAttribute('content', config.themeColor);
-      }
-    });
-  })();
-</script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; }
+    /* Hidden by default until JS checks environment */
+    .browser-view, .app-view { display: none; padding: 2rem; text-align: center; }
+    .install-btn {
+      background: #2563eb; color: white; border: none; padding: 12px 24px;
+      font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 20px;
+    }
+    .ios-instructions { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block; text-align: left; }
+  </style>
 </head>
 <body>
-  <h1>Welcome to the Institute Portal</h1>
-  <p>Loading your customized learning environment...</p>
+
+  <!-- Browser Landing View (Shown only on web browser) -->
+  <div id="browser-view" class="browser-view">
+    <h1 id="landing-school-name">Loading School Portal...</h1>
+    <p>Install our app for the best experience.</p>
+    
+    <!-- Custom Install Button (Android / Desktop Chrome/Edge) -->
+    <button id="install-btn" class="install-btn" style="display: none;">Install App</button>
+
+    <!-- Apple / iOS Instructions -->
+    <div id="ios-instructions" class="ios-instructions" style="display: none;">
+      <p><strong>To install on your Apple device:</strong></p>
+      <ol style="margin: 0; padding-left: 20px;">
+        탭 Tap the <strong>Share</strong> button in Safari 
+        <li>Select <strong>"Add to Home Screen"</strong> ➕</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- App Main Content View (Shown only when opened as installed PWA) -->
+  <div id="app-view" class="app-view">
+    <h1>Welcome to <span id="app-school-name">Portal</span></h1>
+    <p>Your portal is running as an installed app.</p>
+    <!-- Put your actual app content here -->
+  </div>
+<srtipt src="../sync.js"></srtipt>
+  <!-- Firebase SDK (Modular CDN) -->
+  <script type="module">
+
+
+    // Run PWA & School Logic
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const schoolId = params.get('id') || 'digibook';
+
+      let schoolName = `${schoolId.toUpperCase()} Portal`;
+      let themeColor = "#2563eb";
+
+      // Fetch school name from Firebase path: schools/${schoolId}/details/schoolName
+      try {
+        const schoolNameRef = ref(db, `schools/${schoolId}/details/schoolName`);
+        const snapshot = await get(schoolNameRef);
+        if (snapshot.exists()) {
+          schoolName = snapshot.val();
+        }
+      } catch (error) {
+        console.error("Error fetching school name from Firebase:", error);
+      }
+
+      // Update UI Texts
+      document.getElementById('page-title').innerText = schoolName;
+      document.getElementById('landing-school-name').innerText = schoolName;
+      document.getElementById('app-school-name').innerText = schoolName;
+
+      // Check if running as Standalone PWA
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+      if (isStandalone) {
+        document.getElementById('app-view').style.display = 'block';
+      } else {
+        document.getElementById('browser-view').style.display = 'block';
+      }
+
+      // Dynamically Build Manifest
+      const baseUrl = window.location.origin;
+      const currentPath = window.location.pathname;
+      const targetUrl = `${baseUrl}${currentPath}?id=${encodeURIComponent(schoolId)}`;
+
+      const manifest = {
+        name: schoolName,
+        short_name: schoolName.split(' ')[0],
+        start_url: targetUrl,
+        scope: `${baseUrl}${currentPath}`,
+        display: "standalone",
+        background_color: "#ffffff",
+        theme_color: themeColor,
+        icons: [
+          {
+            src: "https://digibook.edu.lk/scan/icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable"
+          },
+          {
+            src: "https://digibook.edu.lk/scan/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable"
+          }
+        ]
+      };
+
+      const stringManifest = JSON.stringify(manifest);
+      const blob = new Blob([stringManifest], { type: 'application/json' });
+      const manifestURL = URL.createObjectURL(blob);
+      document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
+
+      let themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (themeMeta) {
+        themeMeta.setAttribute('content', themeColor);
+      }
+
+      // Handle Install Prompt (Android / Desktop Chrome/Edge)
+      let deferredPrompt;
+      const installBtn = document.getElementById('install-btn');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'inline-block';
+      });
+
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
+          deferredPrompt = null;
+        }
+      });
+
+      // Handle Apple / iOS Device Detection
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isInStandaloneMode = window.navigator.standalone;
+
+      if (isIos && !isInStandaloneMode) {
+        document.getElementById('ios-instructions').style.display = 'block';
+      }
+    })();
+  </script>
 </body>
 </html>
