@@ -37,7 +37,12 @@
     <!-- Already Installed Notice -->
     <div id="installed-notice" class="installed-notice" style="display: none;">
       <p style="margin: 0; font-weight: 600;">📱 App is already installed on your device!</p>
-      <p style="margin: 5px 0 0 0; font-size: 14px;">Please open it from your home screen or app launcher. (In Chrome, check top-right menu <strong>⋮</strong> to "Open in app").</p>
+      <p style="margin: 5px 0 10px 0; font-size: 14px;">Please open it from your home screen or app launcher.</p>
+    </div>
+
+    <!-- Manual Override if user installed via browser menu -->
+    <div style="margin-top: 25px;">
+      <a href="#" id="manual-installed-link" style="color: #2563eb; font-size: 14px; text-decoration: underline;">Already installed? Click here to view app mode</a>
     </div>
 
     <!-- Apple / iOS Instructions -->
@@ -91,7 +96,6 @@
         overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-family:system-ui,sans-serif;z-index:9999;';
         overlay.innerHTML = `<div style="background:white;color:#1f2937;padding:24px 32px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.2);text-align:center;"><div style="border:4px solid #f3f3f3;border-top:4px solid #2563eb;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:0 auto 12px auto;"></div><p id="busy-msg" style="margin:0;font-weight:600;font-size:16px;"></p></div>`;
         
-        // Add spinner animation style dynamically
         const style = document.createElement('style');
         style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
         document.head.appendChild(style);
@@ -195,22 +199,11 @@
 
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-      if (isStandalone) {
-        document.getElementById('app-view').style.display = 'block';
-        renderStudentList();
-      } else {
-        document.getElementById('browser-view').style.display = 'block';
-
-        const isInstalledFlag = localStorage.getItem(`pwa_installed_${schoolId}`);
-        if (isInstalledFlag) {
-          document.getElementById('installed-notice').style.display = 'block';
-        }
-      }
-
       const baseUrl = window.location.origin;
       const currentPath = window.location.pathname;
       const targetUrl = `${baseUrl}${currentPath}?id=${encodeURIComponent(schoolId)}`;
 
+      // Dynamically Build Manifest with related_applications for PWA detection support
       const manifest = {
         name: schoolName,
         short_name: schoolName.split(' ')[0],
@@ -222,6 +215,12 @@
         icons: [
           { src: "https://digibook.edu.lk/scan/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
           { src: "https://digibook.edu.lk/scan/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+        ],
+        related_applications: [
+          {
+            platform: "webapp",
+            url: targetUrl
+          }
         ]
       };
 
@@ -229,6 +228,42 @@
       const blob = new Blob([stringManifest], { type: 'application/json' });
       const manifestURL = URL.createObjectURL(blob);
       document.querySelector('#dynamic-manifest').setAttribute('href', manifestURL);
+
+      if (isStandalone) {
+        document.getElementById('app-view').style.display = 'block';
+        renderStudentList();
+      } else {
+        document.getElementById('browser-view').style.display = 'block';
+
+        // Check localStorage flag or use browser's getInstalledRelatedApps() API if available
+        let isInstalled = localStorage.getItem(`pwa_installed_${schoolId}`) === 'true';
+        
+        if (!isInstalled && navigator.getInstalledRelatedApps) {
+          try {
+            const relatedApps = await navigator.getInstalledRelatedApps();
+            if (relatedApps && relatedApps.length > 0) {
+              isInstalled = true;
+            }
+          } catch (err) {
+            console.log("getInstalledRelatedApps check failed:", err);
+          }
+        }
+
+        if (isInstalled) {
+          document.getElementById('installed-notice').style.display = 'block';
+          const installBtn = document.getElementById('install-btn');
+          if (installBtn) installBtn.style.display = 'none';
+        }
+      }
+
+      // Manual override click handler
+      document.getElementById('manual-installed-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.setItem(`pwa_installed_${schoolId}`, 'true');
+        document.getElementById('installed-notice').style.display = 'block';
+        document.getElementById('install-btn').style.display = 'none';
+        alert("Marked as installed on this device!");
+      });
 
       // --- QR Code Scanner Integration ---
       let html5QrCode = null;
