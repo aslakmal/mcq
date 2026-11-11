@@ -67,6 +67,7 @@
   .then((snapshot) => {
     if (snapshot.exists()) {
       const schoolName = snapshot.val()||"digibook";
+    })
       } catch (error) {
         console.error("Error fetching school name from Firebase:", error);
       }
