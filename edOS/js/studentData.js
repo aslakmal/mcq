@@ -73,17 +73,7 @@ let detailsChartInstance = null;
             student.d= await syncEngine.decryptField(student.d)
             student.g= await syncEngine.decryptField(student.g)
             student = syncEngine.unmapFromFirebase('students', student);
-          try {
-            student.id=studentId;
-      await saveStudentToIndexedDB(student, window.location.href);
-      
-      // Refresh parent window list if loaded inside iframe modal
-      if (window.parent && typeof window.parent.renderStudentList === 'function') {
-        window.parent.renderStudentList();
-      }
-    } catch (dbErr) {
-      console.error("Failed to execute saveStudentToIndexedDB:", dbErr);
-    }
+            await saveStudentToIndexedDB(student);
           }
         } catch (err) {
           console.error("Error fetching single student from Firebase:", err);
@@ -146,8 +136,11 @@ function camelToTitle(str) {
     const container = document.getElementById('popupGridContainer');
     if (!container) return;
   
-    // Fields to explicitly ignore in the info-card grid
-    const skipFields = new Set(['photoUrl', 'exam', 'updatedAt', 'updatedBy', 'isDeleted', 'id','key','isPaid','classFee','paidAt']);
+    const skipFields = new Set([
+      'photoUrl', 'exam', 'updatedAt', 'updatedBy', 
+      'isDeleted', 'id', 'key', 'isPaid', 'classFee', 'paidAt',
+      'todayAtt', 'H'
+    ]);
   
     // 1. Handle Profile Photo separately
     const avatarImg = document.getElementById('popupAvatar');
@@ -155,27 +148,65 @@ function camelToTitle(str) {
       if (data.photoUrl && data.photoUrl.trim() !== '') {
         avatarImg.src = getFullCloudinaryUrl(data.photoUrl);
         avatarImg.style.display = 'block';
-      }else{
-        avatarImg.src='img/user.svg';
-        
+      } else {
+        avatarImg.src = 'img/user.svg';
       }
     }
   
     // 2. Clear old dynamic cards
     container.innerHTML = '';
   
-    // 3. Dynamically generate cards for all non-empty fields
+    // 3. Parse and Render Today's Attendance Status Card First
+    let attendanceStatusText = 'Not checked in today';
+    let iconHtml = `<span style="color: #e53935; margin-right: 6px; font-size: 1.1em;">✖</span>`; // Red close icon
+  
+    if (data.todayAtt && typeof data.todayAtt === 'string') {
+      const match = data.todayAtt.match(/^(.*?)\[(\d+):(.*?)\]$/);
+  
+      if (match) {
+        const recordedDate = match[1];          // e.g., "11:12"
+        const timestamp = Number(match[2]);     // e.g., 1794468259871
+        const className = match[3];             // e.g., "6A"
+  
+        // Format today's date as "MM:DD"
+        const now = new Date();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const currentDate = `${month}:${day}`;
+  
+        if (recordedDate === currentDate) {
+          const timeString = new Date(timestamp).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+  
+          attendanceStatusText = `Visited ${className} at ${timeString}`;
+          iconHtml = `<span style="color: #43a047; margin-right: 6px; font-size: 1.1em;">✔</span>`; // Green check icon
+        }
+      }
+    }
+  
+    // Insert the Attendance Status card with the icon placed before the text
+    const attendanceCardHtml = `
+      <div class="info-card">
+        <label>Today's Attendance</label>
+        <span style="display: flex; align-items: center;">
+          ${iconHtml}
+          <span>${attendanceStatusText}</span>
+        </span>
+      </div>
+    `;
+    container.insertAdjacentHTML('afterbegin', attendanceCardHtml);
+  
+    // 4. Dynamically generate cards for all remaining non-empty fields
     Object.keys(data).forEach(key => {
-      // Skip internal/ignored keys
       if (skipFields.has(key)) return;
   
       const value = data[key];
   
-      // Check for non-empty, non-null values
       if (value !== undefined && value !== null && String(value).trim() !== '') {
         const formattedLabel = camelToTitle(key);
   
-        // Construct info-card element
         const cardHtml = `
           <div class="info-card">
             <label>${formattedLabel}</label>
@@ -341,76 +372,24 @@ function camelToTitle(str) {
       }
     });
 }
-// --- Enhanced IndexedDB Save Function ---
-async function saveStudentToIndexedDB(studentData, profileUrl) {
-  if (!studentData) {
-    console.error("IndexedDB Error: studentData is null or undefined");
-    return;
-  }
-
-  // Fallback check for ID field names
-  const studentId = studentData.id || studentData.studentId || studentData.uid || studentData._id;
-  if (!studentId) {
-    console.error("IndexedDB Error: Could not find a valid ID in student object", studentData);
-    return;
-  }
-
-  const DB_NAME = "SchoolPWA_DB";
-  const STORE_NAME = "students";
-
+async function saveStudentToIndexedDB(student) {
+  if (!student || !student.id) return;
+  
+  const dbInstance = await openIndexedDB();
   return new Promise((resolve, reject) => {
-    // Open DB and handle upgrades automatically
-    const request = indexedDB.open(DB_NAME, 1);
+    const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
+    const store = transaction.objectStore(STORE_NAME);
 
-    request.onupgradeneeded = (e) => {
-      const dbInstance = e.target.result;
-      if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
-        dbInstance.createObjectStore(STORE_NAME, { keyPath: "id" });
-        console.log(`IndexedDB: Store '${STORE_NAME}' created successfully.`);
-      }
+    // Construct object containing required profile fields
+    const record = {
+      id: student.id,
+      name: student.name || 'Unknown Student',
+      photoUrl: student.photoUrl || ''
     };
 
-    request.onsuccess = (e) => {
-      const dbInstance = e.target.result;
-      
-      // Check if object store exists
-      if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
-        console.error(`IndexedDB Error: Store '${STORE_NAME}' does not exist.`);
-        reject(`Store '${STORE_NAME}' does not exist`);
-        return;
-      }
+    const request = store.put(record); // put() inserts or updates existing entry by keyPath ("id")
 
-      const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-
-      // Clean extract of values
-      const record = {
-        id: String(studentId),
-        name: studentData.name || studentData.fullName || studentData.studentName || 'Unknown Student',
-        photoUrl: studentData.photoUrl || studentData.photo || studentData.image || '',
-        url: profileUrl
-      };
-
-      const putRequest = store.put(record);
-
-      putRequest.onsuccess = () => {
-        console.log("IndexedDB Success: Saved student record successfully ->", record);
-        resolve();
-      };
-
-      putRequest.onerror = (err) => {
-        console.error("IndexedDB Error on store.put():", err.target.error);
-        reject(err.target.error);
-      };
-
-      transaction.oncomplete = () => {
-        dbInstance.close();
-      };
-    };
-
-    request.onerror = (err) => {
-      console.error("IndexedDB Open Request Error:", err.target.error);
-      reject(err.target.error);
-    };
+    request.onsuccess = () => resolve();
+    request.onerror = (e) => reject(e.target.error);
   });
 }
