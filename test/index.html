@@ -30,7 +30,12 @@
     /* Scanner & Student UI Styles */
     #scanner-container { width: 100%; max-width: 400px; margin: 20px auto; display: none; background: #000; border-radius: 8px; overflow: hidden; }
     .students-list { margin-top: 30px; text-align: left; }
-    .student-card { display: flex; align-items: center; background: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .student-card { 
+      display: flex; align-items: center; background: white; padding: 12px 16px; 
+      border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+      cursor: pointer; transition: transform 0.1s ease, background-color 0.2s ease;
+    }
+    .student-card:hover { background-color: #f3f4f6; transform: translateY(-1px); }
     .student-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; background: #e5e7eb; }
 
     /* Full-Screen Iframe Modal Viewport for student.html */
@@ -179,12 +184,13 @@
           return;
         }
         container.innerHTML = students.map(s => `
-          <div class="student-card">
+          <div class="student-card" onclick="openStudentModal('${s.url}')">
             <img src="${s.photoUrl || 'https://via.placeholder.com/50'}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/50'">
-            <div>
+            <div style="flex-grow: 1; text-align: left;">
               <strong>${s.name}</strong>
               <div style="font-size: 12px; color: #6b7280;">ID: ${s.id}</div>
             </div>
+            <span style="color: #2563eb; font-size: 14px; font-weight: 600;">View ➔</span>
           </div>
         `).join('');
       } catch (err) {
@@ -194,17 +200,25 @@
 
     // --- Open student.html in Iframe Modal ---
     function openStudentModal(url) {
+      if (!url || url === 'undefined') {
+        alert("Invalid student profile URL.");
+        return;
+      }
       const iframe = document.getElementById('student-iframe');
       iframe.src = url;
       document.getElementById('student-modal').style.display = 'block';
     }
 
+    // Make openStudentModal globally available
+    window.openStudentModal = openStudentModal;
+    window.renderStudentList = renderStudentList;
+
     // Close Modal Handler
     document.getElementById('close-modal-btn').addEventListener('click', () => {
       const iframe = document.getElementById('student-iframe');
-      iframe.src = ''; // Clear source to stop processes inside iframe
+      iframe.src = ''; 
       document.getElementById('student-modal').style.display = 'none';
-      renderStudentList(); // Refresh saved student list
+      renderStationList = renderStudentList();
     });
 
     // --- Main PWA Logic ---
@@ -315,7 +329,7 @@
 
       stopScanBtn.addEventListener('click', stopScanner);
 
-      // Install prompt handling with persistent background loading indicator
+      // Install prompt handling
       let deferredPrompt;
       
       window.addEventListener('beforeinstallprompt', (e) => {
