@@ -158,7 +158,7 @@ function camelToTitle(str) {
   
     // 3. Parse and Render Today's Attendance Status Card First
     let attendanceStatusText = 'Not checked in today';
-    let iconHtml = `<span style="color: #e53935; margin-right: 6px; font-size: 1.1em;">✖</span>`; // Red close icon
+    let iconHtml = `<span style="color: #e53935; margin-right: 6px; font-size: 12px;">✖</span>`; // Red close icon
   
     if (data.todayAtt && typeof data.todayAtt === 'string') {
       const match = data.todayAtt.match(/^(.*?)\[(\d+):(.*?)\]$/);
@@ -181,7 +181,7 @@ function camelToTitle(str) {
           });
   
           attendanceStatusText = `Visited ${className} at ${timeString}`;
-          iconHtml = `<span style="color: #43a047; margin-right: 6px; font-size: 1.1em;">✔</span>`; // Green check icon
+          iconHtml = `<span style="color: #43a047; margin-right: 6px; font-size: 12px;">✔</span>`; // Green check icon
         }
       }
     }
