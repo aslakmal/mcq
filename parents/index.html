@@ -358,7 +358,7 @@
       overlay.style.display = isBusy ? 'flex' : 'none';
       document.getElementById('busy-msg').innerText = message;
     }
-
+    const schoolId;
     // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBTq5fuuBh9Ye5r7exiJFtLjJpQ-9vIY2U",
@@ -403,7 +403,7 @@
       });
     }
 
-    async function renderStudentList() {
+    async function renderStudentList(){
       const container = document.getElementById('students-container');
       try {
         const students = await getStoredStudents();
@@ -437,14 +437,27 @@
     });
 
     function openStudentModal(url) {
-      if (!url || url === 'undefined') {
-        alert("Invalid student profile URL.");
-        return;
-      }
-      setAppBusy(true, "Loading student profile...");
-      iframe.src = url;
-      document.getElementById('student-modal').style.display = 'block';
+  if (!url || url === 'undefined') {
+    alert("Invalid student profile URL.");
+    return;
+  }
+  try {
+    const parsedUrl = new URL(url, window.location.origin);
+    const urlSchool = parsedUrl.searchParams.get('school');
+
+    if (urlSchool !== schoolId) {
+      alert("something went wrong");
+      return;
     }
+  } catch (error) {
+    alert("something went wrong");
+    return;
+  }
+
+  setAppBusy(true, "Loading student profile...");
+  iframe.src = url;
+  document.getElementById('student-modal').style.display = 'block';
+}
 
     window.openStudentModal = openStudentModal;
     window.renderStudentList = renderStudentList;
@@ -456,22 +469,28 @@
       renderStudentList();
     });
 
-    // --- Main PWA Logic ---
     (async function () {
-      const params = new URLSearchParams(window.location.search);
-      const schoolId = params.get('id') || 'default';
+    const params = new URLSearchParams(window.location.search);
+    schoolId = params.get('id');
+    if (!schoolId) {
+        alert("Error: No school ID provided in the URL.");
+        return; 
+    }
 
-      let schoolName = `${schoolId.toUpperCase()} Portal`;
-      let themeColor = "#2563eb";
+    let schoolName = `${schoolId.toUpperCase()} Portal`;
+    let themeColor = "#2563eb";
 
-      try {
+    try {
         const snapshot = await db.ref(`schools/${schoolId}/details/schoolName`).once('value');
-        if (snapshot.exists() && snapshot.val()) {
-          schoolName = snapshot.val();
+            if (!snapshot.exists() || !snapshot.val()) {
+            alert(`Error: No school found with the ID "${schoolId}".`);
+            return; 
         }
-      } catch (error) {
-        console.error("Error fetching school name from Firebase:", error);
-      }
+        schoolName = snapshot.val();
+    } catch (error) {
+        alert("An error occurred while connecting to the database.");
+        return; 
+    }
 
       const setText = (id, text) => {
         const el = document.getElementById(id);
