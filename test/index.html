@@ -6,55 +6,286 @@
   <title id="page-title">EduPortal</title>
   <link id="dynamic-manifest" rel="manifest" href="">
   <meta name="theme-color" content="#2563eb">
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0 0 80px 0; background: #f9fafb; color: #1f2937; }
-    .app-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; text-align: center; }
-    .action-btn {
-      background: #059669; color: white; border: none; padding: 12px 24px;
-      font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 15px; width: 100%; max-width: 300px;
-    }
-    .manual-instructions { background: #eff6ff; color: #1e40af; padding: 12px 15px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: left; }
-    
-    /* Fixed Bottom Install Bar */
-    .fixed-install-bar {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: white; border-top: 1px solid #e5e7eb;
-      padding: 12px 20px; display: none; align-items: center; justify-content: space-between;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 1000;
-    }
-    .fixed-install-btn {
-      background: #2563eb; color: white; border: none; padding: 10px 20px;
-      font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer;
-    }
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --accent: #10b981;
+    --accent-hover: #059669;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+  }
 
-    /* Scanner & Student UI Styles */
-    #scanner-container { width: 100%; max-width: 400px; margin: 20px auto; display: none; background: #000; border-radius: 8px; overflow: hidden; }
-    .students-list { margin-top: 30px; text-align: left; }
-    .student-card { 
-      display: flex; align-items: center; background: white; padding: 12px 16px; 
-      border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
-      cursor: pointer; transition: transform 0.1s ease, background-color 0.2s ease;
-    }
-    .student-card:hover { background-color: #f3f4f6; transform: translateY(-1px); }
-    .student-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; background: #e5e7eb; }
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    /* Full-Screen Iframe Modal Viewport for student.html */
-    #student-modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: white; z-index: 9000; display: none; overflow: hidden;
-    }
-    .modal-header {
-      position: absolute; top: 0; left: 0; right: 0; background: #ffffff; border-bottom: 1px solid #e5e7eb;
-      padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 9001; height: 45px; box-sizing: border-box;
-    }
-    .close-modal-btn {
-      background: #ef4444; color: white; border: none; padding: 6px 14px;
-      border-radius: 6px; cursor: pointer; font-weight: 600;
-    }
-    #student-iframe {
-      position: absolute; top: 45px; left: 0; width: 100%; height: calc(100% - 45px); border: none;
-    }
-  </style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0 0 96px 0;
+    background: var(--bg);
+    color: var(--text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-container {
+    padding: 2rem 1.25rem;
+    max-width: 540px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  h1#app-school-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--text-main);
+    margin: 0 0 0.25rem 0;
+  }
+
+  .app-container > p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0 0 1.5rem 0;
+  }
+
+  /* Primary Scan Action Button */
+  .action-btn {
+    background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+    color: #ffffff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 14px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .action-btn:hover {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+    transform: translateY(-1px);
+  }
+
+  .action-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Safari / Firefox Manual Install Banner */
+  .manual-instructions {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e3a8a;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin: 0 auto 1.25rem auto;
+    font-size: 0.875rem;
+    text-align: left;
+    line-height: 1.45;
+  }
+
+  /* Scanner Viewport */
+  #scanner-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    display: none;
+    background: #0f172a;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+    border: 2px solid var(--border);
+  }
+
+  #stop-scan-btn {
+    background: var(--danger) !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    margin: 12px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  #stop-scan-btn:hover {
+    background: var(--danger-hover) !important;
+  }
+
+  /* Saved Students Section */
+  .students-list {
+    margin-top: 2.25rem;
+    text-align: left;
+  }
+
+  .students-list h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 0.85rem 4px;
+    font-weight: 700;
+  }
+
+  .student-card {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .student-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .student-card:active {
+    transform: scale(0.99);
+  }
+
+  .student-card img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 14px;
+    background: #e2e8f0;
+    border: 2px solid #f1f5f9;
+    flex-shrink: 0;
+  }
+
+  .student-card strong {
+    display: block;
+    font-size: 0.98rem;
+    color: var(--text-main);
+    font-weight: 600;
+  }
+
+  /* Glassmorphic Fixed Bottom Install Bar */
+  .fixed-install-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 14px 20px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+    z-index: 1000;
+  }
+
+  .fixed-install-btn {
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 10px 22px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  .fixed-install-btn:hover {
+    background: var(--primary-hover);
+  }
+
+  .fixed-install-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* Full-Screen Iframe Modal */
+  #student-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--surface);
+    z-index: 9000;
+    display: none;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 54px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9001;
+  }
+
+  #modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .close-modal-btn {
+    background: #fee2e2;
+    color: var(--danger);
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .close-modal-btn:hover {
+    background: var(--danger);
+    color: #ffffff;
+  }
+
+  #student-iframe {
+    position: absolute;
+    top: 54px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 54px);
+    border: none;
+    background: var(--bg);
+  }
+</style>
 </head>
 <body>
 
