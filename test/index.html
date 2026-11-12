@@ -185,7 +185,7 @@
         }
         container.innerHTML = students.map(s => `
           <div class="student-card" onclick="openStudentModal('${s.url}')">
-            <img src="${s.photoUrl || 'https://via.placeholder.com/50'}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/50'">
+            <img src="${getFullCloudinaryUrl(s.photoUrl) || '../edOS/img/user.svg'}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/50'">
             <div style="flex-grow: 1; text-align: left;">
               <strong>${s.name}</strong>
               <div style="font-size: 12px; color: #6b7280;">ID: ${s.id}</div>
@@ -370,6 +370,14 @@
         if (fixedInstallBar) fixedInstallBar.style.display = 'none';
       });
     })();
+
+    function getFullCloudinaryUrl(relativePath) {
+  const CLOUDINARY_BASE = "https://res.cloudinary.com/vmorkfqp/image/upload/";
+  if (!relativePath) return '';
+  if (relativePath.startsWith('http')) return relativePath; // Fallback if full URL was passed
+
+  return `${CLOUDINARY_BASE}${relativePath}`;
+}
   </script>
 </body>
 </html>
