@@ -631,7 +631,7 @@ body.is-loading .loading-overlay {
                 // 1. Set fee status from student record
                 sessionFees[studentId] = s.isPaid !== undefined ? s.isPaid : (s.C !== undefined ? s.C : (s.F !== undefined ? s.F : 0));
             });
-
+console.log(classStudents)
             // Re-render table with the fresh states
             renderStudentTable(classStudents);
         }
@@ -699,7 +699,6 @@ async function toggleFee(studentId, checkboxEl) {
     const student = cachedStudents.find(s => (s.id || s.key) === studentId);
     if (student) {
         student.isPaid = newFeeStatus;
-        student.F = newFeeStatus;
         if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
             syncEngine.saveToIDB('students', student);
         }
@@ -725,8 +724,7 @@ async function toggleFee(studentId, checkboxEl) {
         sessionFees[studentId] = checkboxEl.checked ? 1 : 0;
         if (student) {
             student.isPaid = sessionFees[studentId];
-            student.F = sessionFees[studentId];
-        }
+            }
         alertbox("Failed to update fee: " + err.message, "error");
     }
 }
@@ -742,32 +740,71 @@ async function resetAllFees() {
         return;
     }
 
-    setAppBusy(true, `Resetting Class ${currentClass} fees...`);
+    setAppBusy(true, `Archiving & resetting Class ${currentClass} fees...`);
 
     try {
         db.goOnline();
         
-        // Build high-efficiency Firebase multi-path update payload
         const updates = {};
         const timestamp = firebase.database.ServerValue.TIMESTAMP;
+        
+        // Structure: { "2026-11": { "W1": { total: 0, count: 0 }, "W2": { total: 0, count: 0 } } }
+        const groupedPayments = {}; 
 
         classStudents.forEach(s => {
             const studentId = s.id || s.key;
+            const isPaid = Number(s.isPaid ?? s.F ?? 0);
+            const paidAt = s.paidAt || s.G;
+            const fee = Number(s.classFee ?? s.C ?? 0);
+
+            // 1. Archive payment grouped by Month -> Week
+            if (isPaid === 1 && fee > 0) {
+                const dateObj = paidAt ? new Date(Number(paidAt)) : new Date();
+                const year = dateObj.getFullYear();
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const monthKey = `${year}-${month}`; // e.g., "2026-11"
+
+                // Calculate week of the month (Days 1-7 = W1, 8-14 = W2, ..., 29-31 = W5)
+                const weekNum = Math.ceil(dateObj.getDate() / 7);
+                const weekKey = `W${weekNum}`; // e.g., "W2"
+
+                if (!groupedPayments[monthKey]) {
+                    groupedPayments[monthKey] = {};
+                }
+                if (!groupedPayments[monthKey][weekKey]) {
+                    groupedPayments[monthKey][weekKey] = { total: 0, count: 0 };
+                }
+
+                groupedPayments[monthKey][weekKey].total += fee;
+                groupedPayments[monthKey][weekKey].count += 1;
+            }
             
-            // Update local session state
+            // 2. Update local session state
             sessionFees[studentId] = 0;
             s.isPaid = 0;
             s.F = 0;
+            s.paidAt = null;
+            s.G = null;
 
-            // Save back to local IndexedDB
+            // 3. Save back to local IndexedDB
             if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
                 syncEngine.saveToIDB('students', s);
             }
 
-            // Queue Firebase multi-path update keys
+            // 4. Queue Firebase multi-path update keys to reset student
             updates[`schools/${schoolId}/students/${studentId}/F`] = 0;
-            updates[`schools/${schoolId}/students/${studentId}/G`] = null; // Clear payment timestamp
+            updates[`schools/${schoolId}/students/${studentId}/G`] = null;
             updates[`schools/${schoolId}/students/${studentId}/A`] = timestamp;
+        });
+
+        // 5. Queue aggregated weekly totals under each month node
+        Object.entries(groupedPayments).forEach(([monthKey, weeks]) => {
+            Object.entries(weeks).forEach(([weekKey, data]) => {
+                const basePath = `schools/${schoolId}/payments/${currentClass}/${monthKey}/${weekKey}`;
+                updates[`${basePath}/total`] = firebase.database.ServerValue.increment(data.total);
+                updates[`${basePath}/count`] = firebase.database.ServerValue.increment(data.count);
+                updates[`${basePath}/updatedAt`] = timestamp;
+            });
         });
 
         // Execute single atomic batch update to Firebase
@@ -778,7 +815,7 @@ async function resetAllFees() {
         renderStudentTable(classStudents);
 
         setAppBusy(false);
-        alertbox(`Successfully reset all fees for Class ${currentClass}.`, "success");
+        alertbox(`Successfully archived weekly payments and reset fees for Class ${currentClass}.`, "success");
 
     } catch (err) {
         db.goOffline();
