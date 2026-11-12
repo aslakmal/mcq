@@ -198,27 +198,34 @@
       }
     }
 
-    // --- Open student.html in Iframe Modal ---
+    // --- Open student.html in Iframe Modal with Loading Indicator ---
+    const iframe = document.getElementById('student-iframe');
+
+    // Automatically hide loading indicator when iframe finishes loading content
+    iframe.addEventListener('load', () => {
+      if (document.getElementById('student-modal').style.display === 'block') {
+        setAppBusy(false);
+      }
+    });
+
     function openStudentModal(url) {
       if (!url || url === 'undefined') {
         alert("Invalid student profile URL.");
         return;
       }
-      const iframe = document.getElementById('student-iframe');
+      setAppBusy(true, "Loading student profile...");
       iframe.src = url;
       document.getElementById('student-modal').style.display = 'block';
     }
 
-    // Make openStudentModal globally available
     window.openStudentModal = openStudentModal;
     window.renderStudentList = renderStudentList;
 
     // Close Modal Handler
     document.getElementById('close-modal-btn').addEventListener('click', () => {
-      const iframe = document.getElementById('student-iframe');
       iframe.src = ''; 
       document.getElementById('student-modal').style.display = 'none';
-      renderStationList = renderStudentList();
+      renderStudentList();
     });
 
     // --- Main PWA Logic ---
