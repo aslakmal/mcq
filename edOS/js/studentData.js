@@ -75,7 +75,7 @@ let detailsChartInstance = null;
             student = syncEngine.unmapFromFirebase('students', student);
           try {
             student.id=studentId;
-      await saveStudentToIndexedDB(student);
+      await saveStudentToIndexedDB(student, window.location.href);
       
       // Refresh parent window list if loaded inside iframe modal
       if (window.parent && typeof window.parent.renderStudentList === 'function') {
@@ -342,7 +342,7 @@ function camelToTitle(str) {
     });
 }
 // --- Enhanced IndexedDB Save Function ---
-async function saveStudentToIndexedDB(studentData) {
+async function saveStudentToIndexedDB(studentData, profileUrl) {
   if (!studentData) {
     console.error("IndexedDB Error: studentData is null or undefined");
     return;
@@ -387,7 +387,8 @@ async function saveStudentToIndexedDB(studentData) {
       const record = {
         id: String(studentId),
         name: studentData.name || studentData.fullName || studentData.studentName || 'Unknown Student',
-        photoUrl: studentData.photoUrl || studentData.photo || studentData.image || ''
+        photoUrl: studentData.photoUrl || studentData.photo || studentData.image || '',
+        url: profileUrl
       };
 
       const putRequest = store.put(record);
