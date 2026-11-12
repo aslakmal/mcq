@@ -372,24 +372,43 @@ function camelToTitle(str) {
       }
     });
 }
-async function saveStudentToIndexedDB(student) {
-  if (!student || !student.id) return;
+async function saveStudentToIndexedDB(studentData, profileUrl) {
+  if (!studentData) return;
   
-  const dbInstance = await openIndexedDB();
-  return new Promise((resolve, reject) => {
-    const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
+  const studentId = studentData.id || studentData.studentId || studentData.uid;
+  if (!studentId) return;
 
-    // Construct object containing required profile fields
-    const record = {
-      id: student.id,
-      name: student.name || 'Unknown Student',
-      photoUrl: student.photoUrl || ''
+  const DB_NAME = "SchoolPWA_DB";
+  const STORE_NAME = "students";
+
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+
+    request.onupgradeneeded = (e) => {
+      const dbInstance = e.target.result;
+      if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+        dbInstance.createObjectStore(STORE_NAME, { keyPath: "id" });
+      }
     };
 
-    const request = store.put(record); // put() inserts or updates existing entry by keyPath ("id")
+    request.onsuccess = (e) => {
+      const dbInstance = e.target.result;
+      const transaction = dbInstance.transaction(STORE_NAME, "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
 
-    request.onsuccess = () => resolve();
-    request.onerror = (e) => reject(e.target.error);
+      const record = {
+        id: String(studentId),
+        name: studentData.name || studentData.fullName || 'Unknown Student',
+        photoUrl: studentData.photoUrl || studentData.photo || '',
+        url: profileUrl // <-- Save the exact URL used to load this profile
+      };
+
+      const putRequest = store.put(record);
+      putRequest.onsuccess = () => resolve();
+      putRequest.onerror = (err) => reject(err.target.error);
+      transaction.oncomplete = () => dbInstance.close();
+    };
+
+    request.onerror = (err) => reject(err.target.error);
   });
 }
