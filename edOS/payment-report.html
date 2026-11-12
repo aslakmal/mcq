@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Payment Manager</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --gray-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-bg);
+            color: var(--text-main);
+            padding: 5px;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Card Box */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header */
+        .header-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 200px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            float: right;
+            margin: 10px;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-secondary {
+            background: #00000000;
+            color: var(--text-main);
+        }
+
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+        }
+
+        @media(max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Controls */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        input:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+
+     
+
+
+        /* Student Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 2px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+
+        .badge {
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-paid {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .badge-unpaid {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .attendance-btn {
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: #f1f5f9;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .attendance-btn.present {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Alert Banner */
+        #alertBox {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+
+        .alert-success {
+            background: var(--success);
+        }
+
+        .alert-error {
+            background: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+
+            /* Hide table header */
+            table thead {
+                display: none;
+            }
+
+            /* Turn table structure into block cards */
+            table,
+            table tbody,
+            table tr,
+            table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                background: #ffffff;
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            }
+
+            table td {
+                border: none;
+                padding: 0;
+            }
+
+            /* Mobile Actions Row: Side-by-side layout with space between */
+            .mobile-actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            /* Style the fee toggle button on mobile */
+            .fee-toggle-btn {
+                padding: 0.5rem 0.875rem !important;
+                font-size: 0.85rem !important;
+                border-radius: 8px !important;
+            }
+
+            /* Style the attendance button on mobile */
+            .attendance-btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.85rem !important;
+                border-radius: 8px !important;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Unified Toggle Switch Styles */
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 104px;
+            height: 34px;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Slider Track */
+        .slider-text {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #fee2e2;
+            color: var(--danger);
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 17px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            border: 1px solid #fecaca;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Sliding Knob */
+        .slider-text:before {
+            position: absolute;
+            content: "";
+            height: 28px;
+            width: 28px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+        }
+
+        /* Off-state text (Right side) */
+        .slider-text::after {
+            content: attr(data-off);
+            position: absolute;
+            right: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Checked (On) State Colors & Slide */
+        input:checked+.slider-text {
+            background-color: var(--success-light);
+            color: var(--success);
+            border-color: #bbf7d0;
+        }
+
+        input:checked+.slider-text:before {
+            transform: translateX(70px);
+        }
+
+        /* On-state text switches to the left side */
+        input:checked+.slider-text::after {
+            content: attr(data-on);
+            left: 14px;
+            right: auto;
+        }
+        table td:nth-child(2){text-align: center;}
+        /* Responsive adjustments for mobile screens */
+        @media (max-width: 768px) {
+            table thead {
+                display: none;
+            }
+
+            table,
+            table tbody,
+            table tr,
+            table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                background: #ffffff;
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                margin-bottom: 5px;
+                padding: 5px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            }
+
+            table td {
+                border: none;
+                padding: 0;
+            }
+
+            .card {
+                padding: 5px;
+            }
+
+            table td:nth-child(1) {
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            /* Place Fee switch on left and Attendance switch on right side */
+            table td:nth-child(2),
+            table td:nth-child(3) {
+                display: inline-block;
+                text-align: right;
+            }
+
+            table td:nth-child(3) {
+                text-align: right;
+            }
+        }
+/**Loading*/
+        .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+.loader-content {
+    background: #fff;
+    padding: 1.5rem 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-color, #3b82f6);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 0.75rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Disable body interaction when active */
+body.is-loading {
+    pointer-events: none;
+}
+body.is-loading .loading-overlay {
+    pointer-events: auto; /* Keep overlay responsive or let container block */
+}
+
+.btn-reset {
+    background-color: transparent;
+    color: #dc2626;
+    border: 1.5px solid #dc2626;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 10px;
+}
+
+.btn-reset:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
+}
+
+
+
+
+
+
+
+
+.report-tab.active {
+    background: #ffffff;
+    color: #2563eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.report-tab{
+    background: transparent;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease-in-out;
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div>
+
+            <!-- Class Card -->
+            <div class="card form-group">
+                <h3>Payment report</h3>
+                <label>Select Class</label>
+                <input type="text" id="classInput">
+                <button onclick="loadPaymentReport()" class="btn btn-primary"
+                    style="margin-top: 0.5rem;">Proceed</button>
+            </div>
+
+
+        </div>
+
+        <div id="paymentReportContainer" class="card" style="width: 100%; margin: 0 auto;">
+            <!-- Period Switcher Buttons -->
+            <div style="display: inline-block;margin-bottom: 12px;background: #f1f5f9;padding: 4px;">
+                <button type="button" class="report-tab active" data-period="weekly" onclick="switchReportPeriod('weekly', this)">Weekly</button>
+                <button type="button" class="report-tab" data-period="monthly" onclick="switchReportPeriod('monthly', this)">Monthly</button>
+                <button type="button" class="report-tab" data-period="yearly" onclick="switchReportPeriod('yearly', this)">Yearly</button>
+            </div>
+        
+            <!-- Summary Header -->
+            <div id="reportSummaryText" style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">
+                Loading report...
+            </div>
+        
+            <!-- Chart.js Canvas -->
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="paymentReportChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Alert Box -->
+    <script src="sync.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const instituteType = localStorage.getItem('instituteType') || '';
+
+        let cachedStudents = [];
+        let currentClass = "";
+        let sessionFees = {};   
+
+        async function initApp() {
+            try {
+                await syncEngine.initIndexedDB();
+                await syncEngine.syncStudents();
+                await loadFromIndexedDBDirect();
+            } catch (err) {
+                console.warn("Offline mode active:", err);
+            }
+        }
+
+        function loadFromIndexedDBDirect() {
+            return new Promise((resolve) => {
+                syncEngine.getLocalData('students').then((students) => {
+                    if (students && students.length > 0) cachedStudents = students;
+                    resolve();
+                }).catch(() => resolve());
+            });
+        }
+
+
+
+        // 3. Select Date and prepare student session list
+        async function selectStudents() {
+            const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
+            if (!inputVal) {
+                alertbox("Please enter a valid class name.", "error");
+                return;
+            }
+            currentClass = inputVal;
+
+            document.getElementById('currentSelectedDateLabel').innerText = `Class ${currentClass}`;
+            document.getElementById('studentSection').classList.remove('hidden');
+
+            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+
+            sessionFees = {};
+
+            classStudents.forEach(s => {
+                const studentId = s.id || s.key;
+                // 1. Set fee status from student record
+                sessionFees[studentId] = s.isPaid !== undefined ? s.isPaid : (s.C !== undefined ? s.C : (s.F !== undefined ? s.F : 0));
+            });
+console.log(classStudents)
+            // Re-render table with the fresh states
+            renderStudentTable(classStudents);
+        }
+let paymentChartInstance = null;
+let cachedMergedPayments = null; // Stores merged (Firebase + live) data for fast tab switching
+let currentReportPeriod = 'weekly';
+
+/**
+ * Helper: Extracts { monthKey: "2026-11", weekKey: "W2" } from a timestamp
+ * Matches the exact grouping logic used in resetAllFees()
+ */
+function getMonthAndWeekKeys(timestamp) {
+    const dateObj = timestamp ? new Date(Number(timestamp)) : new Date();
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const weekNum = Math.ceil(dateObj.getDate() / 7);
+    return {
+        monthKey: `${year}-${month}`,
+        weekKey: `W${weekNum}`
+    };
+}
+
+/**
+ * 1. Fetches archived payments from Firebase and merges with live unpaid-reset students
+ */
+async function loadPaymentReport(forceRefresh = true) {
+    const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
+            if (!inputVal) {
+                alertbox("Please enter a valid class name.", "error");
+                return;
+            }
+            currentClass = inputVal;
+    if (!currentClass) return;
+
+    if (forceRefresh || !cachedMergedPayments) {
+        setAppBusy(true, `Loading payment report for Class ${currentClass}...`);
+        try {
+            db.goOnline();
+            const snap = await db.ref(`schools/${schoolId}/payments/${currentClass}`).once('value');
+            const archivedData = snap.val() || {};
+            db.goOffline();
+
+            // Deep clone archived Firebase structure: { "2026-10": { "W1": { total, count } } }
+            const merged = JSON.parse(JSON.stringify(archivedData));
+
+            // Add live (unarchived) paid students from cachedStudents
+            const classStudents = cachedStudents.filter(
+                s => (s.class || s.h || '').toUpperCase() === currentClass
+            );
+
+            classStudents.forEach(s => {
+                const isPaid = Number(s.isPaid ?? s.F ?? 0);
+                const fee = Number(s.classFee ?? s.C ?? 0);
+                const paidAt = s.paidAt || s.G;
+
+                if (isPaid === 1 && fee > 0) {
+                    const { monthKey, weekKey } = getMonthAndWeekKeys(paidAt);
+
+                    if (!merged[monthKey]) merged[monthKey] = {};
+                    if (!merged[monthKey][weekKey]) {
+                        merged[monthKey][weekKey] = { total: 0, count: 0 };
+                    }
+
+                    merged[monthKey][weekKey].total += fee;
+                    merged[monthKey][weekKey].count += 1;
+                }
+            });
+
+            cachedMergedPayments = merged;
+            setAppBusy(false);
+        } catch (err) {
+            db.goOffline();
+            setAppBusy(false);
+            alertbox("Failed to load report: " + err.message, "error");
+            return;
+        }
+    }
+
+    renderPaymentChart(currentReportPeriod);
+}
+
+/**
+ * 2. Button click handler for Weekly / Monthly / Yearly tabs
+ */
+function switchReportPeriod(period, btnElement) {
+    currentReportPeriod = period;
+
+    document.querySelectorAll('.report-tab').forEach(btn => btn.classList.remove('active'));
+    if (btnElement) btnElement.classList.add('active');
+
+    if (!cachedMergedPayments) {
+        loadPaymentReport(true);
+    } else {
+        renderPaymentChart(period);
+    }
+}
+
+/**
+ * 3. Aggregates merged data for the selected timeframe and draws Chart.js
+ */
+function renderPaymentChart(period) {
+    const data = cachedMergedPayments || {};
+    const now = new Date();
+    const currentYear = String(now.getFullYear());
+    const currentMonthKey = `${currentYear}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    let labels = [];
+    let totals = [];
+    let counts = [];
+    let titleText = '';
+
+    if (period === 'weekly') {
+        // Show W1 - W5 for the current month (includes live unarchived payments)
+        const weeks = ['W1', 'W2', 'W3', 'W4', 'W5'];
+        const monthObj = data[currentMonthKey] || {};
+
+        labels = weeks.map(w => `Week ${w.replace('W', '')}`);
+        totals = weeks.map(w => monthObj[w]?.total || 0);
+        counts = weeks.map(w => monthObj[w]?.count || 0);
+        titleText = `Weekly Collections (${currentMonthKey})`;
+
+    } else if (period === 'monthly') {
+        // Show Jan - Dec for the current year
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        labels = monthNames;
+
+        for (let m = 1; m <= 12; m++) {
+            const mKey = `${currentYear}-${String(m).padStart(2, '0')}`;
+            const weekEntries = Object.values(data[mKey] || {});
+            const mTotal = weekEntries.reduce((sum, w) => sum + (Number(w.total) || 0), 0);
+            const mCount = weekEntries.reduce((sum, w) => sum + (Number(w.count) || 0), 0);
+
+            totals.push(mTotal);
+            counts.push(mCount);
+        }
+        titleText = `Monthly Collections (${currentYear})`;
+
+    } else if (period === 'yearly') {
+        // Group all available YYYY-MM keys by YYYY
+        const yearMap = {};
+
+        Object.entries(data).forEach(([mKey, weeksObj]) => {
+            const yr = mKey.split('-')[0];
+            if (!yearMap[yr]) yearMap[yr] = { total: 0, count: 0 };
+
+            Object.values(weeksObj || {}).forEach(w => {
+                yearMap[yr].total += Number(w.total) || 0;
+                yearMap[yr].count += Number(w.count) || 0;
+            });
+        });
+
+        const sortedYears = Object.keys(yearMap).sort();
+        labels = sortedYears.length ? sortedYears : [currentYear];
+        totals = sortedYears.length ? sortedYears.map(y => yearMap[y].total) : [0];
+        counts = sortedYears.length ? sortedYears.map(y => yearMap[y].count) : [0];
+        titleText = `Yearly Collections`;
+    }
+
+    // Update top summary text
+    const grandTotal = totals.reduce((a, b) => a + b, 0);
+    const totalStudents = counts.reduce((a, b) => a + b, 0);
+    document.getElementById('reportSummaryText').textContent =
+        `${titleText} — Total: Rs. ${grandTotal.toLocaleString()} (${totalStudents} payments)`;
+
+    // Destroy previous chart instance before re-rendering
+    if (paymentChartInstance) {
+        paymentChartInstance.destroy();
+    }
+
+    const ctx = document.getElementById('paymentReportChart').getContext('2d');
+    paymentChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Collected Fees (Rs.)',
+                data: totals,
+                backgroundColor: '#3b82f6',
+            hoverBackgroundColor: '#1d4ed8',
+            borderRadius: 6,
+            maxBarThickness: 30
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const amount = context.parsed.y || 0;
+                            const count = counts[context.dataIndex] || 0;
+                            return ` Rs. ${amount.toLocaleString()} (${count} students)`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                grid: { display: false },
+                border: { display: false },
+                ticks: { color: '#8490a3', font: { size: 11 } }
+            }, 
+            y: {
+                beginAtZero: true,
+                border: { display: false, dash: [4, 4] },
+                grid: { color: '#f0f2f6' },
+                    ticks: {
+                        callback: value => 'Rs. ' + value.toLocaleString()
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+
+        initApp();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('school') === 'choola') {
+    document.getElementById('classInput').value = '6A';
+}
+if (params.get('school') === '68ewd') {
+    document.getElementById('classInput').value = '6';
+}
+    </script>
+</body>
+
+</html>
