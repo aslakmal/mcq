@@ -73,7 +73,7 @@ let detailsChartInstance = null;
             student.d= await syncEngine.decryptField(student.d)
             student.g= await syncEngine.decryptField(student.g)
             student = syncEngine.unmapFromFirebase('students', student);
-            await saveStudentToIndexedDB(student);
+            await saveStudentToIndexedDB(student,window.location.href);
           }
         } catch (err) {
           console.error("Error fetching single student from Firebase:", err);
