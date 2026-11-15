@@ -568,16 +568,27 @@ body.is-loading .loading-overlay {
         </div>
 
         <div id="paymentReportContainer" class="card" style="width: 100%; margin: 0 auto;">
+           <div style="
+           display: flex;
+           gap: 5px;margin-bottom: 12px;
+       ">
+            <div style="display: inline-block;align-items: center;gap: 6px;font-size: 13px;background: #f1f5f9;padding: 6px;">
+                <input type="date" id="reportStartDate" onchange="onDateRangeChange()" style="padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                <span>to</span>
+                <input type="date" id="reportEndDate" onchange="onDateRangeChange()" style="padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                <button type="button" onclick="resetDateRange()" style="padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; cursor: pointer;">Reset</button>
+            </div>
             <!-- Period Switcher Buttons -->
-            <div style="display: inline-block;margin-bottom: 12px;background: #f1f5f9;padding: 4px;">
+            <div style="display: inline-block;background: #f1f5f9;padding: 4px;">
                 <button type="button" class="report-tab active" data-period="weekly" onclick="switchReportPeriod('weekly', this)">Weekly</button>
                 <button type="button" class="report-tab" data-period="monthly" onclick="switchReportPeriod('monthly', this)">Monthly</button>
                 <button type="button" class="report-tab" data-period="yearly" onclick="switchReportPeriod('yearly', this)">Yearly</button>
             </div>
-        
+        </div>
+
             <!-- Summary Header -->
             <div id="reportSummaryText" style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">
-                Loading report...
+                Select Class to load report
             </div>
         
             <!-- Chart.js Canvas -->
@@ -644,13 +655,14 @@ console.log(classStudents)
             // Re-render table with the fresh states
             renderStudentTable(classStudents);
         }
-let paymentChartInstance = null;
-let cachedMergedPayments = null; // Stores merged (Firebase + live) data for fast tab switching
+
+
+        let paymentChartInstance = null;
+let cachedArchivedPayments = null; // Stores raw Firebase snapshot for fast filtering
 let currentReportPeriod = 'weekly';
 
 /**
  * Helper: Extracts { monthKey: "2026-11", weekKey: "W2" } from a timestamp
- * Matches the exact grouping logic used in resetAllFees()
  */
 function getMonthAndWeekKeys(timestamp) {
     const dateObj = timestamp ? new Date(Number(timestamp)) : new Date();
@@ -664,52 +676,62 @@ function getMonthAndWeekKeys(timestamp) {
 }
 
 /**
- * 1. Fetches archived payments from Firebase and merges with live unpaid-reset students
+ * Helper: Converts "2026-11" + "W2" into exact start/end Date objects for range filtering
+ */
+function getWeekDateBounds(monthKey, weekKey) {
+    const [year, month] = monthKey.split('-').map(Number);
+    const weekNum = Number(weekKey.replace('W', ''));
+    const startDay = (weekNum - 1) * 7 + 1;
+    const lastDayOfMonth = new Date(year, month, 0).getDate();
+    const endDay = Math.min(weekNum * 7, lastDayOfMonth);
+
+    return {
+        start: new Date(year, month - 1, startDay, 0, 0, 0, 0),
+        end: new Date(year, month - 1, endDay, 23, 59, 59, 999)
+    };
+}
+
+/**
+ * Helper: Reads #reportStartDate and #reportEndDate inputs
+ */
+function getSelectedDateRange() {
+    const startVal = document.getElementById('reportStartDate')?.value;
+    const endVal = document.getElementById('reportEndDate')?.value;
+
+    let startDate = null;
+    let endDate = null;
+
+    if (startVal) {
+        const [y, m, d] = startVal.split('-').map(Number);
+        startDate = new Date(y, m - 1, d, 0, 0, 0, 0);
+    }
+    if (endVal) {
+        const [y, m, d] = endVal.split('-').map(Number);
+        endDate = new Date(y, m - 1, d, 23, 59, 59, 999);
+    }
+
+    return { startDate, endDate, hasRange: Boolean(startDate || endDate) };
+}
+
+/**
+ * 1. Fetches archived payments from Firebase (keeps your exact classInput check)
  */
 async function loadPaymentReport(forceRefresh = true) {
     const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
-            if (!inputVal) {
-                alertbox("Please enter a valid class name.", "error");
-                return;
-            }
-            currentClass = inputVal;
+    if (!inputVal) {
+        alertbox("Please enter a valid class name.", "error");
+        return;
+    }
+    currentClass = inputVal;
     if (!currentClass) return;
 
-    if (forceRefresh || !cachedMergedPayments) {
+    if (forceRefresh || !cachedArchivedPayments) {
         setAppBusy(true, `Loading payment report for Class ${currentClass}...`);
         try {
             db.goOnline();
             const snap = await db.ref(`schools/${schoolId}/payments/${currentClass}`).once('value');
-            const archivedData = snap.val() || {};
+            cachedArchivedPayments = snap.val() || {};
             db.goOffline();
-
-            // Deep clone archived Firebase structure: { "2026-10": { "W1": { total, count } } }
-            const merged = JSON.parse(JSON.stringify(archivedData));
-
-            // Add live (unarchived) paid students from cachedStudents
-            const classStudents = cachedStudents.filter(
-                s => (s.class || s.h || '').toUpperCase() === currentClass
-            );
-
-            classStudents.forEach(s => {
-                const isPaid = Number(s.isPaid ?? s.F ?? 0);
-                const fee = Number(s.classFee ?? s.C ?? 0);
-                const paidAt = s.paidAt || s.G;
-
-                if (isPaid === 1 && fee > 0) {
-                    const { monthKey, weekKey } = getMonthAndWeekKeys(paidAt);
-
-                    if (!merged[monthKey]) merged[monthKey] = {};
-                    if (!merged[monthKey][weekKey]) {
-                        merged[monthKey][weekKey] = { total: 0, count: 0 };
-                    }
-
-                    merged[monthKey][weekKey].total += fee;
-                    merged[monthKey][weekKey].count += 1;
-                }
-            });
-
-            cachedMergedPayments = merged;
             setAppBusy(false);
         } catch (err) {
             db.goOffline();
@@ -723,7 +745,60 @@ async function loadPaymentReport(forceRefresh = true) {
 }
 
 /**
- * 2. Button click handler for Weekly / Monthly / Yearly tabs
+ * 2. Merges Firebase archived data + live cachedStudents filtered by the selected date range
+ */
+function getFilteredMergedPayments(startDate, endDate) {
+    const merged = {};
+
+    // A. Add archived Firebase weekly data that overlaps the date range
+    Object.entries(cachedArchivedPayments || {}).forEach(([monthKey, weeksObj]) => {
+        Object.entries(weeksObj || {}).forEach(([weekKey, wData]) => {
+            const { start, end } = getWeekDateBounds(monthKey, weekKey);
+
+            if (startDate && end < startDate) return;
+            if (endDate && start > endDate) return;
+
+            if (!merged[monthKey]) merged[monthKey] = {};
+            merged[monthKey][weekKey] = {
+                total: Number(wData.total) || 0,
+                count: Number(wData.count) || 0
+            };
+        });
+    });
+
+    // B. Add live (unarchived) paid students from cachedStudents filtered by exact paidAt date
+    const classStudents = cachedStudents.filter(
+        s => (s.class || s.h || '').toUpperCase() === currentClass
+    );
+
+    classStudents.forEach(s => {
+        const isPaid = Number(s.isPaid ?? s.F ?? 0);
+        const fee = Number(s.classFee ?? s.C ?? 0);
+        const paidAt = s.paidAt || s.G;
+
+        if (isPaid === 1 && fee > 0) {
+            const paidDate = paidAt ? new Date(Number(paidAt)) : new Date();
+
+            if (startDate && paidDate < startDate) return;
+            if (endDate && paidDate > endDate) return;
+
+            const { monthKey, weekKey } = getMonthAndWeekKeys(paidDate.getTime());
+
+            if (!merged[monthKey]) merged[monthKey] = {};
+            if (!merged[monthKey][weekKey]) {
+                merged[monthKey][weekKey] = { total: 0, count: 0 };
+            }
+
+            merged[monthKey][weekKey].total += fee;
+            merged[monthKey][weekKey].count += 1;
+        }
+    });
+
+    return merged;
+}
+
+/**
+ * 3. Button & Date Input Handlers
  */
 function switchReportPeriod(period, btnElement) {
     currentReportPeriod = period;
@@ -731,18 +806,36 @@ function switchReportPeriod(period, btnElement) {
     document.querySelectorAll('.report-tab').forEach(btn => btn.classList.remove('active'));
     if (btnElement) btnElement.classList.add('active');
 
-    if (!cachedMergedPayments) {
+    if (!cachedArchivedPayments) {
         loadPaymentReport(true);
     } else {
         renderPaymentChart(period);
     }
 }
 
+function onDateRangeChange() {
+    if (!cachedArchivedPayments) {
+        loadPaymentReport(true);
+    } else {
+        renderPaymentChart(currentReportPeriod);
+    }
+}
+
+function resetDateRange() {
+    const startEl = document.getElementById('reportStartDate');
+    const endEl = document.getElementById('reportEndDate');
+    if (startEl) startEl.value = '';
+    if (endEl) endEl.value = '';
+    renderPaymentChart(currentReportPeriod);
+}
+
 /**
- * 3. Aggregates merged data for the selected timeframe and draws Chart.js
+ * 4. Aggregates merged data for the selected timeframe & draws Chart.js (with your exact styling)
  */
 function renderPaymentChart(period) {
-    const data = cachedMergedPayments || {};
+    const { startDate, endDate, hasRange } = getSelectedDateRange();
+    const data = getFilteredMergedPayments(startDate, endDate);
+
     const now = new Date();
     const currentYear = String(now.getFullYear());
     const currentMonthKey = `${currentYear}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -753,33 +846,56 @@ function renderPaymentChart(period) {
     let titleText = '';
 
     if (period === 'weekly') {
-        // Show W1 - W5 for the current month (includes live unarchived payments)
-        const weeks = ['W1', 'W2', 'W3', 'W4', 'W5'];
-        const monthObj = data[currentMonthKey] || {};
+        if (hasRange) {
+            // Show all matching weeks within the selected date range
+            const sortedMonths = Object.keys(data).sort();
+            sortedMonths.forEach(mKey => {
+                ['W1', 'W2', 'W3', 'W4', 'W5'].forEach(wKey => {
+                    if (data[mKey][wKey]) {
+                        labels.push(`${mKey} ${wKey}`);
+                        totals.push(data[mKey][wKey].total);
+                        counts.push(data[mKey][wKey].count);
+                    }
+                });
+            });
+            titleText = `Weekly Collections (Filtered Range)`;
+        } else {
+            // Default: Show W1 - W5 for the current month
+            const weeks = ['W1', 'W2', 'W3', 'W4', 'W5'];
+            const monthObj = data[currentMonthKey] || {};
 
-        labels = weeks.map(w => `Week ${w.replace('W', '')}`);
-        totals = weeks.map(w => monthObj[w]?.total || 0);
-        counts = weeks.map(w => monthObj[w]?.count || 0);
-        titleText = `Weekly Collections (${currentMonthKey})`;
+            labels = weeks.map(w => `Week ${w.replace('W', '')}`);
+            totals = weeks.map(w => monthObj[w]?.total || 0);
+            counts = weeks.map(w => monthObj[w]?.count || 0);
+            titleText = `Weekly Collections (${currentMonthKey})`;
+        }
 
     } else if (period === 'monthly') {
-        // Show Jan - Dec for the current year
-        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        labels = monthNames;
+        if (hasRange) {
+            // Show all months present in the filtered range
+            const sortedMonths = Object.keys(data).sort();
+            sortedMonths.forEach(mKey => {
+                const weekEntries = Object.values(data[mKey] || {});
+                labels.push(mKey);
+                totals.push(weekEntries.reduce((sum, w) => sum + (Number(w.total) || 0), 0));
+                counts.push(weekEntries.reduce((sum, w) => sum + (Number(w.count) || 0), 0));
+            });
+            titleText = `Monthly Collections (Filtered Range)`;
+        } else {
+            // Default: Show Jan - Dec for the current year
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            labels = monthNames;
 
-        for (let m = 1; m <= 12; m++) {
-            const mKey = `${currentYear}-${String(m).padStart(2, '0')}`;
-            const weekEntries = Object.values(data[mKey] || {});
-            const mTotal = weekEntries.reduce((sum, w) => sum + (Number(w.total) || 0), 0);
-            const mCount = weekEntries.reduce((sum, w) => sum + (Number(w.count) || 0), 0);
-
-            totals.push(mTotal);
-            counts.push(mCount);
+            for (let m = 1; m <= 12; m++) {
+                const mKey = `${currentYear}-${String(m).padStart(2, '0')}`;
+                const weekEntries = Object.values(data[mKey] || {});
+                totals.push(weekEntries.reduce((sum, w) => sum + (Number(w.total) || 0), 0));
+                counts.push(weekEntries.reduce((sum, w) => sum + (Number(w.count) || 0), 0));
+            }
+            titleText = `Monthly Collections (${currentYear})`;
         }
-        titleText = `Monthly Collections (${currentYear})`;
 
     } else if (period === 'yearly') {
-        // Group all available YYYY-MM keys by YYYY
         const yearMap = {};
 
         Object.entries(data).forEach(([mKey, weeksObj]) => {
@@ -796,7 +912,7 @@ function renderPaymentChart(period) {
         labels = sortedYears.length ? sortedYears : [currentYear];
         totals = sortedYears.length ? sortedYears.map(y => yearMap[y].total) : [0];
         counts = sortedYears.length ? sortedYears.map(y => yearMap[y].count) : [0];
-        titleText = `Yearly Collections`;
+        titleText = hasRange ? `Yearly Collections (Filtered Range)` : `Yearly Collections`;
     }
 
     // Update top summary text
@@ -819,9 +935,9 @@ function renderPaymentChart(period) {
                 label: 'Collected Fees (Rs.)',
                 data: totals,
                 backgroundColor: '#3b82f6',
-            hoverBackgroundColor: '#1d4ed8',
-            borderRadius: 6,
-            maxBarThickness: 30
+                hoverBackgroundColor: '#1d4ed8',
+                borderRadius: 6,
+                maxBarThickness: 30
             }]
         },
         options: {
@@ -841,14 +957,14 @@ function renderPaymentChart(period) {
             },
             scales: {
                 x: {
-                grid: { display: false },
-                border: { display: false },
-                ticks: { color: '#8490a3', font: { size: 11 } }
-            }, 
-            y: {
-                beginAtZero: true,
-                border: { display: false, dash: [4, 4] },
-                grid: { color: '#f0f2f6' },
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: { color: '#8490a3', font: { size: 11 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    border: { display: false, dash: [4, 4] },
+                    grid: { color: '#f0f2f6' },
                     ticks: {
                         callback: value => 'Rs. ' + value.toLocaleString()
                     }
@@ -857,7 +973,6 @@ function renderPaymentChart(period) {
         }
     });
 }
-
 
 
         initApp();
