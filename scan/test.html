@@ -660,7 +660,7 @@
   </div>
 </nav>
 </div>
-<script src="../edOS/sync.js"></script>
+<script src="sync.js"></script>
 <script>
 
   
@@ -1295,6 +1295,7 @@ function printRawBTReceipt() {
 
 // 2. Direct WhatsApp via `wa.me` (Uses teacher's WhatsApp app instantly for free)
 function sendWhatsAppReceiptDirect() {
+  console.log(currentSelectedStudentId)
   const student = cachedStudents.find(s => s.id === currentSelectedStudentId);
   if (!student) {
     alertbox("Please select a student first.", "error");
@@ -1302,7 +1303,7 @@ function sendWhatsAppReceiptDirect() {
   }
 
   // Assumes your student object stores parent phone as parentPhone or p
-  const parentPhone = student.parentPhone || student.phone || student.p;
+  const parentPhone = student.studentContact || student.phone || student.d;
   if (!parentPhone) {
     alertbox("Parent phone number not found for this student.", "error");
     return;
@@ -1332,7 +1333,7 @@ function sendWhatsAppReceiptAPI() {
     return;
   }
 
-  const parentPhone = student.parentPhone || student.phone || student.p;
+  const parentPhone = student.studentContact || student.phone || student.d;
   if (!parentPhone) {
     alertbox("Parent phone number not found.", "error");
     return;
