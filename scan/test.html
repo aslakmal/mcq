@@ -433,9 +433,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
 /* Default: Hide main app, show landing container */
-#app-content {
-  display: none !important;
-}
+
 
 #install-landing {
   display: flex;
@@ -446,7 +444,9 @@
   text-align: center;
   padding: 20px;
 }
-
+  #install-landing {
+    display: none !important;
+  }
 /* INSTALLED PWA MODE: Swap visibility */
 @media all and (display-mode: standalone), (display-mode: fullscreen) {
   #install-landing {
