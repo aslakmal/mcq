@@ -286,7 +286,6 @@
 
             table tr {
                 background: #ffffff;
-                border: 1px solid var(--border-color);
                 border-radius: 10px;
                 margin-bottom: 1rem;
                 padding: 1rem;
@@ -415,7 +414,6 @@
 
             table tr {
                 background: #ffffff;
-                border: 1px solid var(--border-color);
                 border-radius: 10px;
                 margin-bottom: 5px;
                 padding: 5px;
@@ -522,6 +520,7 @@ body.is-loading .loading-overlay {
     color: #ffffff;
     box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
 }
+
     </style>
 </head>
 
@@ -548,6 +547,27 @@ body.is-loading .loading-overlay {
                 <input type="text" id="classInput">
                 <button onclick="selectStudents()" class="btn btn-primary"
                     style="margin-top: 0.5rem;">Proceed</button>
+
+
+<!-- Inside #studentSection, right below the class header -->
+<div id="paymentCycleBar" class="hidden" style="position: relative; margin: 1rem 0; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px;">
+    <label for="paymentLabelInput" style="display: block; font-weight: 600; margin-bottom: 0.25rem;">
+    Payment For
+    </label>
+    <input
+        type="text"
+        id="paymentLabelInput"
+        autocomplete="off"
+        placeholder="e.g. January, Tute Fee"
+        onfocus="showAllPaymentDropdown()"
+        oninput="onPaymentLabelInput()"
+    />
+    <div
+        id="paymentLabelDropdown"
+        class="hidden"
+        style="position: absolute; left: 0.75rem; right: 0.75rem; top: calc(100% - 0.5rem); z-index: 50; background: var(--card-bg, #fff); border: 1px solid var(--border-color); border-radius: 6px; max-height: 200px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.12);"
+    ></div>
+</div>
             </div>
 
 
@@ -562,8 +582,7 @@ body.is-loading .loading-overlay {
                     </h2>
                 </div>
             </div>
-<!-- Reset Button -->
-<button type="button" class="btn-reset" onclick="resetAllFees()">Reset All to Unpaid</button>
+
 
 <!-- Fullscreen Loading Overlay -->
 <div id="loadingOverlay" class="loading-overlay hidden">
@@ -594,11 +613,14 @@ body.is-loading .loading-overlay {
     <script src="sync.js"></script>
     <script>
         const instituteType = localStorage.getItem('instituteType') || '';
-
+        const MAX_PAYMENTS_PER_STUDENT = 12;
+        const VISIBLE_RECENT_PAYMENTS = 5;
+    
         let cachedStudents = [];
+        let savedPaymentLabels = [];
         let currentClass = "";
-        let sessionFees = {};   
-
+        let currentPaymentLabel = "";
+    
         async function initApp() {
             try {
                 await syncEngine.initIndexedDB();
@@ -608,7 +630,7 @@ body.is-loading .loading-overlay {
                 console.warn("Offline mode active:", err);
             }
         }
-
+    
         function loadFromIndexedDBDirect() {
             return new Promise((resolve) => {
                 syncEngine.getLocalData('students').then((students) => {
@@ -617,231 +639,312 @@ body.is-loading .loading-overlay {
                 }).catch(() => resolve());
             });
         }
-
-
-
-        // 3. Select Date and prepare student session list
+    
+        // Normalize student.payments to compact tuples: [[label, status, paidAt], ...]
+        function getStudentPayments(student) {
+            if (Array.isArray(student.payments)) {
+                return student.payments
+                    .filter(item => Array.isArray(item) && item[0])
+                    .slice(-MAX_PAYMENTS_PER_STUDENT)
+                    .map(item => [
+                        String(item[0]),
+                        item[1] === "paid" || item[1] === "pending" ? item[1] : null,
+                        item[1] === "paid" ? (item[2] ?? null) : null
+                    ]);
+            }
+    
+            // Backward compatibility if legacy F/G fields exist on a student record
+        /*    if (Number(student.isPaid ?? student.F ?? 0) === 1) {
+                return [["General Fee", "paid", student.G || student.paidAt || null]];
+            }
+    */
+            return [];
+        }
+    
+        function refreshSavedPaymentLabels() {
+            const labelSet = new Set();
+            cachedStudents.forEach(s => {
+                getStudentPayments(s).forEach(([label]) => {
+                    if (label) labelSet.add(label.trim());
+                });
+            });
+            savedPaymentLabels = Array.from(labelSet);
+            renderPaymentDropdownList();
+        }
+    
+        function renderPaymentDropdownList() {
+            const dropdown = document.getElementById('paymentLabelDropdown');
+            if (!dropdown) return;
+    
+            if (savedPaymentLabels.length === 0) {
+                dropdown.innerHTML = `<div style="padding: 0.5rem 0.75rem; color: var(--text-muted); font-size: 13px;">No previous items</div>`;
+                return;
+            }
+    
+            dropdown.innerHTML = savedPaymentLabels
+                .map(lbl => `
+                    <button
+                        type="button"
+                        onmousedown="selectDropdownLabel('${escapeAttr(lbl)}')"
+                        style="display: block; width: 100%; text-align: left; padding: 0.5rem 0.75rem; border: none; border-bottom: 1px solid var(--border-color); background: transparent; cursor: pointer; font-size: 14px;"
+                    >${escapeHtml(lbl)}</button>
+                `)
+                .join('');
+        }
+    
+        function showAllPaymentDropdown() {
+            renderPaymentDropdownList();
+            const dropdown = document.getElementById('paymentLabelDropdown');
+            if (dropdown) dropdown.classList.remove('hidden');
+        }
+    
+        function hidePaymentDropdown() {
+            const dropdown = document.getElementById('paymentLabelDropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+        }
+    
+        function selectDropdownLabel(lbl) {
+            const input = document.getElementById('paymentLabelInput');
+            if (input) input.value = lbl;
+            currentPaymentLabel = lbl.trim();
+            hidePaymentDropdown();
+    
+            if (currentClass) {
+                const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+                renderStudentTable(classStudents);
+            }
+        }
+    
+        function onPaymentLabelInput() {
+            const input = document.getElementById('paymentLabelInput');
+            currentPaymentLabel = input ? input.value.trim() : "";
+    
+            // Keep full unfiltered previous list visible while typing
+            showAllPaymentDropdown();
+            console.log(currentClass)
+            document.getElementById('studentSection').classList.remove('hidden');
+            
+            if (!currentClass) return;
+            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+            renderStudentTable(classStudents);
+        }
+    
+        document.addEventListener('click', (e) => {
+            const bar = document.getElementById('paymentCycleBar');
+            if (bar && !bar.contains(e.target)) {
+                hidePaymentDropdown();
+            }
+        });
+    
+        function getStatusForLabel(student, label) {
+            if (!label) return null;
+            const found = getStudentPayments(student).find(
+                ([lbl]) => lbl.toLowerCase() === label.toLowerCase()
+            );
+            return found ? found[1] : null; // null | "pending" | "paid"
+        }
+    
+        // Select Class and prepare student payment list
         async function selectStudents() {
-            const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
+            
+            document.getElementById('paymentCycleBar').classList.remove('hidden');
+           const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
             if (!inputVal) {
                 alertbox("Please enter a valid class name.", "error");
                 return;
             }
             currentClass = inputVal;
-
+    
+            const labelInput = document.getElementById('paymentLabelInput');
+            currentPaymentLabel = labelInput ? labelInput.value.trim() : "";
+    
             document.getElementById('currentSelectedDateLabel').innerText = `Class ${currentClass}`;
             document.getElementById('studentSection').classList.remove('hidden');
-
-            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
-
-            sessionFees = {};
-
-            classStudents.forEach(s => {
-                const studentId = s.id || s.key;
-                // 1. Set fee status from student record
-                sessionFees[studentId] = s.isPaid !== undefined ? s.isPaid : (s.C !== undefined ? s.C : (s.F !== undefined ? s.F : 0));
-            });
-console.log(classStudents)
-            // Re-render table with the fresh states
-            renderStudentTable(classStudents);
-        }
-
-        function renderStudentTable(students) {
-            const tbody = document.getElementById('studentTableBody');
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 2rem;">No students found in Class ${currentClass}.</td></tr>`;
-                return;
-            }
-
-            students.forEach(s => {
-                const studentId = s.id || s.key;
-                const name = s.name;
-                const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
-                const feeVal = sessionFees[studentId];
-               
-                const isPaid = feeVal == 1;
-               
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-  <td>
-    <div class="student-info">
-      <img src="${photo}" class="avatar" alt="Avatar">
-      <div><p style="font-weight: 600;">${name}</p>
-      ${s.classFee ? `<p>Class Fee: ${s.classFee}</p>` : ''}
-    </div>
-    </div>
-  </td>
-  <td>
-    <!-- Fee Switch (Left) -->
-    <label class="switch-toggle">
-      <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="toggleFee('${studentId}', this)">
-      <span class="slider-text" data-on="Paid" data-off="Unpaid"></span>
-    </label>
-  </td>
-`;
-                tbody.appendChild(tr);
-            });
-        }
-
-   // Helper to show/hide loading curtain and lock UI
-function setAppBusy(isBusy, message = "Updating...") {
-    const overlay = document.getElementById('loadingOverlay');
-    const textEl = document.getElementById('loadingText');
-    if (textEl) textEl.innerText = message;
     
-    if (isBusy) {
-        document.body.classList.add('is-loading');
-        overlay.classList.remove('hidden');
-    } else {
-        document.body.classList.remove('is-loading');
-        overlay.classList.add('hidden');
-    }
-}
+            refreshSavedPaymentLabels();
+    
+            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+         //  renderStudentTable(classStudents);
+           }
+    
+           function renderStudentTable(students) {
+    const tbody = document.getElementById('studentTableBody');
+    tbody.innerHTML = '';
 
-// 4. Update Paid status instantly with screen fade & disabled inputs
-async function toggleFee(studentId, checkboxEl) {
-    const newFeeStatus = checkboxEl.checked ? 1 : 0;
-    sessionFees[studentId] = newFeeStatus;
-
-    // Update local cache immediately
-    const student = cachedStudents.find(s => (s.id || s.key) === studentId);
-    if (student) {
-        student.isPaid = newFeeStatus;
-        if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
-            syncEngine.saveToIDB('students', student);
-        }
-    }
-
-    setAppBusy(true, "Saving payment status...");
-
-    try {
-        db.goOnline();
-        await db.ref(`schools/${schoolId}/students/${studentId}`).update({
-            F: newFeeStatus,
-            G: newFeeStatus === 1 ? firebase.database.ServerValue.TIMESTAMP : null,
-            A: firebase.database.ServerValue.TIMESTAMP
-        });
-        db.goOffline();
-        setAppBusy(false);
-        alertbox("Payment status saved!", "success");
-    } catch (err) {
-        db.goOffline();
-        setAppBusy(false);
-        // Revert checkbox state on failure
-        checkboxEl.checked = !checkboxEl.checked;
-        sessionFees[studentId] = checkboxEl.checked ? 1 : 0;
-        if (student) {
-            student.isPaid = sessionFees[studentId];
-            }
-        alertbox("Failed to update fee: " + err.message, "error");
-    }
-}
-
-// 5. Reset All Class Students to Unpaid (0)
-async function resetAllFees() {
-    if (!currentClass) return;
-
-    const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
-    if (classStudents.length === 0) return;
-
-    if (!confirm(`Are you sure you want to reset all payment statuses for Class ${currentClass} to Unpaid?`)) {
+    if (students.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 2rem;">No students found in Class ${escapeHtml(currentClass)}.</td></tr>`;
         return;
     }
 
-    setAppBusy(true, `Archiving & resetting Class ${currentClass} fees...`);
+    students.forEach(s => {
+        const studentId = s.id || s.key;
+        const safeId = escapeAttr(String(studentId));
+        const name = s.name;
+        const photo = s.photoUrl ? getFullCloudinaryUrl(s.photoUrl) : 'img/user.svg';
 
-    try {
-        db.goOnline();
-        
-        const updates = {};
-        const timestamp = firebase.database.ServerValue.TIMESTAMP;
-        
-        // Structure: { "2026-11": { "W1": { total: 0, count: 0 }, "W2": { total: 0, count: 0 } } }
-        const groupedPayments = {}; 
+        const allPayments = getStudentPayments(s);
+        const lastFivePayments = allPayments.slice(-VISIBLE_RECENT_PAYMENTS);
+        const activeStatus = getStatusForLabel(s, currentPaymentLabel);
 
-        classStudents.forEach(s => {
-            const studentId = s.id || s.key;
-            const isPaid = Number(s.isPaid ?? s.F ?? 0);
-            const paidAt = s.paidAt || s.G;
-            const fee = Number(s.classFee ?? s.C ?? 0);
+        const recentHtml = lastFivePayments.length
+            ? `<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">` +
+              lastFivePayments.map(([lbl, st]) => {
+                  return `<span style="font-size:11px; padding:2px 6px; border-radius:4px; border:1px solid var(--border-color);">
+                      ${escapeHtml(lbl)}: <strong>${escapeHtml(st ?? "null")}</strong>
+                  </span>`;
+              }).join('') +
+              `</div>`
+            : `<p style="font-size:12px; color:var(--text-muted); margin-top:4px;">No payments recorded</p>`;
 
-            // 1. Archive payment grouped by Month -> Week
-            if (isPaid === 1 && fee > 0) {
-                const dateObj = paidAt ? new Date(Number(paidAt)) : new Date();
-                const year = dateObj.getFullYear();
-                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                const monthKey = `${year}-${month}`; // e.g., "2026-11"
-
-                // Calculate week of the month (Days 1-7 = W1, 8-14 = W2, ..., 29-31 = W5)
-                const weekNum = Math.ceil(dateObj.getDate() / 7);
-                const weekKey = `W${weekNum}`; // e.g., "W2"
-
-                if (!groupedPayments[monthKey]) {
-                    groupedPayments[monthKey] = {};
-                }
-                if (!groupedPayments[monthKey][weekKey]) {
-                    groupedPayments[monthKey][weekKey] = { total: 0, count: 0 };
-                }
-
-                groupedPayments[monthKey][weekKey].total += fee;
-                groupedPayments[monthKey][weekKey].count += 1;
-            }
-            
-            // 2. Update local session state
-            sessionFees[studentId] = 0;
-            s.isPaid = 0;
-            s.F = 0;
-            s.paidAt = null;
-            s.G = null;
-
-            // 3. Save back to local IndexedDB
-            if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
-                syncEngine.saveToIDB('students', s);
-            }
-
-            // 4. Queue Firebase multi-path update keys to reset student
-            updates[`schools/${schoolId}/students/${studentId}/F`] = 0;
-            updates[`schools/${schoolId}/students/${studentId}/G`] = null;
-            updates[`schools/${schoolId}/students/${studentId}/A`] = timestamp;
-        });
-
-        // 5. Queue aggregated weekly totals under each month node
-        Object.entries(groupedPayments).forEach(([monthKey, weeks]) => {
-            Object.entries(weeks).forEach(([weekKey, data]) => {
-                const basePath = `schools/${schoolId}/payments/${currentClass}/${monthKey}/${weekKey}`;
-                updates[`${basePath}/total`] = firebase.database.ServerValue.increment(data.total);
-                updates[`${basePath}/count`] = firebase.database.ServerValue.increment(data.count);
-                updates[`${basePath}/updatedAt`] = timestamp;
-            });
-        });
-
-        // Execute single atomic batch update to Firebase
-        await db.ref().update(updates);
-        db.goOffline();
-
-        // Re-render table to reflect "Unpaid" state across all checkboxes
-        renderStudentTable(classStudents);
-
-        setAppBusy(false);
-        alertbox(`Successfully archived weekly payments and reset fees for Class ${currentClass}.`, "success");
-
-    } catch (err) {
-        db.goOffline();
-        setAppBusy(false);
-        alertbox("Failed to reset fees: " + err.message, "error");
-    }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>
+                <div class="student-info">
+                    <img src="${photo}" class="avatar" alt="Avatar">
+                    <div>
+                        <p style="font-weight: 600;">${escapeHtml(name)}</p>
+                        ${s.classFee ? `<p>Class Fee: ${escapeHtml(String(s.classFee))}</p>` : ''}
+                        ${recentHtml}
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div role="group" aria-label="Payment status for ${escapeHtml(name)}" style="display: inline-flex; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color);">
+                    <button
+                        type="button"
+                        onclick="updateStudentPaymentStatus('${safeId}', '')"
+                        style="padding: 6px 10px; border: none; border-right: 1px solid var(--border-color); cursor: pointer; font-size: 12px; ${activeStatus === null ? 'background: #64748b; color: #fff; font-weight: 600;' : 'background: transparent; color: inherit;'}"
+                    >...</button>
+                    <button
+                        type="button"
+                        onclick="updateStudentPaymentStatus('${safeId}', 'pending')"
+                        style="padding: 6px 10px; border: none; border-right: 1px solid var(--border-color); cursor: pointer; font-size: 12px; ${activeStatus === 'pending' ? 'background: #d97706; color: #fff; font-weight: 600;' : 'background: transparent; color: inherit;'}"
+                    >pending</button>
+                    <button
+                        type="button"
+                        onclick="updateStudentPaymentStatus('${safeId}', 'paid')"
+                        style="padding: 6px 10px; border: none; cursor: pointer; font-size: 12px; ${activeStatus === 'paid' ? 'background: #16a34a; color: #fff; font-weight: 600;' : 'background: transparent; color: inherit;'}"
+                    >paid</button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
-
+    
+        // Helper to show/hide loading curtain and lock UI
+        function setAppBusy(isBusy, message = "Updating...") {
+            const overlay = document.getElementById('loadingOverlay');
+            const textEl = document.getElementById('loadingText');
+            if (textEl) textEl.innerText = message;
+    
+            if (isBusy) {
+                document.body.classList.add('is-loading');
+                overlay.classList.remove('hidden');
+            } else {
+                document.body.classList.remove('is-loading');
+                overlay.classList.add('hidden');
+            }
+        }
+    
+        // Update payment status (null | "pending" | "paid") for the active Fee / Payment Item
+        async function updateStudentPaymentStatus(studentId, rawValue, selectEl) {
+            const labelInput = document.getElementById('paymentLabelInput');
+            const label = labelInput ? labelInput.value.trim() : "";
+            const student = cachedStudents.find(s => String(s.id || s.key) === String(studentId));
+            if (!student) return;
+    
+            if (!label) {
+                alertbox("Please enter or select a Fee / Payment Item first.", "error");
+                if (selectEl) {
+                    selectEl.value = getStatusForLabel(student, "") ?? "";
+                }
+                return;
+            }
+    
+            const newStatus = rawValue === "" ? null : rawValue; // null | "pending" | "paid"
+            const prevPayments = getStudentPayments(student).map(item => [...item]);
+            let nextPayments = prevPayments.map(item => [...item]);
+    
+            const existingIdx = nextPayments.findIndex(([lbl]) => lbl.toLowerCase() === label.toLowerCase());
+    
+            if (existingIdx >= 0) {
+                if (newStatus === null) {
+                    nextPayments.splice(existingIdx, 1);
+                } else {
+                    const existingPaidAt = nextPayments[existingIdx][2];
+                    nextPayments[existingIdx] = [
+                        label,
+                        newStatus,
+                        newStatus === "paid" ? (existingPaidAt || Date.now()) : null
+                    ];
+                }
+            } else if (newStatus !== null) {
+                nextPayments.push([
+                    label,
+                    newStatus,
+                    newStatus === "paid" ? Date.now() : null
+                ]);
+                while (nextPayments.length > MAX_PAYMENTS_PER_STUDENT) {
+                    nextPayments.shift();
+                }
+            }
+    
+            student.payments = nextPayments;
+            if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
+                syncEngine.saveToIDB('students', student);
+            }
+            refreshSavedPaymentLabels();
+    
+            setAppBusy(true, "Saving payment status...");
+    
+            try {
+                db.goOnline();
+                await db.ref(`schools/${schoolId}/students/${studentId}`).update({
+                    payments: nextPayments,
+                    A: firebase.database.ServerValue.TIMESTAMP
+                });
+                db.goOffline();
+                setAppBusy(false);
+    
+                const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+                renderStudentTable(classStudents);
+                alertbox("Payment status saved!", "success");
+            } catch (err) {
+                db.goOffline();
+                setAppBusy(false);
+    
+                student.payments = prevPayments;
+                if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
+                    syncEngine.saveToIDB('students', student);
+                }
+    
+                const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
+                renderStudentTable(classStudents);
+                alertbox("Failed to update fee: " + err.message, "error");
+            }
+        }
+    
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+    
+        function escapeAttr(str) {
+            return escapeHtml(str).replace(/'/g, "&#39;");
+        }
+    
         initApp();
         const params = new URLSearchParams(window.location.search);
         if (params.get('school') === 'choola') {
-    document.getElementById('classInput').value = '6A';
-}
-if (params.get('school') === '68ewd') {
-    document.getElementById('classInput').value = '6';
-}
+            document.getElementById('classInput').value = '6A';
+        }
+        if (params.get('school') === '68ewd') {
+            document.getElementById('classInput').value = '6';
+        }
     </script>
 </body>
 
