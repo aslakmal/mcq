@@ -520,7 +520,7 @@ function renderBreakdownTable(sortedKeys, buckets) {
     });
 
     const sortedItems = Array.from(itemMap.values()).sort((a, b) => a.localeCompare(b));
-    select.innerHTML = `<option value="ALL">All Items</option>` +
+    select.innerHTML = `<option value="ALL">All</option>` +
         sortedItems.map(item => `<option value="${escapeAttr(item.toLowerCase())}">${escapeHtml(item)}</option>`).join('');
 
     // Keep previous selection if still available, otherwise default to "ALL"
