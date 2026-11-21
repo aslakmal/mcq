@@ -1,989 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Payment Manager</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Report</title>
+   <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --success: #16a34a;
-            --success-light: #dcfce7;
-            --danger: #dc2626;
-            --danger-light: #fee2e2;
-            --gray-bg: #f8fafc;
             --border-color: #e2e8f0;
-            --text-main: #1e293b;
             --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --bg-page: #f8fafc;
+            --primary-color: #2563eb;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
         body {
-            background-color: var(--gray-bg);
-            color: var(--text-main);
-            padding: 5px;
-            min-height: 100vh;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg-page);
+            color: #0f172a;
+            margin: 0;
+            padding: 1rem;
         }
-
-        a {
-            text-decoration: none;
-        }
-
         .container {
-            max-width: 1000px;
+            max-width: 960px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
         }
-
-        /* Card Box */
         .card {
-            background: #ffffff;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            overflow: scroll;
         }
-
-        /* Header */
-        .header-card {
+        .header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
         }
-
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            width: 200px;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-            float: right;
-            margin: 10px;
-        }
-
-        .btn-success:hover {
-            background: #15803d;
-        }
-
-        .btn-secondary {
-            background: #00000000;
-            color: var(--text-main);
-        }
-
-
-        /* Grid Layout */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 1.5rem;
-        }
-
-        @media(max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Form Controls */
-        .form-group {
+        .controls-row {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.75rem;
         }
-
-        label {
-            font-size: 0.875rem;
+        .btn-group {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .btn-group button {
+            padding: 7px 14px;
+            border: none;
+            border-right: 1px solid var(--border-color);
+            background: transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: inherit;
+        }
+        .btn-group button:last-child {
+            border-right: none;
+        }
+        .btn-group button.active {
+            background: var(--primary-color);
+            color: #fff;
             font-weight: 600;
-            color: var(--text-main);
         }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 0.625rem;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .stat-box {
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 1rem;
-            text-transform: uppercase;
-            font-weight: 600;
+            padding: 0.75rem 1rem;
+            background: #fff;
         }
-
-        input:focus {
-            outline: 2px solid var(--primary);
-            border-color: transparent;
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
         }
-
-     
-
-
-        /* Student Table */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 1rem;
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 4px;
         }
-
+        .chart-wrap {
+            position: relative;
+            height: 340px;
+            width: 100%;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        th, td {
             text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
         }
-
         th {
-            background: #f8fafc;
-            font-size: 0.75rem;
-            font-weight: 700;
             color: var(--text-muted);
+            font-size: 12px;
             text-transform: uppercase;
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
         }
-
-        td {
-            padding: 2px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.875rem;
-            vertical-align: middle;
-        }
-
-        .student-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .avatar {
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--border-color);
-        }
-
-        .badge {
-            padding: 0.25rem 0.625rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
+        .back-link {
+            text-decoration: none;
+            font-size: 14px;
+            color: var(--primary-color);
             font-weight: 600;
-            display: inline-block;
         }
-
-        .badge-paid {
-            background: var(--success-light);
-            color: var(--success);
-        }
-
-        .badge-unpaid {
-            background: var(--danger-light);
-            color: var(--danger);
-        }
-
-        .attendance-btn {
-            padding: 0.375rem 0.875rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid var(--border-color);
-            background: #f1f5f9;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-
-        .attendance-btn.present {
-            background: var(--success);
-            color: white;
-            border-color: var(--success);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Alert Banner */
-        #alertBox {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            padding: 0.875rem 1.25rem;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-            transition: opacity 0.3s ease;
-        }
-
-        .alert-success {
-            background: var(--success);
-        }
-
-        .alert-error {
-            background: var(--danger);
-        }
-
-        @media (max-width: 768px) {
-
-            /* Hide table header */
-            table thead {
-                display: none;
-            }
-
-            /* Turn table structure into block cards */
-            table,
-            table tbody,
-            table tr,
-            table td {
-                display: block;
-                width: 100%;
-            }
-
-            table tr {
-                background: #ffffff;
-                border: 1px solid var(--border-color);
-                border-radius: 10px;
-                margin-bottom: 1rem;
-                padding: 1rem;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-            }
-
-            table td {
-                border: none;
-                padding: 0;
-            }
-
-            /* Mobile Actions Row: Side-by-side layout with space between */
-            .mobile-actions {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 1rem;
-                width: 100%;
-            }
-
-            /* Style the fee toggle button on mobile */
-            .fee-toggle-btn {
-                padding: 0.5rem 0.875rem !important;
-                font-size: 0.85rem !important;
-                border-radius: 8px !important;
-            }
-
-            /* Style the attendance button on mobile */
-            .attendance-btn {
-                padding: 0.5rem 1rem !important;
-                font-size: 0.85rem !important;
-                border-radius: 8px !important;
-                flex-shrink: 0;
-            }
-        }
-
-        /* Unified Toggle Switch Styles */
-        .switch-toggle {
-            position: relative;
-            display: inline-block;
-            width: 104px;
-            height: 34px;
-        }
-
-        .switch-toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        /* Slider Track */
-        .slider-text {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #fee2e2;
-            color: var(--danger);
-            font-size: 0.7rem;
-            font-weight: 700;
-            border-radius: 17px;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            display: flex;
-            align-items: center;
-            border: 1px solid #fecaca;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        /* Sliding Knob */
-        .slider-text:before {
-            position: absolute;
-            content: "";
-            height: 28px;
-            width: 28px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-            z-index: 2;
-        }
-
-        /* Off-state text (Right side) */
-        .slider-text::after {
-            content: attr(data-off);
-            position: absolute;
-            right: 12px;
-            transition: opacity 0.2s ease;
-        }
-
-        /* Checked (On) State Colors & Slide */
-        input:checked+.slider-text {
-            background-color: var(--success-light);
-            color: var(--success);
-            border-color: #bbf7d0;
-        }
-
-        input:checked+.slider-text:before {
-            transform: translateX(70px);
-        }
-
-        /* On-state text switches to the left side */
-        input:checked+.slider-text::after {
-            content: attr(data-on);
-            left: 14px;
-            right: auto;
-        }
-        table td:nth-child(2){text-align: center;}
-        /* Responsive adjustments for mobile screens */
-        @media (max-width: 768px) {
-            table thead {
-                display: none;
-            }
-
-            table,
-            table tbody,
-            table tr,
-            table td {
-                display: block;
-                width: 100%;
-            }
-
-            table tr {
-                background: #ffffff;
-                border: 1px solid var(--border-color);
-                border-radius: 10px;
-                margin-bottom: 5px;
-                padding: 5px;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-            }
-
-            table td {
-                border: none;
-                padding: 0;
-            }
-
-            .card {
-                padding: 5px;
-            }
-
-            table td:nth-child(1) {
-                padding-bottom: 0.75rem;
-                margin-bottom: 0.75rem;
-            }
-
-            /* Place Fee switch on left and Attendance switch on right side */
-            table td:nth-child(2),
-            table td:nth-child(3) {
-                display: inline-block;
-                text-align: right;
-            }
-
-            table td:nth-child(3) {
-                text-align: right;
-            }
-        }
-/**Loading*/
-        .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
+        .student-cell {
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
+    gap: 8px;
 }
-
-.loading-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-    display: none;
-}
-
-.loader-content {
-    background: #fff;
-    padding: 1.5rem 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    text-align: center;
-}
-
-.spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid var(--primary-color, #3b82f6);
+.student-avatar {
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 0.75rem auto;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+    background: #f1f5f9;
 }
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Disable body interaction when active */
-body.is-loading {
-    pointer-events: none;
-}
-body.is-loading .loading-overlay {
-    pointer-events: auto; /* Keep overlay responsive or let container block */
-}
-
-.btn-reset {
-    background-color: transparent;
-    color: #dc2626;
-    border: 1.5px solid #dc2626;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 10px;
-}
-
-.btn-reset:hover {
-    background-color: #dc2626;
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
-}
-
-
-
-
-
-
-
-
-.report-tab.active {
-    background: #ffffff;
-    color: #2563eb;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-.report-tab{
-    background: transparent;
-    border: none;
-    padding: 7px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #64748b;
-    transition: all 0.2s ease-in-out;
+.paid-items-sub {
+    font-size: 11px;
+    color: var(--text-muted);
 }
     </style>
 </head>
-
 <body>
-
     <div class="container">
-
-        <div>
-
-            <!-- Class Card -->
-            <div class="card form-group">
-                <h3>Payment report</h3>
-                <label>Select Class</label>
-                <input type="text" id="classInput">
-                <button onclick="loadPaymentReport()" class="btn btn-primary"
-                    style="margin-top: 0.5rem;">Proceed</button>
+        <div class="card">
+            <div class="header-row">
+                <div>
+                    <h2 style="margin: 0;">Payment Report</h2>
+                    <p id="schoolSubtitle" style="margin: 4px 0 0; font-size: 13px; color: var(--text-muted);"></p>
+                </div>
+                <a id="backToCollectionLink" href="index.html" class="back-link">&larr; Back to Collection</a>
             </div>
 
+            <div class="controls-row">
+                <div class="btn-group" role="group" aria-label="Report period">
+                    <button type="button" id="btn-weekly" onclick="setPeriod('weekly')">Weekly</button>
+                    <button type="button" id="btn-monthly" class="active" onclick="setPeriod('monthly')">Monthly</button>
+                    <button type="button" id="btn-yearly" onclick="setPeriod('yearly')">Yearly</button>
+                </div>
 
-        </div>
-
-        <div id="paymentReportContainer" class="card" style="width: 100%; margin: 0 auto;">
-           <div style="
-           display: flex;
-           gap: 5px;margin-bottom: 12px;
-       ">
-            <div style="display: inline-block;align-items: center;gap: 6px;font-size: 13px;background: #f1f5f9;padding: 6px;">
-                <input type="date" id="reportStartDate" onchange="onDateRangeChange()" style="padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px;">
-                <span>to</span>
-                <input type="date" id="reportEndDate" onchange="onDateRangeChange()" style="padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px;">
-                <button type="button" onclick="resetDateRange()" style="padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; cursor: pointer;">Reset</button>
-            </div>
-            <!-- Period Switcher Buttons -->
-            <div style="display: inline-block;background: #f1f5f9;padding: 4px;">
-                <button type="button" class="report-tab active" data-period="weekly" onclick="switchReportPeriod('weekly', this)">Weekly</button>
-                <button type="button" class="report-tab" data-period="monthly" onclick="switchReportPeriod('monthly', this)">Monthly</button>
-                <button type="button" class="report-tab" data-period="yearly" onclick="switchReportPeriod('yearly', this)">Yearly</button>
+                <div>
+                    <label for="classFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Class:</label>
+                    <select id="classFilter" onchange="refreshReport()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <option value="ALL">All Classes</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-            <!-- Summary Header -->
-            <div id="reportSummaryText" style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">
-                Select Class to load report
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-label">Total Collected (Selected View)</div>
+                <div id="totalAmountStat" class="stat-value">0</div>
             </div>
-        
-            <!-- Chart.js Canvas -->
-            <div style="position: relative; height: 320px; width: 100%;">
-                <canvas id="paymentReportChart"></canvas>
+            <div class="stat-box">
+                <div class="stat-label">Paid Entries Count</div>
+                <div id="paidCountStat" class="stat-value">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Pending Entries Count</div>
+                <div id="pendingCountStat" class="stat-value">0</div>
             </div>
         </div>
 
+        <div class="card">
+            <div class="chart-wrap">
+                <canvas id="paymentChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Paid Count</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="breakdownTableBody"></tbody>
+            </table>
+        </div>
     </div>
-
-    <!-- Alert Box -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="sync.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
     <script>
-        const instituteType = localStorage.getItem('instituteType') || '';
-
+      
         let cachedStudents = [];
-        let currentClass = "";
-        let sessionFees = {};   
+        let currentPeriod = 'monthly'; // 'weekly' | 'monthly' | 'yearly'
+        let chartInstance = null;
 
-        async function initApp() {
+        document.getElementById('schoolSubtitle').innerText = schoolId ? `School ID: ${schoolId}` : 'All Cached Students';
+        if (schoolId) {
+            document.getElementById('backToCollectionLink').href = `payments.html?school=${encodeURIComponent(schoolId)}`;
+        }
+
+        async function initReport() {
             try {
-                await syncEngine.initIndexedDB();
-                await syncEngine.syncStudents();
-                await loadFromIndexedDBDirect();
-            } catch (err) {
-                console.warn("Offline mode active:", err);
-            }
-        }
-
-        function loadFromIndexedDBDirect() {
-            return new Promise((resolve) => {
-                syncEngine.getLocalData('students').then((students) => {
-                    if (students && students.length > 0) cachedStudents = students;
-                    resolve();
-                }).catch(() => resolve());
-            });
-        }
-
-
-
-        // 3. Select Date and prepare student session list
-        async function selectStudents() {
-            const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
-            if (!inputVal) {
-                alertbox("Please enter a valid class name.", "error");
-                return;
-            }
-            currentClass = inputVal;
-
-            document.getElementById('currentSelectedDateLabel').innerText = `Class ${currentClass}`;
-            document.getElementById('studentSection').classList.remove('hidden');
-
-            const classStudents = cachedStudents.filter(s => (s.class || s.h || '').toUpperCase() === currentClass);
-
-            sessionFees = {};
-
-            classStudents.forEach(s => {
-                const studentId = s.id || s.key;
-                // 1. Set fee status from student record
-                sessionFees[studentId] = s.isPaid !== undefined ? s.isPaid : (s.C !== undefined ? s.C : (s.F !== undefined ? s.F : 0));
-            });
-console.log(classStudents)
-            // Re-render table with the fresh states
-            renderStudentTable(classStudents);
-        }
-
-
-        let paymentChartInstance = null;
-let cachedArchivedPayments = null; // Stores raw Firebase snapshot for fast filtering
-let currentReportPeriod = 'weekly';
-
-/**
- * Helper: Extracts { monthKey: "2026-11", weekKey: "W2" } from a timestamp
- */
-function getMonthAndWeekKeys(timestamp) {
-    const dateObj = timestamp ? new Date(Number(timestamp)) : new Date();
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const weekNum = Math.ceil(dateObj.getDate() / 7);
-    return {
-        monthKey: `${year}-${month}`,
-        weekKey: `W${weekNum}`
-    };
-}
-
-/**
- * Helper: Converts "2026-11" + "W2" into exact start/end Date objects for range filtering
- */
-function getWeekDateBounds(monthKey, weekKey) {
-    const [year, month] = monthKey.split('-').map(Number);
-    const weekNum = Number(weekKey.replace('W', ''));
-    const startDay = (weekNum - 1) * 7 + 1;
-    const lastDayOfMonth = new Date(year, month, 0).getDate();
-    const endDay = Math.min(weekNum * 7, lastDayOfMonth);
-
-    return {
-        start: new Date(year, month - 1, startDay, 0, 0, 0, 0),
-        end: new Date(year, month - 1, endDay, 23, 59, 59, 999)
-    };
-}
-
-/**
- * Helper: Reads #reportStartDate and #reportEndDate inputs
- */
-function getSelectedDateRange() {
-    const startVal = document.getElementById('reportStartDate')?.value;
-    const endVal = document.getElementById('reportEndDate')?.value;
-
-    let startDate = null;
-    let endDate = null;
-
-    if (startVal) {
-        const [y, m, d] = startVal.split('-').map(Number);
-        startDate = new Date(y, m - 1, d, 0, 0, 0, 0);
-    }
-    if (endVal) {
-        const [y, m, d] = endVal.split('-').map(Number);
-        endDate = new Date(y, m - 1, d, 23, 59, 59, 999);
-    }
-
-    return { startDate, endDate, hasRange: Boolean(startDate || endDate) };
-}
-
-/**
- * 1. Fetches archived payments from Firebase (keeps your exact classInput check)
- */
-async function loadPaymentReport(forceRefresh = true) {
-    const inputVal = document.getElementById('classInput').value.trim().toUpperCase();
-    if (!inputVal) {
-        alertbox("Please enter a valid class name.", "error");
-        return;
-    }
-    currentClass = inputVal;
-    if (!currentClass) return;
-
-    if (forceRefresh || !cachedArchivedPayments) {
-        setAppBusy(true, `Loading payment report for Class ${currentClass}...`);
-        try {
-            db.goOnline();
-            const snap = await db.ref(`schools/${schoolId}/payments/${currentClass}`).once('value');
-            cachedArchivedPayments = snap.val() || {};
-            db.goOffline();
-            setAppBusy(false);
-        } catch (err) {
-            db.goOffline();
-            setAppBusy(false);
-            alertbox("Failed to load report: " + err.message, "error");
-            return;
-        }
-    }
-
-    renderPaymentChart(currentReportPeriod);
-}
-
-/**
- * 2. Merges Firebase archived data + live cachedStudents filtered by the selected date range
- */
-function getFilteredMergedPayments(startDate, endDate) {
-    const merged = {};
-
-    // A. Add archived Firebase weekly data that overlaps the date range
-    Object.entries(cachedArchivedPayments || {}).forEach(([monthKey, weeksObj]) => {
-        Object.entries(weeksObj || {}).forEach(([weekKey, wData]) => {
-            const { start, end } = getWeekDateBounds(monthKey, weekKey);
-
-            if (startDate && end < startDate) return;
-            if (endDate && start > endDate) return;
-
-            if (!merged[monthKey]) merged[monthKey] = {};
-            merged[monthKey][weekKey] = {
-                total: Number(wData.total) || 0,
-                count: Number(wData.count) || 0
-            };
-        });
-    });
-
-    // B. Add live (unarchived) paid students from cachedStudents filtered by exact paidAt date
-    const classStudents = cachedStudents.filter(
-        s => (s.class || s.h || '').toUpperCase() === currentClass
-    );
-
-    classStudents.forEach(s => {
-        const isPaid = Number(s.isPaid ?? s.F ?? 0);
-        const fee = Number(s.classFee ?? s.C ?? 0);
-        const paidAt = s.paidAt || s.G;
-
-        if (isPaid === 1 && fee > 0) {
-            const paidDate = paidAt ? new Date(Number(paidAt)) : new Date();
-
-            if (startDate && paidDate < startDate) return;
-            if (endDate && paidDate > endDate) return;
-
-            const { monthKey, weekKey } = getMonthAndWeekKeys(paidDate.getTime());
-
-            if (!merged[monthKey]) merged[monthKey] = {};
-            if (!merged[monthKey][weekKey]) {
-                merged[monthKey][weekKey] = { total: 0, count: 0 };
-            }
-
-            merged[monthKey][weekKey].total += fee;
-            merged[monthKey][weekKey].count += 1;
-        }
-    });
-
-    return merged;
-}
-
-/**
- * 3. Button & Date Input Handlers
- */
-function switchReportPeriod(period, btnElement) {
-    currentReportPeriod = period;
-
-    document.querySelectorAll('.report-tab').forEach(btn => btn.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-
-    if (!cachedArchivedPayments) {
-        loadPaymentReport(true);
-    } else {
-        renderPaymentChart(period);
-    }
-}
-
-function onDateRangeChange() {
-    if (!cachedArchivedPayments) {
-        loadPaymentReport(true);
-    } else {
-        renderPaymentChart(currentReportPeriod);
-    }
-}
-
-function resetDateRange() {
-    const startEl = document.getElementById('reportStartDate');
-    const endEl = document.getElementById('reportEndDate');
-    if (startEl) startEl.value = '';
-    if (endEl) endEl.value = '';
-    renderPaymentChart(currentReportPeriod);
-}
-
-/**
- * 4. Aggregates merged data for the selected timeframe & draws Chart.js (with your exact styling)
- */
-function renderPaymentChart(period) {
-    const { startDate, endDate, hasRange } = getSelectedDateRange();
-    const data = getFilteredMergedPayments(startDate, endDate);
-
-    const now = new Date();
-    const currentYear = String(now.getFullYear());
-    const currentMonthKey = `${currentYear}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-
-    let labels = [];
-    let totals = [];
-    let counts = [];
-    let titleText = '';
-
-    if (period === 'weekly') {
-        if (hasRange) {
-            // Show all matching weeks within the selected date range
-            const sortedMonths = Object.keys(data).sort();
-            sortedMonths.forEach(mKey => {
-                ['W1', 'W2', 'W3', 'W4', 'W5'].forEach(wKey => {
-                    if (data[mKey][wKey]) {
-                        labels.push(`${mKey} ${wKey}`);
-                        totals.push(data[mKey][wKey].total);
-                        counts.push(data[mKey][wKey].count);
+                if (typeof syncEngine !== 'undefined') {
+                    await syncEngine.initIndexedDB();
+                    await syncEngine.syncStudents();
+                    const localStudents = await syncEngine.getLocalData('students');
+                    if (Array.isArray(localStudents) && localStudents.length > 0) {
+                        cachedStudents = localStudents;
                     }
-                });
-            });
-            titleText = `Weekly Collections (Filtered Range)`;
-        } else {
-            // Default: Show W1 - W5 for the current month
-            const weeks = ['W1', 'W2', 'W3', 'W4', 'W5'];
-            const monthObj = data[currentMonthKey] || {};
-
-            labels = weeks.map(w => `Week ${w.replace('W', '')}`);
-            totals = weeks.map(w => monthObj[w]?.total || 0);
-            counts = weeks.map(w => monthObj[w]?.count || 0);
-            titleText = `Weekly Collections (${currentMonthKey})`;
-        }
-
-    } else if (period === 'monthly') {
-        if (hasRange) {
-            // Show all months present in the filtered range
-            const sortedMonths = Object.keys(data).sort();
-            sortedMonths.forEach(mKey => {
-                const weekEntries = Object.values(data[mKey] || {});
-                labels.push(mKey);
-                totals.push(weekEntries.reduce((sum, w) => sum + (Number(w.total) || 0), 0));
-                counts.push(weekEntries.reduce((sum, w) => sum + (Number(w.count) || 0), 0));
-            });
-            titleText = `Monthly Collections (Filtered Range)`;
-        } else {
-            // Default: Show Jan - Dec for the current year
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            labels = monthNames;
-
-            for (let m = 1; m <= 12; m++) {
-                const mKey = `${currentYear}-${String(m).padStart(2, '0')}`;
-                const weekEntries = Object.values(data[mKey] || {});
-                totals.push(weekEntries.reduce((sum, w) => sum + (Number(w.total) || 0), 0));
-                counts.push(weekEntries.reduce((sum, w) => sum + (Number(w.count) || 0), 0));
+                }
+            } catch (err) {
+                console.warn("Using offline/local data:", err);
             }
-            titleText = `Monthly Collections (${currentYear})`;
+
+            populateClassFilter();
+            refreshReport();
         }
 
-    } else if (period === 'yearly') {
-        const yearMap = {};
+        function getStudentPayments(student) {
+            if (!Array.isArray(student.payments)) return [];
+            return student.payments
+                .filter(item => Array.isArray(item) && item[0])
+                .slice(-12)
+                .map(item => [
+                    String(item[0]),
+                    item[1] === 'paid' || item[1] === 'pending' ? item[1] : null,
+                    item[1] === 'paid' && item[2] ? Number(item[2]) : null
+                ]);
+        }
 
-        Object.entries(data).forEach(([mKey, weeksObj]) => {
-            const yr = mKey.split('-')[0];
-            if (!yearMap[yr]) yearMap[yr] = { total: 0, count: 0 };
-
-            Object.values(weeksObj || {}).forEach(w => {
-                yearMap[yr].total += Number(w.total) || 0;
-                yearMap[yr].count += Number(w.count) || 0;
+        function populateClassFilter() {
+            const select = document.getElementById('classFilter');
+            const classes = new Set();
+            cachedStudents.forEach(s => {
+                const cls = (s.class || s.h || '').trim().toUpperCase();
+                if (cls) classes.add(cls);
             });
-        });
 
-        const sortedYears = Object.keys(yearMap).sort();
-        labels = sortedYears.length ? sortedYears : [currentYear];
-        totals = sortedYears.length ? sortedYears.map(y => yearMap[y].total) : [0];
-        counts = sortedYears.length ? sortedYears.map(y => yearMap[y].count) : [0];
-        titleText = hasRange ? `Yearly Collections (Filtered Range)` : `Yearly Collections`;
-    }
+            const sorted = Array.from(classes).sort();
+            select.innerHTML = `<option value="ALL">All Classes</option>` +
+                sorted.map(cls => `<option value="${escapeAttr(cls)}">${escapeHtml(cls)}</option>`).join('');
+        }
 
-    // Update top summary text
-    const grandTotal = totals.reduce((a, b) => a + b, 0);
-    const totalStudents = counts.reduce((a, b) => a + b, 0);
-    document.getElementById('reportSummaryText').textContent =
-        `${titleText} — Total: Rs. ${grandTotal.toLocaleString()} (${totalStudents} payments)`;
+        function setPeriod(period) {
+            currentPeriod = period;
+            ['weekly', 'monthly', 'yearly'].forEach(p => {
+                const btn = document.getElementById(`btn-${p}`);
+                if (btn) btn.classList.toggle('active', p === period);
+            });
+            refreshReport();
+        }
 
-    // Destroy previous chart instance before re-rendering
-    if (paymentChartInstance) {
-        paymentChartInstance.destroy();
-    }
+        function getBucketKey(timestampMs, period) {
+            const d = new Date(timestampMs);
+            if (Number.isNaN(d.getTime())) return null;
 
-    const ctx = document.getElementById('paymentReportChart').getContext('2d');
-    paymentChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Collected Fees (Rs.)',
-                data: totals,
-                backgroundColor: '#3b82f6',
-                hoverBackgroundColor: '#1d4ed8',
-                borderRadius: 6,
-                maxBarThickness: 30
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const amount = context.parsed.y || 0;
-                            const count = counts[context.dataIndex] || 0;
-                            return ` Rs. ${amount.toLocaleString()} (${count} students)`;
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+
+            if (period === 'yearly') {
+                return `${year}`;
+            }
+            if (period === 'monthly') {
+                return `${year}-${month}`;
+            }
+            // Weekly: e.g. "2026-11 W3"
+            const weekNum = Math.ceil(d.getDate() / 7);
+            return `${year}-${month} W${weekNum}`;
+        }
+
+
+
+        function renderChart(labels, amounts, counts) {
+            const ctx = document.getElementById('paymentChart').getContext('2d');
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const titleMap = {
+                weekly: 'Weekly Collected Amount',
+                monthly: 'Monthly Collected Amount',
+                yearly: 'Yearly Collected Amount'
+            };
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: titleMap[currentPeriod] || 'Collected Amount',
+                        data: amounts,
+                        backgroundColor: 'rgba(37, 99, 235, 0.75)',
+                        borderColor: 'rgb(37, 99, 235)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: (context) => {
+                                    const idx = context.dataIndex;
+                                    return `Paid records: ${counts[idx] ?? 0}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
                         }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    grid: { display: false },
-                    border: { display: false },
-                    ticks: { color: '#8490a3', font: { size: 11 } }
-                },
-                y: {
-                    beginAtZero: true,
-                    border: { display: false, dash: [4, 4] },
-                    grid: { color: '#f0f2f6' },
-                    ticks: {
-                        callback: value => 'Rs. ' + value.toLocaleString()
-                    }
-                }
-            }
+            });
         }
+
+        function getStudentPhoto(student) {
+    if (!student.photoUrl) return 'img/user.svg';
+    if (typeof getFullCloudinaryUrl === 'function') {
+        return getFullCloudinaryUrl(student.photoUrl);
+    }
+    return student.photoUrl;
+}
+
+function refreshReport() {
+    const selectedClass = document.getElementById('classFilter').value;
+    const filteredStudents = cachedStudents.filter(s => {
+        if (selectedClass === 'ALL') return true;
+        return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
     });
+
+    // periodKey -> { amount: 0, count: 0, students: Map(studentKey -> { name, photo, count, amount, labels }) }
+    const buckets = new Map();
+    let totalAmount = 0;
+    let paidCount = 0;
+    let pendingCount = 0;
+
+    filteredStudents.forEach((s, idx) => {
+        const studentKey = String(s.id || s.key || `stu_${idx}`);
+        const name = s.name || 'Unnamed Student';
+        const photo = getStudentPhoto(s);
+        const fee = Number(s.classFee ?? s.C ?? 0) || 0;
+        const payments = getStudentPayments(s);
+
+        payments.forEach(([label, status, paidAt]) => {
+            if (status === 'pending') {
+                pendingCount += 1;
+            } else if (status === 'paid' && paidAt) {
+                const key = getBucketKey(paidAt, currentPeriod);
+                if (!key) return;
+
+                if (!buckets.has(key)) {
+                    buckets.set(key, { amount: 0, count: 0, students: new Map() });
+                }
+                const bucket = buckets.get(key);
+                bucket.amount += fee;
+                bucket.count += 1;
+
+                if (!bucket.students.has(studentKey)) {
+                    bucket.students.set(studentKey, {
+                        name,
+                        photo,
+                        count: 0,
+                        amount: 0,
+                        labels: []
+                    });
+                }
+                const stuEntry = bucket.students.get(studentKey);
+                stuEntry.count += 1;
+                stuEntry.amount += fee;
+                if (label) stuEntry.labels.push(label);
+
+                totalAmount += fee;
+                paidCount += 1;
+            }
+        });
+    });
+
+    const sortedKeys = Array.from(buckets.keys()).sort();
+    const amounts = sortedKeys.map(k => buckets.get(k).amount);
+    const counts = sortedKeys.map(k => buckets.get(k).count);
+
+    document.getElementById('totalAmountStat').innerText = totalAmount.toLocaleString();
+    document.getElementById('paidCountStat').innerText = paidCount.toLocaleString();
+    document.getElementById('pendingCountStat').innerText = pendingCount.toLocaleString();
+
+    renderChart(sortedKeys, amounts, counts);
+    renderBreakdownTable(sortedKeys, buckets);
 }
 
+function renderBreakdownTable(sortedKeys, buckets) {
+    const tbody = document.getElementById('breakdownTableBody');
+    if (sortedKeys.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No paid payment records found for this view.</td></tr>`;
+        return;
+    }
 
-        initApp();
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('school') === 'choola') {
-    document.getElementById('classInput').value = '6A';
+    const rows = [];
+    sortedKeys.forEach(key => {
+        const bucket = buckets.get(key);
+        const paidStudentsList = Array.from(bucket.students.values());
+
+        // Period title row
+        rows.push(`
+            <tr style="background: #f1f5f9;">
+                <td colspan="3" style="font-weight: 700; font-size: 14px; color: #0f172a; padding-top: 10px; padding-bottom: 10px;">
+                    ${escapeHtml(key)}
+                </td>
+            </tr>
+        `);
+
+        // Paid students in this period
+        paidStudentsList.forEach(stu => {
+            const labelsText = stu.labels.length
+                ? `<div class="paid-items-sub">${escapeHtml(stu.labels.join(', '))}</div>`
+                : '';
+            rows.push(`
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <img src="${escapeAttr(stu.photo)}" alt="${escapeAttr(stu.name)}" class="student-avatar" onerror="this.src='img/user.svg'">
+                            <div>
+                                <div style="font-weight: 600;">${escapeHtml(stu.name)}</div>
+                                ${labelsText}
+                            </div>
+                        </div>
+                    </td>
+                    <td>${stu.count}</td>
+                    <td><strong>${stu.amount.toLocaleString()}</strong></td>
+                </tr>
+            `);
+        });
+
+        // Period subtotal row
+        rows.push(`
+            <tr style="background: #f8fafc;">
+                <td style="text-align: right; font-weight: 600;">Subtotal</td>
+                <td><strong>${bucket.count}</strong></td>
+                <td><strong>${bucket.amount.toLocaleString()}</strong></td>
+            </tr>
+        `);
+    });
+
+    tbody.innerHTML = rows.join('');
 }
-if (params.get('school') === '68ewd') {
-    document.getElementById('classInput').value = '6';
-}
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function escapeAttr(str) {
+            return escapeHtml(str).replace(/'/g, "&#39;");
+        }
+
+        initReport();
     </script>
 </body>
-
 </html>
