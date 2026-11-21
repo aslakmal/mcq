@@ -155,11 +155,20 @@
                     <button type="button" id="btn-yearly" onclick="setPeriod('yearly')">Yearly</button>
                 </div>
 
-                <div>
-                    <label for="classFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Class:</label>
-                    <select id="classFilter" onchange="refreshReport()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                        <option value="ALL">All Classes</option>
-                    </select>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+                    <div>
+                        <label for="classFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Class:</label>
+                        <select id="classFilter" onchange="onClassFilterChange()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <option value="ALL">All Classes</option>
+                        </select>
+                    </div>
+                
+                    <div>
+                        <label for="itemFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Payment For:</label>
+                        <select id="itemFilter" onchange="refreshReport()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <option value="ALL">All</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -228,7 +237,7 @@
             } catch (err) {
                 console.warn("Using offline/local data:", err);
             }
-
+            populateItemFilter();
             populateClassFilter();
             refreshReport();
         }
@@ -347,6 +356,7 @@
 
 function refreshReport() {
     const selectedClass = document.getElementById('classFilter').value;
+    const selectedItem = document.getElementById('itemFilter').value;
     const filteredStudents = cachedStudents.filter(s => {
         if (selectedClass === 'ALL') return true;
         return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
@@ -366,6 +376,10 @@ function refreshReport() {
         const payments = getStudentPayments(s);
 
         payments.forEach(([label, status, paidAt]) => {
+            const cleanLabel = (label || '').trim().toLowerCase();
+if (selectedItem !== 'ALL' && cleanLabel !== selectedItem) {
+    return;
+}
             if (status === 'pending') {
                 pendingCount += 1;
             } else if (status === 'paid' && paidAt) {
@@ -480,6 +494,47 @@ function renderBreakdownTable(sortedKeys, buckets) {
         }
 
         initReport();
+        function populateItemFilter() {
+    const select = document.getElementById('itemFilter');
+    if (!select) return;
+
+    const prevValue = select.value || 'ALL';
+    const selectedClass = document.getElementById('classFilter')?.value || 'ALL';
+
+    const scopedStudents = cachedStudents.filter(s => {
+        if (selectedClass === 'ALL') return true;
+        return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
+    });
+
+    const itemMap = new Map(); // lowerCaseKey -> originalLabel
+    scopedStudents.forEach(s => {
+        getStudentPayments(s).forEach(([label]) => {
+            const clean = label ? label.trim() : '';
+            if (clean) {
+                const key = clean.toLowerCase();
+                if (!itemMap.has(key)) {
+                    itemMap.set(key, clean);
+                }
+            }
+        });
+    });
+
+    const sortedItems = Array.from(itemMap.values()).sort((a, b) => a.localeCompare(b));
+    select.innerHTML = `<option value="ALL">All Items</option>` +
+        sortedItems.map(item => `<option value="${escapeAttr(item.toLowerCase())}">${escapeHtml(item)}</option>`).join('');
+
+    // Keep previous selection if still available, otherwise default to "ALL"
+    if (prevValue !== 'ALL' && Array.from(select.options).some(opt => opt.value === prevValue)) {
+        select.value = prevValue;
+    } else {
+        select.value = 'ALL';
+    }
+}
+
+function onClassFilterChange() {
+    populateItemFilter();
+    refreshReport();
+}
     </script>
 </body>
 </html>
