@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment Report</title>
-   <style>
+    <style>
         :root {
             --border-color: #e2e8f0;
             --text-muted: #64748b;
@@ -12,6 +13,7 @@
             --bg-page: #f8fafc;
             --primary-color: #2563eb;
         }
+
         body {
             font-family: system-ui, -apple-system, sans-serif;
             background: var(--bg-page);
@@ -19,10 +21,12 @@
             margin: 0;
             padding: 1rem;
         }
+
         .container {
             max-width: 960px;
             margin: 0 auto;
         }
+
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -31,6 +35,7 @@
             margin-bottom: 1rem;
             overflow: scroll;
         }
+
         .header-row {
             display: flex;
             justify-content: space-between;
@@ -38,6 +43,7 @@
             flex-wrap: wrap;
             gap: 0.75rem;
         }
+
         .controls-row {
             display: flex;
             flex-wrap: wrap;
@@ -46,12 +52,14 @@
             justify-content: space-between;
             margin-top: 0.75rem;
         }
+
         .btn-group {
             display: inline-flex;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             overflow: hidden;
         }
+
         .btn-group button {
             padding: 7px 14px;
             border: none;
@@ -62,81 +70,97 @@
             font-weight: 500;
             color: inherit;
         }
+
         .btn-group button:last-child {
             border-right: none;
         }
+
         .btn-group button.active {
             background: var(--primary-color);
             color: #fff;
             font-weight: 600;
         }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
+
         .stat-box {
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 0.75rem 1rem;
             background: #fff;
         }
+
         .stat-label {
             font-size: 12px;
             color: var(--text-muted);
         }
+
         .stat-value {
             font-size: 20px;
             font-weight: 700;
             margin-top: 4px;
         }
+
         .chart-wrap {
             position: relative;
             height: 340px;
             width: 100%;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 0.5rem;
         }
-        th, td {
+
+        th,
+        td {
             text-align: left;
             padding: 8px 10px;
             border-bottom: 1px solid var(--border-color);
             font-size: 14px;
         }
+
         th {
             color: var(--text-muted);
             font-size: 12px;
             text-transform: uppercase;
         }
+
         .back-link {
             text-decoration: none;
             font-size: 14px;
             color: var(--primary-color);
             font-weight: 600;
         }
+
         .student-cell {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.student-avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border-color);
-    background: #f1f5f9;
-}
-.paid-items-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-}
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .student-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background: #f1f5f9;
+        }
+
+        .paid-items-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="card">
@@ -151,21 +175,26 @@
             <div class="controls-row">
                 <div class="btn-group" role="group" aria-label="Report period">
                     <button type="button" id="btn-weekly" onclick="setPeriod('weekly')">Weekly</button>
-                    <button type="button" id="btn-monthly" class="active" onclick="setPeriod('monthly')">Monthly</button>
+                    <button type="button" id="btn-monthly" class="active"
+                        onclick="setPeriod('monthly')">Monthly</button>
                     <button type="button" id="btn-yearly" onclick="setPeriod('yearly')">Yearly</button>
                 </div>
 
                 <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
                     <div>
-                        <label for="classFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Class:</label>
-                        <select id="classFilter" onchange="onClassFilterChange()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <label for="classFilter"
+                            style="font-size: 13px; font-weight: 600; margin-right: 6px;">Class:</label>
+                        <select id="classFilter" onchange="onClassFilterChange()"
+                            style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
                             <option value="ALL">All Classes</option>
                         </select>
                     </div>
-                
+
                     <div>
-                        <label for="itemFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Payment For:</label>
-                        <select id="itemFilter" onchange="refreshReport()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <label for="itemFilter" style="font-size: 13px; font-weight: 600; margin-right: 6px;">Payment
+                            For:</label>
+                        <select id="itemFilter" onchange="refreshReport()"
+                            style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
                             <option value="ALL">All</option>
                         </select>
                     </div>
@@ -195,11 +224,19 @@
         </div>
 
         <div class="card">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <button type="button" onclick="downloadBreakdownCSV()"
+                    style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: #fff; color: #0f172a; font-size: 13px; font-weight: 600; cursor: pointer;">
+                    Download CSV
+                </button>
+            </div>
             <table>
                 <thead>
                     <tr>
                         <th>Student</th>
                         <th>Paid Count</th>
+                        <th>Paid Time</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -212,13 +249,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="sync.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+
     <script>
-      
+
         let cachedStudents = [];
         let currentPeriod = 'monthly'; // 'weekly' | 'monthly' | 'yearly'
         let chartInstance = null;
-
+        let lastReportRows = [];
+        let lastReportSummary = { totalAmount: 0, paidCount: 0 };
         document.getElementById('schoolSubtitle').innerText = schoolId ? `School ID: ${schoolId}` : 'All Cached Students';
         if (schoolId) {
             document.getElementById('backToCollectionLink').href = `payments.html?school=${encodeURIComponent(schoolId)}`;
@@ -347,111 +385,135 @@
         }
 
         function getStudentPhoto(student) {
-    if (!student.photoUrl) return 'img/user.svg';
-    if (typeof getFullCloudinaryUrl === 'function') {
-        return getFullCloudinaryUrl(student.photoUrl);
-    }
-    return student.photoUrl;
-}
-
-function refreshReport() {
-    const selectedClass = document.getElementById('classFilter').value;
-    const selectedItem = document.getElementById('itemFilter').value;
-    const filteredStudents = cachedStudents.filter(s => {
-        if (selectedClass === 'ALL') return true;
-        return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
-    });
-
-    // periodKey -> { amount: 0, count: 0, students: Map(studentKey -> { name, photo, count, amount, labels }) }
-    const buckets = new Map();
-    let totalAmount = 0;
-    let paidCount = 0;
-    let pendingCount = 0;
-
-    filteredStudents.forEach((s, idx) => {
-        const studentKey = String(s.id || s.key || `stu_${idx}`);
-        const name = s.name || 'Unnamed Student';
-        const photo = getStudentPhoto(s);
-        const fee = Number(s.classFee ?? s.C ?? 0) || 0;
-        const payments = getStudentPayments(s);
-
-        payments.forEach(([label, status, paidAt]) => {
-            const cleanLabel = (label || '').trim().toLowerCase();
-if (selectedItem !== 'ALL' && cleanLabel !== selectedItem) {
-    return;
-}
-            if (status === 'pending') {
-                pendingCount += 1;
-            } else if (status === 'paid' && paidAt) {
-                const key = getBucketKey(paidAt, currentPeriod);
-                if (!key) return;
-
-                if (!buckets.has(key)) {
-                    buckets.set(key, { amount: 0, count: 0, students: new Map() });
-                }
-                const bucket = buckets.get(key);
-                bucket.amount += fee;
-                bucket.count += 1;
-
-                if (!bucket.students.has(studentKey)) {
-                    bucket.students.set(studentKey, {
-                        name,
-                        photo,
-                        count: 0,
-                        amount: 0,
-                        labels: []
-                    });
-                }
-                const stuEntry = bucket.students.get(studentKey);
-                stuEntry.count += 1;
-                stuEntry.amount += fee;
-                if (label) stuEntry.labels.push(label);
-
-                totalAmount += fee;
-                paidCount += 1;
+            if (!student.photoUrl) return 'img/user.svg';
+            if (typeof getFullCloudinaryUrl === 'function') {
+                return getFullCloudinaryUrl(student.photoUrl);
             }
-        });
-    });
+            return student.photoUrl;
+        }
 
-    const sortedKeys = Array.from(buckets.keys()).sort();
-    const amounts = sortedKeys.map(k => buckets.get(k).amount);
-    const counts = sortedKeys.map(k => buckets.get(k).count);
+        function refreshReport() {
+            const selectedClass = document.getElementById('classFilter').value;
+            const selectedItem = document.getElementById('itemFilter').value;
+            const filteredStudents = cachedStudents.filter(s => {
+                if (selectedClass === 'ALL') return true;
+                return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
+            });
 
-    document.getElementById('totalAmountStat').innerText = totalAmount.toLocaleString();
-    document.getElementById('paidCountStat').innerText = paidCount.toLocaleString();
-    document.getElementById('pendingCountStat').innerText = pendingCount.toLocaleString();
+            // periodKey -> { amount: 0, count: 0, students: Map(studentKey -> { name, photo, count, amount, labels }) }
+            const buckets = new Map();
+            let totalAmount = 0;
+            let paidCount = 0;
+            let pendingCount = 0;
 
-    renderChart(sortedKeys, amounts, counts);
-    renderBreakdownTable(sortedKeys, buckets);
-}
+            filteredStudents.forEach((s, idx) => {
+                const studentKey = String(s.id || s.key || `stu_${idx}`);
+                const name = s.name || 'Unnamed Student';
+                const photo = getStudentPhoto(s);
+                const fee = Number(s.classFee ?? s.C ?? 0) || 0;
+                const payments = getStudentPayments(s);
 
-function renderBreakdownTable(sortedKeys, buckets) {
+                payments.forEach(([label, status, paidAt]) => {
+                    const cleanLabel = (label || '').trim().toLowerCase();
+                    if (selectedItem !== 'ALL' && cleanLabel !== selectedItem) {
+                        return;
+                    }
+                    if (status === 'pending') {
+                        pendingCount += 1;
+                    } else if (status === 'paid' && paidAt) {
+                        const key = getBucketKey(paidAt, currentPeriod);
+                        if (!key) return;
+
+                        if (!buckets.has(key)) {
+                            buckets.set(key, { amount: 0, count: 0, students: new Map() });
+                        }
+                        const bucket = buckets.get(key);
+                        bucket.amount += fee;
+                        bucket.count += 1;
+
+                        if (!bucket.students.has(studentKey)) {
+                            bucket.students.set(studentKey, {
+                                name,
+                                photo,
+                                count: 0,
+                                amount: 0,
+                                labels: [],
+                                paidTimes: []
+                            });
+                        }
+                        const stuEntry = bucket.students.get(studentKey);
+                        stuEntry.count += 1;
+                        stuEntry.amount += fee;
+                        if (label) stuEntry.labels.push(label);
+
+                        const formattedTime = formatPaidTime(paidAt);
+                        if (formattedTime) {
+                            stuEntry.paidTimes.push(label ? `${label}: ${formattedTime}` : formattedTime);
+                        }
+
+                        totalAmount += fee;
+                        paidCount += 1;
+                    }
+                });
+            });
+
+            const sortedKeys = Array.from(buckets.keys()).sort();
+            const amounts = sortedKeys.map(k => buckets.get(k).amount);
+            const counts = sortedKeys.map(k => buckets.get(k).count);
+
+            document.getElementById('totalAmountStat').innerText = totalAmount.toLocaleString();
+            document.getElementById('paidCountStat').innerText = paidCount.toLocaleString();
+            document.getElementById('pendingCountStat').innerText = pendingCount.toLocaleString();
+
+            lastReportSummary = { totalAmount, paidCount };
+            renderChart(sortedKeys, amounts, counts);
+            renderBreakdownTable(sortedKeys, buckets);
+        }
+
+        function renderBreakdownTable(sortedKeys, buckets) {
     const tbody = document.getElementById('breakdownTableBody');
+    lastReportRows = [];
+
     if (sortedKeys.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No paid payment records found for this view.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No paid payment records found for this view.</td></tr>`;
         return;
     }
 
-    const rows = [];
+    const htmlRows = [];
     sortedKeys.forEach(key => {
         const bucket = buckets.get(key);
         const paidStudentsList = Array.from(bucket.students.values());
 
         // Period title row
-        rows.push(`
+        htmlRows.push(`
             <tr style="background: #f1f5f9;">
-                <td colspan="3" style="font-weight: 700; font-size: 14px; color: #0f172a; padding-top: 10px; padding-bottom: 10px;">
+                <td colspan="4" style="font-weight: 700; font-size: 14px; color: #0f172a; padding-top: 10px; padding-bottom: 10px;">
                     ${escapeHtml(key)}
                 </td>
             </tr>
         `);
+        lastReportRows.push({
+            type: 'period',
+            period: key,
+            student: '',
+            items: '',
+            paidCount: '',
+            paidTime: '',
+            total: ''
+        });
 
         // Paid students in this period
         paidStudentsList.forEach(stu => {
-            const labelsText = stu.labels.length
-                ? `<div class="paid-items-sub">${escapeHtml(stu.labels.join(', '))}</div>`
+            const itemsStr = stu.labels.join(', ');
+            const paidTimeStr = stu.paidTimes.join(' | ');
+            const labelsText = itemsStr
+                ? `<div class="paid-items-sub">${escapeHtml(itemsStr)}</div>`
                 : '';
-            rows.push(`
+            const paidTimeHtml = stu.paidTimes.length
+                ? stu.paidTimes.map(t => `<div style="font-size: 12px;">${escapeHtml(t)}</div>`).join('')
+                : '<span style="color: var(--text-muted); font-size: 12px;">—</span>';
+
+            htmlRows.push(`
                 <tr>
                     <td>
                         <div class="student-cell">
@@ -463,22 +525,88 @@ function renderBreakdownTable(sortedKeys, buckets) {
                         </div>
                     </td>
                     <td>${stu.count}</td>
+                    <td>${paidTimeHtml}</td>
                     <td><strong>${stu.amount.toLocaleString()}</strong></td>
                 </tr>
             `);
+
+            lastReportRows.push({
+                type: 'student',
+                period: key,
+                student: stu.name,
+                items: itemsStr,
+                paidCount: stu.count,
+                paidTime: paidTimeStr,
+                total: stu.amount
+            });
         });
 
-        // Period subtotal row
-        rows.push(`
+        // Period total row
+        htmlRows.push(`
             <tr style="background: #f8fafc;">
-                <td style="text-align: right; font-weight: 600;">Subtotal</td>
+                <td style="text-align: right; font-weight: 600;">Total</td>
                 <td><strong>${bucket.count}</strong></td>
+                <td></td>
                 <td><strong>${bucket.amount.toLocaleString()}</strong></td>
             </tr>
         `);
+
+        lastReportRows.push({
+            type: 'subtotal',
+            period: key,
+            student: 'Total',
+            items: '',
+            paidCount: bucket.count,
+            paidTime: '',
+            total: bucket.amount
+        });
     });
 
-    tbody.innerHTML = rows.join('');
+    tbody.innerHTML = htmlRows.join('');
+}
+
+function downloadBreakdownCSV() {
+    if (!lastReportRows || lastReportRows.length === 0) {
+        alert("No report data available to download.");
+        return;
+    }
+
+    const selectedClass = document.getElementById('classFilter')?.value || 'ALL';
+    const selectedItem = document.getElementById('itemFilter')?.value || 'ALL';
+
+    const lines = [
+        ['Student', 'Payment Items', 'Paid Count', 'Paid Time', 'Total'].map(csvCell).join(',')
+    ];
+
+    lastReportRows.forEach(row => {
+        if (row.type === 'period') {
+            lines.push([row.period, '', '', '', ''].map(csvCell).join(','));
+        } else {
+            lines.push([
+                row.student,
+                row.items,
+                row.paidCount,
+                row.paidTime,
+                row.total
+            ].map(csvCell).join(','));
+        }
+    });
+
+    const csvContent = '\uFEFF' + lines.join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const safeClass = selectedClass.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const safeItem = selectedItem.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const filename = `payment-report-${currentPeriod}-${safeClass}-${safeItem}.csv`;
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
 
         function escapeHtml(str) {
@@ -495,46 +623,153 @@ function renderBreakdownTable(sortedKeys, buckets) {
 
         initReport();
         function populateItemFilter() {
-    const select = document.getElementById('itemFilter');
-    if (!select) return;
+            const select = document.getElementById('itemFilter');
+            if (!select) return;
 
-    const prevValue = select.value || 'ALL';
-    const selectedClass = document.getElementById('classFilter')?.value || 'ALL';
+            const prevValue = select.value || 'ALL';
+            const selectedClass = document.getElementById('classFilter')?.value || 'ALL';
 
-    const scopedStudents = cachedStudents.filter(s => {
-        if (selectedClass === 'ALL') return true;
-        return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
-    });
+            const scopedStudents = cachedStudents.filter(s => {
+                if (selectedClass === 'ALL') return true;
+                return (s.class || s.h || '').trim().toUpperCase() === selectedClass;
+            });
 
-    const itemMap = new Map(); // lowerCaseKey -> originalLabel
-    scopedStudents.forEach(s => {
-        getStudentPayments(s).forEach(([label]) => {
-            const clean = label ? label.trim() : '';
-            if (clean) {
-                const key = clean.toLowerCase();
-                if (!itemMap.has(key)) {
-                    itemMap.set(key, clean);
-                }
+            const itemMap = new Map(); // lowerCaseKey -> originalLabel
+            scopedStudents.forEach(s => {
+                getStudentPayments(s).forEach(([label]) => {
+                    const clean = label ? label.trim() : '';
+                    if (clean) {
+                        const key = clean.toLowerCase();
+                        if (!itemMap.has(key)) {
+                            itemMap.set(key, clean);
+                        }
+                    }
+                });
+            });
+
+            const sortedItems = Array.from(itemMap.values()).sort((a, b) => a.localeCompare(b));
+            select.innerHTML = `<option value="ALL">All</option>` +
+                sortedItems.map(item => `<option value="${escapeAttr(item.toLowerCase())}">${escapeHtml(item)}</option>`).join('');
+
+            // Keep previous selection if still available, otherwise default to "ALL"
+            if (prevValue !== 'ALL' && Array.from(select.options).some(opt => opt.value === prevValue)) {
+                select.value = prevValue;
+            } else {
+                select.value = 'ALL';
             }
-        });
-    });
+        }
 
-    const sortedItems = Array.from(itemMap.values()).sort((a, b) => a.localeCompare(b));
-    select.innerHTML = `<option value="ALL">All</option>` +
-        sortedItems.map(item => `<option value="${escapeAttr(item.toLowerCase())}">${escapeHtml(item)}</option>`).join('');
+        function onClassFilterChange() {
+            populateItemFilter();
+            refreshReport();
+        }
 
-    // Keep previous selection if still available, otherwise default to "ALL"
-    if (prevValue !== 'ALL' && Array.from(select.options).some(opt => opt.value === prevValue)) {
-        select.value = prevValue;
-    } else {
-        select.value = 'ALL';
-    }
-}
+        function renderBreakdownTable(sortedKeys, buckets) {
+            const tbody = document.getElementById('breakdownTableBody');
+            lastReportRows = [];
 
-function onClassFilterChange() {
-    populateItemFilter();
-    refreshReport();
-}
+            if (sortedKeys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No paid payment records found for this view.</td></tr>`;
+                return;
+            }
+
+            const htmlRows = [];
+            sortedKeys.forEach(key => {
+                const bucket = buckets.get(key);
+                const paidStudentsList = Array.from(bucket.students.values());
+
+                // Period title row
+                /* htmlRows.push(`
+                     <tr style="background: #f1f5f9;">
+                         <td colspan="3" style="font-weight: 700; font-size: 14px; color: #0f172a; padding-top: 10px; padding-bottom: 10px;">
+                             ${escapeHtml(key)}
+                         </td>
+                     </tr>
+                 `);*/
+                lastReportRows.push({
+                    type: 'period',
+                    period: key,
+                    student: '',
+                    items: '',
+                    paidCount: '',
+                    total: ''
+                });
+
+                // Paid students in this period
+                paidStudentsList.forEach(stu => {
+                    const itemsStr = stu.labels.join(', ');
+                    const labelsText = itemsStr
+                        ? `<div class="paid-items-sub">${escapeHtml(itemsStr)}</div>`
+                        : '';
+
+                    htmlRows.push(`
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <img src="${escapeAttr(stu.photo)}" alt="${escapeAttr(stu.name)}" class="student-avatar" onerror="this.src='img/user.svg'">
+                            <div>
+                                <div style="font-weight: 600;">${escapeHtml(stu.name)}</div>
+                                ${labelsText}
+                            </div>
+                        </div>
+                    </td>
+                    <td>${stu.count}</td>
+                    <td><strong>${stu.amount.toLocaleString()}</strong></td>
+                </tr>
+            `);
+
+                    lastReportRows.push({
+                        type: 'student',
+                        period: key,
+                        student: stu.name,
+                        items: itemsStr,
+                        paidCount: stu.count,
+                        total: stu.amount
+                    });
+                });
+
+                // Period subtotal row
+                htmlRows.push(`
+    <tr style="background: #f8fafc;">
+        <td style="text-align: right; font-weight: 600;">Total</td>
+        <td><strong>${bucket.count}</strong></td>
+        <td><strong>${bucket.amount.toLocaleString()}</strong></td>
+    </tr>
+`);
+
+                lastReportRows.push({
+                    type: 'subtotal',
+                    period: key,
+                    student: 'Total',
+                    items: '',
+                    paidCount: bucket.count,
+                    total: bucket.amount
+                });
+            });
+
+            tbody.innerHTML = htmlRows.join('');
+        }
+
+        function csvCell(val) {
+            const str = String(val ?? '');
+            return `"${str.replace(/"/g, '""')}"`;
+        }
+
+        function formatPaidTime(timestampMs) {
+            const num = Number(timestampMs);
+            if (!num || Number.isNaN(num)) return '';
+            const d = new Date(num);
+            if (Number.isNaN(d.getTime())) return '';
+
+            return d.toLocaleString([], {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
     </script>
 </body>
+
 </html>
