@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>දෙමළ ඉගෙන ගනිමු - Kids Tamil Learning App</title>
+    <!-- Google Fonts for Sinhala, Tamil, & Kids -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Mukta+Malar:wght@500;700&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== Reset & Base ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Noto Sans Sinhala", "Plus Jakarta Sans", sans-serif;
+            color: #1e293b;
+            background: linear-gradient(135deg, #f6f8fd 0%, #e3eeff 100%);
+            min-height: 100vh;
+            padding-bottom: 4rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection {
+            background: #e9d5ff;
+            color: #581c87;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        input {
+            font-family: inherit;
+        }
+
+        /* ===== Utilities ===== */
+        .font-kids {
+            font-family: Fredoka, "Noto Sans Sinhala", sans-serif;
+        }
+
+        .font-tamil {
+            font-family: "Mukta Malar", sans-serif;
+        }
+
+        .bounce-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        .bounce-click:active {
+            transform: scale(0.96);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .speaking-pulse {
+            animation: pulse-ring 1.2s infinite ease-in-out;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 4px solid #facc15;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .header-inner {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-logo {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 1rem;
+            background: linear-gradient(to top right, #fbbf24, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: rotate(3deg);
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.25;
+            letter-spacing: 0.025em;
+        }
+
+        @media (min-width: 768px) {
+            .header-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .header-badge {
+            font-size: 0.75rem;
+            background: #fce7f3;
+            color: #db2777;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-mode {
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            transition: all 0.15s ease;
+        }
+
+        @media (min-width: 768px) {
+            .btn-mode {
+                font-size: 0.875rem;
+            }
+        }
+
+        .btn-mode-active {
+            background: #9333ea;
+            color: #fff;
+            box-shadow: 0 4px 6px rgba(147, 51, 234, 0.3);
+        }
+
+        .btn-mode-active:hover {
+            background: #7e22ce;
+        }
+
+        .btn-mode-inactive {
+            background: #fff;
+            border: 2px solid #e9d5ff;
+            color: #7e22ce;
+        }
+
+        .btn-mode-inactive:hover {
+            background: #faf5ff;
+        }
+
+        /* ===== Main ===== */
+        .main {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 1.5rem 1rem 0;
+        }
+
+        .view-space {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            background: linear-gradient(to right, #9333ea, #4f46e5, #ec4899);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            color: #fff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            right: -2rem;
+            bottom: -2rem;
+            opacity: 0.2;
+            font-size: 8rem;
+            font-weight: 700;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 42rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fef08a;
+            width: fit-content;
+        }
+
+        .hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 1.875rem;
+            }
+        }
+
+        .search-wrap {
+            position: relative;
+            padding-top: 0.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.875rem 2.5rem 0.875rem 2.75rem;
+            border-radius: 1rem;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.875rem;
+            background: #fff;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            border: none;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 4px #fde047;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 1.5rem;
+            color: #94a3b8;
+            font-size: 1.125rem;
+            pointer-events: none;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 0.75rem;
+            top: 1.25rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 700;
+            background: #f1f5f9;
+            border-radius: 9999px;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-clear:hover {
+            color: #475569;
+            background: #e2e8f0;
+        }
+
+        .search-clear.visible {
+            display: flex;
+        }
+
+        /* ===== Categories ===== */
+        .cat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            padding: 0 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cat-badge {
+            background: #f3e8ff;
+            color: #7e22ce;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .cat-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.25rem;
+        }
+
+        .cat-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (min-width: 768px) {
+            .cat-btn {
+                font-size: 0.875rem;
+            }
+        }
+
+        .cat-btn-active {
+            background: #7e22ce;
+            color: #fff;
+            box-shadow: 0 0 0 4px #e9d5ff;
+            transform: scale(1.05);
+        }
+
+        .cat-btn-inactive {
+            background: #fff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cat-btn-inactive:hover {
+            background: #f1f5f9;
+        }
+
+        /* ===== Cards Grid ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 1.5rem;
+            border: 2px solid #f3e8ff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .card-header:hover {
+            background: linear-gradient(to right, #faf5ff, #fdf2f8);
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            flex: 1;
+            padding-right: 0.5rem;
+        }
+
+        .card-emoji {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 1rem;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .card-emoji:hover {
+            transform: rotate(6deg);
+        }
+
+        .card-cat-label {
+            font-size: 0.625rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.375rem;
+            background: #f3e8ff;
+            color: #7e22ce;
+            display: inline-block;
+            margin-bottom: 0.125rem;
+        }
+
+        .card-sinhala {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+        }
+
+        @media (min-width: 768px) {
+            .card-sinhala {
+                font-size: 1.125rem;
+            }
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-speak {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            background: #facc15;
+            color: #0f172a;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: background 0.15s;
+        }
+
+        .btn-speak:hover {
+            background: #eab308;
+        }
+
+        .card-arrow {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 800;
+            font-size: 0.875rem;
+            transition: transform 0.3s, background 0.3s, color 0.3s;
+        }
+
+        .card-arrow.open {
+            transform: rotate(180deg);
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        /* Accordion */
+        .accordion-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-wrapper.open {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-inner {
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+            background: linear-gradient(to bottom right, rgba(250, 245, 255, 0.8), #fff, rgba(253, 242, 248, 0.5));
+            border-top: 1px solid #f3e8ff;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tamil-box {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid #f3e8ff;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .tamil-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .tamil-tag {
+            font-size: 0.6875rem;
+            color: #9333ea;
+            background: #faf5ff;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+        }
+
+        .tamil-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #581c87;
+            line-height: 1.4;
+        }
+
+        @media (min-width: 768px) {
+            .tamil-text {
+                font-size: 1.875rem;
+            }
+        }
+
+        .tamil-polite {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #7e22ce;
+            border-top: 1px solid #faf5ff;
+            padding-top: 0.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .phonetic-box {
+            background: rgba(255, 251, 235, 0.8);
+            padding: 0.875rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(253, 230, 138, 0.7);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .phonetic-icon {
+            font-size: 1.25rem;
+        }
+
+        .phonetic-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #92400e;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .phonetic-text {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #78350f;
+            margin-top: 0.125rem;
+        }
+
+        .card-btns {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-top: 0.25rem;
+        }
+
+        .btn-listen {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            background: linear-gradient(to right, #9333ea, #4f46e5);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.75rem;
+            box-shadow: 0 4px 6px rgba(147, 51, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.15s;
+        }
+
+        @media (min-width: 768px) {
+            .btn-listen {
+                font-size: 0.875rem;
+            }
+        }
+
+        .btn-listen:hover {
+            background: linear-gradient(to right, #7e22ce, #4338ca);
+        }
+
+        .btn-copy {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            color: #334155;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: background 0.15s;
+        }
+
+        .btn-copy:hover {
+            background: #f8fafc;
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 1.5rem;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .empty-emoji {
+            font-size: 3.75rem;
+        }
+
+        .empty-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .empty-desc {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .btn-show-all {
+            padding: 0.5rem 1rem;
+            background: #9333ea;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: background 0.15s;
+        }
+
+        .btn-show-all:hover {
+            background: #7e22ce;
+        }
+
+        /* ===== Quiz View ===== */
+        .quiz-hero {
+            background: linear-gradient(to right, #fbbf24, #fb923c, #ec4899);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            color: #fff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-hero-emoji {
+            font-size: 3rem;
+        }
+
+        .quiz-hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .quiz-hero-desc {
+            font-size: 0.75rem;
+            color: #ffedd5;
+            font-weight: 500;
+        }
+
+        @media (min-width: 768px) {
+            .quiz-hero-desc {
+                font-size: 0.875rem;
+            }
+        }
+
+        .quiz-card {
+            max-width: 36rem;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 4px solid #fde047;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .quiz-card {
+                padding: 2rem;
+            }
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 1rem;
+        }
+
+        .quiz-score {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .quiz-prompt {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quiz-emoji {
+            font-size: 3.75rem;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .quiz-emoji:hover {
+            transform: scale(1.1);
+        }
+
+        .quiz-prompt-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .quiz-question {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding-top: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .quiz-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .quiz-opt-btn {
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.875rem;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.15s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .quiz-opt-btn:hover:not(:disabled) {
+            border-color: #d8b4fe;
+        }
+
+        .quiz-opt-btn:disabled {
+            cursor: default;
+        }
+
+        .quiz-opt-tamil {
+            font-size: 1.125rem;
+            color: #581c87;
+            font-weight: 700;
+        }
+
+        .quiz-opt-phonetic {
+            font-size: 0.75rem;
+            color: #b45309;
+            font-weight: 600;
+        }
+
+        .quiz-opt-correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .quiz-opt-wrong {
+            border-color: #f87171;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .quiz-feedback {
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 800;
+        }
+
+        .quiz-feedback-correct {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .quiz-feedback-wrong {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .quiz-next-wrap {
+            text-align: center;
+            padding-top: 0.5rem;
+        }
+
+        .btn-next {
+            width: 100%;
+            padding: 0.875rem;
+            background: #9333ea;
+            color: #fff;
+            font-weight: 800;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.3);
+            transition: background 0.15s;
+        }
+
+        .btn-next:hover {
+            background: #7e22ce;
+        }
+
+        .btn-restart {
+            grid-column: 1 / -1;
+            padding: 1rem;
+            background: #9333ea;
+            color: #fff;
+            font-weight: 800;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.3);
+            transition: background 0.15s;
+        }
+
+        .btn-restart:hover {
+            background: #7e22ce;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            bottom: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            background: rgba(15, 23, 42, 0.9);
+            color: #fff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 1px solid #334155;
+            backdrop-filter: blur(12px);
+            max-width: 24rem;
+            width: calc(100% - 2rem);
+            margin: 0 auto;
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+
+        .toast-text {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header / Banner -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-brand">
+                <div class="header-logo">🎈</div>
+                <div>
+                    <h1 class="header-title font-kids">
+                        දෙමළ ඉගෙන ගනිමු <span class="header-badge">ළමුන් සඳහා</span>
+                    </h1>
+                    <p class="header-subtitle">Sinhala to Tamil Kids Fun Learning</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="viewModeBtn" onclick="switchTab('learn')" class="btn-mode btn-mode-active bounce-click">
+                    <span>📖</span> පාඩම්
+                </button>
+                <button id="quizModeBtn" onclick="switchTab('quiz')" class="btn-mode btn-mode-inactive bounce-click">
+                    <span>🎯</span> සෙල්ලම් කරමු (Quiz)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main">
+
+        <!-- ================= LEARN VIEW ================= -->
+        <div id="learnView" class="view-space">
+            
+            <!-- Hero / Search Section -->
+            <div class="hero">
+                <div class="hero-bg">🔤</div>
+                <div class="hero-content">
+                    <div class="hero-tag">✨ ඔබන්න, අසන්න, ඉගෙන ගන්න!</div>
+                    <h2 class="hero-title font-kids">
+                        සිංහලෙන් දෙමළ වචන සහ වාක්‍ය පහසුවෙන්ම ඉගෙන ගනිමු!
+                    </h2>
+                    
+                    <div class="search-wrap">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="වචනයක් හෝ වාක්‍යයක් සොයන්න (Search in Sinhala or Tamil)..." 
+                            oninput="filterItems()"
+                            class="search-input"
+                        >
+                        <span class="search-icon">🔍</span>
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="search-clear">✕</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Pills Filter -->
+            <div>
+                <div class="cat-header">
+                    <span>ප්‍රවර්ග තෝරන්න (Select Category):</span>
+                    <span id="itemCountBadge" class="cat-badge">සියල්ල</span>
+                </div>
+                
+                <div class="cat-list no-scrollbar" id="categoryContainer">
+                    <!-- Dynamic categories injected by JS -->
+                </div>
+            </div>
+
+            <!-- Content Card Grid -->
+            <div id="cardsGrid" class="cards-grid">
+                <!-- Dynamic cards injected by JS -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-emoji">🧐</div>
+                <h3 class="empty-title">ප්‍රතිඵල හමු වූයේ නැත</h3>
+                <p class="empty-desc">කරුණාකර වෙනත් වචනයක් සොයා බලන්න.</p>
+                <button onclick="clearSearch()" class="btn-show-all">
+                    සියලු වචන පෙන්වන්න
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- ================= QUIZ VIEW ================= -->
+        <div id="quizView" class="view-space hidden">
+            <div class="quiz-hero">
+                <div class="quiz-hero-emoji">🎯</div>
+                <h2 class="quiz-hero-title font-kids">දෙමළ දැනුම මැන බලමු!</h2>
+                <p class="quiz-hero-desc">නිවැරදි දෙමළ උච්චාරණය හෝ වචනය තෝරන්න</p>
+            </div>
+
+            <!-- Quiz Card Box -->
+            <div class="quiz-card">
+                <!-- Score & Progress -->
+                <div class="quiz-meta">
+                    <span id="quizProgress">ප්‍රශ්නය 1</span>
+                    <span id="quizScoreBadge" class="quiz-score">ලකුණු: 0</span>
+                </div>
+
+                <!-- Question Prompt -->
+                <div class="quiz-prompt">
+                    <span id="quizEmoji" class="quiz-emoji">❓</span>
+                    <p class="quiz-prompt-label">මෙම වචනය දෙමළෙන් හඳුන්වන්නේ කොහොමද?</p>
+                    <h3 id="quizQuestionText" class="quiz-question">අන්නාසි</h3>
+                </div>
+
+                <!-- Options Grid -->
+                <div id="quizOptionsContainer" class="quiz-options">
+                    <!-- Dynamic option buttons -->
+                </div>
+
+                <!-- Feedback Toast -->
+                <div id="quizFeedback" class="quiz-feedback hidden">
+                    <!-- Success/Error msg -->
+                </div>
+
+                <!-- Next Question Button -->
+                <div class="quiz-next-wrap">
+                    <button id="nextQuizBtn" onclick="nextQuizQuestion()" class="btn-next hidden bounce-click">
+                        ඊළඟ ප්‍රශ්නය ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Audio Speech Warning / Toast Modal -->
+    <div id="toastNotification" class="toast hidden">
+        <span id="toastIcon" class="toast-icon">🔊</span>
+        <span id="toastText" class="toast-text">ශබ්ද වාදනය වේ...</span>
+    </div>
+
+    <!-- Application Logic JavaScript -->
+    <script>
+        // Data structure containing all items requested with audio Tamil text, Sinhala display, Sinhala phonetic, emoji
+        const appData = [
+            // 1. වාක්‍ය සහ සුභ පැතුම් (Sentences & Greetings)
+            {
+                id: 1,
+                category: "sentences",
+                categoryName: "වාක්‍ය සහ සුභ පැතුම්",
+                sinhala: "ඔයාගේ වයස කීයද?",
+                tamil: "உனக்கு எத்தனை வயசு?",
+                tamilPolite: "உங்களுக்கு எத்தனை வயது?",
+                phonetic: "උනක්කු එත්තනෛ වයසු? (මිත්‍රශීලී) / උංගළුක්කු එත්තනෛ වයදු? (ගරුත්වයෙන්)",
+                speechText: "உனக்கு எத்தனை வயசு?",
+                emoji: "🎂"
+            },
+            {
+                id: 2,
+                category: "sentences",
+                categoryName: "වාක්‍ය සහ සුභ පැතුම්",
+                sinhala: "මම ඇතුළට එන්නද?",
+                tamil: "நான் உள்ளே வரலாமா?",
+                phonetic: "නාන් උල්ලේ වරලාමා?",
+                speechText: "நான் உள்ளே வரலாமா?",
+                emoji: "🚪"
+            },
+            {
+                id: 3,
+                category: "sentences",
+                categoryName: "වාක්‍ය සහ සුභ පැතුම්",
+                sinhala: "මම එළියට යන්නම් / යනවා",
+                tamil: "நான் வெளியே போகலாம் / போறேன்",
+                phonetic: "නාන් වෙළියේ පෝහලාම් / පෝරේන්",
+                speechText: "நான் வெளியே போகலாம்",
+                emoji: "🚶"
+            },
+            {
+                id: 4,
+                category: "sentences",
+                categoryName: "වාක්‍ය සහ සුභ පැතුම්",
+                sinhala: "සුභ උපන්දිනයක් වේවා!",
+                tamil: "இனிய பிறந்தநாள் வாழ்த்துக்கள்",
+                phonetic: "ඉනිය පිරන්දනාල් වාල්තුක්කල්",
+                speechText: "இனிய பிறந்தநாள் வாழ்த்துக்கள்",
+                emoji: "🎉"
+            },
+            {
+                id: 5,
+                category: "sentences",
+                categoryName: "වාක්‍ය සහ සුභ පැතුම්",
+                sinhala: "සුභ අලුත් අවුරුද්දක් වේවා!",
+                tamil: "இனிய புத்தாண்டு வாழ்த்துக்கள்",
+                phonetic: "ඉනිය පුත්තාන්ඩු වාල්තුක්කල්",
+                speechText: "இனிய புத்தாண்டு வாழ்த்துக்கள்",
+                emoji: "🎆"
+            },
+            {
+                id: 6,
+                category: "sentences",
+                categoryName: "වාක්‍ය සහ සුභ පැතුම්",
+                sinhala: "සුභ නත්තලක් වේවා!",
+                tamil: "இனிய நத்தார் வாழ்த்துக்கள்",
+                phonetic: "ඉනිය නත්තාර් වාල්තුක්කල්",
+                speechText: "இனிய நத்தார் வாழ்த்துக்கள்",
+                emoji: "🎄"
+            },
+
+            // 2. හමුවීම් (Meetings & Politeness)
+            {
+                id: 7,
+                category: "meetings",
+                categoryName: "හමුවීම්",
+                sinhala: "ආයුබෝවන්",
+                tamil: "வணக்கம்",
+                phonetic: "වණක්කම්",
+                speechText: "வணக்கம்",
+                emoji: "🙏"
+            },
+            {
+                id: 8,
+                category: "meetings",
+                categoryName: "හමුවීම්",
+                sinhala: "එන්න ඉඳගන්න",
+                tamil: "வாருங்கள் உட்காருங்கள்",
+                phonetic: "වාරුංගල් උට්කාරුංගල්",
+                speechText: "வாருங்கள் உட்காருங்கள்",
+                emoji: "🪑"
+            },
+            {
+                id: 9,
+                category: "meetings",
+                categoryName: "හමුවීම්",
+                sinhala: "ස්තූතියි",
+                tamil: "நன்றி",
+                phonetic: "නන්ද්‍රි",
+                speechText: "நன்றி",
+                emoji: "🤝"
+            },
+            {
+                id: 10,
+                category: "meetings",
+                categoryName: "හමුවීම්",
+                sinhala: "සැප සනීප කොහොමද?",
+                tamil: "எப்படி இருக்கிறீர்கள்?",
+                phonetic: "එප්පඩි ඉරුක්කිරීර්ගල්?",
+                speechText: "எப்படி இருக்கிறீர்கள்?",
+                emoji: "😊"
+            },
+            {
+                id: 11,
+                category: "meetings",
+                categoryName: "හමුවීම්",
+                sinhala: "හොඳින් ඉන්නවා",
+                tamil: "நன்றாக இருக்கிறேன்",
+                phonetic: "නන්ද්‍රාග ඉරුක්කිරේන්",
+                speechText: "நன்றாக இருக்கிறேன்",
+                emoji: "👍"
+            },
+
+            // 3. මල් වර්ග (Flowers)
+            {
+                id: 12,
+                category: "flowers",
+                categoryName: "මල් වර්ග",
+                sinhala: "අරලිය මල්",
+                tamil: "அலரிப் பூ",
+                phonetic: "අලරිප් පූ",
+                speechText: "அலரிப் பூ",
+                emoji: "🌺"
+            },
+            {
+                id: 13,
+                category: "flowers",
+                categoryName: "මල් වර්ග",
+                sinhala: "රෝස මල්",
+                tamil: "ரோஜாப் பூ",
+                phonetic: "රෝජාප් පූ",
+                speechText: "ரோஜாப் பூ",
+                emoji: "🌹"
+            },
+            {
+                id: 14,
+                category: "flowers",
+                categoryName: "මල් වර්ග",
+                sinhala: "පිච්ච මල්",
+                tamil: "மல்லிகைப் பூ",
+                phonetic: "මල්ලිගෛප් පූ",
+                speechText: "மல்லிகைப் பூ",
+                emoji: "🌼"
+            },
+            {
+                id: 15,
+                category: "flowers",
+                categoryName: "මල් වර්ග",
+                sinhala: "නෙළුම් මල්",
+                tamil: "தாமரைப் பூ",
+                phonetic: "තාමරෛප් පූ",
+                speechText: "தாமரைப் பூ",
+                emoji: "🪷"
+            },
+
+            // 4. පලතුරු වර්ග (Fruits)
+            {
+                id: 16,
+                category: "fruits",
+                categoryName: "පලතුරු වර්ග",
+                sinhala: "අන්නාසි",
+                tamil: "அன்னாசி",
+                phonetic: "අන්නාසි",
+                speechText: "அன்னாசி",
+                emoji: "🍍"
+            },
+            {
+                id: 17,
+                category: "fruits",
+                categoryName: "පලතුරු වර්ග",
+                sinhala: "අඹ",
+                tamil: "மாம்பழம்",
+                phonetic: "මාම්පළම්",
+                speechText: "மாம்பழம்",
+                emoji: "🥭"
+            },
+            {
+                id: 18,
+                category: "fruits",
+                categoryName: "පලතුරු වර්ග",
+                sinhala: "කෙසෙල්",
+                tamil: "வாழைப்பழம்",
+                phonetic: "වාළෛප්පළම්",
+                speechText: "வாழைப்பழம்",
+                emoji: "🍌"
+            },
+            {
+                id: 19,
+                category: "fruits",
+                categoryName: "පලතුරු වර්ග",
+                sinhala: "පැපොල්",
+                tamil: "பப்பாளி",
+                phonetic: "පප්පාළි",
+                speechText: "பப்பாளி",
+                emoji: "🍈"
+            },
+            {
+                id: 20,
+                category: "fruits",
+                categoryName: "පලතුරු වර්ග",
+                sinhala: "දොඩම්",
+                tamil: "தோடம்பழம்",
+                phonetic: "තෝඩම්පළම්",
+                speechText: "தோடம்பழம்",
+                emoji: "🍊"
+            },
+
+            // 5. ඇඟේ කොටස් (Body Parts)
+            {
+                id: 21,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "ඔළුව",
+                tamil: "தலை",
+                phonetic: "තලෛ",
+                speechText: "தலை",
+                emoji: "🗣️"
+            },
+            {
+                id: 22,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "කන",
+                tamil: "காது",
+                phonetic: "කාදු",
+                speechText: "காது",
+                emoji: "👂"
+            },
+            {
+                id: 23,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "කට",
+                tamil: "வாய்",
+                phonetic: "වායි",
+                speechText: "வாய்",
+                emoji: "👄"
+            },
+            {
+                id: 24,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "නහය",
+                tamil: "மூக்கு",
+                phonetic: "මූක්කු",
+                speechText: "மூக்கு",
+                emoji: "👃"
+            },
+            {
+                id: 25,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "ඇස්",
+                tamil: "கண்கள்",
+                phonetic: "කණ්ගල්",
+                speechText: "கண்கள்",
+                emoji: "👁️"
+            },
+            {
+                id: 26,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "බඩ",
+                tamil: "வயிறு",
+                phonetic: "වයිරු",
+                speechText: "வயிறு",
+                emoji: "🫃"
+            },
+            {
+                id: 27,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "අත්",
+                tamil: "கைகள்",
+                phonetic: "කෛගල්",
+                speechText: "கைகள்",
+                emoji: "✋"
+            },
+            {
+                id: 28,
+                category: "body",
+                categoryName: "ඇඟේ කොටස්",
+                sinhala: "කකුල්",
+                tamil: "கால்கள்",
+                phonetic: "කාල්ගල්",
+                speechText: "கால்கள்",
+                emoji: "🦶"
+            },
+
+            // 6. පාට වර්ග (Colors)
+            {
+                id: 29,
+                category: "colors",
+                categoryName: "පාට වර්ග",
+                sinhala: "රතු",
+                tamil: "சிவப்பு",
+                phonetic: "සිවප්පු",
+                speechText: "சிவப்பு",
+                emoji: "🔴"
+            },
+            {
+                id: 30,
+                category: "colors",
+                categoryName: "පාට වර්ග",
+                sinhala: "කොළ",
+                tamil: "பச்சை",
+                phonetic: "පච්චෛ",
+                speechText: "பச்சை",
+                emoji: "🟢"
+            },
+            {
+                id: 31,
+                category: "colors",
+                categoryName: "පාට වර්ග",
+                sinhala: "නිල්",
+                tamil: "நீலம்",
+                phonetic: "නීලම්",
+                speechText: "நீலம்",
+                emoji: "🔵"
+            },
+            {
+                id: 32,
+                category: "colors",
+                categoryName: "පාට වර්ග",
+                sinhala: "කළු",
+                tamil: "கறுப்பு",
+                phonetic: "කරුප්පු",
+                speechText: "கறுப்பு",
+                emoji: "⬛"
+            },
+            {
+                id: 33,
+                category: "colors",
+                categoryName: "පාට වර්ග",
+                sinhala: "කහ",
+                tamil: "மஞ்சள்",
+                phonetic: "මඤ්ජල්",
+                speechText: "மஞ்சள்",
+                emoji: "🟡"
+            },
+            {
+                id: 34,
+                category: "colors",
+                categoryName: "පාට වර්ග",
+                sinhala: "සුදු",
+                tamil: "வெள்ளை",
+                phonetic: "වෙල්ලෛ",
+                speechText: "வெள்ளை",
+                emoji: "⚪"
+            },
+
+            // 7. කුරුල්ලෝ (Birds)
+            {
+                id: 35,
+                category: "birds",
+                categoryName: "කුරුල්ලෝ",
+                sinhala: "ගිරවා",
+                tamil: "கிளி",
+                phonetic: "කිළි",
+                speechText: "கிளி",
+                emoji: "🦜"
+            },
+            {
+                id: 36,
+                category: "birds",
+                categoryName: "කුරුල්ලෝ",
+                sinhala: "කුකුළා",
+                tamil: "சேவல்",
+                phonetic: "සේවල්",
+                speechText: "சேவல்",
+                emoji: "🐓"
+            },
+            {
+                id: 37,
+                category: "birds",
+                categoryName: "කුරුල්ලෝ",
+                sinhala: "කපුටා",
+                tamil: "காகம்",
+                phonetic: "කාගම්",
+                speechText: "காகம்",
+                emoji: "🐦‍⬛"
+            },
+            {
+                id: 38,
+                category: "birds",
+                categoryName: "කුරුල්ලෝ",
+                sinhala: "මොනරා",
+                tamil: "மயில்",
+                phonetic: "මයිල්",
+                speechText: "மயில்",
+                emoji: "🦚"
+            },
+            {
+                id: 39,
+                category: "birds",
+                categoryName: "කුරුල්ලෝ",
+                sinhala: "පරවියා",
+                tamil: "புறா",
+                phonetic: "පුරා",
+                speechText: "புறா",
+                emoji: "🕊️"
+            },
+
+            // 8. ඉලක්කම් 1 - 10 (Numbers 1 - 10)
+            {
+                id: 40,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "1 - එක",
+                tamil: "ஒன்று",
+                phonetic: "ඔන්ඩ්‍රු",
+                speechText: "ஒன்று",
+                emoji: "1️⃣"
+            },
+            {
+                id: 41,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "2 - දෙක",
+                tamil: "இரண்டு",
+                phonetic: "ඉරණ්ඩු",
+                speechText: "இரண்டு",
+                emoji: "2️⃣"
+            },
+            {
+                id: 42,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "3 - තුන",
+                tamil: "மூன்று",
+                phonetic: "මූන්ඩ්‍රු",
+                speechText: "மூன்று",
+                emoji: "3️⃣"
+            },
+            {
+                id: 43,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "4 - හතර",
+                tamil: "நான்கு",
+                phonetic: "නාන්ගු",
+                speechText: "நான்கு",
+                emoji: "4️⃣"
+            },
+            {
+                id: 44,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "5 - පහ",
+                tamil: "ஐந்து",
+                phonetic: "අයින්දු",
+                speechText: "ஐந்து",
+                emoji: "5️⃣"
+            },
+            {
+                id: 45,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "6 - හය",
+                tamil: "ஆறு",
+                phonetic: "ආරු",
+                speechText: "ஆறு",
+                emoji: "6️⃣"
+            },
+            {
+                id: 46,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "7 - හත",
+                tamil: "ஏழு",
+                phonetic: "ඒළු",
+                speechText: "ஏழு",
+                emoji: "7️⃣"
+            },
+            {
+                id: 47,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "8 - අට",
+                tamil: "எட்டு",
+                phonetic: "එට්ටු",
+                speechText: "எட்டு",
+                emoji: "8️⃣"
+            },
+            {
+                id: 48,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "9 - නවය",
+                tamil: "ஒன்பது",
+                phonetic: "ඔන්බදු",
+                speechText: "ஒன்பது",
+                emoji: "9️⃣"
+            },
+            {
+                id: 49,
+                category: "numbers",
+                categoryName: "ඉලක්කම් (1 - 10)",
+                sinhala: "10 - දහය",
+                tamil: "பத்து",
+                phonetic: "පත්තු",
+                speechText: "பத்து",
+                emoji: "🔟"
+            }
+        ];
+
+        // Categories metadata for styling and display
+        const categories = [
+            { id: 'all', name: 'සියල්ල (All)', icon: '✨' },
+            { id: 'sentences', name: 'වාක්‍ය & සුභ පැතුම්', icon: '💬' },
+            { id: 'meetings', name: 'හමුවීම් (Greetings)', icon: '🤝' },
+            { id: 'flowers', name: 'මල් වර්ග', icon: '🌸' },
+            { id: 'fruits', name: 'පලතුරු වර්ග', icon: '🍎' },
+            { id: 'body', name: 'ඇඟේ කොටස්', icon: '🖐️' },
+            { id: 'colors', name: 'පාට වර්ග', icon: '🎨' },
+            { id: 'birds', name: 'කුරුල්ලෝ', icon: '🦜' },
+            { id: 'numbers', name: 'ඉලක්කම් 1-10', icon: '🔢' }
+        ];
+
+        // App state
+        let currentCategory = 'all';
+        let openCardId = null;
+        let speechVoices = [];
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let quizItems = [];
+
+        // Init Speech Synthesis Voices
+        function initSpeech() {
+            if ('speechSynthesis' in window) {
+                speechVoices = window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = () => {
+                    speechVoices = window.speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        // Render Category Pills
+        function renderCategories() {
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = categories.map(cat => {
+                const isActive = currentCategory === cat.id;
+                return `
+                    <button 
+                        onclick="setCategory('${cat.id}')"
+                        class="cat-btn bounce-hover bounce-click ${isActive ? 'cat-btn-active' : 'cat-btn-inactive'}"
+                    >
+                        <span>${cat.icon}</span>
+                        <span>${cat.name}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // Set Active Category
+        function setCategory(catId) {
+            currentCategory = catId;
+            renderCategories();
+            filterItems();
+        }
+
+        // Render Item Cards Grid
+        function renderCards(items) {
+            const grid = document.getElementById('cardsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const badge = document.getElementById('itemCountBadge');
+
+            badge.innerText = `${items.length} යි`;
+
+            if (items.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = items.map(item => {
+                const isOpen = openCardId === item.id;
+                return `
+                    <div class="card">
+                        <div class="card-header" onclick="toggleCard(${item.id})">
+                            <div class="card-header-left">
+                                <div class="card-emoji">${item.emoji}</div>
+                                <div>
+                                    <span class="card-cat-label">${item.categoryName}</span>
+                                    <h3 class="card-sinhala">${item.sinhala}</h3>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button 
+                                    onclick="event.stopPropagation(); speakTamil('${escapeQuotes(item.speechText)}', ${item.id})"
+                                    title="ශබ්දය අසන්න"
+                                    class="btn-speak bounce-click"
+                                >
+                                    <span id="speakerIcon-${item.id}">🔊</span>
+                                </button>
+                                <div class="card-arrow ${isOpen ? 'open' : ''}">▼</div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-wrapper ${isOpen ? 'open' : ''}">
+                            <div class="accordion-inner">
+                                <div class="card-body">
+                                    <div class="tamil-box">
+                                        <div class="tamil-box-header">
+                                            <span>දෙමළ අකුරින් (Tamil Script)</span>
+                                            <span class="tamil-tag">தமிழ்</span>
+                                        </div>
+                                        <p class="tamil-text font-tamil">${item.tamil}</p>
+                                        ${item.tamilPolite ? `<p class="tamil-polite">ගරුත්වයෙන්: ${item.tamilPolite}</p>` : ''}
+                                    </div>
+
+                                    <div class="phonetic-box">
+                                        <span class="phonetic-icon">🗣️</span>
+                                        <div>
+                                            <h4 class="phonetic-label">ශබ්ද කරන විදිය (උච්චාරණය):</h4>
+                                            <p class="phonetic-text">"${item.phonetic}"</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-btns">
+                                        <button 
+                                            onclick="speakTamil('${escapeQuotes(item.speechText)}', ${item.id})"
+                                            class="btn-listen bounce-click"
+                                        >
+                                            <span style="font-size:1.125rem">🔊</span>
+                                            <span>දෙමළෙන් අසන්න (Listen)</span>
+                                        </button>
+                                        <button 
+                                            onclick="copyText('${escapeQuotes(item.sinhala)} - ${escapeQuotes(item.tamil)} (${escapeQuotes(item.phonetic)})')"
+                                            class="btn-copy bounce-click"
+                                            title="පිටපත් කරන්න"
+                                        >
+                                            <span>📋</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Helper to escape single quotes safely for inline JS triggers
+        function escapeQuotes(str) {
+            return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        // Toggle card collapse / expand
+        function toggleCard(id) {
+            openCardId = openCardId === id ? null : id;
+            filterItems();
+        }
+
+        // Filter Items based on search and category
+        function filterItems() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clearSearchBtn');
+
+            if (query) {
+                clearBtn.classList.add('visible');
+            } else {
+                clearBtn.classList.remove('visible');
+            }
+
+            const filtered = appData.filter(item => {
+                const matchesCategory = (currentCategory === 'all') || (item.category === currentCategory);
+                const matchesQuery = !query || 
+                    item.sinhala.toLowerCase().includes(query) || 
+                    item.tamil.toLowerCase().includes(query) || 
+                    item.phonetic.toLowerCase().includes(query);
+                return matchesCategory && matchesQuery;
+            });
+
+            renderCards(filtered);
+        }
+
+        // Clear Search Box
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filterItems();
+        }
+
+        // Speak Tamil Text using Web Speech API with Fallback Tone
+        function speakTamil(text, itemId) {
+            if (!('speechSynthesis' in window)) {
+                showToast('❌ ඔබේ බ්‍රවුසරයේ ශබ්ද පද්ධතිය සහාය නොදක්වයි.', '⚠️');
+                playFallbackTone();
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ta-IN';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.1;
+
+            const voices = window.speechSynthesis.getVoices();
+            const tamilVoice = voices.find(v => v.lang.includes('ta') || v.lang.includes('ta-IN') || v.lang.includes('ta-LK'));
+            
+            if (tamilVoice) {
+                utterance.voice = tamilVoice;
+            }
+
+            const speakerIcon = document.getElementById(`speakerIcon-${itemId}`);
+            if (speakerIcon) {
+                speakerIcon.classList.add('speaking-pulse');
+            }
+
+            utterance.onstart = () => {
+                showToast(`🔊 දෙමළෙන් ශබ්ද කෙරේ: "${text}"`, '🗣️');
+            };
+
+            utterance.onend = () => {
+                if (speakerIcon) speakerIcon.classList.remove('speaking-pulse');
+            };
+
+            utterance.onerror = () => {
+                if (speakerIcon) speakerIcon.classList.remove('speaking-pulse');
+                showToast(`🔊 ශබ්ද නිකුත් කිරීම: ${text}`, '🎵');
+                playFallbackTone();
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Web Audio synth tone fallback
+        function playFallbackTone() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch (e) {
+                // Audio context not allowed or supported
+            }
+        }
+
+        // Show Toast Notification
+        function showToast(msg, icon = '🔊') {
+            const toast = document.getElementById('toastNotification');
+            const toastText = document.getElementById('toastText');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastText.innerText = msg;
+            toastIcon.innerText = icon;
+            toast.classList.remove('hidden');
+
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Copy Text Helper
+        function copyText(str) {
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = str;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast('📋 පඨිතය පිටපත් කර ගන්නා ලදී!', '✅');
+        }
+
+        // Switch Mode Tab (Learn vs Quiz)
+        function switchTab(mode) {
+            const learnView = document.getElementById('learnView');
+            const quizView = document.getElementById('quizView');
+            const viewModeBtn = document.getElementById('viewModeBtn');
+            const quizModeBtn = document.getElementById('quizModeBtn');
+
+            if (mode === 'learn') {
+                learnView.classList.remove('hidden');
+                quizView.classList.add('hidden');
+                viewModeBtn.className = 'btn-mode btn-mode-active bounce-click';
+                quizModeBtn.className = 'btn-mode btn-mode-inactive bounce-click';
+            } else {
+                learnView.classList.add('hidden');
+                quizView.classList.remove('hidden');
+                quizModeBtn.className = 'btn-mode btn-mode-active bounce-click';
+                viewModeBtn.className = 'btn-mode btn-mode-inactive bounce-click';
+                startQuiz();
+            }
+        }
+
+        // Quiz Logic
+        function startQuiz() {
+            quizScore = 0;
+            currentQuizIndex = 0;
+            quizItems = [...appData].sort(() => 0.5 - Math.random()).slice(0, 10);
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (currentQuizIndex >= quizItems.length) {
+                document.getElementById('quizEmoji').innerText = '🎉';
+                document.getElementById('quizQuestionText').innerText = `ලකුණු ${quizScore} / ${quizItems.length} යි! සුභ පැතුම්!`;
+                document.getElementById('quizOptionsContainer').innerHTML = `
+                    <button onclick="startQuiz()" class="btn-restart bounce-click">
+                        නැවත සෙල්ලම් කරමු 🔄
+                    </button>
+                `;
+                document.getElementById('quizFeedback').classList.add('hidden');
+                document.getElementById('nextQuizBtn').classList.add('hidden');
+                return;
+            }
+
+            const currentItem = quizItems[currentQuizIndex];
+            document.getElementById('quizProgress').innerText = `ප්‍රශ්නය ${currentQuizIndex + 1} / ${quizItems.length}`;
+            document.getElementById('quizScoreBadge').innerText = `ලකුණු: ${quizScore}`;
+            document.getElementById('quizEmoji').innerText = currentItem.emoji;
+            document.getElementById('quizQuestionText').innerText = currentItem.sinhala;
+
+            const wrongOptions = appData.filter(i => i.id !== currentItem.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+            const options = [...wrongOptions, currentItem].sort(() => 0.5 - Math.random());
+
+            const container = document.getElementById('quizOptionsContainer');
+            container.innerHTML = options.map(opt => `
+                <button 
+                    onclick="checkQuizAnswer(${opt.id}, ${currentItem.id}, this)"
+                    class="quiz-opt-btn bounce-click"
+                >
+                    <div class="quiz-opt-tamil font-tamil">${opt.tamil}</div>
+                    <div class="quiz-opt-phonetic">(${opt.phonetic.split('/')[0]})</div>
+                </button>
+            `).join('');
+
+            document.getElementById('quizFeedback').classList.add('hidden');
+            document.getElementById('nextQuizBtn').classList.add('hidden');
+        }
+
+        function checkQuizAnswer(selectedId, correctId, btnEl) {
+            const allBtns = document.querySelectorAll('.quiz-opt-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            const feedback = document.getElementById('quizFeedback');
+            feedback.classList.remove('hidden');
+
+            const currentItem = quizItems[currentQuizIndex];
+            speakTamil(currentItem.speechText, currentItem.id);
+
+            if (selectedId === correctId) {
+                quizScore += 1;
+                btnEl.classList.add('quiz-opt-correct');
+                feedback.className = 'quiz-feedback quiz-feedback-correct';
+                feedback.innerHTML = '🎉 නිවැරදියි! ඉතා හොඳයි! (Correct!)';
+            } else {
+                btnEl.classList.add('quiz-opt-wrong');
+                feedback.className = 'quiz-feedback quiz-feedback-wrong';
+                feedback.innerHTML = `❌ වැරදියි. නිවැරදි පිළිතුර: <b>${currentItem.tamil} (${currentItem.phonetic})</b>`;
+            }
+
+            document.getElementById('nextQuizBtn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex += 1;
+            renderQuizQuestion();
+        }
+
+        // Initialize App on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initSpeech();
+            renderCategories();
+            filterItems();
+        });
+    </script>
+</body>
+</html>
