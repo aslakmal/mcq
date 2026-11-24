@@ -258,7 +258,7 @@
         let lastReportRows = [];
         let lastReportSummary = { totalAmount: 0, paidCount: 0 };
         document.getElementById('schoolSubtitle').innerText = schoolId ? `School ID: ${schoolId}` : 'All Cached Students';
-      
+    
         async function initReport() {
             try {
                 if (typeof syncEngine !== 'undefined') {
@@ -468,6 +468,7 @@
         }
 
         function renderBreakdownTable(sortedKeys, buckets) {
+            console.log(sortedKeys)
     const tbody = document.getElementById('breakdownTableBody');
     lastReportRows = [];
 
@@ -475,7 +476,7 @@
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No paid payment records found for this view.</td></tr>`;
         return;
     }
-
+    console.log(1)
     const htmlRows = [];
     sortedKeys.forEach(key => {
         const bucket = buckets.get(key);
@@ -498,9 +499,10 @@
             paidTime: '',
             total: ''
         });
-
+        
         // Paid students in this period
         paidStudentsList.forEach(stu => {
+            
             const itemsStr = stu.labels.join(', ');
             const paidTimeStr = stu.paidTimes.join(' | ');
             const labelsText = itemsStr
@@ -572,10 +574,11 @@ function downloadBreakdownCSV() {
     const selectedItem = document.getElementById('itemFilter')?.value || 'ALL';
 
     const lines = [
-        ['Student', 'Payment Items', 'Paid Count', 'Paid Time', 'Total'].map(csvCell).join(',')
+        ['Student', 'Payment For', 'Paid Count', 'Paid Time', 'Total'].map(csvCell).join(',')
     ];
 
     lastReportRows.forEach(row => {
+        
         if (row.type === 'period') {
             lines.push([row.period, '', '', '', ''].map(csvCell).join(','));
         } else {
@@ -661,7 +664,7 @@ function downloadBreakdownCSV() {
             refreshReport();
         }
 
-        function renderBreakdownTable(sortedKeys, buckets) {
+        function renderBreakdownTable2(sortedKeys, buckets) {
             const tbody = document.getElementById('breakdownTableBody');
             lastReportRows = [];
 
@@ -694,6 +697,7 @@ function downloadBreakdownCSV() {
 
                 // Paid students in this period
                 paidStudentsList.forEach(stu => {
+                    console.log(stu)
                     const itemsStr = stu.labels.join(', ');
                     const labelsText = itemsStr
                         ? `<div class="paid-items-sub">${escapeHtml(itemsStr)}</div>`
@@ -711,6 +715,7 @@ function downloadBreakdownCSV() {
                         </div>
                     </td>
                     <td>${stu.count}</td>
+                    <td>${stu.paidTimes}</td>
                     <td><strong>${stu.amount.toLocaleString()}</strong></td>
                 </tr>
             `);
@@ -730,6 +735,7 @@ function downloadBreakdownCSV() {
     <tr style="background: #f8fafc;">
         <td style="text-align: right; font-weight: 600;">Total</td>
         <td><strong>${bucket.count}</strong></td>
+        <td></td>
         <td><strong>${bucket.amount.toLocaleString()}</strong></td>
     </tr>
 `);
