@@ -41,7 +41,7 @@ const signupNotice = document.getElementById('signup-notice');
 
 const autoSaveToggle = document.getElementById('auto-save-toggle');
 const attendanceChk = document.getElementById('attendance-chk');
-const paymentChk = document.getElementById('payment-chk');
+
 const manualSaveBtn = document.getElementById('manual-save-btn');
 
 // Bottom dock & card references
@@ -405,23 +405,35 @@ function handleStudentScan(studentId) {
     return;
   }
 
+  const studentKey = currentStudent.id || currentStudent.key;
+  currentSelectedStudentId = studentKey;
+  refreshScanPaymentLabels();
+
+  const labelInput = document.getElementById('scan-payment-label');
+  currentPaymentLabel = labelInput ? labelInput.value.trim() : "";
+  syncPaymentButtonsFromStudent();
+  renderStudentRecentPayments(currentStudent);
+
+  const latestPaidAt = getLatestPaidTimestamp(currentStudent);
+  document.getElementById('st-paidat').textContent = latestPaidAt ? new Date(Number(latestPaidAt)).toLocaleDateString() : 'N/A';
+
+
+
   document.getElementById('st-photo').src = currentStudent.photoUrl ? getFullCloudinaryUrl(currentStudent.photoUrl) : 'img/user.svg';
   document.getElementById('st-name').textContent = currentStudent.fullName;
   document.getElementById('st-id').textContent = currentStudent.id;
-  document.getElementById('st-paidat').textContent =currentStudent?.paidAt ? new Date(currentStudent.paidAt).toLocaleDateString() : 'N/A';
+  //document.getElementById('st-paidat').textContent =currentStudent?.paidAt ? new Date(currentStudent.paidAt).toLocaleDateString() : 'N/A';
   document.getElementById('st-fee').textContent = currentStudent.classFee || '0';
 
   attendanceChk.checked = true; 
-  paymentChk.checked = Number(currentStudent.isPaid) === 1; 
+
 
   studentResultCard.classList.remove('hidden');
 
   if (autoSaveToggle.checked) {
     db.goOnline();
     saveAttendance(currentStudent.id, true, currentStudent.class);
-    if (paymentChk.checked) {
-    //  savePayment(currentStudent.id, true);
-    }
+  
   }
 }
 
@@ -442,19 +454,17 @@ attendanceChk.addEventListener('change', () => {
   }
 });
 
-paymentChk.addEventListener('change', () => {
-  if (autoSaveToggle.checked && currentStudent) {
-    db.goOnline();
-    savePayment(currentStudent.id, paymentChk.checked);
-  }
-});
 
-manualSaveBtn.addEventListener('click', () => {
+
+manualSaveBtn.addEventListener('click', async () => {
   if (!currentStudent) return;
+  const studentKey = currentStudent.id || currentStudent.key;
   db.goOnline();
-  saveAttendance(currentStudent.id, attendanceChk.checked, currentStudent.class);
-  savePayment(currentStudent.id, paymentChk.checked);
-  alertbox(`Successfully saved record for ${currentStudent.fullName}!`, "success");
+  await saveAttendance(currentStudent, attendanceChk.checked, currentStudent.class);
+  if (currentPaymentLabel) {
+    await savePayment(studentKey, selectedPaymentStatus, currentPaymentLabel);
+  }
+  alertbox(`Successfully saved record for ${currentStudent.fullName || currentStudent.name}!`, "success");
 });
 
 async function saveAttendance(student, checked, currentClass) {
@@ -558,41 +568,81 @@ async function saveAttendance(student, checked, currentClass) {
 // Keep track of currently active student in the payment modal/view
 let currentSelectedStudentId = null;
 
-async function savePayment(studentId, checked) {
-  currentSelectedStudentId = studentId; // store active context
-  const newFeeStatus = checked ? 1 : 0;
+async function savePayment(studentId, newStatus, labelOverride) {
+  currentSelectedStudentId = studentId;
+  const label = (labelOverride ?? document.getElementById('scan-payment-label')?.value ?? "").trim();
+  if (!label) {
+    alertbox("Please enter or select a Payment Item first.", "error");
+    return;
+  }
+  currentPaymentLabel = label;
+  setSessionCookie(SCAN_PAYMENT_LABEL_COOKIE, label);
+
+  const student = (cachedStudents || []).find(s => String(s.id || s.key) === String(studentId));
+  if (!student) return;
+
+  const prevPayments = getStudentPayments(student).map(item => [...item]);
+  let nextPayments = prevPayments.map(item => [...item]);
+  const existingIdx = nextPayments.findIndex(([lbl]) => lbl.toLowerCase() === label.toLowerCase());
+
+  if (existingIdx >= 0) {
+    if (newStatus === null) {
+      nextPayments.splice(existingIdx, 1);
+    } else {
+      const existingPaidAt = nextPayments[existingIdx][2];
+      nextPayments[existingIdx] = [
+        label,
+        newStatus,
+        newStatus === 'paid' ? (existingPaidAt || Date.now()) : null
+      ];
+    }
+  } else if (newStatus !== null) {
+    nextPayments.push([
+      label,
+      newStatus,
+      newStatus === 'paid' ? Date.now() : null
+    ]);
+    while (nextPayments.length > MAX_PAYMENTS_PER_STUDENT) {
+      nextPayments.shift();
+    }
+  }
+
+  student.payments = nextPayments;
+  if (typeof syncEngine !== 'undefined' && typeof syncEngine.saveToIDB === 'function') {
+    syncEngine.saveToIDB('students', student);
+  }
+  refreshScanPaymentLabels();
+  renderStudentRecentPayments(student);
+
   setAppBusy(true, "Saving payment status...");
-
   try {
-      db.goOnline();
-      await db.ref(`schools/${schoolId}/students/${studentId}`).update({
-          F: newFeeStatus,
-          G: newFeeStatus === 1 ? firebase.database.ServerValue.TIMESTAMP : null,
-          A: firebase.database.ServerValue.TIMESTAMP
-      });
-      db.goOffline();
-      
-      const student = cachedStudents.find(s => (s.id) === studentId);
-      if (student) {
-          student.isPaid = newFeeStatus;
-          if (typeof syncEngine !== 'undefined' && syncEngine.saveToIDB) {
-              syncEngine.saveToIDB('students', student);
-          }
-      }
-      setAppBusy(false);
-      alertbox("Payment status saved!", "success");
+    db.goOnline();
+    await db.ref(`schools/${schoolId}/students/${studentId}`).update({
+      payments: nextPayments,
+      A: firebase.database.ServerValue.TIMESTAMP
+    });
+    db.goOffline();
+    setAppBusy(false);
 
-      // Optional: If payment is marked Paid, automatically prompt WhatsApp or keep buttons ready
-      if (newFeeStatus === 1) {
-          console.log("Payment marked Paid for student:", studentId);
-      }
+    const latestPaidAt = getLatestPaidTimestamp(student);
+    const paidAtEl = document.getElementById('st-paidat');
+    if (paidAtEl) {
+      paidAtEl.textContent = latestPaidAt ? new Date(Number(latestPaidAt)).toLocaleDateString() : 'N/A';
+    }
+    alertbox("Payment status saved!", "success");
   } catch (err) {
-      db.goOffline();
-      setAppBusy(false);
-      alertbox("Failed to update fee: " + err.message, "error");
+    db.goOffline();
+    setAppBusy(false);
+
+    student.payments = prevPayments;
+    if (typeof syncEngine !== 'undefined' && typeof syncEngine.saveToIDB === 'function') {
+      syncEngine.saveToIDB('students', student);
+    }
+    syncPaymentButtonsFromStudent();
+    renderStudentRecentPayments(student);
+    alertbox("Failed to update fee: " + err.message, "error");
   }
 }
-
 // -------------------------------------------------------------
 // RECEIPT & PRINTING ACTION HANDLERS
 // -------------------------------------------------------------
@@ -689,4 +739,197 @@ function sendWhatsAppReceiptAPI() {
     setAppBusy(false);
     alertbox("Failed to queue WhatsApp: " + err.message, "error");
   });
+}
+
+
+
+
+
+const MAX_PAYMENTS_PER_STUDENT = 12;
+const VISIBLE_RECENT_PAYMENTS = 5;
+
+let currentPaymentLabel = "";
+let selectedPaymentStatus = null; // null | 'pending' | 'paid'
+let savedScanPaymentLabels = [];
+
+function getStudentPayments(student) {
+  if (!student || !Array.isArray(student.payments)) return [];
+  return student.payments
+    .filter(item => Array.isArray(item) && item[0])
+    .slice(-MAX_PAYMENTS_PER_STUDENT)
+    .map(item => [
+      String(item[0]),
+      item[1] === 'paid' || item[1] === 'pending' ? item[1] : null,
+      item[1] === 'paid' && item[2] ? Number(item[2]) : null
+    ]);
+}
+
+function getStatusForLabel(student, label) {
+  if (!student || !label) return null;
+  const found = getStudentPayments(student).find(
+    ([lbl]) => lbl.toLowerCase() === label.trim().toLowerCase()
+  );
+  return found ? found[1] : null;
+}
+
+function getLatestPaidTimestamp(student) {
+  const paidTimes = getStudentPayments(student)
+    .filter(([, st, ts]) => st === 'paid' && ts)
+    .map(([, , ts]) => Number(ts));
+  if (paidTimes.length === 0) return student?.paidAt || student?.G || null;
+  return Math.max(...paidTimes);
+}
+
+function refreshScanPaymentLabels() {
+  const set = new Set();
+  (cachedStudents || []).forEach(s => {
+    getStudentPayments(s).forEach(([lbl]) => {
+      if (lbl && lbl.trim()) set.add(lbl.trim());
+    });
+  });
+  savedScanPaymentLabels = Array.from(set);
+  renderScanPaymentDropdown();
+}
+
+function renderScanPaymentDropdown() {
+  const dd = document.getElementById('scan-payment-dropdown');
+  if (!dd) return;
+
+  if (savedScanPaymentLabels.length === 0) {
+    dd.innerHTML = `<div style="padding: 10px 12px; color: var(--muted); font-size: 12px;">No previous items</div>`;
+    return;
+  }
+
+  dd.innerHTML = savedScanPaymentLabels.map(lbl => `
+    <button
+      type="button"
+      onmousedown="selectScanPaymentLabel('${String(lbl).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')"
+      style="display: block; width: 100%; text-align: left; padding: 10px 12px; border: 0; border-bottom: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 13px; color: var(--text);"
+    >${lbl}</button>
+  `).join('');
+}
+
+function showScanPaymentDropdown() {
+  renderScanPaymentDropdown();
+  const dd = document.getElementById('scan-payment-dropdown');
+  if (dd) dd.classList.remove('hidden');
+}
+
+function hideScanPaymentDropdown() {
+  const dd = document.getElementById('scan-payment-dropdown');
+  if (dd) dd.classList.add('hidden');
+}
+
+function selectScanPaymentLabel(lbl) {
+  const clean = String(lbl ?? '').trim();
+  const input = document.getElementById('scan-payment-label');
+  if (input) input.value = clean;
+  currentPaymentLabel = clean;
+  setSessionCookie(SCAN_PAYMENT_LABEL_COOKIE, clean);
+  hideScanPaymentDropdown();
+  syncPaymentButtonsFromStudent();
+}
+
+function onScanPaymentLabelInput() {
+  const input = document.getElementById('scan-payment-label');
+  currentPaymentLabel = input ? input.value.trim() : "";
+  setSessionCookie(SCAN_PAYMENT_LABEL_COOKIE, currentPaymentLabel);
+  showScanPaymentDropdown();
+  syncPaymentButtonsFromStudent();
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('scan-payment-item-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    hideScanPaymentDropdown();
+  }
+});
+
+function highlightPaymentButtons(status) {
+  const btnNull = document.getElementById('btn-pay-null');
+  const btnPending = document.getElementById('btn-pay-pending');
+  const btnPaid = document.getElementById('btn-pay-paid');
+  if (!btnNull || !btnPending || !btnPaid) return;
+
+  [btnNull, btnPending, btnPaid].forEach(b => {
+    b.style.background = '#eef2f7';
+    b.style.color = '#43516a';
+    b.style.boxShadow = 'none';
+  });
+
+  if (status === null) {
+    btnNull.style.background = '#64748b';
+    btnNull.style.color = '#ffffff';
+  } else if (status === 'pending') {
+    btnPending.style.background = '#d97706';
+    btnPending.style.color = '#ffffff';
+  } else if (status === 'paid') {
+    btnPaid.style.background = '#16a34a';
+    btnPaid.style.color = '#ffffff';
+  }
+}
+
+function syncPaymentButtonsFromStudent() {
+  selectedPaymentStatus = getStatusForLabel(currentStudent, currentPaymentLabel);
+  highlightPaymentButtons(selectedPaymentStatus);
+}
+
+function renderStudentRecentPayments(student) {
+  const el = document.getElementById('st-recent-payments');
+  if (!el) return;
+  const recent = getStudentPayments(student).slice(-VISIBLE_RECENT_PAYMENTS);
+  if (recent.length === 0) {
+    el.textContent = "Recent payments: none";
+    return;
+  }
+  el.textContent = "Recent payments: " + recent.map(([lbl, st]) => `${lbl} (${st ?? 'null'})`).join(' · ');
+}
+
+async function onSelectPaymentStatus(status) {
+  if (!currentStudent) return;
+
+  const input = document.getElementById('scan-payment-label');
+  const label = input ? input.value.trim() : "";
+  if (!label) {
+    alertbox("Please enter or select a Payment Item first.", "error");
+    return;
+  }
+
+  currentPaymentLabel = label;
+  selectedPaymentStatus = status; // null | 'pending' | 'paid'
+  highlightPaymentButtons(selectedPaymentStatus);
+
+  if (autoSaveToggle && autoSaveToggle.checked) {
+    await savePayment(currentStudent.id || currentStudent.key, selectedPaymentStatus, currentPaymentLabel);
+  }
+}
+
+const SCAN_PAYMENT_LABEL_COOKIE = 'scan_last_payment_label';
+
+function setSessionCookie(name, value) {
+  const encoded = encodeURIComponent(String(value ?? ''));
+  document.cookie = `${name}=${encoded}; path=/; SameSite=Lax`;
+}
+
+function getSessionCookie(name) {
+  const prefix = `${name}=`;
+  const parts = document.cookie ? document.cookie.split(';') : [];
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i].trim();
+    if (part.startsWith(prefix)) {
+      return decodeURIComponent(part.slice(prefix.length));
+    }
+  }
+  return '';
+}
+
+function applySavedScanPaymentLabel() {
+  const savedLabel = getSessionCookie(SCAN_PAYMENT_LABEL_COOKIE).trim();
+  const input = document.getElementById('scan-payment-label');
+  if (!input) return;
+
+  if (savedLabel && !input.value.trim()) {
+    input.value = savedLabel;
+  }
+  currentPaymentLabel = input.value.trim();
 }
