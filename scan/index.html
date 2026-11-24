@@ -432,13 +432,10 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
-/* Default: Hide main app, show landing container */
-#app-content {
-  display: none !important;
-}
+
 
 #install-landing {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -447,16 +444,6 @@
   padding: 20px;
 }
 
-/* INSTALLED PWA MODE: Swap visibility */
-@media all and (display-mode: standalone), (display-mode: fullscreen) {
-  #install-landing {
-    display: none !important;
-  }
-  
-  #app-content {
-    display: block !important;
-  }
-}
     #installAppBtn {
   width: 100%;
   z-index: 9999;
@@ -607,20 +594,44 @@
           </label>
         </div>
 
-        <div class="switch-row">
-          <div class="switch-label-wrap">
-            <div class="setting-icon" aria-hidden="true" style="color:#138253;background:#eaf8f1">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20m-15 5h3"></path></svg>
-            </div>
-            <div>
-              <div class="switch-label-text">Payment · Rs. <span id="st-fee">0</span></div>
-              <div class="switch-description">Update monthly payment status</div>
+        <div class="switch-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div class="switch-label-wrap">
+              <div class="setting-icon" aria-hidden="true" style="color:#138253;background:#eaf8f1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20m-15 5h3"></path></svg>
+              </div>
+              <div>
+                <div class="switch-label-text">Payment · Rs. <span id="st-fee">0</span></div>
+              </div>
             </div>
           </div>
-          <label class="switch-toggle" aria-label="Payment">
-            <input type="checkbox" id="payment-chk">
-            <span class="slider-text" data-on="Paid" data-off="Unpaid"></span>
-          </label>
+        
+          <!-- Payment Item input + full unfiltered previous dropdown -->
+          <div id="scan-payment-item-wrap" style="position: relative;">
+            <input
+              type="text"
+              id="scan-payment-label"
+              autocomplete="off"
+              placeholder="Type new or pick previous (e.g. January, Tute Fee)"
+              onfocus="showScanPaymentDropdown()"
+              oninput="onScanPaymentLabelInput()"
+            />
+            <div
+              id="scan-payment-dropdown"
+              class="hidden"
+              style="position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 60; background: var(--surface, #fff); border: 1px solid var(--border, #e7ebf2); border-radius: 12px; max-height: 190px; overflow-y: auto; box-shadow: 0 8px 20px rgba(0,0,0,0.12);"
+            ></div>
+          </div>
+        
+          <!-- 3 Status Buttons: null | pending | paid -->
+          <div id="scan-payment-buttons" role="group" aria-label="Payment status" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+            <button type="button" id="btn-pay-null" class="btn btn-secondary" onclick="onSelectPaymentStatus(null)">...</button>
+            <button type="button" id="btn-pay-pending" class="btn btn-secondary" onclick="onSelectPaymentStatus('pending')">pending</button>
+            <button type="button" id="btn-pay-paid" class="btn btn-secondary" onclick="onSelectPaymentStatus('paid')">paid</button>
+          </div>
+        
+          <!-- Recent payments summary for scanned student -->
+          <div id="st-recent-payments" style="font-size: 11px; color: var(--muted, #718096);"></div>
         </div>
       </div>
 
@@ -643,8 +654,8 @@
   </div>
 </nav>
 </div>
-<script src="../edOS/sync.js"></script>
-<script src="scan.js"></script>
+<script src="../edOS/sync.js?cc"></script>
+<script src="scan.js?cc"></script>
 <script>
   // Keep the fixed action dock visible only after the dashboard is shown.
   // Existing scanner/auth logic remains in js/scan.js.
