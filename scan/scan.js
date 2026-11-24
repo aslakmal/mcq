@@ -572,7 +572,7 @@ async function savePayment(studentId, newStatus, labelOverride) {
   currentSelectedStudentId = studentId;
   const label = (labelOverride ?? document.getElementById('scan-payment-label')?.value ?? "").trim();
   if (!label) {
-    alertbox("Please enter or select a Payment Item first.", "error");
+    document.getElementById('scan-payment-label').focus()
     return;
   }
   currentPaymentLabel = label;
