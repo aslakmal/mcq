@@ -258,10 +258,7 @@
         let lastReportRows = [];
         let lastReportSummary = { totalAmount: 0, paidCount: 0 };
         document.getElementById('schoolSubtitle').innerText = schoolId ? `School ID: ${schoolId}` : 'All Cached Students';
-        if (schoolId) {
-            document.getElementById('backToCollectionLink').href = `payments.html?school=${encodeURIComponent(schoolId)}`;
-        }
-
+      
         async function initReport() {
             try {
                 if (typeof syncEngine !== 'undefined') {
