@@ -433,32 +433,20 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
 
-
-#install-landing {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  text-align: center;
-  padding: 20px;
-}
-
-    #installAppBtn {
-  width: 100%;
-  z-index: 9999;
-  background-color: #10b981; /* Green banner style */
-  color: white;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 -4px 12px 3px rgb(0 0 0 / 12%);
-    margin: 18px 0;
-    border-radius: 32px;
+#installAppBtn {
+    width: 100%;
+    z-index: 9999;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 7px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 -4px 12px 3px rgb(0 0 0 / 12%);
+    position: fixed;
+    top: 0;
 }
 
 #installAppBtn:hover {
@@ -654,8 +642,8 @@
   </div>
 </nav>
 </div>
-<script src="../edOS/sync.js?cc"></script>
-<script src="scan.js?ccc"></script>
+<script src="https://digibook.edu.lk/edOS/sync.js"></script>
+<script src="js/scan.js"></script>
 <script>
   // Keep the fixed action dock visible only after the dashboard is shown.
   // Existing scanner/auth logic remains in js/scan.js.
