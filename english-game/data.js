@@ -1,0 +1,971 @@
+const vocabularyData = [
+	// 1. Basic Words (මූලික වචන)
+	{
+		id: 1,
+		category: "meetings",
+		categoryName: "හමුවීම්",
+		sinhala: "ආයුබෝවන්",
+		english: "Hello",
+		phonetic: "හෙලෝ",
+		speechText: "Hello",
+		emoji: "👋"
+	},
+	{
+		id: 2,
+		category: "meetings",
+		categoryName: "හමුවීම්",
+		sinhala: "කරුණාකර",
+		english: "Please",
+		phonetic: "ප්ලීස්",
+		speechText: "Please",
+		emoji: "🙏"
+	},
+	{
+		id: 3,
+		category: "meetings",
+		categoryName: "හමුවීම්",
+		sinhala: "සමාවෙන්න",
+		english: "Sorry",
+		phonetic: "සොරි",
+		speechText: "Sorry",
+		emoji: "🙇"
+	},
+	{
+		id: 4,
+		category: "meetings",
+		categoryName: "හමුවීම්",
+		sinhala: "ඔව්",
+		english: "Yes",
+		phonetic: "යෙස්",
+		speechText: "Yes",
+		emoji: "✅"
+	},
+	{
+		id: 5,
+		category: "meetings",
+		categoryName: "හමුවීම්",
+		sinhala: "නැහැ",
+		english: "No",
+		phonetic: "නෝ",
+		speechText: "No",
+		emoji: "❌"
+	},
+
+	// 2. Colors (පාට වර්ග)
+	{
+		id: 6,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "රතු",
+		english: "Red",
+		phonetic: "රෙඩ්",
+		speechText: "Red",
+		emoji: "🔴"
+	},
+	{
+		id: 7,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "නිල්",
+		english: "Blue",
+		phonetic: "බ්ලූ",
+		speechText: "Blue",
+		emoji: "🔵"
+	},
+	{
+		id: 8,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "කහ",
+		english: "Yellow",
+		phonetic: "යෙලෝ",
+		speechText: "Yellow",
+		emoji: "🟡"
+	},
+	{
+		id: 9,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "කොළ",
+		english: "Green",
+		phonetic: "ග්‍රීන්",
+		speechText: "Green",
+		emoji: "🟢"
+	},
+	{
+		id: 10,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "කළු",
+		english: "Black",
+		phonetic: "බ්ලැක්",
+		speechText: "Black",
+		emoji: "⬛"
+	},
+	{
+		id: 11,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "සුදු",
+		english: "White",
+		phonetic: "වයිට්",
+		speechText: "White",
+		emoji: "⚪"
+	},
+	{
+		id: 12,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "තැඹිලි",
+		english: "Orange",
+		phonetic: "ඔරෙන්ජ්",
+		speechText: "Orange",
+		emoji: "🟠"
+	},
+	{
+		id: 13,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "රෝස",
+		english: "Pink",
+		phonetic: "පින්ක්",
+		speechText: "Pink",
+		emoji: "🩷"
+	},
+	{
+		id: 14,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "දුඹුරු",
+		english: "Brown",
+		phonetic: "බ්‍රවුන්",
+		speechText: "Brown",
+		emoji: "🤎"
+	},
+	{
+		id: 15,
+		category: "colors",
+		categoryName: "පාට වර්ග",
+		sinhala: "දම්",
+		english: "Purple",
+		phonetic: "පර්පල්",
+		speechText: "Purple",
+		emoji: "🟣"
+	},
+
+	// 3. Numbers 1 - 20 (ඉලක්කම් 1 - 20)
+	{
+		id: 16,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "එක",
+		english: "One",
+		phonetic: "වන්",
+		speechText: "One",
+		emoji: "1️⃣"
+	},
+	{
+		id: 17,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "දෙක",
+		english: "Two",
+		phonetic: "ටූ",
+		speechText: "Two",
+		emoji: "2️⃣"
+	},
+	{
+		id: 18,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "තුන",
+		english: "Three",
+		phonetic: "ත්‍රී",
+		speechText: "Three",
+		emoji: "3️⃣"
+	},
+	{
+		id: 19,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "හතර",
+		english: "Four",
+		phonetic: "ෆෝර්",
+		speechText: "Four",
+		emoji: "4️⃣"
+	},
+	{
+		id: 20,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "පහ",
+		english: "Five",
+		phonetic: "ෆයිව්",
+		speechText: "Five",
+		emoji: "5️⃣"
+	},
+	{
+		id: 21,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "හය",
+		english: "Six",
+		phonetic: "සික්ස්",
+		speechText: "Six",
+		emoji: "6️⃣"
+	},
+	{
+		id: 22,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "හත",
+		english: "Seven",
+		phonetic: "සෙවන්",
+		speechText: "Seven",
+		emoji: "7️⃣"
+	},
+	{
+		id: 23,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "අට",
+		english: "Eight",
+		phonetic: "එයිට්",
+		speechText: "Eight",
+		emoji: "8️⃣"
+	},
+	{
+		id: 24,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "නවය",
+		english: "Nine",
+		phonetic: "නයින්",
+		speechText: "Nine",
+		emoji: "9️⃣"
+	},
+	{
+		id: 25,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "දහය",
+		english: "Ten",
+		phonetic: "ටෙන්",
+		speechText: "Ten",
+		emoji: "🔟"
+	},
+	{
+		id: 26,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "එකොළහ",
+		english: "Eleven",
+		phonetic: "ඉලෙවන්",
+		speechText: "Eleven",
+		emoji: "🔢"
+	},
+	{
+		id: 27,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "දොළහ",
+		english: "Twelve",
+		phonetic: "ට්වෙල්ව්",
+		speechText: "Twelve",
+		emoji: "🔢"
+	},
+	{
+		id: 28,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "පහළොව",
+		english: "Fifteen",
+		phonetic: "ෆිෆ්ටීන්",
+		speechText: "Fifteen",
+		emoji: "🔢"
+	},
+	{
+		id: 29,
+		category: "numbers",
+		categoryName: "ඉලක්කම් (1 - 20)",
+		sinhala: "විස්ස",
+		english: "Twenty",
+		phonetic: "ට්වෙන්ටි",
+		speechText: "Twenty",
+		emoji: "🔢"
+	},
+
+	// 4. Animals (සතුන්)
+	{
+		id: 30,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "බල්ලා",
+		english: "Dog",
+		phonetic: "ඩොග්",
+		speechText: "Dog",
+		emoji: "🐕"
+	},
+	{
+		id: 31,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "පූසා",
+		english: "Cat",
+		phonetic: "කැට්",
+		speechText: "Cat",
+		emoji: "🐈"
+	},
+	{
+		id: 32,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "අලියා",
+		english: "Elephant",
+		phonetic: "එලිෆන්ට්",
+		speechText: "Elephant",
+		emoji: "🐘"
+	},
+	{
+		id: 33,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "එළදෙන",
+		english: "Cow",
+		phonetic: "කවු",
+		speechText: "Cow",
+		emoji: "🐄"
+	},
+	{
+		id: 34,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "එළුවා",
+		english: "Goat",
+		phonetic: "ගෝට්",
+		speechText: "Goat",
+		emoji: "🐐"
+	},
+	{
+		id: 35,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "කිකිළිය",
+		english: "Hen",
+		phonetic: "හෙන්",
+		speechText: "Hen",
+		emoji: "🐔"
+	},
+	{
+		id: 36,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "මාළුවා",
+		english: "Fish",
+		phonetic: "ෆිෂ්",
+		speechText: "Fish",
+		emoji: "🐟"
+	},
+	{
+		id: 37,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "කුරුල්ලා",
+		english: "Bird",
+		phonetic: "බර්ඩ්",
+		speechText: "Bird",
+		emoji: "🐦"
+	},
+	{
+		id: 38,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "සිංහයා",
+		english: "Lion",
+		phonetic: "ලයන්",
+		speechText: "Lion",
+		emoji: "🦁"
+	},
+	{
+		id: 39,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "වඳුරා",
+		english: "Monkey",
+		phonetic: "මන්කි",
+		speechText: "Monkey",
+		emoji: "🐒"
+	},
+	{
+		id: 40,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "හාවා",
+		english: "Rabbit",
+		phonetic: "රැබිට්",
+		speechText: "Rabbit",
+		emoji: "🐇"
+	},
+	{
+		id: 41,
+		category: "animals",
+		categoryName: "සතුන්",
+		sinhala: "ගෙම්බා",
+		english: "Frog",
+		phonetic: "ෆ්‍රොග්",
+		speechText: "Frog",
+		emoji: "🐸"
+	},
+
+	// 5. Fruits & Food (පලතුරු සහ කෑම)
+	{
+		id: 42,
+		category: "fruits",
+		categoryName: "පලතුරු වර්ග",
+		sinhala: "අඹ",
+		english: "Mango",
+		phonetic: "මැංගෝ",
+		speechText: "Mango",
+		emoji: "🥭"
+	},
+	{
+		id: 43,
+		category: "fruits",
+		categoryName: "පලතුරු වර්ග",
+		sinhala: "කෙසෙල්",
+		english: "Banana",
+		phonetic: "බනානා",
+		speechText: "Banana",
+		emoji: "🍌"
+	},
+	{
+		id: 44,
+		category: "fruits",
+		categoryName: "පලතුරු වර්ග",
+		sinhala: "ඇපල්",
+		english: "Apple",
+		phonetic: "ඇපල්",
+		speechText: "Apple",
+		emoji: "🍎"
+	},
+	{
+		id: 45,
+		category: "fruits",
+		categoryName: "පලතුරු වර්ග",
+		sinhala: "දොඩම්",
+		english: "Orange",
+		phonetic: "ඔරෙන්ජ්",
+		speechText: "Orange",
+		emoji: "🍊"
+	},
+	{
+		id: 46,
+		category: "fruits",
+		categoryName: "පලතුරු වර්ග",
+		sinhala: "පැපොල්",
+		english: "Papaya",
+		phonetic: "පපායා",
+		speechText: "Papaya",
+		emoji: "🍈"
+	},
+	{
+		id: 47,
+		category: "food",
+		categoryName: "ආහාර සහ පාන වර්ග",
+		sinhala: "බත්",
+		english: "Rice",
+		phonetic: "රයිස්",
+		speechText: "Rice",
+		emoji: "🍚"
+	},
+	{
+		id: 48,
+		category: "food",
+		categoryName: "ආහාර සහ පාන වර්ග",
+		sinhala: "පාන්",
+		english: "Bread",
+		phonetic: "බ්‍රෙඩ්",
+		speechText: "Bread",
+		emoji: "🍞"
+	},
+	{
+		id: 49,
+		category: "food",
+		categoryName: "ආහාර සහ පාන වර්ග",
+		sinhala: "බිත්තරය",
+		english: "Egg",
+		phonetic: "එග්",
+		speechText: "Egg",
+		emoji: "🥚"
+	},
+	{
+		id: 50,
+		category: "food",
+		categoryName: "ආහාර සහ පාන වර්ග",
+		sinhala: "කිරි",
+		english: "Milk",
+		phonetic: "මිල්ක්",
+		speechText: "Milk",
+		emoji: "🥛"
+	},
+	{
+		id: 51,
+		category: "food",
+		categoryName: "ආහාර සහ පාන වර්ග",
+		sinhala: "වතුර",
+		english: "Water",
+		phonetic: "වෝටර්",
+		speechText: "Water",
+		emoji: "💧"
+	},
+	{
+		id: 52,
+		category: "food",
+		categoryName: "ආහාර සහ පාන වර්ග",
+		sinhala: "කේක්",
+		english: "Cake",
+		phonetic: "කේක්",
+		speechText: "Cake",
+		emoji: "🍰"
+	},
+
+	// 6. Body Parts (ඇඟේ කොටස්)
+	{
+		id: 53,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "ඔළුව",
+		english: "Head",
+		phonetic: "හෙඩ්",
+		speechText: "Head",
+		emoji: "🗣️"
+	},
+	{
+		id: 54,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "ඇස්",
+		english: "Eyes",
+		phonetic: "අයිස්",
+		speechText: "Eyes",
+		emoji: "👁️"
+	},
+	{
+		id: 55,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "කන",
+		english: "Ear",
+		phonetic: "ඉයර්",
+		speechText: "Ear",
+		emoji: "👂"
+	},
+	{
+		id: 56,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "නහය",
+		english: "Nose",
+		phonetic: "නෝස්",
+		speechText: "Nose",
+		emoji: "👃"
+	},
+	{
+		id: 57,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "කට",
+		english: "Mouth",
+		phonetic: "මවුත්",
+		speechText: "Mouth",
+		emoji: "👄"
+	},
+	{
+		id: 58,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "අත්",
+		english: "Hands",
+		phonetic: "හෑන්ඩ්ස්",
+		speechText: "Hands",
+		emoji: "✋"
+	},
+	{
+		id: 59,
+		category: "body",
+		categoryName: "ඇඟේ කොටස්",
+		sinhala: "කකුල්",
+		english: "Legs",
+		phonetic: "ලෙග්ස්",
+		speechText: "Legs",
+		emoji: "🦶"
+	},
+
+	// 7. Family (පවුලේ සාමාජිකයන්)
+	{
+		id: 60,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "අම්මා",
+		english: "Mother",
+		phonetic: "මදර්",
+		speechText: "Mother",
+		emoji: "👩"
+	},
+	{
+		id: 61,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "තාත්තා",
+		english: "Father",
+		phonetic: "ෆාදර්",
+		speechText: "Father",
+		emoji: "👨"
+	},
+	{
+		id: 62,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "සහෝදරයා",
+		english: "Brother",
+		phonetic: "බ්‍රදර්",
+		speechText: "Brother",
+		emoji: "👦"
+	},
+	{
+		id: 63,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "සහෝදරිය",
+		english: "Sister",
+		phonetic: "සිස්ටර්",
+		speechText: "Sister",
+		emoji: "👧"
+	},
+	{
+		id: 64,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "පුතා",
+		english: "Son",
+		phonetic: "සන්",
+		speechText: "Son",
+		emoji: "👦"
+	},
+	{
+		id: 65,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "දුව",
+		english: "Daughter",
+		phonetic: "ඩෝටර්",
+		speechText: "Daughter",
+		emoji: "👧"
+	},
+	{
+		id: 66,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "සීයා",
+		english: "Grandfather",
+		phonetic: "ග්‍රෑන්ඩ්ෆාදර්",
+		speechText: "Grandfather",
+		emoji: "👴"
+	},
+	{
+		id: 67,
+		category: "family",
+		categoryName: "පවුලේ සාමාජිකයන්",
+		sinhala: "ආච්චි",
+		english: "Grandmother",
+		phonetic: "ග්‍රෑන්ඩ්මදර්",
+		speechText: "Grandmother",
+		emoji: "👵"
+	},
+
+	// 8. School Things (පාසල් උපකරණ)
+	{
+		id: 68,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "පාසල",
+		english: "School",
+		phonetic: "ස්කූල්",
+		speechText: "School",
+		emoji: "🏫"
+	},
+	{
+		id: 69,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "ගුරුවරයා",
+		english: "Teacher",
+		phonetic: "ටීචර්",
+		speechText: "Teacher",
+		emoji: "👩‍🏫"
+	},
+	{
+		id: 70,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "ශිෂ්‍යයා",
+		english: "Student",
+		phonetic: "ස්ටූඩන්ට්",
+		speechText: "Student",
+		emoji: "🎒"
+	},
+	{
+		id: 71,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "පොත",
+		english: "Book",
+		phonetic: "බුක්",
+		speechText: "Book",
+		emoji: "📖"
+	},
+	{
+		id: 72,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "පෑන",
+		english: "Pen",
+		phonetic: "පෙන්",
+		speechText: "Pen",
+		emoji: "🖊️"
+	},
+	{
+		id: 73,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "පැන්සල",
+		english: "Pencil",
+		phonetic: "පෙන්සිල්",
+		speechText: "Pencil",
+		emoji: "✏️"
+	},
+	{
+		id: 74,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "මකනය",
+		english: "Eraser",
+		phonetic: "ඉරේසර්",
+		speechText: "Eraser",
+		emoji: "🧼"
+	},
+	{
+		id: 75,
+		category: "school",
+		categoryName: "පාසල සහ උපකරණ",
+		sinhala: "බෑගය",
+		english: "Bag",
+		phonetic: "බෑග්",
+		speechText: "Bag",
+		emoji: "🎒"
+	},
+
+	// 9. Action Words (ක්‍රියා පද)
+	{
+		id: 76,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "යනවා",
+		english: "Go",
+		phonetic: "ගෝ",
+		speechText: "Go",
+		emoji: "🚶"
+	},
+	{
+		id: 77,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "එනවා",
+		english: "Come",
+		phonetic: "කම්",
+		speechText: "Come",
+		emoji: "🚶‍♂️"
+	},
+	{
+		id: 78,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "කනවා",
+		english: "Eat",
+		phonetic: "ඊට්",
+		speechText: "Eat",
+		emoji: "🍽️"
+	},
+	{
+		id: 79,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "බොනවා",
+		english: "Drink",
+		phonetic: "ඩ්‍රින්ක්",
+		speechText: "Drink",
+		emoji: "🥤"
+	},
+	{
+		id: 80,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "කියවනවා",
+		english: "Read",
+		phonetic: "රීඩ්",
+		speechText: "Read",
+		emoji: "📖"
+	},
+	{
+		id: 81,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "ලියනවා",
+		english: "Write",
+		phonetic: "රයිට්",
+		speechText: "Write",
+		emoji: "✍️"
+	},
+	{
+		id: 82,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "සෙල්ලම්",
+		english: "Play",
+		phonetic: "ප්ලේ",
+		speechText: "Play",
+		emoji: "⚽"
+	},
+	{
+		id: 83,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "දුවනවා",
+		english: "Run",
+		phonetic: "රන්",
+		speechText: "Run",
+		emoji: "🏃"
+	},
+	{
+		id: 84,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "නිදාගන්නවා",
+		english: "Sleep",
+		phonetic: "ස්ලීප්",
+		speechText: "Sleep",
+		emoji: "😴"
+	},
+	{
+		id: 85,
+		category: "verbs",
+		categoryName: "ක්‍රියා පද",
+		sinhala: "වාඩි",
+		english: "Sit",
+		phonetic: "සිට්",
+		speechText: "Sit",
+		emoji: "🪑"
+	},
+
+	// 10. Describing Words & Nature (නාම විශේෂණ සහ සොබාදහම)
+	{
+		id: 86,
+		category: "adjectives",
+		categoryName: "නාම විශේෂණ",
+		sinhala: "ලොකු",
+		english: "Big",
+		phonetic: "බිග්",
+		speechText: "Big",
+		emoji: "🐘"
+	},
+	{
+		id: 87,
+		category: "adjectives",
+		categoryName: "නාම විශේෂණ",
+		sinhala: "පොඩි",
+		english: "Small",
+		phonetic: "ස්මෝල්",
+		speechText: "Small",
+		emoji: "🐜"
+	},
+	{
+		id: 88,
+		category: "adjectives",
+		categoryName: "නාම විශේෂණ",
+		sinhala: "හොඳ",
+		english: "Good",
+		phonetic: "ගුඩ්",
+		speechText: "Good",
+		emoji: "👍"
+	},
+	{
+		id: 89,
+		category: "adjectives",
+		categoryName: "නාම විශේෂණ",
+		sinhala: "සතුටු",
+		english: "Happy",
+		phonetic: "හැපි",
+		speechText: "Happy",
+		emoji: "😊"
+	},
+	{
+		id: 90,
+		category: "weather_nature",
+		categoryName: "කාලගුණය සහ සොබාදහම",
+		sinhala: "හිරු",
+		english: "Sun",
+		phonetic: "සන්",
+		speechText: "Sun",
+		emoji: "☀️"
+	},
+	{
+		id: 91,
+		category: "weather_nature",
+		categoryName: "කාලගුණය සහ සොබාදහම",
+		sinhala: "හඳ",
+		english: "Moon",
+		phonetic: "මූන්",
+		speechText: "Moon",
+		emoji: "🌙"
+	},
+	{
+		id: 92,
+		category: "weather_nature",
+		categoryName: "කාලගුණය සහ සොබාදහම",
+		sinhala: "තරු",
+		english: "Star",
+		phonetic: "ස්ටාර්",
+		speechText: "Star",
+		emoji: "⭐"
+	},
+	{
+		id: 93,
+		category: "weather_nature",
+		categoryName: "කාලගුණය සහ සොබාදහම",
+		sinhala: "ගස",
+		english: "Tree",
+		phonetic: "ට්‍රී",
+		speechText: "Tree",
+		emoji: "🌳"
+	},
+	{
+		id: 94,
+		category: "weather_nature",
+		categoryName: "කාලගුණය සහ සොබාදහම",
+		sinhala: "වැස්ස",
+		english: "Rain",
+		phonetic: "රේන්",
+		speechText: "Rain",
+		emoji: "🌧️"
+	},
+	{
+		id: 95,
+		category: "weather_nature",
+		categoryName: "කාලගුණය සහ සොබාදහම",
+		sinhala: "මල",
+		english: "Flower",
+		phonetic: "ෆ්ලවර්",
+		speechText: "Flower",
+		emoji: "🌸"
+	}
+];
