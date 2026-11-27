@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>දෙමළ ඉගෙන ගනිමු - පාඩම් සහ සෙල්ලම්</title>
+  <title>english ඉගෙන ගනිමු - පාඩම් සහ සෙල්ලම්</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="./manifest.json" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Noto+Sans+english:wght@500;700&display=swap" rel="stylesheet">
   <style>
@@ -523,18 +525,18 @@
     /* Friendly Feedback Banner */
  /* Friendly Feedback Modal */
  .feedback-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.35);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 200;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.28s ease, visibility 0.28s ease;
+  position: fixed;
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+    bottom: 0;
+    width: 100%;
+    left: 0;
     }
 
     .feedback-backdrop.show {
@@ -544,18 +546,17 @@
 
     .feedback-banner {
       width: 100%;
-      max-width: 360px;
-      padding: 24px 20px;
-      border-radius: var(--radius-lg);
+      padding: 5px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       gap: 14px;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.22);
+      box-shadow: 0 0 8px 7px #0000000a;
       transform: scale(0.82) translateY(16px);
       opacity: 0;
       transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
+
     }
 
     .feedback-backdrop.show .feedback-banner {
@@ -564,15 +565,13 @@
     }
 
     .feedback-banner.fb-good {
-      background: #dcfce7;
+      background: #fff;
       color: #166534;
-      border: 2px solid #86efac;
     }
 
     .feedback-banner.fb-oops {
     background: #fdfdfd;
     color: #5a5a5a;
-    border: 2px solid #a8a8a8;
     }
 
     .fb-emoji {
@@ -676,13 +675,27 @@
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
     }
+    #installBtn {
+      display: none; 
+    padding: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    position: fixed;
+    top: 0;
+    z-index: 9;
+    left: 0;
+    width: 100%;
+    border: none;
+    color: #fff;
+    background: #3F51B5;
+    }
   </style>
 </head>
 <body>
-
+  <button id="installBtn" type="button">Install App</button>
   <header>
     <div class="header-inner">
-      <div class="app-title">🌟 දෙමළ ඉගෙන ගනිමු 🌟</div>
+      <div class="app-title">🌟 ඉංග්‍රීසි ඉගෙන ගනිමු 🌟</div>
       <div class="top-tabs">
         <button class="tab-btn active" id="tab-lessons-btn" onclick="switchTab('lessons')">
           📖 පාඩම්
@@ -705,7 +718,7 @@
     <section id="game-section" class="tab-section">
       <!-- Level Selection -->
       <div id="game-start-view" class="game-box">
-        <div class="game-intro-title">🎮 සෙල්ලමෙන් දෙමළ ඉගෙන ගමු!</div>
+        <div class="game-intro-title">🎮 සෙල්ලමෙන් ඉංග්‍රීසි ඉගෙන ගමු!</div>
         <p class="game-intro-sub">ප්‍රශ්න 10කට පිළිතුරු දීලා තරු දිනාගන්න. පහතින් මට්ටමක් තෝරන්න:</p>
         <div class="level-cards">
           <button class="level-btn lvl-1" onclick="startQuiz(1, 10)">
@@ -745,7 +758,7 @@
         <div class="question-card">
           <span class="q-emoji" id="q-emoji">🍎</span>
           <div class="q-prompt" id="q-prompt">ඇපල්</div>
-      <!--   <div class="q-sub-hint">මෙහි හරි දෙමළ වචනය තෝරන්න 👇</div>--> 
+      <!--   <div class="q-sub-hint">මෙහි හරි ඉංග්‍රීසි වචනය තෝරන්න 👇</div>--> 
         </div>
 
         <div class="options-grid" id="options-grid"></div>
@@ -776,20 +789,35 @@
     // ==========================================
     // 1. CATEGORIES LIST
     // ==========================================
-   const categories = [
-	{ id: 'all', name: 'සියල්ල (All)', icon: '✨' },
-	{ id: 'meetings', name: 'මූලික වචන (Basic)', icon: '👋' },
-	{ id: 'colors', name: 'පාට වර්ග (Colors)', icon: '🎨' },
-	{ id: 'numbers', name: 'ඉලක්කම් (Numbers)', icon: '🔢' },
-	{ id: 'animals', name: 'සතුන් (Animals)', icon: '🐘' },
-	{ id: 'fruits', name: 'පලතුරු වර්ග (Fruits)', icon: '🍎' },
-	{ id: 'food', name: 'ආහාර සහ පාන (Food)', icon: '🍚' },
-	{ id: 'body', name: 'ඇඟේ කොටස් (Body)', icon: '🖐️' },
-	{ id: 'family', name: 'පවුලේ අය (Family)', icon: '👨‍👩‍👧‍👦' },
-	{ id: 'school', name: 'පාසල් උපකරණ (School)', icon: '🏫' },
-	{ id: 'verbs', name: 'ක්‍රියා පද (Actions)', icon: '🏃' },
-	{ id: 'adjectives', name: 'නාම විශේෂණ (Describing)', icon: '🌟' },
-	{ id: 'weather_nature', name: 'සොබාදහම (Nature)', icon: '☀️' }
+    const categories = [
+    { id: 'all', name: 'සියල්ල (All)', icon: '✨' },
+    { id: 'meetings', name: 'හමුවීම් (Greetings)', icon: '🤝' },
+    { id: 'self_intro', name: 'මා ගැන', icon: '🪪' },
+    { id: 'shopping', name: 'වෙළඳපොළේදී', icon: '🛍️' },
+    { id: 'health', name: 'සෞඛ්‍යය සහ අසනීප', icon: '🏥' },
+    { id: 'flowers', name: 'මල් වර්ග', icon: '🌸' },
+    { id: 'fruits', name: 'පලතුරු වර්ග', icon: '🍎' },
+    { id: 'vegetables', name: 'එළවළු වර්ග', icon: '🥦' },
+    { id: 'animals', name: 'සතුන්', icon: '🐘' },
+    { id: 'birds', name: 'කුරුල්ලෝ', icon: '🦜' },
+    { id: 'body', name: 'ඇඟේ කොටස්', icon: '🖐️' },
+    { id: 'colors', name: 'පාට වර්ග', icon: '🎨' },
+    { id: 'numbers', name: 'ඉලක්කම්', icon: '🔢' },
+    { id: 'family', name: 'පවුලේ සාමාජිකයන්', icon: '👨‍👩‍👧‍👦' },
+    { id: 'school', name: 'පාසල සහ උපකරණ', icon: '🏫' },
+    { id: 'professions', name: 'වෘත්තීන්', icon: '👩‍⚕️' },
+    { id: 'vehicles', name: 'වාහන', icon: '🚌' },
+    { id: 'food', name: 'ආහාර සහ පාන වර්ග', icon: '🍚' },
+    { id: 'home', name: 'නිවස සහ භාණ්ඩ', icon: '🏠' },
+    { id: 'public_places', name: 'පොදු ස්ථාන', icon: '🏛️' },
+    { id: 'days_months', name: 'දින සහ මාස', icon: '📅' },
+    { id: 'weather_nature', name: 'කාලගුණය සහ සොබාදහම', icon: '☀️' },
+    { id: 'directions', name: 'දිශාවන් සහ ස්ථාන', icon: '🧭' },
+    { id: 'verbs', name: 'ක්‍රියා පද', icon: '🏃' },
+    { id: 'pronouns', name: 'සර්වනාම', icon: '🙋‍♂️' },
+    { id: 'questions', name: 'ප්‍රශ්න පද', icon: '❓' },
+    { id: 'adjectives', name: 'නාම විශේෂණ', icon: '🌟' },
+    { id: 'greetings', name: 'සුභ පැතුම්', icon: '🎉' }
 ];
 
 
@@ -1088,7 +1116,7 @@
 
       if (score >= 8) {
         resEmoji.textContent = '🏆';
-        motMsg.textContent = 'සුපිරිම දක්ෂයෙක්! ඔයා දෙමළ වචන ගොඩක් හොඳට ඉගෙනගෙන තියෙනවා! 🌟👏';
+        motMsg.textContent = 'සුපිරිම දක්ෂයෙක්! ඔයා ඉංග්‍රීසි වචන ගොඩක් හොඳට ඉගෙනගෙන තියෙනවා! 🌟👏';
       } else if (score >= 5) {
         resEmoji.textContent = '🌟';
         motMsg.textContent = 'හොඳ උත්සාහයක්! තව ටිකක් පාඩම් බලලා සෙල්ලම් කළොත් ඔයාට 10න් 10ම ගන්න පුළුවන්! 💪😊';
@@ -1122,6 +1150,65 @@
     function hideFeedbackModal() {
       document.getElementById('feedback-backdrop').classList.remove('show');
     }
+  </script>
+
+<script>
+  // 1. Register Service Worker
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch((err) => {
+        console.error("Service worker registration failed:", err);
+      });
+    });
+  }
+
+  // 2. Custom Install Button Logic
+  let deferredPrompt = null;
+  const installBtn = document.getElementById("installBtn");
+
+  function isAppInstalled() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true // iOS Safari
+    );
+  }
+
+  function updateInstallButtonVisibility() {
+    if (isAppInstalled() || !deferredPrompt) {
+      installBtn.style.display = "none";
+    } else {
+      installBtn.style.display = "inline-block";
+    }
+  }
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    // Prevent automatic mini-infobar on supported browsers
+    e.preventDefault();
+    deferredPrompt = e;
+    updateInstallButtonVisibility();
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    installBtn.disabled = true;
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log("Install prompt outcome:", outcome);
+
+    // The prompt can only be used once
+    deferredPrompt = null;
+      installBtn.disabled = false;
+      updateInstallButtonVisibility();
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredPrompt = null;
+      updateInstallButtonVisibility();
+    });
+
+    window.addEventListener("load", updateInstallButtonVisibility);
   </script>
 </body>
 </html>
