@@ -969,3 +969,18 @@ const vocabularyData = [
 		emoji: "🌸"
 	}
 ];
+const categories = [
+	{ id: 'all', name: 'සියල්ල (All)', icon: '✨' },
+	{ id: 'meetings', name: 'මූලික වචන (Basic)', icon: '👋' },
+	{ id: 'colors', name: 'පාට වර්ග (Colors)', icon: '🎨' },
+	{ id: 'numbers', name: 'ඉලක්කම් (Numbers)', icon: '🔢' },
+	{ id: 'animals', name: 'සතුන් (Animals)', icon: '🐘' },
+	{ id: 'fruits', name: 'පලතුරු වර්ග (Fruits)', icon: '🍎' },
+	{ id: 'food', name: 'ආහාර සහ පාන (Food)', icon: '🍚' },
+	{ id: 'body', name: 'ඇඟේ කොටස් (Body)', icon: '🖐️' },
+	{ id: 'family', name: 'පවුලේ අය (Family)', icon: '👨‍👩‍👧‍👦' },
+	{ id: 'school', name: 'පාසල් උපකරණ (School)', icon: '🏫' },
+	{ id: 'verbs', name: 'ක්‍රියා පද (Actions)', icon: '🏃' },
+	{ id: 'adjectives', name: 'නාම විශේෂණ (Describing)', icon: '🌟' },
+	{ id: 'weather_nature', name: 'සොබාදහම (Nature)', icon: '☀️' }
+];
